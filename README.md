@@ -27,6 +27,30 @@ python3 -m http.server 8080
 On desktop widths (≥600px) it renders inside a phone frame; on a phone it is
 full-bleed. State persists in `localStorage` under `ringapp.*` keys.
 
+## Backend & API keys
+
+`backend/` is an Express server that turns the prototype real: it serves the
+app, runs the agent loop (`POST /api/chat`), and reports which capabilities
+are live (`GET /api/health`).
+
+```sh
+cp .env.example .env   # fill in keys — see docs/keys-and-access.md
+cd backend && npm install && npm start
+# → http://localhost:3000, API at /api/health
+```
+
+- `.env.example` — the full key inventory (LLM, Google OAuth, Places,
+  Uber/OpenTable/Resy, Supabase, APNs/FCM). Never commit `.env`.
+- `docs/keys-and-access.md` — every platform: what it unlocks, how to get
+  access, what it costs, and what's self-serve vs partnership track.
+- `docs/architecture.md` — request flow, connector contract, approval gates,
+  and how the prototype maps to the backend.
+- `backend/connectors/` — gmail, calendar, uber, dining. Each declares its
+  required env vars and fails loudly when keys are missing.
+
+With no keys set everything still runs: connectors report `missing`, the
+agent falls back to canned responses, and deep links carry the demo.
+
 ## Notes
 
 - All data is sample data. Placeholders like `[Venue name]`, `[Friend]`,

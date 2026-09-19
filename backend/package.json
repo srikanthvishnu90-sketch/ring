@@ -1,0 +1,1 @@
+{"dependencies":{"dotenv":"^16.4.5","express":"^4.19.2"},"description":"Ring agent backend: chat API, agent loop, and platform connectors","engines":{"node":">=18"},"main":"server.js","name":"ring-backend","private":true,"scripts":{"start":"node server.js"},"version":"0.1.0"}
