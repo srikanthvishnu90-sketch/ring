@@ -19,7 +19,7 @@ const express = require('express');
 require('dotenv').config();
 
 const { env, missing } = require('./lib/config');
-const { saveTokens } = require('./lib/google');
+const { saveTokens, ready: googleReady } = require('./lib/google');
 const { TOOLS, runAgentTurn, llmConfigured } = require('./lib/agent');
 const approvals = require('./lib/approvals');
 const threads = require('./lib/threads');
@@ -179,5 +179,7 @@ app.post('/api/voice', (req, res) => {
 module.exports = app;
 if (require.main === module) {
   const PORT = env('PORT', '3000');
-  app.listen(PORT, () => console.log(`Ring backend live → http://localhost:${PORT}  (api: /api/health)`));
+  googleReady().then(() => {
+    app.listen(PORT, () => console.log(`Ring backend live → http://localhost:${PORT}  (api: /api/health)`));
+  });
 }
