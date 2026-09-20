@@ -110,7 +110,7 @@ a{color:inherit}
 .metric span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-weight:500}
 
 /* ---------- tab bar ---------- */
-.tabbar{position:fixed;bottom:0;left:0;right:0;margin:0 auto;max-width:520px;height:calc(var(--tabbar) + var(--sb));padding:6px 12px var(--sb);background:rgba(0,0,0,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;z-index:20}
+.tabbar{position:fixed;bottom:0;left:0;right:0;margin:0 auto;max-width:520px;height:calc(var(--tabbar) + var(--sb));padding:6px 12px var(--sb);background:rgba(0,0,0,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;z-index:20}
 .tab{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--muted);font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;min-height:48px}
 .tab[aria-current="page"]{color:var(--silver-hi);font-weight:600}
 .tab[aria-current="page"] [data-i]{filter:drop-shadow(0 0 8px rgba(221,224,228,.4))}
@@ -289,6 +289,8 @@ a{color:inherit}
       </div>
       <div class="msgs" id="msgs" aria-live="polite"></div>
     </section>
+    <!-- GROUPS -->
+    <section class="view" id="v-groups" aria-label="Groups" hidden></section>
     <!-- AGENT -->
     <section class="view" id="v-agent" aria-label="Agent" hidden></section>
     <!-- PROFILE -->
@@ -309,6 +311,7 @@ a{color:inherit}
   <nav class="tabbar" aria-label="Main" id="tabbar">
     <button class="tab" data-tab="home"><span data-i="home"></span><span>Home</span></button>
     <button class="tab" data-tab="chat"><span data-i="chat"></span><span>Chat</span></button>
+    <button class="tab" data-tab="groups"><span data-i="users"></span><span>Groups</span></button>
     <button class="tab" data-tab="agent"><span data-i="spark22"></span><span>Agent</span><i class="tab-badge hidden" id="agent-badge"></i></button>
     <button class="tab" data-tab="profile"><span data-i="user"></span><span>Profile</span></button>
   </nav>
@@ -358,6 +361,7 @@ const I={
   cup:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16"/></svg>',
   spark22:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"/></svg>',
   user18:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',
+  users:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1.2-3.4 3.6-5 6.5-5s5.3 1.6 6.5 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16 15.2c2.3.3 4 1.7 5 4.3"/></svg>',
   mail:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>',
   note:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>',
   car:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3 16h18v3H3z"/><circle cx="7.5" cy="13" r="1"/><circle cx="16.5" cy="13" r="1"/></svg>',
@@ -450,10 +454,11 @@ const HEARD=[
 /* ================= navigation ================= */
 function go(tab){
   S.tab=tab;
-  ['home','chat','agent','profile'].forEach(t=>{$('#v-'+t).hidden=t!==tab});
+  ['home','chat','groups','agent','profile'].forEach(t=>{$('#v-'+t).hidden=t!==tab});
   document.querySelectorAll('.tab').forEach(b=>{if(b.dataset.tab===tab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
   $('#composer').classList.toggle('hidden',tab!=='chat');
   if(tab==='home')renderHome();
+  if(tab==='groups')renderGroups();
   if(tab==='agent')renderAgent();
   if(tab==='profile')renderProfile();
   updateBadge();
@@ -718,6 +723,12 @@ function openSheet(kind,arg){
       <form id="cw-form" style="display:flex;flex-direction:column;gap:10px;margin:0"><label for="cw-t" class="sr">Describe your workflow</label><textarea id="cw-t" placeholder="Every Friday at 4, find a dinner spot and invite Sam"></textarea>
       <div class="chips" style="margin-right:0;padding-right:0;flex-wrap:wrap">${["When I leave work, text Mom I'm on my way","If it's going to rain, remind me before I leave","Every Sunday night, plan my week"].map(x=>`<button type="button" class="chip" style="height:auto;min-height:36px;padding:8px 12px;white-space:normal;text-align:left;font-size:13px" data-ex="${esc(x)}">${esc(x)}</button>`).join('')}</div>
       <button class="btn btn-silver" type="submit" id="cw-go">Create workflow</button></form>`,
+    newGroup:()=>`<h3 id="sheet-title">New group</h3><p>Name it and add people — mention <b>@ring</b> in the chat to bring in the agent.</p>
+      <form id="ng-form" style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+        <input id="ng-name" placeholder="Group name" aria-label="Group name" autocomplete="off" style="height:48px;padding:0 18px;border-radius:24px;border:1px solid rgba(201,204,209,.28);background:var(--surface);font-size:16px;color:#fff">
+        <input id="ng-members" placeholder="Members, comma-separated" aria-label="Members" autocomplete="off" style="height:48px;padding:0 18px;border-radius:24px;border:1px solid rgba(201,204,209,.28);background:var(--surface);font-size:16px;color:#fff">
+        <button class="btn btn-brown" type="submit">Create group</button>
+      </form>`,
     conns:()=>`<h3 id="sheet-title">Connectors</h3><p>Apps your agent can use. It only touches what you connect.</p>
       ${backendStatusLine()}
       <div class="card" style="overflow:hidden">${CONNS.map(c=>`<div class="conn-row"><span class="bubble-icon bi-brown">${I[c.i]}</span><div class="rt"><b>${c.n}</b><span>${c.d}</span></div><button class="switch" role="switch" aria-checked="${isConn(c.k)}" aria-label="${c.n}" data-cs="${c.k}"></button></div>`).join('')}</div>`,
@@ -735,6 +746,7 @@ function openSheet(kind,arg){
   const co=$('#confirm-off');if(co)co.onclick=()=>{S.perms.confirm=false;saveState();closeSheet();renderProfile();toast('Your agent will act without asking')};
   const rp=$('#do-replay');if(rp)rp.onclick=()=>{closeSheet();store.set('onboarded',false);startOnboarding()};
   const ps=$('#psearch');if(ps)ps.onsubmit=e=>{e.preventDefault();const q=$('#pq').value.trim();if(!q)return;closeSheet();go('chat');send(q)};
+  const ng=$('#ng-form');if(ng)ng.onsubmit=e=>{e.preventDefault();createThread();};
   b.querySelectorAll('[data-pa]').forEach(x=>x.onclick=()=>{const p=S.pending.splice(+x.dataset.pa,1)[0];S.handled.unshift({icon:p.icon,tone:p.icon==='msg'?'sage':'brown',title:p.icon==='msg'?p.title.replace('Reply to','Replied to'):p.title.replace('Accept','Accepted'),meta:p.from+' · '+timeStr(new Date())});saveState();toast('Done');if(S.tab==='agent')renderAgent();openSheet('pending')});
   b.querySelectorAll('[data-pd]').forEach(x=>x.onclick=()=>{S.pending.splice(+x.dataset.pd,1);saveState();if(S.tab==='agent')renderAgent();openSheet('pending')});
   b.querySelectorAll('[data-pe]').forEach(x=>x.onclick=()=>openSheet('editPending',+x.dataset.pe));
@@ -772,9 +784,10 @@ async function apiInit(){
 }
 function approvalFromTool(p){
   const a=p.args||{};
-  if(p.name==='gmail_send')return{role:'approval',status:'pending',book:`Send email to ${a.to}`,text:(a.subject?a.subject+': ':'')+(a.body||''),to:a.to||''};
-  if(p.name==='calendar_create')return{role:'approval',status:'pending',book:`Add to calendar: ${a.summary||'Event'}`,text:`${a.start||''}${a.location?' · '+a.location:''}`,to:'Calendar'};
-  return{role:'approval',status:'pending',book:p.name,text:JSON.stringify(a).slice(0,140),to:''};
+  const base={approvalId:p.id,status:'pending',role:'approval'};
+  if(p.name==='gmail_send')return{...base,book:`Send email to ${a.to}`,text:(a.subject?a.subject+': ':'')+(a.body||''),to:a.to||''};
+  if(p.name==='calendar_create')return{...base,book:`Add to calendar: ${a.summary||'Event'}`,text:`${a.start||''}${a.location?' · '+a.location:''}`,to:'Calendar'};
+  return{...base,book:p.name,text:JSON.stringify(a).slice(0,140),to:''};
 }
 function backendStatusLine(){
   if(!API.on||!API.health)return '';
@@ -784,6 +797,104 @@ function backendStatusLine(){
     return `${label}: ${s?(s.ok?'live':'needs key'):'—'}`;});
   const llm=API.health.llm&&API.health.llm!=='canned-fallback'?'live ('+esc(API.health.llm)+')':'preview mode';
   return `<div class="card" style="padding:12px 14px;margin-bottom:12px"><span style="font-size:12.5px;color:var(--muted)">Backend · agent ${llm} — ${bits.join(' · ')}</span></div>`;
+}
+
+/* ================= GROUPS ================= */
+// Group threads live on the backend (/api/threads). Mention @ring and the
+// agent joins with full thread context; its held approvals land in-thread.
+let G={threads:[],open:null,es:null};
+async function apiJSON(url,opts){
+  const r=await fetch(url,{headers:{'Content-Type':'application/json'},...opts});
+  if(!r.ok)throw new Error('request failed');
+  return r.json();
+}
+function approvalLabel(p){
+  const a=p.args||{};
+  if(p.name==='gmail_send')return `Send email to ${a.to||'?'}`;
+  if(p.name==='calendar_create')return `Add to calendar: ${a.summary||'event'}`;
+  return p.describe||p.name;
+}
+function gMsgHTML(m){
+  if(m.from==='agent'){
+    return `<div><div class="agent-tag">${mark(12,'#8F857D')}Agent</div><div class="msg-agent">${esc(m.text)}</div>${(m.pendingApprovals||[]).map(p=>`
+      <section class="card-silver approval" aria-label="Needs your OK" style="margin-top:8px">
+        <div class="k">Needs your OK</div>
+        <div class="li"><span style="color:#22140F;display:inline-flex">${I.cal}</span><span>${esc(approvalLabel(p))}</span></div>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+          <button class="btn btn-brown btn-sm" data-gapprove="${p.id}">Approve</button>
+          <button class="btn btn-sm" style="border:1px solid rgba(22,17,14,.35);color:#16110E" data-gdecline="${p.id}">Decline</button>
+        </div>
+      </section>`).join('')}</div>`;
+  }
+  if(m.from==='you')return `<div class="msg-user">${esc(m.text)}</div>`;
+  return `<div style="align-self:flex-start;max-width:82%;background:var(--surface);border:1px solid var(--line-soft);border-radius:16px 16px 16px 4px;padding:10px 14px;font-size:15.5px;line-height:1.4"><b style="font-size:12.5px;color:var(--muted)">${esc(m.from)}</b><br>${esc(m.text)}</div>`;
+}
+function bindGApprovals(root){
+  root.querySelectorAll('[data-gapprove],[data-gdecline]').forEach(b=>b.onclick=()=>gResolve(b.dataset.gapprove||b.dataset.gdecline,b));
+}
+async function gResolve(id,btn){
+  const decision=btn.hasAttribute('data-gdecline')?'decline':'approve';
+  btn.disabled=true;
+  try{await apiJSON(`/api/approvals/${id}/resolve`,{method:'POST',body:JSON.stringify({decision})})}catch(e){}
+  renderGroups();
+}
+async function createThread(){
+  const name=($('#ng-name')||{}).value?.trim()||'New group';
+  const members=(($('#ng-members')||{}).value||'').split(',').map(s=>s.trim()).filter(Boolean);
+  closeSheet();
+  if(!API.on){toast('Groups need the backend — run npm start');return}
+  try{
+    const t=await apiJSON('/api/threads',{method:'POST',body:JSON.stringify({name,members})});
+    G.open=t.id;go('groups');
+  }catch(e){toast('Could not create group')}
+}
+function closeThreadStream(){if(G.es){G.es.close();G.es=null}}
+function closeThread(){closeThreadStream();G.open=null}
+function openThreadStream(){
+  closeThreadStream();
+  if(!G.open||!API.on)return;
+  try{
+    G.es=new EventSource(`/api/threads/${G.open}/stream`);
+    G.es.onmessage=e=>{
+      try{
+        const ev=JSON.parse(e.data);
+        if(ev.type==='message'&&S.tab==='groups'&&G.open){
+          const box=$('#g-msgs');
+          if(box){box.insertAdjacentHTML('beforeend',gMsgHTML(ev.message));box.scrollTop=box.scrollHeight;paintIcons(box);bindGApprovals(box)}
+        }
+      }catch(err){}
+    };
+  }catch(e){}
+}
+async function renderGroups(){
+  const v=$('#v-groups');
+  const head=`<header class="head"><div style="display:flex;flex-direction:column;gap:2px"><div class="sub">Plan together</div><h1 class="h1">Groups</h1></div>${API.on?`<button class="iconbtn" id="ng-open" aria-label="New group"><span data-i="plus"></span></button>`:''}</header>`;
+  if(!API.on){
+    v.innerHTML=head+`<div class="card" style="padding:18px"><b class="serif" style="font-size:19px;font-weight:400">Group chats live on the backend.</b><p style="margin-top:8px;font-size:14.5px;color:var(--muted)">Run the app with npm start and your threads, @ring mentions and shared plans show up here.</p></div>`;
+    paintIcons(v);return;
+  }
+  if(!G.open){
+    try{G.threads=await apiJSON('/api/threads')}catch(e){G.threads=[]}
+    v.innerHTML=head+(G.threads.length
+      ?`<div style="display:flex;flex-direction:column;gap:10px">${G.threads.map(t=>{const last=(t.messages||[])[0];return `<button class="card-brown" data-thread="${t.id}" style="text-align:left;width:100%;padding:14px 16px;border-radius:16px"><div class="rt"><b class="serif" style="font-size:19px;font-weight:400">${esc(t.name)}</b><span>${esc((t.members||[]).join(', ')||'Just you')}</span>${last?`<span style="margin-top:4px;color:var(--muted)">${esc(last.from)}: ${esc(last.text.slice(0,60))}</span>`:''}</div></button>`}).join('')}</div>`
+      :`<div class="card" style="padding:18px"><b class="serif" style="font-size:19px;font-weight:400">No groups yet.</b><p style="margin-top:8px;font-size:14.5px;color:var(--muted)">Start one, add people, and mention <b>@ring</b> whenever you want the agent to weigh in — or book something for everyone.</p></div>`);
+  }else{
+    const t=G.threads.find(x=>x.id===G.open)||{name:'Group'};
+    let msgs=[];
+    try{msgs=await apiJSON(`/api/threads/${G.open}/messages`)}catch(e){}
+    v.innerHTML=head.replace('>Groups</h1>',`>${esc(t.name)}</h1>`)+`
+      <div style="margin:-14px 0 4px"><button class="chip" id="g-back" style="height:32px;font-size:13px">‹ All groups</button></div>
+      <div class="msgs" id="g-msgs" style="min-height:40vh" aria-live="polite">${msgs.map(gMsgHTML).join('')}</div>
+      <form id="g-form" style="display:flex;gap:8px;margin-top:8px"><input id="g-input" placeholder="Message @ring to bring in the agent…" autocomplete="off" aria-label="Group message" style="flex:1;min-width:0;height:48px;padding:0 18px;border-radius:24px;border:1px solid rgba(201,204,209,.28);background:var(--surface);font-size:16px;color:#fff"><button class="btn btn-brown btn-sm" style="width:auto;padding:0 18px">Send</button></form>`;
+    const box=$('#g-msgs');box.scrollTop=box.scrollHeight;
+    $('#g-back').onclick=()=>{closeThread();renderGroups()};
+    $('#g-form').onsubmit=async e=>{e.preventDefault();const inp=$('#g-input');const text=inp.value.trim();if(!text)return;inp.value='';try{await apiJSON(`/api/threads/${G.open}/messages`,{method:'POST',body:JSON.stringify({from:'you',text})})}catch(err){}};
+    openThreadStream();
+  }
+  paintIcons(v);
+  bindGApprovals(v);
+  const nb=$('#ng-open');if(nb)nb.onclick=()=>openSheet('newGroup');
+  v.querySelectorAll('[data-thread]').forEach(b=>b.onclick=()=>{G.open=b.dataset.thread;renderGroups()});
 }
 
 /* ================= CHAT ================= */
@@ -821,7 +932,12 @@ function renderChat(){
 }
 function scrollChat(){SC().scrollTo({top:SC().scrollHeight,behavior:'smooth'})}
 function approve(i){
-  const a=S.chat[i];a.status='done';
+  const a=S.chat[i];
+  // API-held approvals execute server-side on resolve; local ones stay local.
+  if(a.approvalId&&API.on){
+    fetch(`/api/approvals/${a.approvalId}/resolve`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({decision:'approve'})}).catch(()=>{});
+  }
+  a.status='done';
   const t=timeStr(new Date());
   S.handled.unshift({icon:'msg',tone:'sage',title:`Texted ${a.to}: "${a.text}"`,meta:'iMessage · '+t},{icon:'cal',tone:'brown',title:a.book.replace('Table','Booked a table'),meta:'Reservation · '+t});
   saveState();

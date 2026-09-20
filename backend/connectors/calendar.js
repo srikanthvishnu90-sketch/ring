@@ -2,12 +2,19 @@
 // Needs: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (same Google Cloud project
 // as Gmail). Scope: calendar.events.
 const { missing, NotConfigured } = require('../lib/config');
+const { gfetch, isConnected } = require('../lib/google');
 
 const requiredEnv = ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET'];
 
 function status() {
   const m = missing(requiredEnv);
-  return { ok: m.length === 0, missing: m, auth: 'oauth2', scopes: ['calendar.events'] };
+  return {
+    ok: m.length === 0,
+    missing: m,
+    auth: 'oauth2',
+    connected: m.length === 0 && isConnected('local'),
+    scopes: ['calendar.events'],
+  };
 }
 
 function guard() {
@@ -15,16 +22,38 @@ function guard() {
   if (m.length) throw new NotConfigured('Google Calendar', m);
 }
 
-// TODO: GET https://www.googleapis.com/calendar/v3/calendars/primary/events
 async function listEvents({ userId, timeMin, timeMax }) {
   guard();
-  throw new Error('TODO: wire stored OAuth token for user ' + userId);
+  const q = new URLSearchParams({
+    timeMin: timeMin || new Date().toISOString(),
+    ...(timeMax ? { timeMax } : {}),
+    singleEvents: 'true',
+    orderBy: 'startTime',
+    maxResults: '10',
+  });
+  const data = await gfetch(userId, `https://www.googleapis.com/calendar/v3/calendars/primary/events?${q}`);
+  return (data.items || []).map((e) => ({
+    id: e.id,
+    summary: e.summary,
+    start: e.start?.dateTime || e.start?.date,
+    end: e.end?.dateTime || e.end?.date,
+    location: e.location,
+  }));
 }
 
-// TODO: POST https://www.googleapis.com/calendar/v3/calendars/primary/events
 async function createEvent({ userId, summary, start, end, location, description }) {
   guard();
-  throw new Error('TODO: wire stored OAuth token for user ' + userId);
+  const created = await gfetch(userId, 'https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+    method: 'POST',
+    body: JSON.stringify({
+      summary,
+      location,
+      description,
+      start: { dateTime: start },
+      end: { dateTime: end },
+    }),
+  });
+  return { id: created.id, summary: created.summary, link: created.htmlLink };
 }
 
 module.exports = { requiredEnv, status, listEvents, createEvent };

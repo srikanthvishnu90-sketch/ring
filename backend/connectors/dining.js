@@ -54,7 +54,45 @@ function bookTable() {
 
 // Unofficial Resy web-API path (api.resy.com). Opt-in only: set
 // RESY_API_KEY + RESY_AUTH_TOKEN. Undocumented, can break without notice.
-async function resyBookUnofficial({ venueId, date, time, partySize }) {
+// Flow (from the community's reverse-engineering): GET /4/find → slots with
+// config tokens, POST /3/details → book token, POST /3/book → reservation.
+const { env: env2 } = require('../lib/config');
+async function resyFetch(path, { method = 'GET', body } = {}) {
+  const r = await fetch(`https://api.resy.com${path}`, {
+    method,
+    headers: {
+      Authorization: `ResyAPI api_key="${env2('RESY_API_KEY')}"`,
+      'X-Resy-Auth-Token': env2('RESY_AUTH_TOKEN'),
+      'Content-Type': 'application/json',
+      'User-Agent': 'Mozilla/5.0',
+    },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(`Resy API ${r.status}: ${JSON.stringify(data).slice(0, 200)}`);
+  return data;
+}
+
+async function resyFindSlots({ venueId, date, partySize = 2 }) {
+  const m = missing(['RESY_API_KEY', 'RESY_AUTH_TOKEN']);
+  if (m.length) {
+    throw new PartnershipRequired(
+      'Resy unofficial availability',
+      'opt-in path needs RESY_API_KEY + RESY_AUTH_TOKEN — see docs/keys-and-access.md'
+    );
+  }
+  const q = new URLSearchParams({ lat: '0', long: '0', day: date, party_size: String(partySize), venue_id: String(venueId) });
+  const data = await resyFetch(`/4/find?${q}`);
+  const venue = data.results?.venues?.[0];
+  return (venue?.slots || []).map((s) => ({
+    time: s.date?.start,
+    end: s.date?.end,
+    token: s.config?.token,
+    type: s.config?.type,
+  }));
+}
+
+async function resyBookUnofficial({ slotToken, date, partySize = 2 }) {
   const m = missing(['RESY_API_KEY', 'RESY_AUTH_TOKEN']);
   if (m.length) {
     throw new PartnershipRequired(
@@ -62,8 +100,11 @@ async function resyBookUnofficial({ venueId, date, time, partySize }) {
       'opt-in path needs RESY_API_KEY + RESY_AUTH_TOKEN — see docs/keys-and-access.md'
     );
   }
-  // Flow: GET /4/find → POST /3/details (configId → bookToken) → POST /3/book
-  throw new Error('TODO: implement find → details → book against api.resy.com');
+  const details = await resyFetch('/3/details', { method: 'POST', body: { config_id: slotToken, day: date, party_size: partySize } });
+  const bookToken = details?.book_token?.value;
+  if (!bookToken) throw new Error('Resy did not return a book token');
+  const booked = await resyFetch('/3/book', { method: 'POST', body: { book_token: bookToken } });
+  return { reservationId: booked?.resy_token || booked?.id, raw: booked };
 }
 
 module.exports = {
@@ -74,5 +115,6 @@ module.exports = {
   tockLink,
   findSlots,
   bookTable,
+  resyFindSlots,
   resyBookUnofficial,
 };

@@ -55,12 +55,20 @@ direct booking) rather than failing mysteriously.
 
 | Prototype (index.html) | Backend |
 |---|---|
-| Canned chat replies | `POST /api/chat` → agent loop |
-| Approval cards | Pending approvals in DB + push |
+| Canned chat replies | `POST /api/chat` → agent loop (OpenAI or Anthropic) |
+| Approval cards | `lib/approvals.js` — medium/high-risk calls HELD, executed only on `POST /api/approvals/:id/resolve` |
+| Groups tab | `lib/threads.js` — group threads, `@ring` mention routing, SSE live stream |
 | Workflows | Agent schedules / cron tools |
 | Connectors screen | `/api/health` connector status |
-| Onboarding "connect essentials" | OAuth callbacks under `/auth/*` |
+| Onboarding "connect essentials" | OAuth callbacks under `/auth/*` (Google live; tokens server-side in `lib/google.js` with refresh) |
 | Hold-to-talk | `POST /api/voice` (audio in, text out) |
+
+## Tool registry (what the agent can actually call)
+
+Low risk (runs immediately): `gmail_search`, `calendar_list`, `places_search`, `uber_ride_link`, `dining_links`.
+Medium risk (tap/voice confirm): `calendar_create`.
+High risk (in-app approval card): `gmail_send`.
+Partnership-gated (no self-serve API): direct Uber dispatch, direct OpenTable booking, Resy direct booking (opt-in unofficial `resyFindSlots`/`resyBookUnofficial` via `RESY_API_KEY` + `RESY_AUTH_TOKEN`).
 
 ## Run it
 
