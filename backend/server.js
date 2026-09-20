@@ -36,6 +36,14 @@ const app = express();
 app.use(express.json({ limit: '1mb' }));
 app.use(express.static(path.join(__dirname, '..')));
 
+// Serverless (Vercel) exports the app without awaiting the token boot-load,
+// so gate every request on it: first request waits, the rest pass through.
+let googleGate = null;
+app.use((req, res, next) => {
+  if (!googleGate) googleGate = googleReady();
+  googleGate.then(() => next(), () => next());
+});
+
 app.get('/api/health', (req, res) => {
   const out = { ok: true, time: new Date().toISOString(), llm: llmConfigured() ? env('LLM_PROVIDER', 'openai') : 'canned-fallback', connectors: {} };
   for (const [name, c] of Object.entries(connectors)) {
