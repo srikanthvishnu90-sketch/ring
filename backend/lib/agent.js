@@ -65,8 +65,11 @@ function llmConfigured() {
 }
 
 // Both providers normalize to { text, toolCalls: [{id, name, args}] }.
+// OPENAI_BASE_URL lets the OpenAI path point at any OpenAI-compatible
+// endpoint (e.g. Gemini's: https://generativelanguage.googleapis.com/v1beta/openai).
 async function callOpenAI(prompt) {
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+  const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
+  const res = await fetch(`${base}/chat/completions`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${env('OPENAI_API_KEY')}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
