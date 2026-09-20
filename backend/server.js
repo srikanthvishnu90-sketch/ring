@@ -75,12 +75,11 @@ app.post('/api/chat', async (req, res) => {
     // Approval gate: medium/high-risk calls are HELD as approval records —
     // never executed silently. The client renders them as approval cards and
     // resolves them via POST /api/approvals/:id/resolve.
-    const held = (reply.toolsUsed || [])
-      .filter((t) => t.risk !== 'low')
-      .map((t) => {
-        const rec = approvals.create({ toolName: t.name, args: t.args, userId, threadId });
-        return { id: rec.id, name: rec.tool, risk: rec.risk, args: rec.args };
-      });
+    const held = [];
+    for (const t of (reply.toolsUsed || []).filter((t) => t.risk !== 'low')) {
+      const rec = await approvals.create({ toolName: t.name, args: t.args, userId, threadId });
+      held.push({ id: rec.id, name: rec.tool, risk: rec.risk, args: rec.args });
+    }
     res.json({ ...reply, pendingApprovals: held, executed: held.length === 0 });
   } catch (e) {
     res.status(500).json({ error: e.message, code: e.code });
@@ -88,8 +87,8 @@ app.post('/api/chat', async (req, res) => {
 });
 
 // --- Approvals -----------------------------------------------------------
-app.get('/api/approvals', (req, res) => {
-  res.json(approvals.listPending(req.query.userId));
+app.get('/api/approvals', async (req, res) => {
+  res.json(await approvals.listPending(req.query.userId));
 });
 
 app.post('/api/approvals/:id/resolve', async (req, res) => {
@@ -102,15 +101,15 @@ app.post('/api/approvals/:id/resolve', async (req, res) => {
 });
 
 // --- Group threads -------------------------------------------------------
-app.get('/api/threads', (req, res) => res.json(threads.listThreads()));
+app.get('/api/threads', async (req, res) => res.json(await threads.listThreads()));
 
-app.post('/api/threads', (req, res) => {
+app.post('/api/threads', async (req, res) => {
   const { name, members } = req.body || {};
-  res.json(threads.createThread({ name, members }));
+  res.json(await threads.createThread({ name, members }));
 });
 
-app.get('/api/threads/:id/messages', (req, res) => {
-  const th = threads.getThread(req.params.id);
+app.get('/api/threads/:id/messages', async (req, res) => {
+  const th = await threads.getThread(req.params.id);
   if (!th) return res.status(404).json({ error: 'thread not found' });
   res.json(th.messages);
 });
@@ -126,8 +125,8 @@ app.post('/api/threads/:id/messages', async (req, res) => {
   }
 });
 
-app.get('/api/threads/:id/stream', (req, res) => {
-  const th = threads.getThread(req.params.id);
+app.get('/api/threads/:id/stream', async (req, res) => {
+  const th = await threads.getThread(req.params.id);
   if (!th) return res.status(404).json({ error: 'thread not found' });
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
@@ -140,7 +139,8 @@ app.get('/api/threads/:id/stream', (req, res) => {
 });
 
 // --- Google OAuth (Gmail + Calendar) -------------------------------------
-// Tokens stay server-side in lib/google.js (in-memory; Supabase for prod).
+// Tokens stay server-side in lib/google.js (Supabase ring_oauth_tokens,
+// file fallback for local dev).
 app.get('/auth/google', (req, res) => {
   const m = missing(['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_REDIRECT_URI']);
   if (m.length) return res.status(500).send('Google OAuth not configured — see .env.example');

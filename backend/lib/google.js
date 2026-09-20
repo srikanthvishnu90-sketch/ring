@@ -7,29 +7,12 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { env } = require('./config');
+const { ENABLED: USE_SUPABASE, sbRequest } = require('./supabase');
 
 const TOKEN_FILE = env('GOOGLE_TOKEN_FILE') || path.join(os.homedir(), '.ring', 'tokens.json');
-const SB_URL = env('SUPABASE_URL');
-const SB_KEY = env('SUPABASE_SERVICE_KEY');
 const SB_TABLE = 'ring_oauth_tokens';
-const USE_SUPABASE = !!(SB_URL && SB_KEY);
 
 const store = new Map(); // userId -> { access_token, refresh_token, expires_at, scope, token_type }
-
-async function sbRequest(pathname, opts = {}) {
-  const r = await fetch(`${SB_URL}/rest/v1${pathname}`, {
-    ...opts,
-    headers: {
-      apikey: SB_KEY,
-      Authorization: `Bearer ${SB_KEY}`,
-      'Content-Type': 'application/json',
-      ...(opts.headers || {}),
-    },
-  });
-  const text = await r.text();
-  if (!r.ok) throw new Error(`Supabase ${r.status}: ${text.slice(0, 200)}`);
-  return text ? JSON.parse(text) : null;
-}
 
 async function loadFromSupabase() {
   const rows = await sbRequest(`/${SB_TABLE}?select=user_id,access_token,refresh_token,expires_at,scope,token_type`);
