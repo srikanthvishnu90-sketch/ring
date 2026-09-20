@@ -51,6 +51,16 @@ cd backend && npm install && npm start
 With no keys set everything still runs: connectors report `missing`, the
 agent falls back to canned responses, and deep links carry the demo.
 
+## Deploy (phone preview)
+
+The repo is Vercel-ready (`vercel.json` + `api/index.js` serverless entry):
+
+1. In the [Vercel dashboard](https://vercel.com/new), import
+   `srikanthvishnu90-sketch/ring` — auto-deploys from `main`.
+2. Add env vars from `.env.example` as needed (works with none set).
+3. Open the deployment URL on your phone — the app detects the backend
+   automatically and routes chat through the real agent loop.
+
 ## Notes
 
 - All data is sample data. Placeholders like `[Venue name]`, `[Friend]`,

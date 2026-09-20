@@ -11,7 +11,7 @@ const path = require('path');
 const express = require('express');
 require('dotenv').config();
 
-const { env } = require('./lib/config');
+const { env, missing } = require('./lib/config');
 const { TOOLS, runAgentTurn, llmConfigured } = require('./lib/agent');
 
 const connectors = {
@@ -66,10 +66,55 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
+// Google OAuth: /auth/google starts it, /auth/google/callback finishes it.
+// Tokens stay server-side (in-memory here; persist to Supabase for prod).
+// The gmail/calendar connectors exchange these per user.
+const tokenStore = new Map(); // userId -> token response
+app.get('/auth/google', (req, res) => {
+  const m = missing(['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_REDIRECT_URI']);
+  if (m.length) return res.status(500).send('Google OAuth not configured — see .env.example');
+  const q = new URLSearchParams({
+    client_id: env('GOOGLE_CLIENT_ID'),
+    redirect_uri: env('GOOGLE_REDIRECT_URI'),
+    response_type: 'code',
+    scope: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/calendar.events',
+    access_type: 'offline',
+    prompt: 'consent',
+  });
+  res.redirect('https://accounts.google.com/o/oauth2/v2/auth?' + q.toString());
+});
+app.get('/auth/google/callback', async (req, res) => {
+  const { code } = req.query;
+  if (!code) return res.status(400).send('Missing authorization code');
+  try {
+    const r = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        code,
+        client_id: env('GOOGLE_CLIENT_ID'),
+        client_secret: env('GOOGLE_CLIENT_SECRET'),
+        redirect_uri: env('GOOGLE_REDIRECT_URI'),
+        grant_type: 'authorization_code',
+      }),
+    });
+    const tok = await r.json();
+    if (!r.ok) throw new Error(tok.error_description || 'token exchange failed');
+    tokenStore.set('local', tok); // TODO: tie to real user id + Supabase
+    res.send('<p style="font-family:sans-serif">Gmail + Calendar connected. Close this tab and return to the app.</p>');
+  } catch (e) {
+    res.status(500).send('OAuth failed: ' + e.message);
+  }
+});
+
 // Stub: ring/phone posts audio, gets back the agent's turn. STT hookup next.
 app.post('/api/voice', (req, res) => {
   res.status(501).json({ error: 'voice relay not wired yet — see docs/architecture.md' });
 });
 
-const PORT = env('PORT', '3000');
-app.listen(PORT, () => console.log(`Ring backend live → http://localhost:${PORT}  (api: /api/health)`));
+module.exports = app;
+module.exports.tokenStore = tokenStore;
+if (require.main === module) {
+  const PORT = env('PORT', '3000');
+  app.listen(PORT, () => console.log(`Ring backend live → http://localhost:${PORT}  (api: /api/health)`));
+}

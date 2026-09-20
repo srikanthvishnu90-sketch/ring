@@ -719,6 +719,7 @@ function openSheet(kind,arg){
       <div class="chips" style="margin-right:0;padding-right:0;flex-wrap:wrap">${["When I leave work, text Mom I'm on my way","If it's going to rain, remind me before I leave","Every Sunday night, plan my week"].map(x=>`<button type="button" class="chip" style="height:auto;min-height:36px;padding:8px 12px;white-space:normal;text-align:left;font-size:13px" data-ex="${esc(x)}">${esc(x)}</button>`).join('')}</div>
       <button class="btn btn-silver" type="submit" id="cw-go">Create workflow</button></form>`,
     conns:()=>`<h3 id="sheet-title">Connectors</h3><p>Apps your agent can use. It only touches what you connect.</p>
+      ${backendStatusLine()}
       <div class="card" style="overflow:hidden">${CONNS.map(c=>`<div class="conn-row"><span class="bubble-icon bi-brown">${I[c.i]}</span><div class="rt"><b>${c.n}</b><span>${c.d}</span></div><button class="switch" role="switch" aria-checked="${isConn(c.k)}" aria-label="${c.n}" data-cs="${c.k}"></button></div>`).join('')}</div>`,
     signout:()=>`<h3 id="sheet-title">Sign out?</h3><p>Your ring stays paired to this phone. Sign back in anytime.</p>
       <div style="display:flex;flex-direction:column;gap:8px"><button class="btn btn-silver" id="do-signout">Sign out</button><button class="btn btn-ghost" data-close>Cancel</button></div>`,
@@ -757,6 +758,33 @@ function closeSheet(){
 }
 $('#scrim').onclick=closeSheet;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#sheet').classList.contains('on'))closeSheet();else if(!$('#voice').classList.contains('hidden'))closeVoice(true)}});
+
+/* ================= BACKEND API ================= */
+// When served by backend/server.js (same origin), chat goes through the real
+// agent loop and approvals can arrive from the API. Opened as a plain static
+// file, everything falls back to the on-device sample behavior.
+const API={on:false,health:null};
+async function apiInit(){
+  try{
+    const r=await fetch('/api/health',{cache:'no-store'});
+    if(r.ok){API.on=true;API.health=await r.json();}
+  }catch(e){/* static file — stay on sample behavior */}
+}
+function approvalFromTool(p){
+  const a=p.args||{};
+  if(p.name==='gmail_send')return{role:'approval',status:'pending',book:`Send email to ${a.to}`,text:(a.subject?a.subject+': ':'')+(a.body||''),to:a.to||''};
+  if(p.name==='calendar_create')return{role:'approval',status:'pending',book:`Add to calendar: ${a.summary||'Event'}`,text:`${a.start||''}${a.location?' · '+a.location:''}`,to:'Calendar'};
+  return{role:'approval',status:'pending',book:p.name,text:JSON.stringify(a).slice(0,140),to:''};
+}
+function backendStatusLine(){
+  if(!API.on||!API.health)return '';
+  const c=API.health.connectors||{};
+  const map={mail:'gmail',calendar:'calendar',rides:'uber',dining:'dining'};
+  const bits=Object.entries(map).map(([k,bk])=>{const s=c[bk];const label=(CONNS.find(x=>x.k===k)||{n:k}).n;
+    return `${label}: ${s?(s.ok?'live':'needs key'):'—'}`;});
+  const llm=API.health.llm&&API.health.llm!=='canned-fallback'?'live ('+esc(API.health.llm)+')':'preview mode';
+  return `<div class="card" style="padding:12px 14px;margin-bottom:12px"><span style="font-size:12.5px;color:var(--muted)">Backend · agent ${llm} — ${bits.join(' · ')}</span></div>`;
+}
 
 /* ================= CHAT ================= */
 S.chat=[
@@ -844,6 +872,17 @@ async function send(text){
   S.busy=true;
   const msg={role:'agent',text:'Thinking…',thinking:true};S.chat.push(msg);renderChat();scrollChat();
   const idx=S.chat.length-1;
+  if(API.on){
+    try{
+      const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+      if(r.ok){
+        const data=await r.json();
+        msg.thinking=false;msg.text=data.text||'Done.';
+        (data.pendingApprovals||[]).forEach(p=>S.chat.push(approvalFromTool(p)));
+        S.busy=false;saveState();renderChat();scrollChat();return;
+      }
+    }catch(e){/* fall through to on-device sample */}
+  }
   const sample=await getSample();
   if(!sample){
     await new Promise(r=>setTimeout(r,600));
@@ -1055,6 +1094,7 @@ const endSplash=()=>{if(splash.classList.contains('out'))return;splash.classList
 setTimeout(endSplash,1900);
 splash.addEventListener('click',endSplash);
 getSample();
+apiInit();
 })();
 </script>
 </body>
