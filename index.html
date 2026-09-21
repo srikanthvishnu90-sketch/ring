@@ -31,6 +31,32 @@
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--black:#000000;--text:#FFFFFF}}
 :root[data-theme="dark"]{--black:#000000;--text:#FFFFFF}
+/* ---------- light theme ---------- */
+:root[data-theme="light"]{
+  --black:#F6F3EE; --text:#171310; --surface:#FFFFFF; --surface-2:#F1ECE5;
+  --brown:#2B1D14; --brown-2:#EFE7DC; --brown-line:#E2D6C4; --brown-hi:#D8C9B4;
+  --silver:#4A443D; --silver-hi:#171310;
+  --silver-grad:linear-gradient(135deg,#2B1D14 0%,#4A3222 100%);
+  --silver-card:linear-gradient(158deg,#FFFFFF 0%,#F1ECE5 100%);
+  --brown-card:linear-gradient(158deg,#2B1D14 0%,#1C110C 100%);
+  --sage:#2F5236; --sage-dark:#2F5236;
+  --muted:#6E655B; --muted-2:#8A7F72;
+  --line:rgba(23,19,16,.12); --line-soft:rgba(23,19,16,.07);
+  --ink:#FFFFFF;
+  color-scheme:light;
+}
+:root[data-theme="light"] .msg-user{background:#2B1D14;color:#fff}
+:root[data-theme="light"] .btn-silver{color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 10px 28px rgba(43,29,20,.18)}
+:root[data-theme="light"] .btn-brown{background:#2B1D14;color:#fff}
+:root[data-theme="light"] .tabbar{background:rgba(246,243,238,.94)}
+:root[data-theme="light"] .chat-head{background:var(--black)}
+:root[data-theme="light"] .composer{background:var(--black)}
+:root[data-theme="light"] .badge-silver{color:#fff}
+:root[data-theme="light"] .pill-sage{color:#2F5236;background:rgba(47,82,54,.12)}
+:root[data-theme="light"] .sheet{background:#FBF9F6}
+:root[data-theme="light"] .splash{background:radial-gradient(85% 50% at 28% 16%,rgba(43,29,20,.06) 0%,rgba(43,29,20,0) 70%),radial-gradient(120% 80% at 50% 44%,#EFE7DC 0%,#E7DDD0 48%,#D9CBB6 100%)}
+:root[data-theme="light"] .voice{background:radial-gradient(70% 45% at 50% 42%,rgba(43,29,20,.10) 0%,rgba(43,29,20,0) 100%),#F6F3EE}
+:root[data-theme="light"] .onb{background:var(--black)}
 html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;height:100%;overflow:hidden;background:var(--black);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
@@ -140,6 +166,12 @@ a{color:inherit}
 .msg-user{align-self:flex-end;max-width:80%;padding:11px 16px;border-radius:20px 20px 6px 20px;background:var(--brown);font-size:15px;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}
 .msg-agent{font-size:15px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
 .msg-agent.thinking{color:var(--muted);font-style:italic}
+.msg-agent.streaming::after{content:'▍';margin-left:2px;color:var(--silver);animation:caretBlink 1s steps(1) infinite}
+@keyframes caretBlink{50%{opacity:0}}
+.msg-in{animation:msgIn .35s cubic-bezier(.2,.7,.2,1) both}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.dots::after{content:'';animation:dots 1.2s steps(4) infinite}
+@keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
 .agent-tag{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted-2);margin-bottom:4px}
 .approval{padding:16px;display:flex;flex-direction:column;gap:12px}
 .approval .k{font-size:13px;font-weight:600;color:rgba(22,17,14,.72)}
@@ -285,6 +317,7 @@ a{color:inherit}
           <span id="chat-mark"></span>
           <h1 class="h1" style="font-size:28px">Chat</h1>
         </div>
+        <button class="iconbtn" id="mute" aria-label="Toggle voice replies"></button>
         <button class="iconbtn" id="new-chat" aria-label="New chat"><span data-i="plus"></span></button>
       </div>
       <div class="msgs" id="msgs" aria-live="polite"></div>
@@ -368,6 +401,8 @@ const I={
   fork18:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 1.5-3 4-3 7h3v11"/></svg>',
   doc:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h5"/></svg>',
   moon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  vol:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>',
+  volx:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="m17 9 5 6M22 9l-5 6"/></svg>',
 };
 const mark=(sz,c,dot)=>`<svg width="${sz}" height="${sz}" viewBox="0 0 120 120" aria-hidden="true"><path d="M 97.59 46.32 A 40 40 0 1 1 73.68 22.41" fill="none" stroke="${c}" stroke-width="13"/><circle cx="88.28" cy="31.72" r="7.5" fill="${dot||c}"/></svg>`;
 function paintIcons(root=document){root.querySelectorAll('[data-i]').forEach(el=>{if(!el.dataset.done){el.innerHTML=I[el.dataset.i]||'';el.dataset.done=1;el.style.display='inline-flex'}})}
@@ -390,6 +425,7 @@ const ringArt=(size,charge)=>{
 
 let toastT;
 function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('on'),2200)}
+function setTheme(t){S.theme=t==='light'?'light':'dark';store.set('theme',S.theme);document.documentElement.dataset.theme=S.theme}
 
 /* ================= state ================= */
 const now=new Date();
@@ -401,6 +437,7 @@ const timeStr=d=>d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'
 const S={
   tab:'home',
   charge:82,
+  theme:store.get('theme','dark'),
   perms:store.get('perms',{messages:true,calendar:true,location:true,confirm:true}),
   plan:store.get('plan','plus'),
   listen:'tap',
@@ -426,7 +463,8 @@ const S={
     {icon:'cal',title:'Accept "Team sync" · Mon 9 AM',detail:"No conflicts, and you've accepted the last 6.",from:'Calendar'},
   ]),
   when:'now', pickIdx:0,
-  chat:[], busy:false
+  chat:[], busy:false,
+  muted:store.get('muted',false),
 };
 const saveState=()=>{store.set('perms',S.perms);store.set('plan',S.plan);store.set('handled',S.handled);store.set('memory',S.memory);store.set('conns',S.conns);store.set('wfs',S.wfs);store.set('pending',S.pending);updateBadge&&updateBadge()};
 
@@ -460,7 +498,7 @@ function go(tab){
   if(tab==='home')renderHome();
   if(tab==='groups')renderGroups();
   if(tab==='agent')renderAgent();
-  if(tab==='profile')renderProfile();
+  if(tab==='profile'){renderProfile();if(signedIn())loadMemories().then(()=>{if(S.tab==='profile')renderProfile()})}
   updateBadge();
   if(tab==='chat'){renderChat();setTimeout(()=>SC().scrollTo({top:SC().scrollHeight,behavior:'instant'}),0)}
   else SC().scrollTo({top:0,behavior:'instant'});
@@ -648,11 +686,16 @@ function renderProfile(){
   </section>
 
   <section class="card-brown" style="overflow:hidden" aria-label="Settings">
-    ${nav('memory','What your agent remembers',S.memory.length+' things')}
+    ${nav('memory','What your agent remembers',(signedIn()?MEM.length:S.memory.length)+' things')}
     ${nav('listen','Listening and privacy','Double-tap only')}
+    ${nav('theme','Appearance',S.theme==='light'?'Light':'Dark')}
     ${nav('plan','Plan and billing',planName)}
     ${nav('replay','Replay ring setup','')}
   </section>
+
+  ${signedIn()?`<section class="card" style="overflow:hidden" aria-label="Privacy">
+    ${nav('privacy','Privacy and data','Export or delete')}
+  </section>`:''}
 
   <section class="card" style="overflow:hidden" aria-label="Account">
     ${nav('signout','Sign out','', 'color:#E8A598')}
@@ -675,6 +718,11 @@ function bindCommon(root){
 
 /* ================= SHEETS ================= */
 let sheetReturn=null,scrimT;
+let MEM=[];
+async function loadMemories(){
+  if(!signedIn())return;
+  try{const r=await apiFetch('/api/memories');if(r.ok)MEM=await r.json()}catch(e){}
+}
 function openSheet(kind,arg){
   sheetReturn=document.activeElement;
   const b=$('#sheet-body');
@@ -691,7 +739,15 @@ function openSheet(kind,arg){
       ${planOpt('plus','Plus','$12','Adds messages and calendar')}
       ${planOpt('pro','Pro','$15','Adds memory across everything and priority speed')}</div>
       <div style="height:16px"></div><button class="btn btn-silver" data-close>Done</button>`,
-    memory:()=>`<h3 id="sheet-title">What your agent remembers</h3><p>Things it learned from your chats. Forget anything, anytime.</p><div class="card" id="mem-list">${S.memory.map((m,i)=>`<div class="list-row"><div class="rt"><b>${esc(m)}</b></div><button class="link" data-forget="${i}" style="color:var(--muted)">Forget</button></div>`).join('')||'<div class="list-row"><div class="rt"><span>Nothing saved.</span></div></div>'}</div>`,
+    memory:()=>{
+      const signed=signedIn();
+      const rows=signed
+        ? (MEM.map(m=>`<div class="list-row"><div class="rt"><b>${esc(m.key)}</b><span>${esc(m.value)}</span></div><button class="link" data-memdel="${esc(m.id)}" style="color:var(--muted)">Forget</button></div>`).join('')||'<div class="list-row"><div class="rt"><span>Nothing saved yet — I’ll remember things you tell me.</span></div></div>')
+        : (S.memory.map((m,i)=>`<div class="list-row"><div class="rt"><b>${esc(m)}</b></div><button class="link" data-forget="${i}" style="color:var(--muted)">Forget</button></div>`).join('')||'<div class="list-row"><div class="rt"><span>Nothing saved.</span></div></div>');
+      const add=signed?`<form id="mem-add" style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><input id="mem-k" placeholder="Key (e.g. favorite food)" aria-label="Memory key" style="flex:1;min-width:120px;height:48px;padding:0 14px;border-radius:14px;border:1px solid rgba(201,204,209,.28);background:var(--surface);font-size:15px"><input id="mem-v" placeholder="Value" aria-label="Memory value" style="flex:2;min-width:120px;height:48px;padding:0 14px;border-radius:14px;border:1px solid rgba(201,204,209,.28);background:var(--surface);font-size:15px"><button class="btn btn-silver btn-sm" style="width:auto;padding:0 16px" type="submit">Add</button></form>`:'';
+      const note=signed?'Things it learned from your chats, saved to your account. Forget anything, anytime.':'Things it learned from your chats. Forget anything, anytime. Sign in to keep them on every device.';
+      return `<h3 id="sheet-title">What your agent remembers</h3><p>${note}</p><div class="card" id="mem-list">${rows}</div>${add}`;
+    },
     find:()=>`<h3 id="sheet-title">Finding your ring</h3><p>Playing a sound and flashing its light. Last seen at home, 2 minutes ago.</p>
       <div style="display:flex;justify-content:center;padding:10px 0 24px"><div class="voice-orb" style="width:140px;height:140px"><i class="wave"></i><i class="wave"></i><i class="wave"></i>${mark(56,'#C9CCD1','#A9C2A6')}</div></div>
       <button class="btn btn-silver" data-close>I found it</button>`,
@@ -729,9 +785,18 @@ function openSheet(kind,arg){
         <input id="ng-members" placeholder="Members, comma-separated" aria-label="Members" autocomplete="off" style="height:48px;padding:0 18px;border-radius:24px;border:1px solid rgba(201,204,209,.28);background:var(--surface);font-size:16px;color:#fff">
         <button class="btn btn-brown" type="submit">Create group</button>
       </form>`,
-    conns:()=>`<h3 id="sheet-title">Connectors</h3><p>Apps your agent can use. It only touches what you connect.</p>
-      ${backendStatusLine()}
+    conns:()=>`<h3 id="sheet-title">Connectors</h3><p>Apps your agent can use. It only touches what you connect.</p>      ${backendStatusLine()}
       <div class="card" style="overflow:hidden">${CONNS.map(c=>`<div class="conn-row"><span class="bubble-icon bi-brown">${I[c.i]}</span><div class="rt"><b>${c.n}</b><span>${c.d}</span></div><button class="switch" role="switch" aria-checked="${isConn(c.k)}" aria-label="${c.n}" data-cs="${c.k}"></button></div>`).join('')}</div>`,
+    theme:()=>`<h3 id="sheet-title">Appearance</h3><p>Dark is the classic ring look; light is easier in bright sun.</p>
+      <div role="radiogroup" aria-label="Appearance">
+      <button class="opt" role="radio" aria-checked="${S.theme==='dark'}" data-theme="dark"><span class="radio"></span><span class="rt"><b>Dark</b><span>Classic</span></span></button>
+      <button class="opt" role="radio" aria-checked="${S.theme==='light'}" data-theme="light"><span class="radio"></span><span class="rt"><b>Light</b><span>Bright</span></span></button></div>
+      <div style="height:16px"></div><button class="btn btn-ghost" data-close>Done</button>`,
+    privacy:()=>`<h3 id="sheet-title">Privacy and data</h3><p>Everything your agent stored about you — export it or wipe it, anytime.</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button class="btn btn-silver" id="pv-export">Download my data</button>
+        <button class="btn btn-ghost" id="pv-del" style="color:#E8A598">Delete my account</button>
+      </div>`,
     signout:()=>`<h3 id="sheet-title">Sign out?</h3><p>Your ring stays paired to this phone. Sign back in anytime.</p>
       <div style="display:flex;flex-direction:column;gap:8px"><button class="btn btn-silver" id="do-signout">Sign out</button><button class="btn btn-ghost" data-close>Cancel</button></div>`,
     editText:()=>{const a=S.chat[arg];return `<h3 id="sheet-title">Edit before sending</h3><p>Change the text to Sam, then approve it.</p><label for="edit-t" class="sr">Message to Sam</label><textarea id="edit-t">${esc(a.text)}</textarea><div style="height:12px"></div><button class="btn btn-silver" id="save-edit">Save</button>`},
@@ -743,6 +808,18 @@ function openSheet(kind,arg){
   b.querySelectorAll('[data-ask2]').forEach(x=>x.onclick=()=>{closeSheet();go('chat');send(x.dataset.ask2)});
   b.querySelectorAll('[data-plan]').forEach(x=>x.onclick=()=>{S.plan=x.dataset.plan;saveState();b.querySelectorAll('[data-plan]').forEach(y=>y.setAttribute('aria-checked',y===x));renderProfile()});
   b.querySelectorAll('[data-forget]').forEach(x=>x.onclick=()=>{S.memory.splice(+x.dataset.forget,1);saveState();openSheet('memory');renderProfile();toast('Forgotten')});
+  b.querySelectorAll('[data-memdel]').forEach(x=>x.onclick=async ()=>{
+    try{await apiFetch('/api/memories/'+encodeURIComponent(x.dataset.memdel),{method:'DELETE'})}catch(e){}
+    await loadMemories();openSheet('memory');if(S.tab==='profile')renderProfile();toast('Forgotten');
+  });
+  const ma=$('#mem-add');
+  if(ma)ma.onsubmit=async e=>{e.preventDefault();
+    const k=$('#mem-k').value.trim(),v=$('#mem-v').value.trim();
+    if(!k||!v)return;
+    try{await apiFetch('/api/memories',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:k,value:v})})}
+    catch(err){toast('Could not save — try again')}
+    await loadMemories();openSheet('memory');if(S.tab==='profile')renderProfile();
+  };
   const co=$('#confirm-off');if(co)co.onclick=()=>{S.perms.confirm=false;saveState();closeSheet();renderProfile();toast('Your agent will act without asking')};
   const rp=$('#do-replay');if(rp)rp.onclick=()=>{closeSheet();store.set('onboarded',false);startOnboarding()};
   const ps=$('#psearch');if(ps)ps.onsubmit=e=>{e.preventDefault();const q=$('#pq').value.trim();if(!q)return;closeSheet();go('chat');send(q)};
@@ -759,7 +836,32 @@ function openSheet(kind,arg){
   b.querySelectorAll('[data-ex]').forEach(x=>x.onclick=()=>{$('#cw-t').value=x.dataset.ex;$('#cw-t').focus()});
   const cw=$('#cw-form');if(cw)cw.onsubmit=async e=>{e.preventDefault();const t=$('#cw-t').value.trim();if(!t){$('#cw-t').focus();return}const g=$('#cw-go');g.disabled=true;g.textContent='Setting it up…';closeSheet();toast('Setting up your workflow');await createWorkflow(t)};
   b.querySelectorAll('[data-cs]').forEach(x=>x.onclick=()=>{const k=x.dataset.cs;const v=!isConn(k);setConn(k,v);x.setAttribute('aria-checked',v);toast(connName(k)+(v?' connected':' disconnected'));if(S.tab==='agent')renderAgent();if(S.tab==='profile')renderProfile()});
-  const so=$('#do-signout');if(so)so.onclick=()=>{closeSheet();S.account=null;store.set('account',null);setTimeout(()=>showAuth('welcome'),250)};
+  const so=$('#do-signout');if(so)so.onclick=()=>{closeSheet();tokenStore.set(null);S.account=null;store.set('account',null);setTimeout(()=>showAuth('welcome'),250)};
+  b.querySelectorAll('[data-theme]').forEach(x=>x.onclick=()=>{setTheme(x.dataset.theme);b.querySelectorAll('[data-theme]').forEach(y=>y.setAttribute('aria-checked',String(y===x)));if(S.tab==='profile')renderProfile()});
+  const pe=$('#pv-export');
+  if(pe)pe.onclick=async ()=>{
+    pe.disabled=true;pe.textContent='Preparing…';
+    try{
+      const r=await apiFetch('/api/export');
+      if(!r.ok)throw new Error('export failed');
+      const blob=await r.blob();
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ring-data.json';document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),500);
+      toast('Downloaded');
+    }catch(e){toast('Could not export — try again')}
+    pe.disabled=false;pe.textContent='Download my data';
+  };
+  const pd=$('#pv-del');
+  if(pd)pd.onclick=async ()=>{
+    if(pd.dataset.armed){
+      pd.disabled=true;pd.textContent='Deleting…';
+      try{await apiFetch('/api/account',{method:'DELETE'})}catch(e){}
+      tokenStore.set(null);S.account=null;store.set('account',null);MEM=[];
+      closeSheet();setTimeout(()=>showAuth('welcome'),250);toast('Account deleted');
+      return;
+    }
+    pd.dataset.armed='1';pd.textContent='Tap again to confirm delete';
+    setTimeout(()=>{if(document.body.contains(pd)){delete pd.dataset.armed;pd.textContent='Delete my account'}},4000);
+  };
   const se=$('#save-edit');if(se)se.onclick=()=>{const t=$('#edit-t').value.trim();if(t){S.chat[arg].text=t;renderChat()}closeSheet()};
   const first=b.querySelector('input,textarea,button');if(first)setTimeout(()=>first.focus(),320);
 }
@@ -776,6 +878,26 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#sheet').clas
 // agent loop and approvals can arrive from the API. Opened as a plain static
 // file, everything falls back to the on-device sample behavior.
 const API={on:false,health:null};
+/* ---- auth token + authed fetch ---- */
+const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtqd3Zxd2t1cHJmaGZ0bWZmbG51Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5MzA4NTYsImV4cCI6MjEwNTUwNjg1Nn0._ZuzR2874_yOiK8kXHsNVZ773ld3F3jqC-H-34WPO-4'; // Supabase anon key, inlined at build (public key, safe in browser)
+const SB_REF='kjwvqwkuprfhftmfflnu';
+const tokenStore={
+  get(){try{return localStorage.getItem('ring_token')}catch(e){return null}},
+  set(t){try{if(t)localStorage.setItem('ring_token',t);else localStorage.removeItem('ring_token')}catch(e){}},
+};
+function signedIn(){return !!tokenStore.get()}
+function authHeaders(h={}){const t=tokenStore.get();return t?{...h,'Authorization':'Bearer '+t}:h}
+async function apiFetch(url,opts={}){
+  const headers={...(opts.headers||{})};
+  const t=tokenStore.get();
+  if(t)headers['Authorization']='Bearer '+t;
+  const r=await fetch(url,{...opts,headers});
+  if(r.status===401&&t){ // token expired/revoked — drop back to signed-out
+    tokenStore.set(null);
+    if(S.account&&S.account.email){S.account=null;store.set('account',null);if(S.tab==='profile')renderProfile()}
+  }
+  return r;
+}
 async function apiInit(){
   try{
     const r=await fetch('/api/health',{cache:'no-store'});
@@ -802,9 +924,9 @@ function backendStatusLine(){
 /* ================= GROUPS ================= */
 // Group threads live on the backend (/api/threads). Mention @ring and the
 // agent joins with full thread context; its held approvals land in-thread.
-let G={threads:[],open:null,es:null};
+let G={threads:[],open:null,es:null,ws:null,seen:new Set()};
 async function apiJSON(url,opts){
-  const r=await fetch(url,{headers:{'Content-Type':'application/json'},...opts});
+  const r=await apiFetch(url,{headers:{'Content-Type':'application/json'},...opts});
   if(!r.ok)throw new Error('request failed');
   return r.json();
 }
@@ -848,22 +970,46 @@ async function createThread(){
     G.open=t.id;go('groups');
   }catch(e){toast('Could not create group')}
 }
-function closeThreadStream(){if(G.es){G.es.close();G.es=null}}
-function closeThread(){closeThreadStream();G.open=null}
+function closeThreadStream(){
+  if(G.es){try{G.es.close()}catch(e){}G.es=null}
+  if(G.ws){try{G.ws.close()}catch(e){}G.ws=null}
+}
+function closeThread(){closeThreadStream();G.open=null;G.seen=new Set()}
+function onThreadEvent(ev){
+  if(!ev||ev.type!=='message'||S.tab!=='groups'||!G.open)return;
+  const id=ev.message&&ev.message.id;
+  if(id){if(G.seen.has(id))return;G.seen.add(id)}
+  const box=$('#g-msgs');
+  if(box){box.insertAdjacentHTML('beforeend',gMsgHTML(ev.message));box.scrollTop=box.scrollHeight;paintIcons(box);bindGApprovals(box)}
+}
+/* Cross-instance realtime via Supabase Broadcast (raw WebSocket, no library),
+   with the per-instance SSE stream as fallback when the socket can't join. */
 function openThreadStream(){
   closeThreadStream();
   if(!G.open||!API.on)return;
   try{
-    G.es=new EventSource(`/api/threads/${G.open}/stream`);
-    G.es.onmessage=e=>{
-      try{
-        const ev=JSON.parse(e.data);
-        if(ev.type==='message'&&S.tab==='groups'&&G.open){
-          const box=$('#g-msgs');
-          if(box){box.insertAdjacentHTML('beforeend',gMsgHTML(ev.message));box.scrollTop=box.scrollHeight;paintIcons(box);bindGApprovals(box)}
-        }
-      }catch(err){}
+    const ws=new WebSocket(`wss://${SB_REF}.supabase.co/realtime/v1/websocket?apikey=${SB_ANON}&vsn=1.0.0`);
+    G.ws=ws;
+    const topic=`realtime:thread:${G.open}`;
+    let joined=false;
+    const giveUp=setTimeout(()=>{if(!joined){try{ws.close()}catch(e){}sseFallback()}},7000);
+    ws.onopen=()=>{ws.send(JSON.stringify({topic,event:'phx_join',payload:{config:{broadcast:{ack:false,self:false},presence:{key:''},postgres_changes:[]}},ref:'1'}))};
+    ws.onmessage=raw=>{
+      let m;try{m=JSON.parse(raw.data)}catch(e){return}
+      if(m.event==='phx_reply'){if(m.payload&&m.payload.status==='ok'){joined=true;clearTimeout(giveUp)}return}
+      if(m.event==='broadcast'&&m.payload&&m.payload.event==='message')onThreadEvent(m.payload.payload);
     };
+    ws.onerror=()=>{clearTimeout(giveUp);if(!joined)sseFallback()};
+    ws.onclose=()=>{clearTimeout(giveUp)};
+    const hb=setInterval(()=>{if(ws.readyState===1){ws.send(JSON.stringify({topic:'phoenix',event:'heartbeat',payload:{},ref:String(Date.now())}))}else clearInterval(hb)},25000);
+  }catch(e){sseFallback()}
+}
+function sseFallback(){
+  if(!G.open||!API.on||G.es)return;
+  try{
+    G.es=new EventSource(`/api/threads/${G.open}/stream`);
+    G.es.onmessage=e=>{try{onThreadEvent(JSON.parse(e.data))}catch(err){}};
+    G.es.onerror=()=>{try{G.es.close()}catch(x){}G.es=null};
   }catch(e){}
 }
 async function renderGroups(){
@@ -882,6 +1028,7 @@ async function renderGroups(){
     const t=G.threads.find(x=>x.id===G.open)||{name:'Group'};
     let msgs=[];
     try{msgs=await apiJSON(`/api/threads/${G.open}/messages`)}catch(e){}
+    G.seen=new Set(msgs.map(m=>m.id).filter(Boolean));
     v.innerHTML=head.replace('>Groups</h1>',`>${esc(t.name)}</h1>`)+`
       <div style="margin:-14px 0 4px"><button class="chip" id="g-back" style="height:32px;font-size:13px">‹ All groups</button></div>
       <div class="msgs" id="g-msgs" style="min-height:40vh" aria-live="polite">${msgs.map(gMsgHTML).join('')}</div>
@@ -908,14 +1055,21 @@ S.chat=[
 const SUGGEST=['Plan my evening','Catch me up on texts',"What's tomorrow?",'Remind me to call Mom at 9'];
 function renderChat(){
   $('#chat-mark').innerHTML=mark(22,'#C9CCD1','#A9C2A6');
+  const mb=$('#mute');
+  if(mb){mb.innerHTML=I[S.muted?'volx':'vol'];mb.setAttribute('aria-label',S.muted?'Unmute voice replies':'Mute voice replies');
+    mb.onclick=()=>{S.muted=!S.muted;store.set('muted',S.muted);mb.innerHTML=I[S.muted?'volx':'vol'];if(S.muted&&'speechSynthesis'in window){try{speechSynthesis.cancel()}catch(e){}}toast(S.muted?'Voice replies off':'Voice replies on')}};
   const box=$('#msgs');
   box.innerHTML='<div class="chat-day">Today</div>'+S.chat.map((m,i)=>{
-    if(m.role==='user')return `<div class="msg-user">${esc(m.text)}</div>`;
-    if(m.role==='agent')return `<div><div class="agent-tag">${mark(12,'#8F857D')}Agent</div><div class="msg-agent${m.thinking?' thinking':''}" data-mi="${i}">${esc(m.text)}</div></div>`;
-    if(m.role==='places')return `<div style="display:flex;flex-direction:column;gap:8px">${m.items.map(p=>`<button class="card-brown" data-toast="Opening walking directions" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;text-align:left;width:100%;border-radius:16px"><div class="rt"><b class="serif" style="font-size:18px;font-weight:400">${esc(p.name)}</b><span>${esc(p.kind)}</span></div><div class="metric"><b>${p.mins}</b><span>min walk</span></div></button>`).join('')}</div>`;
+    if(m.role==='user')return `<div class="msg-user msg-in">${esc(m.text)}</div>`;
+    if(m.role==='agent'){
+      const cls='msg-agent'+(m.thinking?' thinking':'')+(m.streaming?' streaming':'');
+      const txt=(m.streaming&&!m.text)?'<span class="dots">Thinking</span>':esc(m.text);
+      return `<div class="msg-in"><div class="agent-tag">${mark(12,'#8F857D')}Agent</div><div class="${cls}" data-mi="${i}">${txt}</div></div>`;
+    }
+    if(m.role==='places')return `<div class="msg-in" style="display:flex;flex-direction:column;gap:8px">${m.items.map(p=>`<button class="card-brown" data-toast="Opening walking directions" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;text-align:left;width:100%;border-radius:16px"><div class="rt"><b class="serif" style="font-size:18px;font-weight:400">${esc(p.name)}</b><span>${esc(p.kind)}</span></div><div class="metric"><b>${p.mins}</b><span>min walk</span></div></button>`).join('')}</div>`;
     if(m.role==='approval'){
       const done=m.status==='done';
-      return `<section class="${done?'card':'card-silver'} approval${done?' done':''}" aria-label="${done?'Done':'Needs your OK'}">
+      return `<section class="${done?'card':'card-silver'} approval${done?' done':''} msg-in" aria-label="${done?'Done':'Needs your OK'}">
         <div class="k">${done?'Done':'Needs your OK'}</div>
         <div class="li"><span style="color:${done?'var(--sage)':'#22140F'};display:inline-flex">${done?I.check:I.cal}</span><span>${esc(m.book)}</span></div>
         <div class="li"><span style="color:${done?'var(--sage)':'#22140F'};display:inline-flex">${done?I.check:I.msg}</span><span>Text ${esc(m.to)}: "${esc(m.text)}"</span></div>
@@ -935,7 +1089,7 @@ function approve(i){
   const a=S.chat[i];
   // API-held approvals execute server-side on resolve; local ones stay local.
   if(a.approvalId&&API.on){
-    fetch(`/api/approvals/${a.approvalId}/resolve`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({decision:'approve'})}).catch(()=>{});
+    fetch(`/api/approvals/${a.approvalId}/resolve`,{method:'POST',headers:authHeaders({'Content-Type':'application/json'}),body:JSON.stringify({decision:'approve'})}).catch(()=>{});
   }
   a.status='done';
   const t=timeStr(new Date());
@@ -976,6 +1130,38 @@ ${hist}
 
 Reply as the Agent to the user's last message.`;
 }
+/* Token-streaming chat. Returns true when the stream completed; throws when
+   the caller should fall back to /api/chat or the on-device sample. */
+async function sendStream(text,msg,idx){
+  const r=await apiFetch('/api/chat/stream',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+  if(!r.ok||!r.body)throw new Error('stream unavailable');
+  msg.streaming=true;msg.thinking=true;
+  const paint=()=>{const el=document.querySelector(`.msg-agent[data-mi="${idx}"]`);if(el){el.classList.remove('thinking');el.classList.add('streaming');el.textContent=msg.text}};
+  const reader=r.body.getReader();
+  const dec=new TextDecoder();let buf='';let got=false;
+  for(;;){
+    const {done,value}=await reader.read();
+    if(done)break;
+    buf+=dec.decode(value,{stream:true});
+    const lines=buf.split('\n');buf=lines.pop();
+    for(const line of lines){
+      const s=line.trim();
+      if(!s.startsWith('data:'))continue;
+      let ev;try{ev=JSON.parse(s.slice(5))}catch(e){continue}
+      if(ev.token){got=true;msg.thinking=false;msg.text+=ev.token;paint();scrollChat()}
+      else if(ev.done){
+        msg.streaming=false;msg.thinking=false;
+        if(ev.error&&!got)throw new Error(ev.error);
+        msg.text=ev.text||msg.text||'Done.';
+        (ev.pendingApprovals||[]).forEach(p=>S.chat.push(approvalFromTool(p)));
+        return true;
+      }
+    }
+  }
+  if(!got)throw new Error('empty stream');
+  msg.streaming=false;msg.thinking=false;
+  return true;
+}
 async function send(text){
   text=String(text||'').trim(); if(!text||S.busy)return;
   S.chat.push({role:'user',text});renderChat();scrollChat();
@@ -986,16 +1172,21 @@ async function send(text){
     S.chat.pop();CANNED[key].forEach(m=>S.chat.push(JSON.parse(JSON.stringify(m))));S.busy=false;renderChat();scrollChat();return;
   }
   S.busy=true;
-  const msg={role:'agent',text:'Thinking…',thinking:true};S.chat.push(msg);renderChat();scrollChat();
+  const msg={role:'agent',text:'',thinking:true};S.chat.push(msg);renderChat();scrollChat();
   const idx=S.chat.length-1;
   if(API.on){
     try{
-      const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+      if(await sendStream(text,msg,idx)){
+        S.busy=false;saveState();renderChat();scrollChat();speakReply(msg.text);return;
+      }
+    }catch(e){/* fall through to non-streaming, then on-device sample */}
+    try{
+      const r=await apiFetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
       if(r.ok){
         const data=await r.json();
-        msg.thinking=false;msg.text=data.text||'Done.';
+        msg.thinking=false;msg.streaming=false;msg.text=data.text||'Done.';
         (data.pendingApprovals||[]).forEach(p=>S.chat.push(approvalFromTool(p)));
-        S.busy=false;saveState();renderChat();scrollChat();return;
+        S.busy=false;saveState();renderChat();scrollChat();speakReply(msg.text);return;
       }
     }catch(e){/* fall through to on-device sample */}
   }
@@ -1011,10 +1202,39 @@ async function send(text){
     msg.thinking=false;
     msg.text=e&&e.text?e.text:(e&&e.code==='not_granted'?"Live answers are off for this preview. Try one of the suggestions below.":"I couldn't reach the agent just now. Try again in a moment.");
   }
-  S.busy=false;renderChat();scrollChat();
+  S.busy=false;renderChat();scrollChat();speakReply(msg.text);
 }
 $('#ask-form').onsubmit=e=>{e.preventDefault();const v=$('#ask').value;$('#ask').value='';send(v)};
-$('#mic').onclick=()=>openVoice();
+
+/* ---- voice input (Web Speech) + spoken replies ---- */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null;
+function speakReply(text){
+  if(S.muted||!('speechSynthesis'in window)||!text)return;
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(String(text).slice(0,400));
+    u.rate=1.05;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function setupMic(){
+  const btn=$('#mic');
+  if(!SR){btn.style.display='none';return}
+  btn.onclick=()=>{
+    if(rec){try{rec.stop()}catch(e){}return}
+    rec=new SR();rec.lang=navigator.language||'en-US';rec.interimResults=false;rec.maxAlternatives=1;
+    const inp=$('#ask');
+    inp.placeholder='Listening… speak now';btn.setAttribute('aria-label','Stop listening');
+    rec.onresult=e=>{
+      const t=e.results[0][0].transcript;
+      if(t&&t.trim())send(t.trim());
+    };
+    rec.onerror=()=>{toast("Couldn't hear that — try typing")};
+    rec.onend=()=>{inp.placeholder='Ask anything';btn.setAttribute('aria-label','Talk');rec=null};
+    try{rec.start()}catch(e){rec=null;inp.placeholder='Ask anything'}
+  };
+}
 
 /* ================= VOICE ================= */
 const PHRASES=["Where should I eat dinner close by?","What's fun near me tonight?","Catch me up on texts","What's tomorrow?"];
@@ -1047,9 +1267,6 @@ let authView='welcome', pendingAcc=null;
 function showAuth(view){authView=view||'welcome';$('#auth').classList.remove('hidden');renderAuth()}
 function hideAuth(){$('#auth').classList.add('hidden');$('#auth').innerHTML=''}
 const backBtn='<button class="iconbtn" id="au-back" aria-label="Back" style="align-self:flex-start"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>';
-const socials=`<div style="display:flex;flex-direction:column;gap:8px">
-  <button class="btn" data-social="Apple" style="background:#FFFFFF;color:#000">Continue with Apple</button>
-  <button class="btn btn-ghost" data-social="Google">Continue with Google</button></div>`;
 function field(id,label,type,ac,val){return `<div class="field"><label for="${id}">${label}</label><input id="${id}" type="${type}" autocomplete="${ac}" value="${esc(val||'')}"${type==='email'?' inputmode="email" autocapitalize="off" spellcheck="false"':''}><div class="err" id="${id}-err"></div></div>`}
 function renderAuth(){
   const el=$('#auth');
@@ -1060,95 +1277,76 @@ function renderAuth(){
       <h2>Your assistant, on your finger.</h2>
       <p class="lead">Double-tap your ring and just talk. It texts, plans and finds places for you, while your phone stays in your pocket.</p>
       <div class="onb-foot">
-        <button class="btn btn-silver" data-to="signup">Create account</button>
-        <button class="btn btn-ghost" data-to="login">Log in</button>
-        <p class="sub" style="text-align:center;margin:6px 0 0;font-size:12px">By continuing you agree to the Terms and Privacy Policy.</p>
+        <button class="btn btn-silver" data-to="magic">Continue with email</button>
+        <p class="sub" style="text-align:center;margin:6px 0 0;font-size:12px">We’ll send you a magic link — no password needed.</p>
       </div></div>`,
-    signup:()=>`<div class="onb-inner">${backBtn}
-      <h2>Create your account</h2>
-      ${socials}
-      <div class="divider">or with email</div>
-      <form id="su-form" novalidate style="display:flex;flex-direction:column;gap:10px;margin:0">
-        ${field('su-name','Name','text','name')}
-        ${field('su-email','Email','email','email')}
-        <div class="field"><label for="su-pass">Password</label><div style="position:relative"><input id="su-pass" type="password" autocomplete="new-password" style="width:100%;padding-right:70px"><button type="button" class="textbtn" id="su-show" style="position:absolute;right:8px;top:4px">Show</button></div><div class="err" id="su-pass-err"></div></div>
-        <button class="btn btn-silver" type="submit">Create account</button>
-      </form>
-      <p class="sub" style="text-align:center;margin:0">Already have an account? <button class="textbtn" data-to="login">Log in</button></p></div>`,
-    verify:()=>`<div class="onb-inner">${backBtn}
-      <h2>Check your email</h2>
-      <p class="lead">We sent a 6-digit code to <span style="color:#fff">${esc(pendingAcc?pendingAcc.email:'')}</span>. Any 6 digits work in this prototype.</p>
-      <div class="code-row" role="group" aria-label="Verification code">${[0,1,2,3,4,5].map(i=>`<input inputmode="numeric" maxlength="1" aria-label="Digit ${i+1}" data-ci="${i}" autocomplete="${i?'off':'one-time-code'}">`).join('')}</div>
-      <div class="err" id="code-err"></div>
-      <div style="flex-grow:1"></div>
-      <div class="onb-foot"><button class="btn btn-silver" id="verify" disabled>Verify</button><button class="textbtn" id="resend" style="align-self:center">Resend code</button></div></div>`,
-    login:()=>`<div class="onb-inner">${backBtn}
-      <h2>Welcome back</h2>
-      ${socials}
-      <div class="divider">or with email</div>
-      <form id="li-form" novalidate style="display:flex;flex-direction:column;gap:10px;margin:0">
-        ${field('li-email','Email','email','email')}
-        ${field('li-pass','Password','password','current-password')}
-        <button type="button" class="textbtn" data-to="forgot" style="align-self:flex-end;margin-top:-6px">Forgot password?</button>
-        <button class="btn btn-silver" type="submit">Log in</button>
-      </form>
-      <p class="sub" style="text-align:center;margin:0">New here? <button class="textbtn" data-to="signup">Create account</button></p></div>`,
-    forgot:()=>`<div class="onb-inner">${backBtn}
-      <h2>Reset your password</h2>
-      <p class="lead">Enter your email and we'll send you a link to set a new one.</p>
-      <form id="fp-form" novalidate style="display:flex;flex-direction:column;gap:10px;margin:0">
-        ${field('fp-email','Email','email','email')}
-        <button class="btn btn-silver" type="submit">Send reset link</button>
+    magic:()=>`<div class="onb-inner">${backBtn}
+      <h2>Sign in</h2>
+      <p class="lead">Enter your email and we’ll send you a magic link. Tap it on this device and you’re in — no password to remember.</p>
+      <form id="ml-form" novalidate style="display:flex;flex-direction:column;gap:10px;margin:0">
+        ${field('ml-email','Email','email','email')}
+        <button class="btn btn-silver" type="submit" id="ml-go">Send magic link</button>
       </form></div>`,
+    sent:()=>`<div class="onb-inner">${backBtn}
+      <h2>Check your inbox</h2>
+      <p class="lead">We sent a sign-in link to <span style="color:#fff">${esc(pendingAcc?pendingAcc.email:'your email')}</span>. Tap it on this device and you’re in.</p>
+      <div style="flex-grow:1"></div>
+      <div class="onb-foot"><button class="btn btn-ghost" id="ml-resend">Resend link</button></div></div>`,
   };
   el.innerHTML=V[authView]();
   el.scrollTop=0;
   el.querySelectorAll('[data-to]').forEach(b=>b.onclick=()=>{authView=b.dataset.to;renderAuth()});
-  const back=$('#au-back');if(back)back.onclick=()=>{authView=authView==='verify'?'signup':authView==='forgot'?'login':'welcome';renderAuth()};
-  el.querySelectorAll('[data-social]').forEach(b=>b.onclick=()=>{
-    const isNew=authView==='signup';
-    finishAuth({name:'[Your name]',email:'you@'+b.dataset.social.toLowerCase()+'.com',via:b.dataset.social},isNew);
-  });
+  const back=$('#au-back');if(back)back.onclick=()=>{authView=authView==='sent'?'magic':'welcome';renderAuth()};
   const setErr=(id,m)=>{const e=$('#'+id+'-err');if(e)e.textContent=m||'';const i=$('#'+id);if(i)i.setAttribute('aria-invalid',m?'true':'false')};
-  const su=$('#su-form');
-  if(su){
-    $('#su-show').onclick=()=>{const p=$('#su-pass');const show=p.type==='password';p.type=show?'text':'password';$('#su-show').textContent=show?'Hide':'Show'};
-    su.onsubmit=e=>{e.preventDefault();
-      const n=$('#su-name').value.trim(),m=$('#su-email').value.trim(),p=$('#su-pass').value;
-      setErr('su-name',n?'':'Enter your name');setErr('su-email',EMAIL_RE.test(m)?'':'Enter a valid email');setErr('su-pass',p.length>=8?'':'Use at least 8 characters');
-      if(!n||!EMAIL_RE.test(m)||p.length<8){const f=su.querySelector('[aria-invalid="true"]');if(f)f.focus();return}
-      pendingAcc={name:n,email:m};authView='verify';renderAuth();
-    };
-    setTimeout(()=>$('#su-name').focus(),50);
-  }
-  const li=$('#li-form');
-  if(li){li.onsubmit=e=>{e.preventDefault();
-      const m=$('#li-email').value.trim(),p=$('#li-pass').value;
-      setErr('li-email',EMAIL_RE.test(m)?'':'Enter a valid email');setErr('li-pass',p?'':'Enter your password');
-      if(!EMAIL_RE.test(m)||!p)return;
-      const nm=m.split('@')[0].replace(/[._-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-      finishAuth({name:nm,email:m},false);
-    };setTimeout(()=>$('#li-email').focus(),50)}
-  const fp=$('#fp-form');
-  if(fp){fp.onsubmit=e=>{e.preventDefault();const m=$('#fp-email').value.trim();setErr('fp-email',EMAIL_RE.test(m)?'':'Enter a valid email');if(!EMAIL_RE.test(m))return;toast('Reset link sent');authView='login';renderAuth()}}
-  const boxes=[...el.querySelectorAll('[data-ci]')];
-  if(boxes.length){
-    const check=()=>{$('#verify').disabled=!boxes.every(b=>/^\d$/.test(b.value))};
-    boxes.forEach((b,i)=>{
-      b.oninput=()=>{b.value=b.value.replace(/\D/g,'').slice(-1);if(b.value&&boxes[i+1])boxes[i+1].focus();check()};
-      b.onkeydown=e=>{if(e.key==='Backspace'&&!b.value&&boxes[i-1]){boxes[i-1].focus();boxes[i-1].value='';check()}};
-      b.onpaste=e=>{e.preventDefault();const d=(e.clipboardData.getData('text')||'').replace(/\D/g,'').slice(0,6);d.split('').forEach((c,j)=>{if(boxes[j])boxes[j].value=c});(boxes[Math.min(d.length,5)]).focus();check()};
-    });
-    setTimeout(()=>boxes[0].focus(),50);
-    $('#verify').onclick=()=>finishAuth(pendingAcc,true);
-    $('#resend').onclick=()=>toast('New code sent');
-  }
+  const ml=$('#ml-form');
+  if(ml){ml.onsubmit=async e=>{e.preventDefault();
+      const m=$('#ml-email').value.trim();
+      setErr('ml-email',EMAIL_RE.test(m)?'':'Enter a valid email');
+      if(!EMAIL_RE.test(m)){$('#ml-email').focus();return}
+      pendingAcc={email:m};
+      if(!API.on){ // static preview — local account, no email sent
+        const nm=m.split('@')[0].replace(/[._-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+        finishAuth({name:nm,email:m},true);return;
+      }
+      const go=$('#ml-go');go.disabled=true;go.textContent='Sending…';
+      try{
+        const r=await fetch('/api/auth/otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:m})});
+        if(!r.ok)throw new Error('send failed');
+        authView='sent';renderAuth();
+      }catch(err){
+        setErr('ml-email','Could not send the link — try again in a moment');
+        go.disabled=false;go.textContent='Send magic link';
+      }
+    };setTimeout(()=>$('#ml-email').focus(),50)}
+  const mr=$('#ml-resend');
+  if(mr)mr.onclick=async ()=>{
+    try{
+      await fetch('/api/auth/otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:pendingAcc&&pendingAcc.email})});
+      toast('New link sent');
+    }catch(e){toast('Could not resend — try again')}
+  };
 }
 function finishAuth(acc,isNew){
   S.account=acc;store.set('account',acc);
   hideAuth();
   if(isNew){store.set('onboarded',false);startOnboarding()}
   else{store.set('onboarded',true);go('home');toast('Welcome back')}
+}
+/* Magic-link callback: Supabase drops the session in the URL hash. */
+function handleAuthCallback(){
+  const m=(location.hash||'').match(/access_token=([^&]+)/);
+  if(!m)return;
+  try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+  tokenStore.set(decodeURIComponent(m[1]));
+  apiFetch('/api/auth/me').then(r=>r.ok?r.json():null).then(me=>{
+    if(me&&me.email){
+      const nm=me.email.split('@')[0].replace(/[._-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+      S.account={name:nm,email:me.email};store.set('account',S.account);
+      hideAuth();loadMemories();
+      if(store.get('onboarded',false))go('home');else startOnboarding();
+      toast('Signed in');
+    }
+  }).catch(()=>{});
 }
 
 /* ================= ONBOARDING (ring setup) ================= */
@@ -1179,11 +1377,11 @@ function renderOnb(){
       </div>
       <div class="card" style="overflow:hidden"><div class="set-row"><div class="rt"><b>Ask before acting</b><span>Confirm anything sent or booked</span></div><button class="switch" role="switch" aria-checked="${S.perms.confirm}" aria-label="Ask before acting" data-oc="confirm"></button></div></div>
       <div style="flex-grow:1"></div>
-      <div class="onb-foot"><button class="btn btn-silver" id="ob-next">Finish setup</button></div></div>`,
+      <div class="onb-foot"><button class="btn btn-silver" id="ob-next">Start chatting</button></div></div>`,
   ];
   el.innerHTML=steps[ob]();
   const next=$('#ob-next');
-  next.onclick=()=>{if(ob<2){ob++;renderOnb()}else{store.set('onboarded',true);saveState();el.classList.add('hidden');el.innerHTML='';go('home');toast("You're all set")}};
+  next.onclick=()=>{if(ob<2){ob++;renderOnb()}else{store.set('onboarded',true);saveState();el.classList.add('hidden');el.innerHTML='';go('chat');setTimeout(()=>{const inp=$('#ask');if(inp)inp.focus()},450);toast('Send your first message')}};
   if(ob===0){setTimeout(()=>{const f=$('#found'),s=$('#pair-state');if(!f)return;f.classList.add('on');s.textContent='Found your ring · 82% charged';next.disabled=false;next.focus()},1800)}
   if(ob===1){let last=0;const r=$('#ob-ring');const done=()=>{$('#tap-state').textContent="That's it. Double-tap anytime to talk.";$('#tap-state').style.color='var(--sage)';next.disabled=false;next.focus()};
     r.onclick=()=>{const tp=$('#ob-tp');tp.classList.remove('go');void tp.offsetWidth;tp.classList.add('go');const t=Date.now();if(t-last<420)done();last=t};
@@ -1203,6 +1401,9 @@ function tickClock(){const t=new Date().toLocaleTimeString([], {hour:'numeric',m
 /* ================= boot ================= */
 paintIcons();
 fitDevice();tickClock();setInterval(tickClock,30000);
+document.documentElement.dataset.theme=S.theme;
+setupMic();
+handleAuthCallback();
 go('home');
 const splash=$('#splash');
 const endSplash=()=>{if(splash.classList.contains('out'))return;splash.classList.add('out');setTimeout(()=>splash.remove(),460);
