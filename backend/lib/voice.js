@@ -104,12 +104,12 @@ async function synthesize(text) {
 }
 
 // --- main ------------------------------------------------------------------
-async function processVoice({ audioBase64, mimeType, userId }) {
+async function processVoice({ audioBase64, mimeType, userId, demo = false }) {
   if (!audioBase64 || typeof audioBase64 !== 'string') {
     throw voiceErr('EMPTY_AUDIO', 'audio is required');
   }
   const transcript = await transcribe({ audioBase64, mimeType });
-  const reply = await runAgentTurn({ text: transcript, userId });
+  const reply = await runAgentTurn({ text: transcript, userId, demo });
 
   const spoken = String(reply.text || '').slice(0, MAX_SPOKEN_CHARS);
   const audio = spoken ? await synthesize(spoken) : null;

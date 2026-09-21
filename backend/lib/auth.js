@@ -107,4 +107,4 @@ async function optionalUser(req, res, next) {
   next();
 }
 
-module.exports = { sendMagicLink, validateToken, requireUser, optionalUser };
+module.exports = { sendMagicLink, validateToken, bearerToken, requireUser, optionalUser };

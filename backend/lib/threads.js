@@ -167,7 +167,10 @@ async function postMessage(threadId, { from, text }) {
   const msg = await storeMessage(threadId, { from, text });
   broadcast(threadId, { type: 'message', message: msg });
 
-  // @agent mention → agent turn with thread context
+  // @agent mention → agent turn with thread context.
+  // Runs in DEMO MODE (simulated tools, 'demo'-owned cards) until thread
+  // membership/ownership is enforced: an unauthenticated thread post must
+  // never be able to trigger real tool calls or create executable cards.
   if (new RegExp(`@${AGENT_NAME}\\b`, 'i').test(text)) {
     const history = (await dbOrMemHistory(threadId))
       .slice(-12).map((m) => `${m.from}: ${m.text}`).join('\n');
@@ -175,7 +178,8 @@ async function postMessage(threadId, { from, text }) {
     try {
       reply = await runAgentTurn({
         text: `You are @${AGENT_NAME} in the group chat "${th.name}" with members: ${th.members.join(', ') || 'unknown'}. Recent messages:\n${history}\n\nRespond to the latest message from ${from}. If they want options (restaurants, times), offer 2-3 concrete options and say you'll book once they pick one.`,
-        userId: 'local',
+        userId: 'demo',
+        demo: true,
         threadId,
       });
     } catch (e) {
@@ -183,7 +187,7 @@ async function postMessage(threadId, { from, text }) {
     }
     const held = [];
     for (const t of (reply.toolsUsed || []).filter((t) => t.risk !== 'low')) {
-      const rec = await approvals.create({ toolName: t.name, args: t.args, userId: 'local', threadId });
+      const rec = await approvals.create({ toolName: t.name, args: t.args, userId: 'demo', threadId });
       held.push({ id: rec.id, name: rec.tool, risk: rec.risk, args: rec.args });
     }
     const amsg = await storeMessage(threadId, {

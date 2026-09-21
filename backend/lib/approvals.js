@@ -9,12 +9,23 @@
 // instances — can never execute a tool twice. create() dedupes identical
 // pending approvals inside a short window and honors an explicit
 // idempotencyKey, so retried agent turns don't stack duplicate cards.
-const { TOOLS } = require('./agent');
+const { TOOLS, DEMO_TOOLS } = require('./agent');
 const { logToolRun } = require('./audit');
 const { ENABLED, sbRequest, eq } = require('./supabase');
 
 const TBL = 'ring_approvals';
 const DEDUP_WINDOW_MS = 10 * 60 * 1000;
+
+// Ownership policy (the trust core):
+//   'demo'     — sandbox cards from unauthenticated demo turns. Anyone may
+//                resolve them, but ONLY the simulated DEMO_TOOLS ever run.
+//   'local'    — legacy pre-auth cards. NEVER executable by anyone; resolve
+//                throws LEGACY_CARD so the client can prompt re-auth.
+//   <uuid>     — a real authenticated user's card. Resolving with 'approve'
+//                executes the real tool ONLY when opts.executorUserId matches
+//                the card owner; otherwise FORBIDDEN.
+// create() fails closed on 'local': new cards must be owned by a real user
+// or by the 'demo' sandbox — never the shared legacy identity.
 
 // ---- in-memory fallback (local dev) ----
 const mem = new Map();
@@ -94,6 +105,12 @@ async function create({ toolName, args, userId, threadId, idempotencyKey }) {
   const tool = TOOLS.find((t) => t.name === toolName);
   if (!tool) throw new Error('unknown tool: ' + toolName);
   const uid = userId || 'local';
+  // Fail closed: the shared legacy 'local' identity may never own new cards.
+  // Unauthenticated callers get the 'demo' sandbox; everyone else must be a
+  // real authenticated user id.
+  if (uid === 'local') {
+    throw Object.assign(new Error('approval creation requires authentication'), { code: 'AUTH_REQUIRED' });
+  }
 
   if (ENABLED) {
     if (idempotencyKey) {
@@ -149,20 +166,45 @@ async function listPending(userId) {
   );
 }
 
-async function executeTool(rec) {
-  const tool = TOOLS.find((t) => t.name === rec.tool);
+async function executeTool(rec, tools) {
+  const tool = (tools || TOOLS).find((t) => t.name === rec.tool);
+  if (!tool) return { error: 'unknown tool: ' + rec.tool };
   try {
-    return await tool.fn({ userId: rec.userId, ...rec.args });
+    const out = await tool.fn({ userId: rec.userId, ...rec.args });
+    // Demo executions are always labeled as simulated, whatever the fn says.
+    return rec.userId === 'demo' ? { ...out, simulated: true } : out;
   } catch (e) {
     return { error: e.message, code: e.code };
   }
 }
 
-async function resolve(id, decision) {
+// Decide which toolset may run for this record, enforcing the ownership
+// policy. Throws {code:'LEGACY_CARD'} or {code:'FORBIDDEN'} — never returns
+// a real toolset for a card that must not execute.
+function toolsetFor(rec, opts) {
+  if (rec.userId === 'demo') return DEMO_TOOLS;
+  if (rec.userId === 'local') {
+    throw Object.assign(
+      new Error('legacy approval can no longer be resolved — sign in and retry'),
+      { code: 'LEGACY_CARD' }
+    );
+  }
+  if (!opts || opts.executorUserId !== rec.userId) {
+    throw Object.assign(new Error('forbidden'), { code: 'FORBIDDEN' });
+  }
+  return TOOLS;
+}
+
+async function resolve(id, decision, opts) {
   const status = decision === 'approve' ? 'approved' : 'declined';
   const now = new Date().toISOString();
 
   if (ENABLED) {
+    const rec0 = await get(id);
+    if (!rec0) throw Object.assign(new Error('approval not found'), { code: 'NOT_FOUND' });
+    // Policy check BEFORE the atomic claim: a card that must not execute
+    // never gets claimed for execution.
+    const tools = toolsetFor(rec0, opts);
     // Atomic claim: only a pending row flips. A concurrent resolve on another
     // instance gets zero rows back and returns the already-resolved record —
     // the tool can never execute twice.
@@ -181,7 +223,7 @@ async function resolve(id, decision) {
     }
     const rec = toRec(claimed[0]);
     if (rec.status === 'approved') {
-      rec.result = await executeTool(rec);
+      rec.result = await executeTool(rec, tools);
       await sbRequest(`/${TBL}?id=eq.${eq(id)}`, {
         method: 'PATCH',
         body: JSON.stringify({ result: rec.result }),
@@ -204,11 +246,12 @@ async function resolve(id, decision) {
   // in-memory fallback
   const rec = mem.get(id);
   if (!rec) throw Object.assign(new Error('approval not found'), { code: 'NOT_FOUND' });
+  const tools = toolsetFor(rec, opts);
   if (rec.status !== 'pending') return rec;
   rec.status = status;
   rec.resolvedAt = now;
   if (rec.status === 'approved') {
-    rec.result = await executeTool(rec);
+    rec.result = await executeTool(rec, tools);
     logToolRun({
       userId: rec.userId, tool: rec.tool, args: rec.args, result: rec.result,
       approvalId: rec.id, status: rec.result && rec.result.error ? 'failed' : 'executed',

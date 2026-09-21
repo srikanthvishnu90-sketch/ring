@@ -31,7 +31,7 @@ const { TOOLS, runAgentTurn, runAgentTurnStream, llmConfigured } = require('./li
 const approvals = require('./lib/approvals');
 const threads = require('./lib/threads');
 const memory = require('./lib/memory');
-const { sendMagicLink, requireUser, optionalUser } = require('./lib/auth');
+const { sendMagicLink, requireUser, optionalUser, validateToken, bearerToken } = require('./lib/auth');
 const { processVoice } = require('./lib/voice');
 const { sbRequest, eq, ENABLED: SB_ENABLED } = require('./lib/supabase');
 
@@ -92,10 +92,17 @@ app.get('/api/connectors', (req, res) => {
 
 app.post('/api/chat', async (req, res) => {
   const { text, threadId } = req.body || {};
-  const userId = req.userId || req.body?.userId || 'local';
+  // Caller identity: a valid Supabase JWT → real user id; anything else →
+  // the 'demo' sandbox. Demo turns run simulated tools only and can never
+  // create real approval cards. There is no unauthenticated 'local'
+  // identity anymore — 'local' is a legacy card owner that can never
+  // execute. (The request body's userId is deliberately ignored.)
+  const authed = req.userId && req.userId !== 'local';
+  const userId = authed ? req.userId : 'demo';
+  const demo = !authed;
   if (!text || typeof text !== 'string') return res.status(400).json({ error: 'text is required' });
   try {
-    const reply = await runAgentTurn({ text, userId, threadId });
+    const reply = await runAgentTurn({ text, userId, threadId, demo });
 
     // Approval gate: medium/high-risk calls are HELD as approval records —
     // never executed silently. The client renders them as approval cards and
@@ -107,11 +114,14 @@ app.post('/api/chat', async (req, res) => {
     }
 
     // Learn loop: extract durable facts from this turn (fire-and-forget).
-    memory.extract(userId, `User: ${text}\nAssistant: ${reply.text}`)
-      .then((facts) => Promise.all(facts.map((f) => memory.save(userId, f))))
-      .catch(() => {});
+    // Demo turns are never memorized.
+    if (!demo) {
+      memory.extract(userId, `User: ${text}\nAssistant: ${reply.text}`)
+        .then((facts) => Promise.all(facts.map((f) => memory.save(userId, f))))
+        .catch(() => {});
+    }
 
-    res.json({ ...reply, pendingApprovals: held, executed: held.length === 0 });
+    res.json({ ...reply, demo, pendingApprovals: held, executed: held.length === 0 });
   } catch (e) {
     res.status(500).json({ error: e.message, code: e.code });
   }
@@ -122,7 +132,9 @@ app.post('/api/chat', async (req, res) => {
 // `data: {"done":true, ...full reply...}`. Same approval gating as /api/chat.
 app.post('/api/chat/stream', async (req, res) => {
   const { text, threadId } = req.body || {};
-  const userId = req.userId || req.body?.userId || 'local';
+  const authed = req.userId && req.userId !== 'local';
+  const userId = authed ? req.userId : 'demo';
+  const demo = !authed;
   if (!text || typeof text !== 'string') return res.status(400).json({ error: 'text is required' });
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
@@ -132,7 +144,7 @@ app.post('/api/chat/stream', async (req, res) => {
   const send = (obj) => res.write(`data: ${JSON.stringify(obj)}\n\n`);
   try {
     const reply = await runAgentTurnStream({
-      text, userId, threadId,
+      text, userId, threadId, demo,
       onToken: (token) => send({ token }),
     });
     const held = [];
@@ -140,10 +152,12 @@ app.post('/api/chat/stream', async (req, res) => {
       const rec = await approvals.create({ toolName: t.name, args: t.args, userId, threadId });
       held.push({ id: rec.id, name: rec.tool, risk: rec.risk, args: rec.args });
     }
-    memory.extract(userId, `User: ${text}\nAssistant: ${reply.text}`)
-      .then((facts) => Promise.all(facts.map((f) => memory.save(userId, f))))
-      .catch(() => {});
-    send({ done: true, text: reply.text, toolsUsed: reply.toolsUsed, mode: reply.mode, pendingApprovals: held, executed: held.length === 0 });
+    if (!demo) {
+      memory.extract(userId, `User: ${text}\nAssistant: ${reply.text}`)
+        .then((facts) => Promise.all(facts.map((f) => memory.save(userId, f))))
+        .catch(() => {});
+    }
+    send({ done: true, text: reply.text, toolsUsed: reply.toolsUsed, mode: reply.mode, demo, pendingApprovals: held, executed: held.length === 0 });
   } catch (e) {
     send({ done: true, error: e.message, code: e.code });
   }
@@ -201,22 +215,40 @@ app.delete('/api/account', requireUser, async (req, res) => {
 });
 
 // --- Approvals -----------------------------------------------------------
-app.get('/api/approvals', async (req, res) => {
-  res.json(await approvals.listPending(req.userId || req.query.userId));
+app.get('/api/approvals', requireUser, async (req, res) => {
+  res.json(await approvals.listPending(req.userId));
 });
 
-app.post('/api/approvals/:id/resolve', optionalUser, async (req, res) => {
+app.post('/api/approvals/:id/resolve', async (req, res) => {
   try {
     const rec = await approvals.get(req.params.id);
     if (!rec) return res.status(404).json({ error: 'approval not found' });
-    // Legacy unauthenticated 'local' cards stay resolvable without auth.
-    // Anything owned by a real user needs their token.
-    if (rec.userId !== 'local' && rec.userId !== req.userId)
-      return res.status(rec.userId && req.userId ? 403 : 401).json({ error: 'forbidden' });
-    const out = await approvals.resolve(req.params.id, req.body?.decision);
+    // Demo sandbox cards resolve without auth, but can only ever run the
+    // simulated tools (enforced inside approvals.resolve) — no real-world
+    // effect is possible from a demo card, no matter who resolves it.
+    if (rec.userId === 'demo') {
+      return res.json(await approvals.resolve(req.params.id, req.body?.decision));
+    }
+    // Legacy pre-auth 'local' cards are dead: they can never execute again.
+    if (rec.userId === 'local') {
+      return res.status(410).json({ error: 'legacy approval expired — sign in and retry', code: 'LEGACY_CARD' });
+    }
+    // Real user cards need the card owner's token. (We validate the bearer
+    // directly instead of trusting the global optionalUser fallback.)
+    const jwt = bearerToken(req);
+    if (!jwt) return res.status(401).json({ error: 'missing authorization token', code: 'UNAUTHORIZED' });
+    let me;
+    try {
+      me = await validateToken(jwt);
+    } catch (e) {
+      return res.status(401).json({ error: e.message || 'invalid token', code: e.code || 'UNAUTHORIZED' });
+    }
+    if (me.id !== rec.userId) return res.status(403).json({ error: 'forbidden', code: 'FORBIDDEN' });
+    const out = await approvals.resolve(req.params.id, req.body?.decision, { executorUserId: me.id });
     res.json(out);
   } catch (e) {
-    res.status(e.code === 'NOT_FOUND' ? 404 : 500).json({ error: e.message });
+    const status = e.code === 'NOT_FOUND' ? 404 : e.code === 'FORBIDDEN' ? 403 : e.code === 'LEGACY_CARD' ? 410 : 500;
+    res.status(status).json({ error: e.message, code: e.code });
   }
 });
 
@@ -343,7 +375,11 @@ app.post('/api/devices/:id/tap', requireUser, async (req, res) => {
 
   const card = pending[pending.length - 1]; // most recent
   const decision = type === 'double' ? 'approve' : 'decline';
-  const rec = await approvals.resolve(card.id, decision);
+  // Tap is an authenticated device action: the card owner is req.userId, so
+  // execution is authorized here. Demo/legacy cards can never appear in this
+  // list (listPending is scoped to the user), and resolve() enforces the
+  // ownership policy a second time.
+  const rec = await approvals.resolve(card.id, decision, { executorUserId: req.userId });
   if (audit) audit.logToolRun({
     userId: req.userId,
     tool: `ring_tap_${decision}`,
@@ -476,12 +512,14 @@ app.get('/auth/google/callback', async (req, res) => {
 // transcribes, runs the agent turn, and (when TTS is configured) speaks back.
 app.post('/api/voice', async (req, res) => {
   const { audio, mime } = req.body || {};
-  const userId = req.userId || req.body?.userId || 'local';
+  const authed = req.userId && req.userId !== 'local';
+  const userId = authed ? req.userId : 'demo';
+  const demo = !authed;
   if (!audio || typeof audio !== 'string') {
     return res.status(400).json({ error: 'audio is required', code: 'EMPTY_AUDIO' });
   }
   try {
-    const out = await processVoice({ audioBase64: audio, mimeType: mime, userId });
+    const out = await processVoice({ audioBase64: audio, mimeType: mime, userId, demo });
 
     // Approval gate: mirrors /api/chat — medium/high-risk calls are HELD.
     const held = [];
@@ -494,6 +532,7 @@ app.post('/api/voice', async (req, res) => {
       transcript: out.transcript,
       text: out.text,
       audio: out.audioBase64, // base64 mp3, or null when TTS unavailable
+      demo,
       pendingApprovals: held,
       executed: held.length === 0,
     });

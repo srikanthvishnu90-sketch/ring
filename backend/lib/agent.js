@@ -70,6 +70,64 @@ const TOOLS = [
 
 const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. You can search email, manage the calendar, find restaurants, build ride and booking links, and coordinate group plans. Be concise and plainspoken. Never claim a booking or message is done until its tool confirms it — and anything that spends money or sends as the user needs their explicit approval first.`;
 
+const DEMO_PROMPT_SUFFIX = `
+
+You are running in DEMO MODE: every tool is simulated and returns sample data. Nothing you do here touches the user's real accounts. Never claim a real email was sent, a real event was created, or any real-world action happened — say clearly that this is a demo and they should sign in for the real thing.`;
+
+// ---- Demo mode -----------------------------------------------------------
+// Unauthenticated callers get DEMO_TOOLS: same names, schemas, and risk
+// tiers as the real tools, but every fn returns canned simulated data and
+// NEVER touches a connector, credential, or external API. Approval cards
+// created from demo turns are owned by user_id 'demo', and resolve() will
+// only ever run the simulated fn for them — a demo card can never execute
+// a real tool, no matter who resolves it.
+function demoResult(name, args) {
+  const a = args || {};
+  switch (name) {
+    case 'gmail_search':
+      return {
+        demo: true,
+        messages: [{
+          id: 'demo-msg-1',
+          subject: 'Demo: your inbox at a glance',
+          from: 'demo@example.com',
+          date: new Date().toISOString(),
+          snippet: `Simulated result for "${a.query || ''}" — sign in to search your real Gmail.`,
+        }],
+      };
+    case 'gmail_send':
+      return { demo: true, sent: false, note: 'Demo mode: no email was actually sent. Sign in to send real email.' };
+    case 'calendar_list':
+      return {
+        demo: true,
+        events: [{
+          id: 'demo-ev-1',
+          summary: 'Demo: coffee with a friend',
+          start: new Date(Date.now() + 3600e3).toISOString(),
+          end: new Date(Date.now() + 7200e3).toISOString(),
+        }],
+      };
+    case 'calendar_create':
+      return { demo: true, created: false, note: 'Demo mode: no calendar event was actually created. Sign in for the real thing.' };
+    case 'places_search':
+      return {
+        demo: true,
+        places: [{ name: 'Demo Bistro', vicinity: '123 Demo St', rating: 4.5, note: `Simulated result for "${a.query || ''}"` }],
+      };
+    case 'uber_ride_link':
+      return { demo: true, url: 'https://m.uber.com/?demo=1', note: 'Demo mode: simulated deep link.' };
+    case 'dining_links':
+      return { demo: true, opentable: 'https://www.opentable.com/?demo=1', note: 'Demo mode: simulated deep links.' };
+    default:
+      return { demo: true, simulated: true, note: `Demo mode: ${name} was not actually executed. Sign in for the real thing.` };
+  }
+}
+
+const DEMO_TOOLS = TOOLS.map((t) => ({
+  ...t,
+  fn: async (args) => demoResult(t.name, args || {}),
+}));
+
 function llmConfigured() {
   const p = env('LLM_PROVIDER', 'openai');
   return p === 'anthropic' ? !!env('ANTHROPIC_API_KEY') : !!env('OPENAI_API_KEY');
@@ -78,7 +136,7 @@ function llmConfigured() {
 // Both providers normalize to { text, toolCalls: [{id, name, args}] }.
 // OPENAI_BASE_URL lets the OpenAI path point at any OpenAI-compatible
 // endpoint (e.g. Gemini's: https://generativelanguage.googleapis.com/v1beta/openai).
-async function callOpenAI(prompt) {
+async function callOpenAI(prompt, tools = TOOLS) {
   const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
   const res = await fetch(`${base}/chat/completions`, {
     method: 'POST',
@@ -89,7 +147,7 @@ async function callOpenAI(prompt) {
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: prompt },
       ],
-      tools: TOOLS.map((t) => ({ type: 'function', function: { name: t.name, description: t.describe, parameters: t.schema } })),
+      tools: tools.map((t) => ({ type: 'function', function: { name: t.name, description: t.describe, parameters: t.schema } })),
     }),
   });
   if (!res.ok) throw new Error(`LLM error ${res.status}`);
@@ -105,7 +163,7 @@ async function callOpenAI(prompt) {
   };
 }
 
-async function callAnthropic(prompt) {
+async function callAnthropic(prompt, tools = TOOLS) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -118,7 +176,7 @@ async function callAnthropic(prompt) {
       max_tokens: 1024,
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: prompt }],
-      tools: TOOLS.map((t) => ({ name: t.name, description: t.describe, input_schema: t.schema })),
+      tools: tools.map((t) => ({ name: t.name, description: t.describe, input_schema: t.schema })),
     }),
   });
   if (!res.ok) throw new Error(`LLM error ${res.status}`);
@@ -137,7 +195,7 @@ async function callAnthropic(prompt) {
 // Same contract as callOpenAI/callAnthropic, but text tokens are forwarded
 // to onToken as they arrive. Tool-call argument fragments are accumulated
 // and returned whole at the end.
-async function callOpenAIStream(prompt, onToken) {
+async function callOpenAIStream(prompt, onToken, tools = TOOLS) {
   const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
   const res = await fetch(`${base}/chat/completions`, {
     method: 'POST',
@@ -149,7 +207,7 @@ async function callOpenAIStream(prompt, onToken) {
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: prompt },
       ],
-      tools: TOOLS.map((t) => ({ type: 'function', function: { name: t.name, description: t.describe, parameters: t.schema } })),
+      tools: tools.map((t) => ({ type: 'function', function: { name: t.name, description: t.describe, parameters: t.schema } })),
     }),
   });
   if (!res.ok || !res.body) throw new Error(`LLM error ${res.status}`);
@@ -191,7 +249,7 @@ async function callOpenAIStream(prompt, onToken) {
   };
 }
 
-async function callAnthropicStream(prompt, onToken) {
+async function callAnthropicStream(prompt, onToken, tools = TOOLS) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -205,7 +263,7 @@ async function callAnthropicStream(prompt, onToken) {
       stream: true,
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: prompt }],
-      tools: TOOLS.map((t) => ({ name: t.name, description: t.describe, input_schema: t.schema })),
+      tools: tools.map((t) => ({ name: t.name, description: t.describe, input_schema: t.schema })),
     }),
   });
   if (!res.ok || !res.body) throw new Error(`LLM error ${res.status}`);
@@ -246,24 +304,26 @@ async function callAnthropicStream(prompt, onToken) {
   };
 }
 
-async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', onToken }) {
+async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', onToken, demo = false }) {
+  const tools = demo ? DEMO_TOOLS : TOOLS;
   if (!llmConfigured()) {
     const c = cannedReply(text);
     if (onToken) onToken(c.text);
-    return { ...c, mode: 'canned' };
+    return { ...c, mode: demo ? 'canned-demo' : 'canned' };
   }
 
-  const memBlock = await memory.contextBlock(userId, text).catch(() => '');
-  const prompt = memBlock ? `${memBlock}\n\nUser message: ${text}` : text;
+  const memBlock = demo ? '' : await memory.contextBlock(userId, text).catch(() => '');
+  const prompt = (memBlock ? `${memBlock}\n\nUser message: ${text}` : text)
+    + (demo ? DEMO_PROMPT_SUFFIX : '');
 
   const provider = env('LLM_PROVIDER', 'openai');
   const call = provider === 'anthropic' ? callAnthropicStream : callOpenAIStream;
-  const first = await call(prompt, onToken);
+  const first = await call(prompt, onToken, tools);
 
   const toolsUsed = [];
   const results = [];
   for (const tc of first.toolCalls) {
-    const tool = TOOLS.find((t) => t.name === tc.name);
+    const tool = tools.find((t) => t.name === tc.name);
     if (!tool) continue;
     toolsUsed.push({ name: tool.name, risk: tool.risk, args: tc.args });
     if (tool.risk === 'low') {
@@ -284,7 +344,8 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
   if (first.toolCalls.length) {
     const follow = await call(
       `${prompt}\n\nTool results:\n${results.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
-      (tok) => { finalText += ''; if (onToken) onToken(tok); }
+      (tok) => { finalText += ''; if (onToken) onToken(tok); },
+      tools
     );
     // follow.text was already streamed token-by-token; rebuild final text.
     if (follow.text) finalText = first.text + follow.text;
@@ -302,20 +363,22 @@ function cannedReply(text) {
   return { text: 'Got it — say more and I\'ll take it from there.', toolsUsed: [] };
 }
 
-async function runAgentTurn({ text, userId = 'local', threadId = 'local' }) {
-  if (!llmConfigured()) return { ...cannedReply(text), mode: 'canned' };
+async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo = false }) {
+  const tools = demo ? DEMO_TOOLS : TOOLS;
+  if (!llmConfigured()) return { ...cannedReply(text), mode: demo ? 'canned-demo' : 'canned' };
 
-  const memBlock = await memory.contextBlock(userId, text).catch(() => '');
-  const prompt = memBlock ? `${memBlock}\n\nUser message: ${text}` : text;
+  const memBlock = demo ? '' : await memory.contextBlock(userId, text).catch(() => '');
+  const prompt = (memBlock ? `${memBlock}\n\nUser message: ${text}` : text)
+    + (demo ? DEMO_PROMPT_SUFFIX : '');
 
   const provider = env('LLM_PROVIDER', 'openai');
   const call = provider === 'anthropic' ? callAnthropic : callOpenAI;
-  const first = await call(prompt);
+  const first = await call(prompt, tools);
 
   const toolsUsed = [];
   const results = [];
   for (const tc of first.toolCalls) {
-    const tool = TOOLS.find((t) => t.name === tc.name);
+    const tool = tools.find((t) => t.name === tc.name);
     if (!tool) continue;
     toolsUsed.push({ name: tool.name, risk: tool.risk, args: tc.args });
     if (tool.risk === 'low') {
@@ -343,4 +406,4 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local' }) {
   return { text: finalText, toolsUsed, mode: 'live' };
 }
 
-module.exports = { TOOLS, runAgentTurn, runAgentTurnStream, llmConfigured };
+module.exports = { TOOLS, DEMO_TOOLS, runAgentTurn, runAgentTurnStream, llmConfigured };
