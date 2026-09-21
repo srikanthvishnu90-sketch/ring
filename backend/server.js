@@ -197,10 +197,16 @@ app.get('/api/approvals', async (req, res) => {
   res.json(await approvals.listPending(req.userId || req.query.userId));
 });
 
-app.post('/api/approvals/:id/resolve', async (req, res) => {
+app.post('/api/approvals/:id/resolve', optionalUser, async (req, res) => {
   try {
-    const rec = await approvals.resolve(req.params.id, req.body?.decision);
-    res.json(rec);
+    const rec = await approvals.get(req.params.id);
+    if (!rec) return res.status(404).json({ error: 'approval not found' });
+    // Legacy unauthenticated 'local' cards stay resolvable without auth.
+    // Anything owned by a real user needs their token.
+    if (rec.userId !== 'local' && rec.userId !== req.userId)
+      return res.status(rec.userId && req.userId ? 403 : 401).json({ error: 'forbidden' });
+    const out = await approvals.resolve(req.params.id, req.body?.decision);
+    res.json(out);
   } catch (e) {
     res.status(e.code === 'NOT_FOUND' ? 404 : 500).json({ error: e.message });
   }
