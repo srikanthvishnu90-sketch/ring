@@ -691,6 +691,7 @@ function renderProfile(){
     ${nav('theme','Appearance',S.theme==='light'?'Light':'Dark')}
     ${nav('plan','Plan and billing',planName)}
     ${nav('replay','Replay ring setup','')}
+    ${nav('pair','Pair your ring',BLE_DEV&&BLE_DEV.rowId?'Connected':'')}
   </section>
 
   ${signedIn()?`<section class="card" style="overflow:hidden" aria-label="Privacy">
@@ -799,6 +800,24 @@ function openSheet(kind,arg){
       </div>`,
     signout:()=>`<h3 id="sheet-title">Sign out?</h3><p>Your ring stays paired to this phone. Sign back in anytime.</p>
       <div style="display:flex;flex-direction:column;gap:8px"><button class="btn btn-silver" id="do-signout">Sign out</button><button class="btn btn-ghost" data-close>Cancel</button></div>`,
+    pair:()=>{
+      const bt=!!(navigator.bluetooth);
+      const status=BLE_DEV&&BLE_DEV.rowId
+        ? `<div class="card" style="padding:14px;display:flex;gap:10px;align-items:center;margin-bottom:12px"><span class="dot"></span><div class="rt"><b>${esc(BLE_DEV.name||'Ring')}</b><span>Battery ${BLE_DEV.battery!=null?BLE_DEV.battery+'%':'—'} · tap events live</span></div></div>`
+        : '';
+      const body=!bt
+        ? `<p>Web Bluetooth isn't available in this browser. Pairing needs Chrome or Edge on desktop or Android — iPhone Safari can't pair BLE accessories from a web page. Use the simulator page on a laptop to validate the contract meanwhile.</p>`
+        : !signedIn()
+        ? `<p>Sign in first — your ring pairs to your account, not just this phone.</p><button class="btn btn-silver" data-close>OK</button>`
+        : `<p>Hold your ring nearby. Scanning looks for the Ring Control Service — no PIN needed.</p>
+          ${status}
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn btn-silver" id="pair-scan">${BLE_DEV&&BLE_DEV.rowId?'Scan again':'Scan for rings'}</button>
+            <button class="btn btn-ghost" id="pair-test" ${BLE_DEV&&BLE_DEV.rowId?'':'disabled'}>Test haptic buzz</button>
+          </div>
+          <p class="muted" id="pair-status" style="margin-top:12px;font-size:13px"></p>`;
+      return `<h3 id="sheet-title">Pair your ring</h3>${body}`;
+    },
     editText:()=>{const a=S.chat[arg];return `<h3 id="sheet-title">Edit before sending</h3><p>Change the text to Sam, then approve it.</p><label for="edit-t" class="sr">Message to Sam</label><textarea id="edit-t">${esc(a.text)}</textarea><div style="height:12px"></div><button class="btn btn-silver" id="save-edit">Save</button>`},
   };
   b.innerHTML=T[kind]();
@@ -863,6 +882,8 @@ function openSheet(kind,arg){
     setTimeout(()=>{if(document.body.contains(pd)){delete pd.dataset.armed;pd.textContent='Delete my account'}},4000);
   };
   const se=$('#save-edit');if(se)se.onclick=()=>{const t=$('#edit-t').value.trim();if(t){S.chat[arg].text=t;renderChat()}closeSheet()};
+  const psc=$('#pair-scan');if(psc)psc.onclick=pairRingScan;
+  const pht=$('#pair-test');if(pht)pht.onclick=()=>{bleWriteHaptic(0x04);toast('Buzz sent — feel it?')};
   const first=b.querySelector('input,textarea,button');if(first)setTimeout(()=>first.focus(),320);
 }
 function closeSheet(){
@@ -887,6 +908,73 @@ const tokenStore={
 };
 function signedIn(){return !!tokenStore.get()}
 function authHeaders(h={}){const t=tokenStore.get();return t?{...h,'Authorization':'Bearer '+t}:h}
+
+/* ---- ring hardware pairing (Web Bluetooth) ---- */
+// Frozen contract: docs/hardware-integration.md
+const BLE_UUIDS={
+  svc:'2c827db5-23ea-41c0-8860-154b7f7f283b',
+  aud:'2c827db5-23ea-41c0-8860-154b6f7f2831',
+  tap:'2c827db5-23ea-41c0-8860-154b5f7f2832',
+  hap:'2c827db5-23ea-41c0-8860-154b4f7f2833',
+  battSvc:'battery_service',battChar:'battery_level',
+};
+const BLE_TAP={1:'single',2:'double',3:'long'};
+const BLE_HAPTIC={success:0x04,error:0x05,ack:0x01};
+let BLE_DEV=null; // {name,rowId,battery,device,server,tapChar,hapChar}
+
+async function bleWriteHaptic(id){
+  if(!BLE_DEV||!BLE_DEV.hapChar)return;
+  try{await BLE_DEV.hapChar.writeValueWithoutResponse(new Uint8Array([id]));}catch(e){}
+}
+async function bleOnTap(ev){
+  const b=ev.target.value.getUint8(0);
+  const type=BLE_TAP[b];if(!type||!BLE_DEV||!BLE_DEV.rowId)return;
+  bleWriteHaptic(BLE_HAPTIC.ack);
+  try{
+    const r=await apiFetch('/api/devices/'+encodeURIComponent(BLE_DEV.rowId)+'/tap',
+      {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type})});
+    if(!r.ok)return;
+    const j=await r.json();
+    if(j.haptic)bleWriteHaptic(BLE_HAPTIC[j.haptic]||BLE_HAPTIC.error);
+    if(j.action==='approved'||j.action==='declined')toast(j.action==='approved'?'Approved from your ring':'Declined from your ring');
+  }catch(e){}
+}
+async function pairRingScan(){
+  const st=$('#pair-status');
+  const say=t=>{if(st)st.textContent=t};
+  try{
+    say('Scanning…');
+    const device=await navigator.bluetooth.requestDevice({filters:[{services:[BLE_UUIDS.svc]}]});
+    say('Connecting to '+(device.name||'ring')+'…');
+    const server=await device.gatt.connect();
+    const svc=await server.getPrimaryService(BLE_UUIDS.svc);
+    const tapChar=await svc.getCharacteristic(BLE_UUIDS.tap);
+    const hapChar=await svc.getCharacteristic(BLE_UUIDS.hap);
+    await tapChar.startNotifications();
+    tapChar.addEventListener('characteristicvaluechanged',bleOnTap);
+    let battery=null;
+    try{
+      const bs=await server.getPrimaryService(BLE_UUIDS.battSvc);
+      const bc=await bs.getCharacteristic(BLE_UUIDS.battChar);
+      battery=(await bc.readValue()).getUint8(0);
+    }catch(e){}
+    const reg=await apiFetch('/api/devices/register',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ble_id:device.id,name:device.name||'Ring'})});
+    if(!reg.ok)throw new Error('server rejected the device (HTTP '+reg.status+')');
+    const row=await reg.json();
+    if(battery!=null)apiFetch('/api/devices/'+encodeURIComponent(row.id)+'/battery',
+      {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({level:battery})}).catch(()=>{});
+    BLE_DEV={name:device.name||'Ring',rowId:row.id,battery,device,server,tapChar,hapChar};
+    device.addEventListener('gattserverdisconnected',()=>{BLE_DEV=null;toast('Ring disconnected');if(S.tab==='profile')renderProfile()});
+    say('Connected. Double-tap your ring to test — approvals buzz back.');
+    bleWriteHaptic(0x02);
+    if(S.tab==='profile')renderProfile();
+    openSheet('pair');
+    toast('Ring paired');
+  }catch(e){
+    say(e.name==='NotFoundError'?'No ring found — try again with it nearby.':'Pairing failed: '+(e.message||e));
+  }
+}
 async function apiFetch(url,opts={}){
   const headers={...(opts.headers||{})};
   const t=tokenStore.get();

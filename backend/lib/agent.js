@@ -17,7 +17,9 @@ const dining = require('../connectors/dining');
 // Tools the model can call. `risk`: low runs immediately, medium needs a
 // tap/voice confirm, high needs an in-app approval card. Nothing irreversible
 // runs without the gate in server.js checking this field.
-const TOOLS = [
+const _RAW_TOOLS = [
+  // Tools contributed by connectors that define their own `tools` array
+  // (see backend/connectors/registry.js).
   {
     name: 'gmail_search', risk: 'low', fn: gmail.searchMessages,
     schema: { type: 'object', properties: { query: { type: 'string' }, maxResults: { type: 'number' } }, required: ['query'] },
@@ -56,7 +58,14 @@ const TOOLS = [
     }),
     schema: { type: 'object', properties: { slug: { type: 'string' }, city: { type: 'string' }, date: { type: 'string' }, dateTime: { type: 'string' }, seats: { type: 'number' } }, required: ['slug'] },
     describe: 'Build prefilled booking deep links for a restaurant',
-  },
+  },];
+
+// Legacy entries win on name collisions: a connector-contributed tool can
+// never shadow an existing one.
+const _seen = new Set(_RAW_TOOLS.map((t) => t.name));
+const TOOLS = [
+  ...require('../connectors/registry').allTools().filter((t) => !_seen.has(t.name)),
+  ..._RAW_TOOLS,
 ];
 
 const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. You can search email, manage the calendar, find restaurants, build ride and booking links, and coordinate group plans. Be concise and plainspoken. Never claim a booking or message is done until its tool confirms it — and anything that spends money or sends as the user needs their explicit approval first.`;

@@ -16,10 +16,12 @@
 //   GET/POST/DELETE /api/memories        → durable user memory
 //   GET  /api/export                    → export all user data (JSON)
 //   DELETE /api/account                 → wipe all user data
+//   POST /api/twilio/inbound            → Twilio SMS/WhatsApp webhook (signature-verified)
 //
 // Static: serves ../index.html so one `npm start` runs the whole prototype
 // with the API live underneath it.
 const path = require('path');
+const crypto = require('crypto');
 const express = require('express');
 require('dotenv').config();
 
@@ -39,7 +41,11 @@ const connectors = {
   places: require('./connectors/places'),
   uber: require('./connectors/uber'),
   dining: require('./connectors/dining'),
+  twilio: require('./connectors/twilio'),
+  telegram: require('./connectors/telegram'),
+  stripe: require('./connectors/stripe'),
 };
+const { connectorStatus } = require('./connectors/registry');
 
 const app = express();
 // /api/voice carries base64 audio — give it a bigger body; everything else
@@ -69,6 +75,8 @@ app.get('/api/health', (req, res) => {
       out.connectors[name] = { ok: false, error: e.message };
     }
   }
+  // Registry view (same data, single source of truth going forward).
+  try { Object.assign(out.connectors, connectorStatus()); } catch (e) { /* never break health */ }
   res.json(out);
 });
 
@@ -173,13 +181,13 @@ app.delete('/api/memories/:id', requireUser, async (req, res) => {
 });
 
 // --- Privacy: export + delete --------------------------------------------
-const USER_TABLES = ['ring_oauth_tokens', 'ring_approvals', 'ring_threads', 'ring_messages', 'ring_memories', 'ring_tool_runs'];
+const USER_TABLES = ['ring_oauth_tokens', 'ring_approvals', 'ring_threads', 'ring_messages', 'ring_memories', 'ring_tool_runs', 'ring_devices'];
 
 app.get('/api/export', requireUser, async (req, res) => {
   if (!SB_ENABLED) return res.status(501).json({ error: 'persistence not configured' });
   const out = { user: { id: req.userId, email: req.userEmail }, exportedAt: new Date().toISOString(), data: {} };
   for (const t of USER_TABLES) {
-    out.data[t] = await sbRequest('GET', `/${t}?user_id=${eq(req.userId)}&select=*`);
+    out.data[t] = await sbRequest('GET', `/${t}?user_id=eq.${eq(req.userId)}&select=*`);
   }
   res.json(out);
 });
@@ -187,7 +195,7 @@ app.get('/api/export', requireUser, async (req, res) => {
 app.delete('/api/account', requireUser, async (req, res) => {
   if (!SB_ENABLED) return res.status(501).json({ error: 'persistence not configured' });
   for (const t of USER_TABLES) {
-    await sbRequest('DELETE', `/${t}?user_id=${eq(req.userId)}`);
+    await sbRequest('DELETE', `/${t}?user_id=eq.${eq(req.userId)}`);
   }
   res.json({ ok: true, deletedUser: req.userId });
 });
@@ -211,6 +219,177 @@ app.post('/api/approvals/:id/resolve', optionalUser, async (req, res) => {
     res.status(e.code === 'NOT_FOUND' ? 404 : 500).json({ error: e.message });
   }
 });
+
+// --- Webhook inbound (Home Assistant etc. → Ring) ---------------------------
+// External services push events here. Per-name secret via RING_INBOUND_SECRETS
+// = JSON {name: secret}, sent as ?secret= or the X-Webhook-Secret header.
+// Unknown name → 404, wrong secret → 403 (the two are intentionally distinct).
+app.post('/api/webhooks/in/:name', async (req, res) => {
+  let secrets = {};
+  try { secrets = JSON.parse(process.env.RING_INBOUND_SECRETS || '{}'); } catch (e) { /* malformed env */ }
+  const expected = secrets[req.params.name];
+  if (!expected) return res.status(404).json({ error: 'not found' });
+  const got = req.query.secret || req.get('x-webhook-secret') || '';
+  const a = Buffer.from(String(got));
+  const b = Buffer.from(String(expected));
+  const ok = a.length === b.length && crypto.timingSafeEqual(a, b);
+  if (!ok) return res.status(403).json({ error: 'forbidden' });
+
+  let th = (await threads.listThreads()).find((t) => t.name === 'Automations');
+  if (!th) th = await threads.createThread({ name: 'Automations', members: [] });
+  const body = req.body && Object.keys(req.body).length ? JSON.stringify(req.body) : '';
+  const text = `⚡ ${req.params.name}${body ? ': ' + body : ''}`;
+  const msg = await threads.postMessage(th.id, { from: req.params.name, text });
+  res.json({ ok: true, threadId: th.id, messageId: msg.id });
+});
+
+// --- Telegram webhook -----------------------------------------------------
+// Telegram delivers inbound messages here. If TELEGRAM_WEBHOOK_SECRET is set,
+// the request must carry it as ?secret= (set the webhook URL with the secret
+// appended). Wrong secret → 403. Each sender gets their own thread; the
+// message is stored and broadcast (threads.postMessage handles that), but
+// there is intentionally NO auto-reply — the user sees it in the app.
+app.post('/api/telegram/webhook', async (req, res) => {
+  const expected = process.env.TELEGRAM_WEBHOOK_SECRET || '';
+  // Fail closed: no secret configured means the webhook is disabled.
+  if (!expected) return res.status(403).json({ error: 'webhook_not_configured' });
+  const got = req.query.secret || '';
+  const a = Buffer.from(String(got));
+  const b = Buffer.from(String(expected));
+  const ok = a.length === b.length && crypto.timingSafeEqual(a, b);
+  if (!ok) return res.status(403).json({ error: 'forbidden' });
+  const msg = req.body && req.body.message;
+  const text = msg && msg.text;
+  if (!text) return res.json({ ok: true, ignored: true });
+  const from = msg.from?.first_name || msg.from?.username || 'telegram';
+  const threadName = `Telegram — ${from}`;
+  let th = (await threads.listThreads()).find((t) => t.name === threadName);
+  if (!th) th = await threads.createThread({ name: threadName, members: [from] });
+  const stored = await threads.postMessage(th.id, { from, text });
+  res.json({ ok: true, threadId: th.id, messageId: stored.id });
+});
+
+// --- Ring devices (hardware) -----------------------------------------------
+const DEV_TBL = 'ring_devices';
+const audit = (() => { try { return require('./lib/audit'); } catch { return null; } })();
+
+app.get('/api/devices', requireUser, async (req, res) => {
+  if (!SB_ENABLED) return res.status(501).json({ error: 'persistence not configured' });
+  const rows = await sbRequest('GET', `/${DEV_TBL}?user_id=eq.${eq(req.userId)}&select=*&order=last_seen_at.desc`);
+  res.json(rows || []);
+});
+
+app.post('/api/devices/register', requireUser, async (req, res) => {
+  if (!SB_ENABLED) return res.status(501).json({ error: 'persistence not configured' });
+  const { ble_id, name, firmware } = req.body || {};
+  if (!ble_id) return res.status(400).json({ error: 'ble_id is required' });
+  const now = new Date().toISOString();
+  const existing = await sbRequest('GET', `/${DEV_TBL}?ble_id=eq.${eq(ble_id)}&select=id,user_id`);
+  let row;
+  if (existing && existing.length) {
+    if (existing[0].user_id !== req.userId) return res.status(409).json({ error: 'device is paired to another account' });
+    row = await sbRequest(`/${DEV_TBL}?ble_id=eq.${eq(ble_id)}`, {
+      method: 'PATCH',
+      headers: { Prefer: 'return=representation' },
+      body: JSON.stringify({ last_seen_at: now, ...(name ? { name } : {}), ...(firmware ? { firmware } : {}) }),
+    });
+    row = row && row[0];
+  } else {
+    row = await sbRequest(`/${DEV_TBL}`, {
+      method: 'POST',
+      headers: { Prefer: 'return=representation' },
+      body: JSON.stringify({ user_id: req.userId, ble_id, name: name || null, firmware: firmware || null, last_seen_at: now }),
+    });
+    row = row && row[0];
+  }
+  res.json(row);
+});
+
+app.post('/api/devices/:id/battery', requireUser, async (req, res) => {
+  if (!SB_ENABLED) return res.status(501).json({ error: 'persistence not configured' });
+  const { level } = req.body || {};
+  if (typeof level !== 'number' || level < 0 || level > 100)
+    return res.status(400).json({ error: 'level must be a number 0-100' });
+  const rows = await sbRequest('GET', `/${DEV_TBL}?id=eq.${eq(req.params.id)}&select=id,user_id`);
+  if (!rows || !rows.length) return res.status(404).json({ error: 'device not found' });
+  if (rows[0].user_id !== req.userId) return res.status(403).json({ error: 'forbidden' });
+  await sbRequest(`/${DEV_TBL}?id=eq.${eq(req.params.id)}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ battery: Math.round(level), last_seen_at: new Date().toISOString() }),
+  });
+  res.json({ ok: true });
+});
+
+// Tap events from the ring. Double-tap approves the most recent pending card
+// (haptic success/error tells the app what to buzz), long-press declines it.
+app.post('/api/devices/:id/tap', requireUser, async (req, res) => {
+  if (!SB_ENABLED) return res.status(501).json({ error: 'persistence not configured' });
+  const { type } = req.body || {};
+  if (!['single', 'double', 'long'].includes(type))
+    return res.status(400).json({ error: "type must be 'single', 'double', or 'long'" });
+  const devs = await sbRequest('GET', `/${DEV_TBL}?id=eq.${eq(req.params.id)}&select=id,user_id`);
+  if (!devs || !devs.length) return res.status(404).json({ error: 'device not found' });
+  if (devs[0].user_id !== req.userId) return res.status(403).json({ error: 'forbidden' });
+
+  await sbRequest(`/${DEV_TBL}?id=eq.${eq(req.params.id)}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ last_seen_at: new Date().toISOString() }),
+  });
+
+  if (type === 'single') return res.json({ action: 'voice_invoke' });
+
+  const pending = await approvals.listPending(req.userId);
+  if (!pending.length) return res.json({ action: type === 'double' ? 'voice_invoke' : 'noop', haptic: 'error', pending: 0 });
+
+  const card = pending[pending.length - 1]; // most recent
+  const decision = type === 'double' ? 'approve' : 'decline';
+  const rec = await approvals.resolve(card.id, decision);
+  if (audit) audit.logToolRun({
+    userId: req.userId,
+    tool: `ring_tap_${decision}`,
+    args: { deviceId: req.params.id, approvalId: card.id, tool: card.tool },
+    result: { status: rec.status },
+    approvalId: card.id,
+    status: decision === 'approve' ? 'approved' : 'held',
+  }).catch(() => {});
+  res.json({
+    action: decision === 'approve' ? 'approved' : 'declined',
+    approvalId: card.id,
+    tool: card.tool,
+    haptic: decision === 'approve' ? 'success' : 'error',
+    pending: pending.length - 1,
+  });
+});
+
+// --- Twilio inbound SMS/WhatsApp webhook ------------------------------------
+// Configure in the Twilio console as the messaging webhook for your number.
+// Validates X-Twilio-Signature; on success the message lands in a per-sender
+// thread (created on first contact) and broadcasts to chat clients. No
+// auto-reply — replies go out only when the user approves them via chat.
+app.post(
+  '/api/twilio/inbound',
+  express.urlencoded({ extended: false }),
+  async (req, res) => {
+    try {
+      const twilio = require('./connectors/twilio');
+      const url = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '') + req.path;
+      const sig = req.get('X-Twilio-Signature');
+      if (!twilio.validateSignature(url, req.body || {}, sig)) {
+        return res.status(403).json({ error: 'invalid Twilio signature' });
+      }
+      const from = (req.body.From || '').replace(/^whatsapp:/, '');
+      const body = (req.body.Body || '').trim();
+      if (!from || !body) return res.status(200).type('text/xml').send('<Response/>');
+      const threadName = `SMS ${from}`;
+      let thread = (await threads.listThreads()).find((t) => t.name === threadName);
+      if (!thread) thread = await threads.createThread({ name: threadName, members: [from] });
+      await threads.postMessage(thread.id, { from, text: body });
+      res.status(200).type('text/xml').send('<Response/>');
+    } catch (e) {
+      res.status(500).json({ error: 'inbound failed' });
+    }
+  }
+);
 
 // --- Group threads -------------------------------------------------------
 app.get('/api/threads', async (req, res) => res.json(await threads.listThreads()));

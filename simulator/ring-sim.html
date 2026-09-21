@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ring Hardware Simulator — validates the server contract without hardware</title>
+<style>
+  :root { color-scheme: dark; }
+  body { font-family: system-ui, sans-serif; background: #0b0b0c; color: #eee; max-width: 720px; margin: 0 auto; padding: 24px; }
+  h1 { font-size: 22px; } h2 { font-size: 16px; margin-top: 28px; border-bottom: 1px solid #333; padding-bottom: 6px; }
+  .card { background: #151517; border: 1px solid #2a2a2d; border-radius: 12px; padding: 16px; margin: 12px 0; }
+  button { background: #2f5236; color: #fff; border: none; border-radius: 8px; padding: 10px 16px; font-size: 15px; margin: 4px; cursor: pointer; }
+  button.ghost { background: #2a2a2d; }
+  button:disabled { opacity: .4; cursor: default; }
+  input[type=text] { background: #1c1c1f; border: 1px solid #333; color: #eee; border-radius: 8px; padding: 10px; font-size: 14px; width: 100%; box-sizing: border-box; }
+  input[type=range] { width: 100%; }
+  pre { background: #000; border: 1px solid #2a2a2d; border-radius: 8px; padding: 12px; font-size: 12px; overflow-x: auto; white-space: pre-wrap; max-height: 260px; overflow-y: auto; }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .ok { color: #7fd08a; } .err { color: #ff8a7a; } .muted { color: #999; font-size: 13px; }
+  .uuid { font-family: monospace; font-size: 12px; color: #a9c2a6; word-break: break-all; }
+</style>
+</head>
+<body>
+<h1>Ring Hardware Simulator</h1>
+<p class="muted">Validates the full BLE-server contract from <code>docs/hardware-integration.md</code> with no hardware.
+Fuzz the same endpoints a firmware engineer would drive from the ring.</p>
+
+<h2>1 · Contract UUIDs (frozen)</h2>
+<div class="card">
+  <div>Service <span class="uuid" id="u-svc"></span></div>
+  <div>Audio <span class="uuid" id="u-aud"></span> · Tap <span class="uuid" id="u-tap"></span> · Haptic <span class="uuid" id="u-hap"></span></div>
+</div>
+
+<h2>2 · Auth</h2>
+<div class="card">
+  <p class="muted">Paste a Supabase JWT (from the app's localStorage <code>ring_token</code> after magic-link sign-in). All device endpoints need it.</p>
+  <input type="text" id="jwt" placeholder="eyJhbGciOi...">
+  <div class="row" style="margin-top:8px"><button id="whoami" class="ghost">Check identity</button><span id="whoami-out" class="muted"></span></div>
+</div>
+
+<h2>3 · Device registration</h2>
+<div class="card">
+  <div class="row">
+    <input type="text" id="bleid" placeholder="BLE id (default: random UUID)" style="flex:1">
+    <button id="register">Register device</button>
+  </div>
+  <div class="row" style="margin-top:8px"><button id="list" class="ghost">List my devices</button></div>
+  <div class="muted">Registered device id: <span id="devid" class="uuid">—</span></div>
+</div>
+
+<h2>4 · Tap events → POST /api/devices/:id/tap</h2>
+<div class="card">
+  <p class="muted">Double-tap approves the most recent pending card, long-press declines it, single invokes voice. The server answers which haptic to buzz.</p>
+  <div class="row">
+    <button data-tap="single" class="ghost">Single tap</button>
+    <button data-tap="double">Double tap → approve</button>
+    <button data-tap="long" class="ghost">Long press → decline</button>
+  </div>
+  <pre id="tap-out">tap results appear here</pre>
+</div>
+
+<h2>5 · Haptic patterns (what the app would write to HAPTIC_CMD)</h2>
+<div class="card">
+  <div class="row" id="haptics"></div>
+  <p class="muted" id="haptic-out">0x01 short · 0x02 double · 0x03 long · 0x04 success · 0x05 error</p>
+</div>
+
+<h2>6 · Battery → POST /api/devices/:id/battery</h2>
+<div class="card">
+  <div class="row"><input type="range" id="batt" min="0" max="100" value="82" style="flex:1"><b id="batt-v">82%</b><button id="batt-send">Send</button></div>
+  <div class="muted" id="batt-out"></div>
+</div>
+
+<h2>7 · Audio test → POST /api/voice</h2>
+<div class="card">
+  <p class="muted">Records up to 10 s from this machine's mic, converts to 16 kHz mono WAV (same PCM the ring streams), and POSTs to /api/voice. Shows transcript + reply.</p>
+  <div class="row"><button id="rec">● Record (10 s max)</button><button id="stop" class="ghost" disabled>Stop</button><span id="rec-state" class="muted"></span></div>
+  <pre id="voice-out">voice results appear here</pre>
+</div>
+
+<script>
+'use strict';
+const API = location.origin; // serve this page from the backend (or set to https://ringsss.vercel.app)
+const UUIDS = {
+  svc: '2C827DB5-23EA-41C0-8860-154B7F7F283B',
+  aud: '2C827DB5-23EA-41C0-8860-154B6F7F2831',
+  tap: '2C827DB5-23EA-41C0-8860-154B5F7F2832',
+  hap: '2C827DB5-23EA-41C0-8860-154B4F7F2833',
+};
+const HAPTICS = { 1: 'short buzz', 2: 'double buzz', 3: 'long buzz', 4: 'success', 5: 'error' };
+document.getElementById('u-svc').textContent = UUIDS.svc;
+document.getElementById('u-aud').textContent = UUIDS.aud;
+document.getElementById('u-tap').textContent = UUIDS.tap;
+document.getElementById('u-hap').textContent = UUIDS.hap;
+
+const $ = id => document.getElementById(id);
+const auth = () => { const t = $('jwt').value.trim(); return t ? { Authorization: 'Bearer ' + t } : {}; };
+let deviceId = null;
+
+async function api(method, path, body) {
+  const r = await fetch(API + path, {
+    method, headers: { 'Content-Type': 'application/json', ...auth() },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const text = await r.text();
+  let json; try { json = JSON.parse(text); } catch { json = { raw: text.slice(0, 200) }; }
+  return { status: r.status, json };
+}
+
+$('whoami').onclick = async () => {
+  const r = await api('GET', '/api/auth/me');
+  $('whoami-out').textContent = r.status === 200 ? 'signed in: ' + r.json.email : 'not signed in (' + r.status + ')';
+  $('whoami-out').className = r.status === 200 ? 'ok' : 'err';
+};
+
+$('register').onclick = async () => {
+  const ble_id = $('bleid').value.trim() || ('sim-' + crypto.randomUUID());
+  const r = await api('POST', '/api/devices/register', { ble_id, name: 'Simulator ring', firmware: 'sim-1.0' });
+  if (r.status === 200) { deviceId = r.json.id; $('devid').textContent = deviceId; }
+  $('tap-out').textContent = JSON.stringify(r, null, 2);
+};
+$('list').onclick = async () => {
+  const r = await api('GET', '/api/devices');
+  $('tap-out').textContent = JSON.stringify(r, null, 2);
+};
+
+document.querySelectorAll('[data-tap]').forEach(b => b.onclick = async () => {
+  if (!deviceId) { $('tap-out').textContent = 'register a device first'; return; }
+  const r = await api('POST', '/api/devices/' + deviceId + '/tap', { type: b.dataset.tap });
+  $('tap-out').textContent = JSON.stringify(r, null, 2);
+  if (r.json && r.json.haptic) {
+    const id = r.json.haptic === 'success' ? 4 : 5;
+    $('haptic-out').textContent = 'app should write HAPTIC_CMD 0x0' + id + ' (' + HAPTICS[id] + ')';
+  }
+});
+
+$('haptics').innerHTML = Object.entries(HAPTICS).map(([id, name]) =>
+  `<button class="ghost" data-h="${id}">0x0${id} ${name}</button>`).join('');
+document.querySelectorAll('[data-h]').forEach(b => b.onclick = () =>
+  $('haptic-out').textContent = 'firmware would buzz: 0x0' + b.dataset.h + ' (' + HAPTICS[b.dataset.h] + ')');
+
+$('batt').oninput = e => $('batt-v').textContent = e.target.value + '%';
+$('batt-send').onclick = async () => {
+  if (!deviceId) { $('batt-out').textContent = 'register a device first'; return; }
+  const r = await api('POST', '/api/devices/' + deviceId + '/battery', { level: +$('batt').value });
+  $('batt-out').textContent = r.status === 200 ? 'battery updated' : 'failed: ' + JSON.stringify(r.json);
+  $('batt-out').className = r.status === 200 ? 'ok' : 'err';
+};
+
+// ---- audio: mic -> 16kHz mono WAV -> /api/voice ----
+let stream, rec, chunks, recTimer;
+function downsampleTo16k(buffer) {
+  const src = buffer.getChannelData(0), srcRate = buffer.sampleRate, dstRate = 16000;
+  const len = Math.floor(src.length * dstRate / srcRate);
+  const out = new Int16Array(len);
+  for (let i = 0; i < len; i++) {
+    const s = src[Math.floor(i * srcRate / dstRate)];
+    out[i] = Math.max(-32768, Math.min(32767, Math.round(s * 32767)));
+  }
+  return out;
+}
+function wavBytes(pcm) {
+  const h = new DataView(new ArrayBuffer(44));
+  const wstr = (o, s) => { for (let i = 0; i < s.length; i++) h.setUint8(o + i, s.charCodeAt(i)); };
+  wstr(0, 'RIFF'); h.setUint32(4, 36 + pcm.length * 2, true); wstr(8, 'WAVE'); wstr(12, 'fmt ');
+  h.setUint32(16, 16, true); h.setUint16(20, 1, true); h.setUint16(22, 1, true);
+  h.setUint32(24, 16000, true); h.setUint32(28, 32000, true); h.setUint16(32, 2, true); h.setUint16(34, 16, true);
+  wstr(36, 'data'); h.setUint32(40, pcm.length * 2, true);
+  const out = new Uint8Array(44 + pcm.length * 2);
+  out.set(new Uint8Array(h.buffer), 0);
+  out.set(new Uint8Array(pcm.buffer), 44);
+  return out;
+}
+$('rec').onclick = async () => {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (e) { $('rec-state').textContent = 'mic denied: ' + e.message; return; }
+  const AC = window.AudioContext || window.webkitAudioContext;
+  const ac = new AC();
+  const srcNode = ac.createMediaStreamSource(stream);
+  const proc = ac.createScriptProcessor(4096, 1, 1);
+  const pcmParts = [];
+  proc.onaudioprocess = e => pcmParts.push(downsampleTo16k(e.inputBuffer));
+  srcNode.connect(proc); proc.connect(ac.createMediaStreamDestination());
+  rec = { ac, proc, pcmParts };
+  $('rec').disabled = true; $('stop').disabled = false;
+  $('rec-state').textContent = 'recording…';
+  recTimer = setTimeout(stopRec, 10000);
+};
+async function stopRec() {
+  if (!rec) return;
+  clearTimeout(recTimer);
+  const total = rec.pcmParts.reduce((n, p) => n + p.length, 0);
+  const pcm = new Int16Array(total);
+  let o = 0; for (const p of rec.pcmParts) { pcm.set(p, o); o += p.length; }
+  rec.proc.disconnect(); rec.ac.close(); stream.getTracks().forEach(t => t.stop());
+  rec = null;
+  $('rec').disabled = false; $('stop').disabled = true;
+  $('rec-state').textContent = 'sending ' + (total / 16000).toFixed(1) + 's of audio…';
+  const wav = wavBytes(pcm);
+  let b64 = ''; const CH = 8192;
+  for (let i = 0; i < wav.length; i += CH) b64 += String.fromCharCode.apply(null, wav.subarray(i, i + CH));
+  b64 = btoa(b64);
+  try {
+    const r = await fetch(API + '/api/voice', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', ...auth() },
+      body: JSON.stringify({ audio: b64, mime: 'audio/wav' }),
+    });
+    const j = await r.json();
+    $('voice-out').textContent = 'HTTP ' + r.status + '\n' + JSON.stringify(j, null, 2).slice(0, 2000);
+    $('rec-state').textContent = r.status === 200 ? 'done' : 'voice endpoint returned ' + r.status + ' (needs STT credentials)';
+  } catch (e) { $('voice-out').textContent = 'request failed: ' + e.message; }
+  $('rec-state').textContent += '';
+}
+$('stop').onclick = stopRec;
+</script>
+</body>
+</html>
