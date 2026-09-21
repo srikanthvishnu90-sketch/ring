@@ -60,18 +60,28 @@ async function dbMessages(threadId, limit) {
   return (rows || []).map(toMsg);
 }
 
-async function createThread({ name, members }) {
+// Ownership model: a thread belongs to its members. The thread's `members`
+// array holds Supabase user UUIDs for app-created threads; webhook-created
+// threads (Telegram etc.) hold the external sender name instead, so they
+// never match a user id and stay out of user listings.
+function isMember(thread, userId) {
+  return !!userId && Array.isArray(thread.members) && thread.members.includes(userId);
+}
+
+async function createThread({ name, members, userId }) {
+  const mems = [...(members || [])];
+  if (userId && !mems.includes(userId)) mems.push(userId);
   const rec = {
     id: newThreadId(),
     name: name || 'New group',
-    members: members || [],
+    members: mems,
     createdAt: new Date().toISOString(),
   };
   if (ENABLED) {
     await sbRequest(`/${THREADS_TBL}`, {
       method: 'POST',
       body: JSON.stringify({
-        id: rec.id, name: rec.name, members: rec.members, created_at: rec.createdAt,
+        id: rec.id, name: rec.name, members: mems, created_at: rec.createdAt,
       }),
     });
     return { ...rec, messages: [] };
@@ -90,9 +100,11 @@ async function getThread(id) {
   return memThreads.get(id);
 }
 
-async function listThreads() {
+async function listThreads({ userId } = {}) {
   if (ENABLED) {
-    const rows = await sbRequest(`/${THREADS_TBL}?select=*&order=created_at.desc&limit=50`);
+    // members is jsonb: PostgREST contains filter matches the user id.
+    const scope = userId ? `&members=cs.${encodeURIComponent(JSON.stringify([userId]))}` : '';
+    const rows = await sbRequest(`/${THREADS_TBL}?select=*&order=created_at.desc&limit=50${scope}`);
     const threads = rows || [];
     if (!threads.length) return [];
     const ids = threads.map((t) => t.id);
@@ -105,7 +117,8 @@ async function listThreads() {
     }
     return threads.map((t) => toThread(t, lastByThread[t.id] ? [lastByThread[t.id]] : []));
   }
-  return [...memThreads.values()].map((t) => ({ ...t, messages: t.messages.slice(-1) }));
+  const all = [...memThreads.values()].map((t) => ({ ...t, messages: t.messages.slice(-1) }));
+  return userId ? all.filter((t) => isMember(t, userId)) : all;
 }
 
 function broadcast(threadId, event) {
@@ -219,4 +232,4 @@ async function getRecentMessages(threadId, limit = 10) {
   return all.slice(-lim);
 }
 
-module.exports = { createThread, getThread, listThreads, postMessage, subscribe, unsubscribe, getRecentMessages, AGENT_NAME };
+module.exports = { createThread, getThread, listThreads, postMessage, subscribe, unsubscribe, getRecentMessages, isMember, AGENT_NAME };

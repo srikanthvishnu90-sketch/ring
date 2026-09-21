@@ -197,23 +197,63 @@ app.delete('/api/memories/:id', requireUser, async (req, res) => {
 });
 
 // --- Privacy: export + delete --------------------------------------------
+// Per-user tables keyed by user_id. Threads/messages are keyed by
+// membership: threads whose members array contains the user, and messages
+// in those threads.
 const USER_TABLES = ['ring_oauth_tokens', 'ring_approvals', 'ring_threads', 'ring_messages', 'ring_memories', 'ring_tool_runs', 'ring_devices'];
+const DIRECT_USER_TABLES = USER_TABLES.filter((t) => t !== 'ring_threads' && t !== 'ring_messages');
+
+async function userThreadIds(userId) {
+  return (await threads.listThreads({ userId })).map((t) => t.id);
+}
 
 app.get('/api/export', requireUser, async (req, res) => {
   if (!SB_ENABLED) return res.status(501).json({ error: 'persistence not configured' });
   const out = { user: { id: req.userId, email: req.userEmail }, exportedAt: new Date().toISOString(), data: {} };
-  for (const t of USER_TABLES) {
-    out.data[t] = await sbRequest('GET', `/${t}?user_id=eq.${eq(req.userId)}&select=*`);
+  for (const t of DIRECT_USER_TABLES) {
+    out.data[t] = await sbRequest(`/${t}?user_id=eq.${eq(req.userId)}&select=*`);
   }
+  const ids = await userThreadIds(req.userId);
+  out.data.ring_threads = await threads.listThreads({ userId: req.userId });
+  out.data.ring_messages = ids.length
+    ? await sbRequest(`/ring_messages?thread_id=in.(${ids.map(eq).join(',')})&select=*&order=created_at.asc`)
+    : [];
   res.json(out);
 });
 
 app.delete('/api/account', requireUser, async (req, res) => {
   if (!SB_ENABLED) return res.status(501).json({ error: 'persistence not configured' });
-  for (const t of USER_TABLES) {
-    await sbRequest('DELETE', `/${t}?user_id=eq.${eq(req.userId)}`);
+  // Threads: delete ones where the user is the sole member (plus their
+  // messages); otherwise just remove the user from members so other
+  // members keep the group chat.
+  const myThreads = await threads.listThreads({ userId: req.userId });
+  const soleIds = myThreads.filter((t) => (t.members || []).length <= 1).map((t) => t.id);
+  if (soleIds.length) {
+    await sbRequest(`/ring_messages?thread_id=in.(${soleIds.map(eq).join(',')})`, { method: 'DELETE' });
+    await sbRequest(`/ring_threads?id=in.(${soleIds.map(eq).join(',')})`, { method: 'DELETE' });
   }
-  res.json({ ok: true, deletedUser: req.userId });
+  for (const t of myThreads.filter((t) => (t.members || []).length > 1)) {
+    await sbRequest(`/ring_threads?id=eq.${eq(t.id)}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ members: (t.members || []).filter((m) => m !== req.userId) }),
+    });
+  }
+  for (const t of DIRECT_USER_TABLES) {
+    await sbRequest(`/${t}?user_id=eq.${eq(req.userId)}`, { method: 'DELETE' });
+  }
+  // Delete the Supabase Auth user as well (admin API, service_role key).
+  let authDeleted = false;
+  try {
+    const r = await fetch(`${process.env.SUPABASE_URL}/auth/v1/admin/users/${req.userId}`, {
+      method: 'DELETE',
+      headers: {
+        apikey: process.env.SUPABASE_SERVICE_KEY,
+        Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
+      },
+    });
+    authDeleted = r.ok;
+  } catch { /* best effort — app rows are already gone */ }
+  res.json({ ok: true, deletedUser: req.userId, authDeleted });
 });
 
 // --- Approvals -----------------------------------------------------------
@@ -406,7 +446,7 @@ const audit = (() => { try { return require('./lib/audit'); } catch { return nul
 
 app.get('/api/devices', requireUser, async (req, res) => {
   if (!SB_ENABLED) return res.status(501).json({ error: 'persistence not configured' });
-  const rows = await sbRequest('GET', `/${DEV_TBL}?user_id=eq.${eq(req.userId)}&select=*&order=last_seen_at.desc`);
+  const rows = await sbRequest(`/${DEV_TBL}?user_id=eq.${eq(req.userId)}&select=*&order=last_seen_at.desc`);
   res.json(rows || []);
 });
 
@@ -415,7 +455,7 @@ app.post('/api/devices/register', requireUser, async (req, res) => {
   const { ble_id, name, firmware } = req.body || {};
   if (!ble_id) return res.status(400).json({ error: 'ble_id is required' });
   const now = new Date().toISOString();
-  const existing = await sbRequest('GET', `/${DEV_TBL}?ble_id=eq.${eq(ble_id)}&select=id,user_id`);
+  const existing = await sbRequest(`/${DEV_TBL}?ble_id=eq.${eq(ble_id)}&select=id,user_id`);
   let row;
   if (existing && existing.length) {
     if (existing[0].user_id !== req.userId) return res.status(409).json({ error: 'device is paired to another account' });
@@ -441,7 +481,7 @@ app.post('/api/devices/:id/battery', requireUser, async (req, res) => {
   const { level } = req.body || {};
   if (typeof level !== 'number' || level < 0 || level > 100)
     return res.status(400).json({ error: 'level must be a number 0-100' });
-  const rows = await sbRequest('GET', `/${DEV_TBL}?id=eq.${eq(req.params.id)}&select=id,user_id`);
+  const rows = await sbRequest(`/${DEV_TBL}?id=eq.${eq(req.params.id)}&select=id,user_id`);
   if (!rows || !rows.length) return res.status(404).json({ error: 'device not found' });
   if (rows[0].user_id !== req.userId) return res.status(403).json({ error: 'forbidden' });
   await sbRequest(`/${DEV_TBL}?id=eq.${eq(req.params.id)}`, {
@@ -458,7 +498,7 @@ app.post('/api/devices/:id/tap', requireUser, async (req, res) => {
   const { type } = req.body || {};
   if (!['single', 'double', 'long'].includes(type))
     return res.status(400).json({ error: "type must be 'single', 'double', or 'long'" });
-  const devs = await sbRequest('GET', `/${DEV_TBL}?id=eq.${eq(req.params.id)}&select=id,user_id`);
+  const devs = await sbRequest(`/${DEV_TBL}?id=eq.${eq(req.params.id)}&select=id,user_id`);
   if (!devs || !devs.length) return res.status(404).json({ error: 'device not found' });
   if (devs[0].user_id !== req.userId) return res.status(403).json({ error: 'forbidden' });
 
@@ -527,33 +567,48 @@ app.post(
 );
 
 // --- Group threads -------------------------------------------------------
-app.get('/api/threads', async (req, res) => res.json(await threads.listThreads()));
+// Every thread route requires auth and membership: the thread's `members`
+// array must contain the caller's user id. Webhook-created threads
+// (Telegram etc.) carry the external sender name in members, so they never
+// appear in user listings — the webhook reaches them through the internal
+// threads API, not these routes.
+async function requireThreadMember(req, res) {
+  const th = await threads.getThread(req.params.id);
+  if (!th) { res.status(404).json({ error: 'thread not found' }); return null; }
+  if (!threads.isMember(th, req.userId)) { res.status(403).json({ error: 'forbidden' }); return null; }
+  return th;
+}
 
-app.post('/api/threads', async (req, res) => {
+app.get('/api/threads', requireUser, async (req, res) =>
+  res.json(await threads.listThreads({ userId: req.userId })));
+
+app.post('/api/threads', requireUser, async (req, res) => {
   const { name, members } = req.body || {};
-  res.json(await threads.createThread({ name, members }));
+  res.json(await threads.createThread({ name, members, userId: req.userId }));
 });
 
-app.get('/api/threads/:id/messages', async (req, res) => {
-  const th = await threads.getThread(req.params.id);
-  if (!th) return res.status(404).json({ error: 'thread not found' });
+app.get('/api/threads/:id/messages', requireUser, async (req, res) => {
+  const th = await requireThreadMember(req, res);
+  if (!th) return;
   res.json(th.messages);
 });
 
-app.post('/api/threads/:id/messages', async (req, res) => {
+app.post('/api/threads/:id/messages', requireUser, async (req, res) => {
+  const th = await requireThreadMember(req, res);
+  if (!th) return;
   const { from, text } = req.body || {};
   if (!text) return res.status(400).json({ error: 'text is required' });
   try {
-    const msg = await threads.postMessage(req.params.id, { from: from || 'you', text });
+    const msg = await threads.postMessage(req.params.id, { from: from || req.userEmail || 'you', text });
     res.json(msg);
   } catch (e) {
     res.status(e.code === 'NOT_FOUND' ? 404 : 500).json({ error: e.message });
   }
 });
 
-app.get('/api/threads/:id/stream', async (req, res) => {
-  const th = await threads.getThread(req.params.id);
-  if (!th) return res.status(404).json({ error: 'thread not found' });
+app.get('/api/threads/:id/stream', requireUser, async (req, res) => {
+  const th = await requireThreadMember(req, res);
+  if (!th) return;
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
