@@ -132,6 +132,12 @@ Production-verified tonight (curl against ringsss.vercel.app + local adversarial
 
 **Biggest leverage to 100:** voice & hardware (15 pts untouched — provider key + real ring audio path), real-device verification of everything above, background work + notifications (2.3/2.5), more connectors (2.2), proactive triggers (2.5), agent naming + voice invocation (8.3), signature interaction (10.2).
 
+## Build log: 2026-09-21 (score unchanged at 49/100 — pending real-device verification)
+
+- **Telegram bot v2** (commit `209997b`, deployed): typing indicator fires instantly; chat-style system prompt (short, warm, texting tone); replies use the sender's first name and mirror their language; last-8 thread messages included for context; long replies split into short paragraph messages; demo disclosure only when a real action is requested; generation capped at 320 tokens. Locally verified 200/replied:true in ~8s; test rows cleaned from prod. Awaiting Vishnu's real-phone feel check before scoring.
+- **OAuth state hardened** (commit `e0f4445`, deployed): `state` is now HMAC-SHA256-signed, 10-minute expiry, bound to the authenticated user; `POST /api/oauth/google/start` (requireUser) issues state + sets HttpOnly SameSite=Lax CSRF-nonce cookie; `/auth/google` bridge page completes the authed start from the app's stored token; callback verifies signature/expiry/cookie and saves tokens only under the sealed userId; plaintext `state=<userId|local>` and anonymous binding removed. Unit + route tests pass (401/403 paths). **Needs Vishnu:** add `OAUTH_STATE_SECRET` (generate: `openssl rand -hex 32`) to ringsss → Settings → Environment Variables (Production) + redeploy, then sign in and reconnect Google.
+- **Security incident:** `.env.example` was committed with real-looking credential values (history: `6c86441`/`fb8056a`). Scrubbed in `e0f4445`, but git history still holds them — exposed values (Stripe, database URL, Telegram webhook secret, Uber/Resy, APNS, session secret) must be rotated. Flagged to Vishnu.
+
 ## Rough self-score: Ring today (~30/100)
 
 | Category | Score | Notes |
