@@ -113,6 +113,25 @@
 
 ---
 
+## Re-score: 2026-09-21 (~49/100)
+
+Production-verified tonight (curl against ringsss.vercel.app + local adversarial suite; real-device phone testing still pending):
+
+| Category | Score | Change | Notes |
+|---|---|---|---|
+| 1. Conversational intelligence | 7/15 | +2 | Token streaming live on prod; durable memory injected into prompts; honesty rule holds |
+| 2. Agentic capability | 5/15 | — | Approvals + Gmail/Calendar/Places unchanged; voice pipeline built but unconfigured |
+| 3. Voice & hardware | 0/15 | — | Server pipeline exists (STT→agent→TTS, graceful 501s); no provider key, no real device, no BLE |
+| 4. Design & craft | 6/10 | +3 | Streaming UI, dark/light themes, voice button, memories screen, onboarding polish — deployed, needs real-phone check |
+| 5. Performance | 5/10 | +2 | /api/chat/stream live (first token fast); cold-start persistence; no offline queue yet |
+| 6. Reliability & backend | 9/10 | +3 | Audit log (ring_tool_runs), cross-instance Realtime broadcast, all durable state in Postgres, atomic idempotent approvals |
+| 7. Trust & safety | 9/10 | +3 | Magic-link auth; 15-probe red-team pass (all safe); critical cross-user approval hole found and fixed; 401/403/404 correct |
+| 8. Memory & personalization | 3/5 | +3 | Durable fact extraction + recall; user can view/add/delete memories; no learning-from-history yet |
+| 9. Privacy & security | 3/5 | +1 | Export + full account delete from the app; no stated audio-retention policy yet |
+| 10. Delight | 2/5 | +1 | Streaming caret, voice UI, motion pass; no signature interaction yet |
+
+**Biggest leverage to 100:** voice & hardware (15 pts untouched — provider key + real ring audio path), real-device verification of everything above, background work + notifications (2.3/2.5), more connectors (2.2), proactive triggers (2.5), agent naming + voice invocation (8.3), signature interaction (10.2).
+
 ## Rough self-score: Ring today (~30/100)
 
 | Category | Score | Notes |
