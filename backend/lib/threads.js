@@ -205,4 +205,18 @@ async function dbOrMemHistory(threadId) {
   return memThreads.get(threadId)?.messages || [];
 }
 
-module.exports = { createThread, getThread, listThreads, postMessage, subscribe, unsubscribe, AGENT_NAME };
+// Last N messages, oldest-first — for giving chat surfaces (Telegram)
+// short-term conversational context without a memory write.
+async function getRecentMessages(threadId, limit = 10) {
+  const lim = Math.min(Math.max(limit | 0, 1), 30);
+  if (ENABLED) {
+    const rows = await sbRequest(
+      `/${MSGS_TBL}?select=id,sender,text,created_at&thread_id=eq.${eq(threadId)}&order=created_at.desc&limit=${lim}`
+    );
+    return (rows || []).reverse().map(toMsg);
+  }
+  const all = memThreads.get(threadId)?.messages || [];
+  return all.slice(-lim);
+}
+
+module.exports = { createThread, getThread, listThreads, postMessage, subscribe, unsubscribe, getRecentMessages, AGENT_NAME };

@@ -51,6 +51,13 @@ async function sendMessage({ chat_id, text }) {
   return { message_id: msg.message_id, chat_id: msg.chat?.id, date: msg.date };
 }
 
+// Shows "typing…" in the chat so replies feel instant. Best-effort: never throws.
+async function sendChatAction({ chat_id, action = 'typing' }) {
+  if (!chat_id) throw new Error('chat_id is required');
+  try { await tg('sendChatAction', { chat_id, action }); } catch { /* best effort */ }
+  return { ok: true };
+}
+
 async function history({ limit = 20 } = {}) {
   const updates = await tg('getUpdates', { limit: Math.min(Math.max(limit | 0, 1), 50), timeout: 0 });
   return (updates || [])
@@ -77,4 +84,4 @@ const tools = [
   },
 ];
 
-module.exports = { id, name, description, envVars, requiredEnv, status, sendMessage, history, tools };
+module.exports = { id, name, description, envVars, requiredEnv, status, sendMessage, sendChatAction, history, tools };

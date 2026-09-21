@@ -74,6 +74,28 @@ const DEMO_PROMPT_SUFFIX = `
 
 You are running in DEMO MODE: every tool is simulated and returns sample data. Nothing you do here touches the user's real accounts. Never claim a real email was sent, a real event was created, or any real-world action happened — say clearly that this is a demo and they should sign in for the real thing.`;
 
+// Telegram chat style: texting, not a document. The demo disclosure is
+// lighter here — it only matters when the user asks for something real.
+const TG_STYLE = (name) => `
+You are chatting with ${name || 'the user'} inside Telegram — this is a texting conversation, not a document.
+Write like a warm, sharp friend texting back: short, natural, contractions, plain words. Never stiff, never corporate.
+Keep it tight: one or two short paragraphs max. No bullet-list essays, no walls of text, unless they explicitly ask for detail.
+Use their first name now and then, naturally — not in every message.
+Reply in the same language they write in.
+If they refer to something from earlier in this chat, use the recent conversation below for context.`;
+
+const TG_DEMO_SUFFIX = `
+
+DEMO MODE: every tool is simulated sample data — nothing touches real accounts. Never claim a real email was sent, event created, or action happened. Do NOT announce "demo mode" unprompted; only mention signing into the Ring app when they ask you to do something real.`;
+
+function tgHistoryBlock(history) {
+  if (!history || !history.length) return '';
+  const lines = history.slice(-8).map((m) =>
+    `${m.from || 'them'}: ${String(m.text || '').slice(0, 300)}`.trim()
+  ).join('\n');
+  return `\n\nRecent conversation:\n${lines}`;
+}
+
 // ---- Demo mode -----------------------------------------------------------
 // Unauthenticated callers get DEMO_TOOLS: same names, schemas, and risk
 // tiers as the real tools, but every fn returns canned simulated data and
@@ -136,19 +158,21 @@ function llmConfigured() {
 // Both providers normalize to { text, toolCalls: [{id, name, args}] }.
 // OPENAI_BASE_URL lets the OpenAI path point at any OpenAI-compatible
 // endpoint (e.g. Gemini's: https://generativelanguage.googleapis.com/v1beta/openai).
-async function callOpenAI(prompt, tools = TOOLS) {
+async function callOpenAI(prompt, tools = TOOLS, opts = {}) {
   const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
+  const body = {
+    model: env('AGENT_MODEL', 'gpt-4o'),
+    messages: [
+      { role: 'system', content: opts.system || SYSTEM_PROMPT },
+      { role: 'user', content: prompt },
+    ],
+    tools: tools.map((t) => ({ type: 'function', function: { name: t.name, description: t.describe, parameters: t.schema } })),
+  };
+  if (opts.maxTokens) body.max_tokens = opts.maxTokens;
   const res = await fetch(`${base}/chat/completions`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${env('OPENAI_API_KEY')}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: env('AGENT_MODEL', 'gpt-4o'),
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: prompt },
-      ],
-      tools: tools.map((t) => ({ type: 'function', function: { name: t.name, description: t.describe, parameters: t.schema } })),
-    }),
+    body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(`LLM error ${res.status}`);
   const data = await res.json();
@@ -163,7 +187,14 @@ async function callOpenAI(prompt, tools = TOOLS) {
   };
 }
 
-async function callAnthropic(prompt, tools = TOOLS) {
+async function callAnthropic(prompt, tools = TOOLS, opts = {}) {
+  const body = {
+    model: env('AGENT_MODEL', 'claude-sonnet-4-5'),
+    max_tokens: opts.maxTokens || 1024,
+    system: opts.system || SYSTEM_PROMPT,
+    messages: [{ role: 'user', content: prompt }],
+    tools: tools.map((t) => ({ name: t.name, description: t.describe, input_schema: t.schema })),
+  };
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -171,13 +202,7 @@ async function callAnthropic(prompt, tools = TOOLS) {
       'anthropic-version': '2023-06-01',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      model: env('AGENT_MODEL', 'claude-sonnet-4-5'),
-      max_tokens: 1024,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: 'user', content: prompt }],
-      tools: tools.map((t) => ({ name: t.name, description: t.describe, input_schema: t.schema })),
-    }),
+    body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(`LLM error ${res.status}`);
   const data = await res.json();
@@ -363,17 +388,23 @@ function cannedReply(text) {
   return { text: 'Got it — say more and I\'ll take it from there.', toolsUsed: [] };
 }
 
-async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo = false }) {
+async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo = false, telegram = null, maxTokens = null }) {
+  const tg = telegram && telegram.style === 'telegram' ? telegram : null;
   const tools = demo ? DEMO_TOOLS : TOOLS;
   if (!llmConfigured()) return { ...cannedReply(text), mode: demo ? 'canned-demo' : 'canned' };
 
+  const system = SYSTEM_PROMPT + (tg ? TG_STYLE(tg.name) : '');
   const memBlock = demo ? '' : await memory.contextBlock(userId, text).catch(() => '');
-  const prompt = (memBlock ? `${memBlock}\n\nUser message: ${text}` : text)
-    + (demo ? DEMO_PROMPT_SUFFIX : '');
+  const histBlock = tg ? tgHistoryBlock(tg.history) : '';
+  const prompt = (memBlock ? `${memBlock}\n\n` : '')
+    + (histBlock ? `${histBlock}\n\n` : '')
+    + `User message: ${text}`
+    + (demo ? (tg ? TG_DEMO_SUFFIX : DEMO_PROMPT_SUFFIX) : '');
 
   const provider = env('LLM_PROVIDER', 'openai');
   const call = provider === 'anthropic' ? callAnthropic : callOpenAI;
-  const first = await call(prompt, tools);
+  const callOpts = { system, ...(maxTokens ? { maxTokens } : tg ? { maxTokens: 320 } : {}) };
+  const first = await call(prompt, tools, callOpts);
 
   const toolsUsed = [];
   const results = [];
@@ -399,7 +430,9 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
   let finalText = first.text;
   if (first.toolCalls.length) {
     const follow = await call(
-      `${prompt}\n\nTool results:\n${results.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`
+      `${prompt}\n\nTool results:\n${results.join('\n')}\n\nNow reply to the user concisely${tg ? ' — one or two short texts' : ' (1-3 short sentences)'}. If something is held for approval, say what you're waiting on.`,
+      tools,
+      callOpts
     );
     if (follow.text) finalText = follow.text;
   }

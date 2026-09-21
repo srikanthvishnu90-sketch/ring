@@ -347,34 +347,53 @@ app.post('/api/telegram/webhook', async (req, res) => {
   const threadName = `Telegram — ${from}`;
   let th = (await threads.listThreads()).find((t) => t.name === threadName);
   if (!th) th = await threads.createThread({ name: threadName, members: [from] });
+
+  // Typing indicator FIRST (fire-and-forget) so it feels instant while the
+  // reply generates. getRecentMessages is fetched before storing the new
+  // message so history holds only prior turns.
+  connectors.telegram.sendChatAction({ chat_id: chatId }).catch(() => {});
+  let tgHistory = [];
+  try { tgHistory = await threads.getRecentMessages(th.id, 8); } catch { /* best effort */ }
   const stored = await threads.postMessage(th.id, { from, text });
 
   // Answer back in Telegram. Errors here must never fail the webhook
   // (a 5xx makes Telegram retry and the user gets double replies).
   let replied = false;
+  // Send like a person texting: split paragraphs into separate short
+  // messages with a brief pause between them.
+  const sendHuman = async (full) => {
+    const pieces = String(full || '').split(/\n{2,}/).map((p) => p.trim()).filter(Boolean).slice(0, 4);
+    for (let i = 0; i < pieces.length; i++) {
+      if (i > 0) await new Promise((r) => setTimeout(r, 400));
+      for (const chunk of tgChunks(pieces[i])) {
+        // eslint-disable-next-line no-await-in-loop
+        await trySend(chunk);
+      }
+    }
+  };
   try {
     let out;
     if (text.trim() === '/start') {
-      out = `Hey ${from}! I\u2019m Ring Assistant. Ask me anything and I\u2019ll answer right here. I\u2019m in demo mode in this chat, so for real actions (email, bookings) open the Ring app: https://ringsss.vercel.app`;
+      out = `Hey ${from}! I'm Ring Assistant — ask me anything right here in Telegram and I'll answer.\n\nQuick heads-up: I'm in demo mode in this chat, so anything real (email, bookings) happens in the Ring app: https://ringsss.vercel.app`;
     } else {
-      const reply = await runAgentTurn({ text, userId: 'demo', threadId: th.id, demo: true });
+      const reply = await runAgentTurn({
+        text, userId: 'demo', threadId: th.id, demo: true,
+        telegram: { style: 'telegram', name: from, history: tgHistory },
+      });
       const held = [];
       for (const t of (reply.toolsUsed || []).filter((t) => t.risk !== 'low')) {
         held.push(await approvals.create({ toolName: t.name, args: t.args, userId: 'demo', threadId: th.id }));
       }
       out = (reply.text || '').trim() || 'Got it.';
       if (held.length) {
-        out += `\n\n\u23f3 That needs your approval first \u2014 I\u2019ve queued it in the Ring app: https://ringsss.vercel.app`;
+        out += `\n\nThat one's on me to hold — it needs your tap in the Ring app first: https://ringsss.vercel.app`;
       }
     }
-    for (const chunk of tgChunks(out)) {
-      // eslint-disable-next-line no-await-in-loop
-      await trySend(chunk);
-    }
+    await sendHuman(out);
     await threads.postMessage(th.id, { from: 'Ring Assistant', text: out }).catch(() => {});
     replied = true;
   } catch (e) {
-    await trySend('Hmm, something glitched on my end \u2014 try again in a moment.');
+    await trySend('Hmm, something glitched on my end — try again in a moment.');
   }
   res.json({ ok: true, threadId: th.id, messageId: stored.id, replied });
 });
