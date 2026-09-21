@@ -280,9 +280,24 @@ app.post('/api/webhooks/in/:name', async (req, res) => {
 // the request must carry it in the X-Telegram-Bot-Api-Secret-Token header
 // (Telegram sends this automatically when secret_token was passed to
 // setWebhook). A ?secret= query fallback exists for manual testing.
-// Wrong secret → 403. Each sender gets their own thread; the
-// message is stored and broadcast (threads.postMessage handles that), but
-// there is intentionally NO auto-reply — the user sees it in the app.
+// Wrong secret → 403. Each sender gets their own thread; the message is
+// stored and broadcast (threads.postMessage handles that), and the bot
+// ANSWERS in the chat. Replies run in the same 'demo' sandbox as the
+// signed-out web chat: simulated tools only, no memory learning, and any
+// approval card created is owned by 'demo' so it can never execute a real
+// tool. Held actions point the user at the Ring app for approval.
+// Best-effort dedup of update_ids guards against Telegram retries.
+const _seenTgUpdates = new Set();
+const TG_BOT_USERNAME = '@ring_assistant_vishnu_bot';
+const TG_CHUNK = 4000;
+
+function tgChunks(s) {
+  const out = [];
+  const t = String(s || '');
+  for (let i = 0; i < t.length; i += TG_CHUNK) out.push(t.slice(i, i + TG_CHUNK));
+  return out.length ? out : [''];
+}
+
 app.post('/api/telegram/webhook', async (req, res) => {
   const expected = process.env.TELEGRAM_WEBHOOK_SECRET || '';
   // Fail closed: no secret configured means the webhook is disabled.
@@ -294,15 +309,74 @@ app.post('/api/telegram/webhook', async (req, res) => {
   const b = Buffer.from(String(expected));
   const ok = a.length === b.length && crypto.timingSafeEqual(a, b);
   if (!ok) return res.status(403).json({ error: 'forbidden' });
-  const msg = req.body && req.body.message;
-  const text = msg && msg.text;
-  if (!text) return res.json({ ok: true, ignored: true });
-  const from = msg.from?.first_name || msg.from?.username || 'telegram';
+
+  const update = req.body || {};
+  if (update.update_id != null) {
+    if (_seenTgUpdates.has(update.update_id)) return res.json({ ok: true, duplicate: true });
+    _seenTgUpdates.add(update.update_id);
+    if (_seenTgUpdates.size > 1000) _seenTgUpdates.clear();
+  }
+
+  const msg = update.message;
+  const chatId = msg && msg.chat && msg.chat.id;
+  const chatType = msg && msg.chat && msg.chat.type; // private | group | supergroup | channel
+  let text = msg && msg.text;
+  const from = (msg && msg.from && (msg.from.first_name || msg.from.username)) || 'telegram';
+
+  const trySend = async (t) => {
+    try { await connectors.telegram.sendMessage({ chat_id: chatId, text: t }); return true; }
+    catch (e) { return false; }
+  };
+
+  if (!text || !chatId) {
+    if (chatId && chatType === 'private') {
+      await trySend('I can only read text messages for now — send me text and I\u2019ll answer.');
+    }
+    return res.json({ ok: true, ignored: true });
+  }
+
+  // In groups, only answer when addressed: @mention or reply to the bot.
+  const isGroup = chatType === 'group' || chatType === 'supergroup';
+  if (isGroup) {
+    const mentioned = text.includes(TG_BOT_USERNAME);
+    const replyToBot = !!(msg.reply_to_message && msg.reply_to_message.from && msg.reply_to_message.from.is_bot);
+    if (!mentioned && !replyToBot) return res.json({ ok: true, ignored: true, reason: 'group_not_addressed' });
+    text = text.split(TG_BOT_USERNAME).join('').trim() || 'Hey';
+  }
+
   const threadName = `Telegram — ${from}`;
   let th = (await threads.listThreads()).find((t) => t.name === threadName);
   if (!th) th = await threads.createThread({ name: threadName, members: [from] });
   const stored = await threads.postMessage(th.id, { from, text });
-  res.json({ ok: true, threadId: th.id, messageId: stored.id });
+
+  // Answer back in Telegram. Errors here must never fail the webhook
+  // (a 5xx makes Telegram retry and the user gets double replies).
+  let replied = false;
+  try {
+    let out;
+    if (text.trim() === '/start') {
+      out = `Hey ${from}! I\u2019m Ring Assistant. Ask me anything and I\u2019ll answer right here. I\u2019m in demo mode in this chat, so for real actions (email, bookings) open the Ring app: https://ringsss.vercel.app`;
+    } else {
+      const reply = await runAgentTurn({ text, userId: 'demo', threadId: th.id, demo: true });
+      const held = [];
+      for (const t of (reply.toolsUsed || []).filter((t) => t.risk !== 'low')) {
+        held.push(await approvals.create({ toolName: t.name, args: t.args, userId: 'demo', threadId: th.id }));
+      }
+      out = (reply.text || '').trim() || 'Got it.';
+      if (held.length) {
+        out += `\n\n\u23f3 That needs your approval first \u2014 I\u2019ve queued it in the Ring app: https://ringsss.vercel.app`;
+      }
+    }
+    for (const chunk of tgChunks(out)) {
+      // eslint-disable-next-line no-await-in-loop
+      await trySend(chunk);
+    }
+    await threads.postMessage(th.id, { from: 'Ring Assistant', text: out }).catch(() => {});
+    replied = true;
+  } catch (e) {
+    await trySend('Hmm, something glitched on my end \u2014 try again in a moment.');
+  }
+  res.json({ ok: true, threadId: th.id, messageId: stored.id, replied });
 });
 
 // --- Ring devices (hardware) -----------------------------------------------
