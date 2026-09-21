@@ -6,6 +6,8 @@
 // must go through the approval gate in server.js / lib/approvals.js, never
 // straight from the model.
 const { env } = require('./config');
+const { logToolRun } = require('./audit');
+const memory = require('./memory');
 const gmail = require('../connectors/gmail');
 const calendar = require('../connectors/calendar');
 const places = require('../connectors/places');
@@ -122,7 +124,164 @@ async function callAnthropic(prompt) {
   };
 }
 
-// Minimal fallback so the app works with zero keys (mirrors the prototype).
+// --- Streaming variants ----------------------------------------------------
+// Same contract as callOpenAI/callAnthropic, but text tokens are forwarded
+// to onToken as they arrive. Tool-call argument fragments are accumulated
+// and returned whole at the end.
+async function callOpenAIStream(prompt, onToken) {
+  const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
+  const res = await fetch(`${base}/chat/completions`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${env('OPENAI_API_KEY')}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: env('AGENT_MODEL', 'gpt-4o'),
+      stream: true,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: prompt },
+      ],
+      tools: TOOLS.map((t) => ({ type: 'function', function: { name: t.name, description: t.describe, parameters: t.schema } })),
+    }),
+  });
+  if (!res.ok || !res.body) throw new Error(`LLM error ${res.status}`);
+  let text = '';
+  const calls = {};
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '';
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    const lines = buf.split('\n');
+    buf = lines.pop();
+    for (const line of lines) {
+      const s = line.trim();
+      if (!s.startsWith('data:')) continue;
+      const payload = s.slice(5).trim();
+      if (payload === '[DONE]') continue;
+      let ev;
+      try { ev = JSON.parse(payload); } catch { continue; }
+      const delta = ev.choices && ev.choices[0] && ev.choices[0].delta;
+      if (!delta) continue;
+      if (delta.content) { text += delta.content; if (onToken) onToken(delta.content); }
+      for (const tc of delta.tool_calls || []) {
+        const c = (calls[tc.index || 0] = calls[tc.index || 0] || { id: '', name: '', args: '' });
+        if (tc.id) c.id = tc.id;
+        if (tc.function && tc.function.name) c.name = tc.function.name;
+        if (tc.function && tc.function.arguments) c.args += tc.function.arguments;
+      }
+    }
+  }
+  return {
+    text,
+    toolCalls: Object.values(calls).map((c) => ({
+      id: c.id, name: c.name,
+      args: (() => { try { return JSON.parse(c.args || '{}'); } catch { return {}; } })(),
+    })).filter((c) => c.name),
+  };
+}
+
+async function callAnthropicStream(prompt, onToken) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': env('ANTHROPIC_API_KEY'),
+      'anthropic-version': '2023-06-01',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: env('AGENT_MODEL', 'claude-sonnet-4-5'),
+      max_tokens: 1024,
+      stream: true,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: 'user', content: prompt }],
+      tools: TOOLS.map((t) => ({ name: t.name, description: t.describe, input_schema: t.schema })),
+    }),
+  });
+  if (!res.ok || !res.body) throw new Error(`LLM error ${res.status}`);
+  let text = '';
+  const blocks = {};
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '';
+  let evType = '';
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    const lines = buf.split('\n');
+    buf = lines.pop();
+    for (const line of lines) {
+      const s = line.trim();
+      if (s.startsWith('event:')) { evType = s.slice(6).trim(); continue; }
+      if (!s.startsWith('data:')) continue;
+      let d;
+      try { d = JSON.parse(s.slice(5).trim()); } catch { continue; }
+      if (evType === 'content_block_start') {
+        blocks[d.index] = { type: d.content_block.type, name: d.content_block.name, id: d.content_block.id, json: '' };
+      } else if (evType === 'content_block_delta') {
+        const b = blocks[d.index];
+        if (!b) continue;
+        if (d.delta.type === 'text_delta') { text += d.delta.text; if (onToken) onToken(d.delta.text); }
+        if (d.delta.type === 'input_json_delta') b.json += d.delta.partial_json;
+      }
+    }
+  }
+  return {
+    text,
+    toolCalls: Object.values(blocks).filter((b) => b.type === 'tool_use').map((b) => ({
+      id: b.id, name: b.name,
+      args: (() => { try { return JSON.parse(b.json || '{}'); } catch { return {}; } })(),
+    })),
+  };
+}
+
+async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', onToken }) {
+  if (!llmConfigured()) {
+    const c = cannedReply(text);
+    if (onToken) onToken(c.text);
+    return { ...c, mode: 'canned' };
+  }
+
+  const memBlock = await memory.contextBlock(userId, text).catch(() => '');
+  const prompt = memBlock ? `${memBlock}\n\nUser message: ${text}` : text;
+
+  const provider = env('LLM_PROVIDER', 'openai');
+  const call = provider === 'anthropic' ? callAnthropicStream : callOpenAIStream;
+  const first = await call(prompt, onToken);
+
+  const toolsUsed = [];
+  const results = [];
+  for (const tc of first.toolCalls) {
+    const tool = TOOLS.find((t) => t.name === tc.name);
+    if (!tool) continue;
+    toolsUsed.push({ name: tool.name, risk: tool.risk, args: tc.args });
+    if (tool.risk === 'low') {
+      try {
+        const out = await tool.fn({ userId, ...tc.args });
+        results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 2000)}`);
+        logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
+      } catch (e) {
+        results.push(`${tc.name} → ERROR ${e.code || ''}: ${e.message}`.slice(0, 400));
+        logToolRun({ userId, tool: tool.name, args: tc.args, result: { error: e.message, code: e.code }, status: 'failed' }).catch(() => {});
+      }
+    } else {
+      results.push(`${tc.name} → HELD for user approval`);
+    }
+  }
+
+  let finalText = first.text;
+  if (first.toolCalls.length) {
+    const follow = await call(
+      `${prompt}\n\nTool results:\n${results.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
+      (tok) => { finalText += ''; if (onToken) onToken(tok); }
+    );
+    // follow.text was already streamed token-by-token; rebuild final text.
+    if (follow.text) finalText = first.text + follow.text;
+  }
+  return { text: finalText, toolsUsed, mode: 'live' };
+}
 function cannedReply(text) {
   const t = text.toLowerCase();
   if (t.includes('uber') || t.includes('ride'))
@@ -137,9 +296,12 @@ function cannedReply(text) {
 async function runAgentTurn({ text, userId = 'local', threadId = 'local' }) {
   if (!llmConfigured()) return { ...cannedReply(text), mode: 'canned' };
 
+  const memBlock = await memory.contextBlock(userId, text).catch(() => '');
+  const prompt = memBlock ? `${memBlock}\n\nUser message: ${text}` : text;
+
   const provider = env('LLM_PROVIDER', 'openai');
   const call = provider === 'anthropic' ? callAnthropic : callOpenAI;
-  const first = await call(text);
+  const first = await call(prompt);
 
   const toolsUsed = [];
   const results = [];
@@ -151,8 +313,11 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local' }) {
       try {
         const out = await tool.fn({ userId, ...tc.args });
         results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 2000)}`);
+        // Audit (fire-and-forget; logToolRun never throws).
+        logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
       } catch (e) {
         results.push(`${tc.name} → ERROR ${e.code || ''}: ${e.message}`.slice(0, 400));
+        logToolRun({ userId, tool: tool.name, args: tc.args, result: { error: e.message, code: e.code }, status: 'failed' }).catch(() => {});
       }
     } else {
       results.push(`${tc.name} → HELD for user approval`);
@@ -162,11 +327,11 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local' }) {
   let finalText = first.text;
   if (first.toolCalls.length) {
     const follow = await call(
-      `${text}\n\nTool results:\n${results.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`
+      `${prompt}\n\nTool results:\n${results.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`
     );
     if (follow.text) finalText = follow.text;
   }
   return { text: finalText, toolsUsed, mode: 'live' };
 }
 
-module.exports = { TOOLS, runAgentTurn, llmConfigured };
+module.exports = { TOOLS, runAgentTurn, runAgentTurnStream, llmConfigured };

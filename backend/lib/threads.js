@@ -6,12 +6,12 @@
 // including any held approvals — lands back in the thread for everyone.
 //
 // Persistence: Supabase (ring_threads, ring_messages) when configured,
-// in-memory otherwise. Realtime: SSE at GET /api/threads/:id/stream stays
-// per-instance in memory — on serverless, a client only receives events for
-// messages posted through the same instance that holds its SSE connection.
-// Supabase Realtime broadcast is the follow-up fix for that.
+// in-memory otherwise. Realtime: SSE at GET /api/threads/:id/stream covers
+// same-instance clients; broadcast() also fans out through Supabase Realtime
+// Broadcast so websocket subscribers get messages posted on any instance.
 const { runAgentTurn } = require('./agent');
 const approvals = require('./approvals');
+const { broadcastRealtime } = require('./realtime');
 const { ENABLED, sbRequest, eq } = require('./supabase');
 
 const THREADS_TBL = 'ring_threads';
@@ -109,12 +109,20 @@ async function listThreads() {
 }
 
 function broadcast(threadId, event) {
+  // Local path: SSE clients on this instance.
   const clients = sseClients.get(threadId);
-  if (!clients) return;
-  const payload = `data: ${JSON.stringify(event)}\n\n`;
-  for (const res of clients) {
-    try { res.write(payload); } catch (e) { /* dead client, cleaned on close */ }
+  if (clients) {
+    const payload = `data: ${JSON.stringify(event)}\n\n`;
+    for (const res of clients) {
+      try { res.write(payload); } catch (e) { /* dead client, cleaned on close */ }
+    }
   }
+  // Cross-instance path: Supabase Realtime Broadcast reaches websocket
+  // subscribers no matter which instance posted the message. Fire-and-forget
+  // — broadcastRealtime never throws, so the local path can't break.
+  try {
+    broadcastRealtime(`thread:${threadId}`, 'message', event).catch(() => {});
+  } catch (e) { /* never break the local path */ }
 }
 
 function subscribe(threadId, res) {

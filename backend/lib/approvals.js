@@ -10,6 +10,7 @@
 // pending approvals inside a short window and honors an explicit
 // idempotencyKey, so retried agent turns don't stack duplicate cards.
 const { TOOLS } = require('./agent');
+const { logToolRun } = require('./audit');
 const { ENABLED, sbRequest, eq } = require('./supabase');
 
 const TBL = 'ring_approvals';
@@ -185,6 +186,17 @@ async function resolve(id, decision) {
         method: 'PATCH',
         body: JSON.stringify({ result: rec.result }),
       });
+      // Audit the approved execution (fire-and-forget; never throws).
+      logToolRun({
+        userId: rec.userId, tool: rec.tool, args: rec.args, result: rec.result,
+        approvalId: rec.id, status: rec.result && rec.result.error ? 'failed' : 'executed',
+      }).catch(() => {});
+    } else {
+      // Declined: nothing executed — audit the hold, not an execution.
+      logToolRun({
+        userId: rec.userId, tool: rec.tool, args: rec.args,
+        result: { declined: true }, approvalId: rec.id, status: 'held',
+      }).catch(() => {});
     }
     return rec;
   }
@@ -195,7 +207,18 @@ async function resolve(id, decision) {
   if (rec.status !== 'pending') return rec;
   rec.status = status;
   rec.resolvedAt = now;
-  if (rec.status === 'approved') rec.result = await executeTool(rec);
+  if (rec.status === 'approved') {
+    rec.result = await executeTool(rec);
+    logToolRun({
+      userId: rec.userId, tool: rec.tool, args: rec.args, result: rec.result,
+      approvalId: rec.id, status: rec.result && rec.result.error ? 'failed' : 'executed',
+    }).catch(() => {});
+  } else {
+    logToolRun({
+      userId: rec.userId, tool: rec.tool, args: rec.args,
+      result: { declined: true }, approvalId: rec.id, status: 'held',
+    }).catch(() => {});
+  }
   return rec;
 }
 
