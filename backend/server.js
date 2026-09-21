@@ -276,16 +276,20 @@ app.post('/api/webhooks/in/:name', async (req, res) => {
 });
 
 // --- Telegram webhook -----------------------------------------------------
-// Telegram delivers inbound messages here. If TELEGRAM_WEBHOOK_SECRET is set,
-// the request must carry it as ?secret= (set the webhook URL with the secret
-// appended). Wrong secret → 403. Each sender gets their own thread; the
+// Telegram delivers inbound messages here. When TELEGRAM_WEBHOOK_SECRET is set,
+// the request must carry it in the X-Telegram-Bot-Api-Secret-Token header
+// (Telegram sends this automatically when secret_token was passed to
+// setWebhook). A ?secret= query fallback exists for manual testing.
+// Wrong secret → 403. Each sender gets their own thread; the
 // message is stored and broadcast (threads.postMessage handles that), but
 // there is intentionally NO auto-reply — the user sees it in the app.
 app.post('/api/telegram/webhook', async (req, res) => {
   const expected = process.env.TELEGRAM_WEBHOOK_SECRET || '';
   // Fail closed: no secret configured means the webhook is disabled.
   if (!expected) return res.status(403).json({ error: 'webhook_not_configured' });
-  const got = req.query.secret || '';
+  const headerSecret = req.get('X-Telegram-Bot-Api-Secret-Token') || '';
+  const querySecret = req.query.secret || '';
+  const got = headerSecret || querySecret;
   const a = Buffer.from(String(got));
   const b = Buffer.from(String(expected));
   const ok = a.length === b.length && crypto.timingSafeEqual(a, b);
