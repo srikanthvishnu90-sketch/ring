@@ -32,6 +32,8 @@ const approvals = require('./lib/approvals');
 const threads = require('./lib/threads');
 const memory = require('./lib/memory');
 const { sendMagicLink, requireUser, optionalUser, validateToken, bearerToken } = require('./lib/auth');
+const { issueState, verifyState, COOKIE_NAME } = require('./lib/oauth_state');
+const cookie = require('cookie');
 const { processVoice } = require('./lib/voice');
 const { sbRequest, eq, ENABLED: SB_ENABLED } = require('./lib/supabase');
 
@@ -564,10 +566,12 @@ app.get('/api/threads/:id/stream', async (req, res) => {
 
 // --- Google OAuth (Gmail + Calendar) -------------------------------------
 // Tokens stay server-side in lib/google.js (Supabase ring_oauth_tokens,
-// file fallback for local dev).
-app.get('/auth/google', (req, res) => {
-  const m = missing(['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_REDIRECT_URI']);
-  if (m.length) return res.status(500).send('Google OAuth not configured — see .env.example');
+// file fallback for local dev). The `state` parameter is HMAC-signed,
+// expires after 10 minutes, and is bound to the authenticated user that
+// started the flow; a SameSite HttpOnly cookie carries the CSRF nonce
+// (see lib/oauth_state.js). There is no anonymous 'local' binding anymore:
+// connecting Google always requires a signed-in user.
+function googleAuthUrl(state) {
   const q = new URLSearchParams({
     client_id: env('GOOGLE_CLIENT_ID'),
     redirect_uri: env('GOOGLE_REDIRECT_URI'),
@@ -575,14 +579,80 @@ app.get('/auth/google', (req, res) => {
     scope: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/calendar.events',
     access_type: 'offline',
     prompt: 'consent',
-    state: req.userId && req.userId !== 'local' ? req.userId : 'local',
+    state,
   });
-  res.redirect('https://accounts.google.com/o/oauth2/v2/auth?' + q.toString());
+  return 'https://accounts.google.com/o/oauth2/v2/auth?' + q.toString();
+}
+
+function oauthStartResponse(req, res) {
+  const m = missing(['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_REDIRECT_URI']);
+  if (m.length) return res.status(500).json({ error: 'Google OAuth not configured', missing: m });
+  let issued;
+  try {
+    issued = issueState(req.userId);
+  } catch (e) {
+    const status = e.code === 'UNAUTHENTICATED' ? 401 : 500;
+    return res.status(status).json({ error: e.message, code: e.code });
+  }
+  res.cookie(COOKIE_NAME, issued.nonce, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 10 * 60 * 1000,
+    path: '/',
+  });
+  res.json({ url: googleAuthUrl(issued.state) });
+}
+
+// Authenticated start: the app's Connect button calls this with the user's
+// JWT, then navigates the browser to the returned URL.
+app.post('/api/oauth/google/start', requireUser, oauthStartResponse);
+
+// Browser entry point: a plain navigation can't carry the Bearer token, so
+// this page completes the authenticated start with the token the app keeps
+// in localStorage, then hands off to Google. Visiting it signed-out explains
+// what to do instead of silently binding to an anonymous identity.
+app.get('/auth/google', (req, res) => {
+  res.send(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connect Google — Ring</title></head>
+<body style="font-family:sans-serif;display:flex;min-height:90vh;align-items:center;justify-content:center;background:#141210;color:#E9DDD2">
+<div style="text-align:center;max-width:320px;padding:24px">
+<h2 style="margin:0 0 8px">Connect Google</h2>
+<p id="msg" style="opacity:.8">Starting secure sign-in…</p>
+</div>
+<script>
+(async () => {
+  const msg = document.getElementById('msg');
+  let token = null;
+  try { token = localStorage.getItem('ring_token'); } catch (e) {}
+  if (!token) { msg.textContent = 'Sign in to the Ring app first, then tap Connect on Google.'; return; }
+  try {
+    const r = await fetch('/api/oauth/google/start', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'could not start');
+    msg.textContent = 'Taking you to Google…';
+    location.href = data.url;
+  } catch (e) { msg.textContent = 'Could not start Google sign-in: ' + e.message; }
+})();
+</script></body></html>`);
 });
 
 app.get('/auth/google/callback', async (req, res) => {
+  const fail = (status, msg) => res.status(status).send(
+    `<p style="font-family:sans-serif">Google connect failed: ${msg} Please start again from the Ring app.</p>`
+  );
   const { code, state } = req.query;
-  if (!code) return res.status(400).send('Missing authorization code');
+  if (!code) return fail(400, 'Missing authorization code.');
+  let userId;
+  try {
+    const cookies = cookie.parse(req.headers.cookie || '');
+    ({ userId } = verifyState(state, cookies[COOKIE_NAME]));
+  } catch (e) {
+    const status = e.code === 'EXPIRED' ? 400 : 403;
+    return fail(status, e.message + '.');
+  }
+  // Single-use: clear the CSRF cookie now that the state is consumed.
+  res.cookie(COOKIE_NAME, '', { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 0 });
   try {
     const r = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
@@ -597,7 +667,7 @@ app.get('/auth/google/callback', async (req, res) => {
     });
     const tok = await r.json();
     if (!r.ok) throw new Error(tok.error_description || 'token exchange failed');
-    saveTokens(state && typeof state === 'string' ? state : 'local', tok);
+    saveTokens(userId, tok);
     res.send('<p style="font-family:sans-serif">Gmail + Calendar connected. Close this tab and return to the app.</p>');
   } catch (e) {
     res.status(500).send('OAuth failed: ' + e.message);
