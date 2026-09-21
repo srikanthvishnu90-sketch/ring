@@ -74,6 +74,14 @@ const DEMO_PROMPT_SUFFIX = `
 
 You are running in DEMO MODE: every tool is simulated and returns sample data. Nothing you do here touches the user's real accounts. Never claim a real email was sent, a real event was created, or any real-world action happened — say clearly that this is a demo and they should sign in for the real thing.`;
 
+// Voice style: this reply will be SPOKEN aloud through the ring. Keep it
+// short enough to say in one breath — one or two sentences, no lists, no
+// markdown, no spelling things out. If an action is held for approval, name
+// it and say "double-tap to approve".
+const VOICE_STYLE = `
+
+This reply will be spoken aloud. Answer in one or two short sentences, plain words, no lists or formatting. If something is held for the user's approval, say what it is and tell them to double-tap to approve it.`;
+
 // Telegram chat style: texting, not a document. The demo disclosure is
 // lighter here — it only matters when the user asks for something real.
 const TG_STYLE = (name) => `
@@ -220,7 +228,7 @@ async function callAnthropic(prompt, tools = TOOLS, opts = {}) {
 // Same contract as callOpenAI/callAnthropic, but text tokens are forwarded
 // to onToken as they arrive. Tool-call argument fragments are accumulated
 // and returned whole at the end.
-async function callOpenAIStream(prompt, onToken, tools = TOOLS) {
+async function callOpenAIStream(prompt, onToken, tools = TOOLS, opts = {}) {
   const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
   const res = await fetch(`${base}/chat/completions`, {
     method: 'POST',
@@ -228,8 +236,9 @@ async function callOpenAIStream(prompt, onToken, tools = TOOLS) {
     body: JSON.stringify({
       model: env('AGENT_MODEL', 'gpt-4o'),
       stream: true,
+      ...(opts.maxTokens ? { max_tokens: opts.maxTokens } : {}),
       messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'system', content: opts.system || SYSTEM_PROMPT },
         { role: 'user', content: prompt },
       ],
       tools: tools.map((t) => ({ type: 'function', function: { name: t.name, description: t.describe, parameters: t.schema } })),
@@ -274,7 +283,7 @@ async function callOpenAIStream(prompt, onToken, tools = TOOLS) {
   };
 }
 
-async function callAnthropicStream(prompt, onToken, tools = TOOLS) {
+async function callAnthropicStream(prompt, onToken, tools = TOOLS, opts = {}) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -284,9 +293,9 @@ async function callAnthropicStream(prompt, onToken, tools = TOOLS) {
     },
     body: JSON.stringify({
       model: env('AGENT_MODEL', 'claude-sonnet-4-5'),
-      max_tokens: 1024,
+      max_tokens: opts.maxTokens || 1024,
       stream: true,
-      system: SYSTEM_PROMPT,
+      system: opts.system || SYSTEM_PROMPT,
       messages: [{ role: 'user', content: prompt }],
       tools: tools.map((t) => ({ name: t.name, description: t.describe, input_schema: t.schema })),
     }),
@@ -329,7 +338,7 @@ async function callAnthropicStream(prompt, onToken, tools = TOOLS) {
   };
 }
 
-async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', onToken, demo = false }) {
+async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', onToken, demo = false, maxTokens = null, voice = false }) {
   const tools = demo ? DEMO_TOOLS : TOOLS;
   if (!llmConfigured()) {
     const c = cannedReply(text);
@@ -343,7 +352,8 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
 
   const provider = env('LLM_PROVIDER', 'openai');
   const call = provider === 'anthropic' ? callAnthropicStream : callOpenAIStream;
-  const first = await call(prompt, onToken, tools);
+  const streamOpts = { system: SYSTEM_PROMPT + (voice ? VOICE_STYLE : ''), ...(maxTokens || voice ? { maxTokens: maxTokens || 150 } : {}) };
+  const first = await call(prompt, onToken, tools, streamOpts);
 
   const toolsUsed = [];
   const results = [];
@@ -370,7 +380,8 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
     const follow = await call(
       `${prompt}\n\nTool results:\n${results.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
       (tok) => { finalText += ''; if (onToken) onToken(tok); },
-      tools
+      tools,
+      streamOpts
     );
     // follow.text was already streamed token-by-token; rebuild final text.
     if (follow.text) finalText = first.text + follow.text;
@@ -388,12 +399,12 @@ function cannedReply(text) {
   return { text: 'Got it — say more and I\'ll take it from there.', toolsUsed: [] };
 }
 
-async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo = false, telegram = null, maxTokens = null }) {
+async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo = false, telegram = null, maxTokens = null, voice = false }) {
   const tg = telegram && telegram.style === 'telegram' ? telegram : null;
   const tools = demo ? DEMO_TOOLS : TOOLS;
   if (!llmConfigured()) return { ...cannedReply(text), mode: demo ? 'canned-demo' : 'canned' };
 
-  const system = SYSTEM_PROMPT + (tg ? TG_STYLE(tg.name) : '');
+  const system = SYSTEM_PROMPT + (tg ? TG_STYLE(tg.name) : '') + (voice ? VOICE_STYLE : '');
   const memBlock = demo ? '' : await memory.contextBlock(userId, text).catch(() => '');
   const histBlock = tg ? tgHistoryBlock(tg.history) : '';
   const prompt = (memBlock ? `${memBlock}\n\n` : '')
@@ -403,7 +414,8 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
 
   const provider = env('LLM_PROVIDER', 'openai');
   const call = provider === 'anthropic' ? callAnthropic : callOpenAI;
-  const callOpts = { system, ...(maxTokens ? { maxTokens } : tg ? { maxTokens: 320 } : {}) };
+  // Voice turns get a tight token cap: shorter replies = faster first audio.
+  const callOpts = { system, ...(maxTokens ? { maxTokens } : voice ? { maxTokens: 150 } : tg ? { maxTokens: 320 } : {}) };
   const first = await call(prompt, tools, callOpts);
 
   const toolsUsed = [];

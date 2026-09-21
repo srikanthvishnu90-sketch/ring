@@ -34,7 +34,7 @@ const memory = require('./lib/memory');
 const { sendMagicLink, requireUser, optionalUser, validateToken, bearerToken } = require('./lib/auth');
 const { issueState, verifyState, COOKIE_NAME } = require('./lib/oauth_state');
 const cookie = require('cookie');
-const { processVoice } = require('./lib/voice');
+const { processVoice, processVoiceStream } = require('./lib/voice');
 const { sbRequest, eq, ENABLED: SB_ENABLED } = require('./lib/supabase');
 
 const connectors = {
@@ -53,7 +53,7 @@ const app = express();
 // /api/voice carries base64 audio — give it a bigger body; everything else
 // stays at 1mb.
 app.use((req, res, next) => {
-  const limit = req.path === '/api/voice' ? '15mb' : '1mb';
+  const limit = (req.path === '/api/voice' || req.path === '/api/voice/stream') ? '15mb' : '1mb';
   express.json({ limit })(req, res, next);
 });
 app.use(express.static(path.join(__dirname, '..')));
@@ -732,23 +732,65 @@ app.get('/auth/google/callback', async (req, res) => {
 // --- Voice (ring hardware path) -------------------------------------------
 // Phone app posts base64 audio from the ring's BLE mic stream; the server
 // transcribes, runs the agent turn, and (when TTS is configured) speaks back.
-app.post('/api/voice', async (req, res) => {
-  const { audio, mime } = req.body || {};
+//
+// Retention: raw audio is never persisted (memory only, per
+// docs/voice-retention.md). The transcript persists only when the caller
+// passes threadId (an existing member thread) or saveTranscript:true —
+// otherwise the turn is fully ephemeral.
+async function holdVoiceTools(out, userId) {
+  // Approval gate: mirrors /api/chat — medium/high-risk calls are HELD.
+  const held = [];
+  for (const t of (out.toolsUsed || []).filter((t) => t.risk !== 'low')) {
+    const rec = await approvals.create({ toolName: t.name, args: t.args, userId, threadId: null });
+    held.push({ id: rec.id, name: rec.tool, risk: rec.risk, args: rec.args });
+  }
+  return held;
+}
+
+// Persist a voice transcript per the retention policy. Demo turns never
+// persist. Returns after best-effort storage; never throws the turn.
+async function maybePersistVoiceTranscript({ userId, demo, threadId, saveTranscript, transcript, replyText }) {
+  if (demo || !transcript) return;
+  try {
+    if (threadId) {
+      const th = await threads.getThread(threadId);
+      if (th && threads.isMember(th, userId)) {
+        await threads.postMessage(threadId, { from: 'you (voice)', text: transcript });
+        if (replyText) await threads.postMessage(threadId, { from: 'agent (voice)', text: replyText });
+      }
+      return;
+    }
+    if (saveTranscript) {
+      const mine = await threads.listThreads({ userId });
+      let vt = mine.find((t) => t.name === 'Voice');
+      if (!vt) vt = await threads.createThread({ name: 'Voice', userId });
+      await threads.postMessage(vt.id, { from: 'you (voice)', text: transcript });
+      if (replyText) await threads.postMessage(vt.id, { from: 'agent (voice)', text: replyText });
+    }
+  } catch { /* transcript persistence is best-effort */ }
+}
+
+function voiceIdentity(req) {
   const authed = req.userId && req.userId !== 'local';
-  const userId = authed ? req.userId : 'demo';
-  const demo = !authed;
+  return { userId: authed ? req.userId : 'demo', demo: !authed };
+}
+
+function voiceErrorStatus(e) {
+  return e.code === 'VOICE_NOT_CONFIGURED' ? 501
+    : e.code === 'EMPTY_AUDIO' ? 400
+    : e.code === 'VOICE_RATE_LIMITED' ? 429 : 500;
+}
+
+app.post('/api/voice', async (req, res) => {
+  const { audio, mime, encoding, sampleRate, threadId, saveTranscript } = req.body || {};
+  const { userId, demo } = voiceIdentity(req);
   if (!audio || typeof audio !== 'string') {
     return res.status(400).json({ error: 'audio is required', code: 'EMPTY_AUDIO' });
   }
   try {
-    const out = await processVoice({ audioBase64: audio, mimeType: mime, userId, demo });
-
-    // Approval gate: mirrors /api/chat — medium/high-risk calls are HELD.
-    const held = [];
-    for (const t of (out.toolsUsed || []).filter((t) => t.risk !== 'low')) {
-      const rec = await approvals.create({ toolName: t.name, args: t.args, userId, threadId: null });
-      held.push({ id: rec.id, name: rec.tool, risk: rec.risk, args: rec.args });
-    }
+    const out = await processVoice({ audioBase64: audio, mimeType: mime, encoding, sampleRate, userId, demo });
+    const held = await holdVoiceTools(out, userId);
+    await maybePersistVoiceTranscript({ userId, demo, threadId, saveTranscript, transcript: out.transcript, replyText: out.text });
 
     res.json({
       transcript: out.transcript,
@@ -757,13 +799,50 @@ app.post('/api/voice', async (req, res) => {
       demo,
       pendingApprovals: held,
       executed: held.length === 0,
+      timings: out.timings,
     });
   } catch (e) {
-    const status = e.code === 'VOICE_NOT_CONFIGURED' ? 501
-      : e.code === 'EMPTY_AUDIO' ? 400
-      : e.code === 'VOICE_RATE_LIMITED' ? 429 : 500;
-    res.status(status).json({ error: e.message, code: e.code || 'VOICE_FAILED' });
+    res.status(voiceErrorStatus(e)).json({ error: e.message, code: e.code || 'VOICE_FAILED' });
   }
+});
+
+// Streaming variant: SSE events as each stage completes —
+//   event: transcript { text, sttMs }
+//   event: token      { token }            (agent reply, streamed)
+//   event: audio       { base64, mime, ttsMs }
+//   event: done        { text, toolsUsed, pendingApprovals, timings, demo }
+//   event: error       { error, code }
+// The phone can render the transcript and begin playback before the turn ends.
+app.post('/api/voice/stream', async (req, res) => {
+  const { audio, mime, encoding, sampleRate, threadId, saveTranscript } = req.body || {};
+  const { userId, demo } = voiceIdentity(req);
+  if (!audio || typeof audio !== 'string') {
+    return res.status(400).json({ error: 'audio is required', code: 'EMPTY_AUDIO' });
+  }
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    Connection: 'keep-alive',
+  });
+  const send = (type, data) => res.write(`event: ${type}\ndata: ${JSON.stringify(data)}\n\n`);
+  try {
+    const out = await processVoiceStream({
+      audioBase64: audio, mimeType: mime, encoding, sampleRate, userId, demo,
+      onEvent: (type, data) => send(type, data),
+    });
+    const held = await holdVoiceTools(out, userId);
+    await maybePersistVoiceTranscript({ userId, demo, threadId, saveTranscript, transcript: out.transcript, replyText: out.text });
+    send('done', {
+      text: out.text,
+      toolsUsed: out.toolsUsed,
+      pendingApprovals: held,
+      timings: out.timings,
+      demo,
+    });
+  } catch (e) {
+    send('error', { error: e.message, code: e.code || 'VOICE_FAILED' });
+  }
+  res.end();
 });
 
 module.exports = app;
