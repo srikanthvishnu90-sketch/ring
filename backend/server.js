@@ -28,7 +28,8 @@ const express = require('express');
 require('dotenv').config();
 
 const { env, missing } = require('./lib/config');
-const { saveTokens, ready: googleReady } = require('./lib/google');
+const { saveTokens, isConnected, ready: googleReady } = require('./lib/google');
+const appUrl = () => env('APP_URL', 'https://ringsss.vercel.app');
 const { TOOLS, runAgentTurn, runAgentTurnStream, llmConfigured } = require('./lib/agent');
 const approvals = require('./lib/approvals');
 const threads = require('./lib/threads');
@@ -703,6 +704,11 @@ function oauthStartResponse(req, res) {
 // JWT, then navigates the browser to the returned URL.
 app.post('/api/oauth/google/start', requireUser, oauthStartResponse);
 
+// Per-user Google connection state for the app's setup UI.
+app.get('/api/oauth/google/status', requireUser, (req, res) => {
+  res.json({ connected: isConnected(req.userId) });
+});
+
 // Browser entry point: a plain navigation can't carry the Bearer token, so
 // this page completes the authenticated start with the token the app keeps
 // in localStorage, then hands off to Google. Visiting it signed-out explains
@@ -763,7 +769,9 @@ app.get('/auth/google/callback', async (req, res) => {
     const tok = await r.json();
     if (!r.ok) throw new Error(tok.error_description || 'token exchange failed');
     saveTokens(userId, tok);
-    res.send('<p style="font-family:sans-serif">Gmail + Calendar connected. Close this tab and return to the app.</p>');
+    // Back to the app — it picks up ?google=connected, refreshes its
+    // connection state, and confirms with a toast.
+    res.redirect(appUrl() + '?google=connected');
   } catch (e) {
     res.status(500).send('OAuth failed: ' + e.message);
   }

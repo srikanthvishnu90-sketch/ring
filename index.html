@@ -162,10 +162,10 @@ a{color:inherit}
 
 /* ---------- chat ---------- */
 .chat-head{position:sticky;top:0;z-index:5;background:var(--black);margin:calc(-1 * (var(--st) + 20px)) -20px 0;padding:calc(var(--st) + 14px) 20px 12px;border-bottom:1px solid var(--line-soft)}
-.msgs{display:flex;flex-direction:column;gap:14px;padding-bottom:128px}
-.chat-day{align-self:center;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);padding:2px 0}
-.msg-user{align-self:flex-end;max-width:80%;padding:11px 16px;border-radius:20px 20px 6px 20px;background:var(--mercury);color:#0C1219;font-size:15px;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}
-.msg-agent{font-size:15px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.msgs{display:flex;flex-direction:column;gap:22px;padding-bottom:144px}
+.chat-day{align-self:center;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);padding:12px 0 6px}
+.msg-user{align-self:flex-end;max-width:78%;padding:13px 18px;border-radius:20px 20px 6px 20px;background:var(--mercury);color:#0C1219;font-size:15px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg-agent{font-size:15px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
 .msg-agent.thinking{color:var(--muted);font-style:italic}
 .msg-agent.streaming::after{content:'▍';margin-left:2px;color:var(--silver);animation:caretBlink 1s steps(1) infinite}
 @keyframes caretBlink{50%{opacity:0}}
@@ -173,18 +173,41 @@ a{color:inherit}
 @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .dots::after{content:'';animation:dots 1.2s steps(4) infinite}
 @keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
-.agent-tag{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted-2);margin-bottom:4px}
+.agent-tag{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted-2);margin-bottom:7px}
 .approval{padding:16px;display:flex;flex-direction:column;gap:12px}
 .approval .k{font-size:13px;font-weight:600;color:rgba(22,17,14,.72)}
 .approval .li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.35}
 .approval .li svg{flex-shrink:0;margin-top:1px}
 .approval.done{background:var(--surface);border:1px solid rgba(169,194,166,.4);color:#fff}
 .approval.done .k{color:var(--sage)}
-.composer{position:fixed;left:0;right:0;margin:0 auto;max-width:520px;bottom:calc(var(--tabbar) + var(--sb));padding:10px 20px 12px;background:var(--black);border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:10px;z-index:15}
+.composer{position:fixed;left:0;right:0;margin:0 auto;max-width:520px;bottom:calc(var(--tabbar) + var(--sb));padding:14px 20px 16px;background:var(--black);border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:12px;z-index:15}
 .composer form{display:flex;align-items:center;gap:8px;margin:0}
 .composer input{flex-grow:1;min-width:0;height:48px;padding:0 18px;border-radius:24px;border:1px solid rgba(201,204,209,.28);background:var(--surface);font-size:16px}
 .composer input::placeholder{color:var(--muted-2)}
 .round{width:48px;height:48px;border-radius:24px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+
+/* ---------- google connect ---------- */
+.gcard{display:flex;align-items:center;gap:14px;padding:16px}
+.gcard .rt{flex-grow:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.gcard .rt b{font-size:16px}
+.gcard .rt span{font-size:13px;color:var(--muted);line-height:1.45}
+.gicon{width:42px;height:42px;border-radius:21px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.gstate{display:flex;align-items:center;gap:7px;color:var(--sage);font-size:14px;font-weight:600;flex-shrink:0}
+.gx{flex-shrink:0;width:32px;height:32px;border-radius:16px;background:none;border:none;display:flex;align-items:center;justify-content:center;color:var(--muted-2);font-size:14px;cursor:pointer}
+
+/* ---------- chat list (secondary page, Claude/ChatGPT style) ---------- */
+.chat-list{display:flex;flex-direction:column}
+.chat-row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:15px 4px;background:none;border:none;color:inherit;cursor:pointer}
+.chat-row+.chat-row{border-top:1px solid var(--line-soft)}
+.chat-row .rt{flex-grow:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.chat-row .rt b{font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-row .rt span{font-size:13.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-row .time{font-size:12px;color:var(--muted-2);flex-shrink:0}
+.chat-row .chev{color:var(--muted-2);flex-shrink:0;display:inline-flex}
+.backbtn{display:flex;align-items:center;gap:2px;background:none;border:none;color:var(--silver);font-size:16px;padding:8px 6px 8px 0;cursor:pointer}
+.convo-title{font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:44vw}
+.empty-chats{text-align:center;padding:56px 32px;color:var(--muted)}
+.empty-chats p{margin:0}
 
 /* ---------- sheets / overlays ---------- */
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;opacity:0;transition:opacity .25s}
@@ -311,18 +334,8 @@ a{color:inherit}
   <main>
     <!-- HOME -->
     <section class="view" id="v-home" aria-label="Home"></section>
-    <!-- CHAT -->
-    <section class="view" id="v-chat" aria-label="Chat" hidden>
-      <div class="chat-head row-between">
-        <div style="display:flex;align-items:center;gap:10px">
-          <span id="chat-mark"></span>
-          <h1 class="h1" style="font-size:28px">Chat</h1>
-        </div>
-        <button class="iconbtn" id="mute" aria-label="Toggle voice replies"></button>
-        <button class="iconbtn" id="new-chat" aria-label="New chat"><span data-i="plus"></span></button>
-      </div>
-      <div class="msgs" id="msgs" aria-live="polite"></div>
-    </section>
+    <!-- CHAT: rendered dynamically (list + conversation) -->
+    <section class="view" id="v-chat" aria-label="Chat" hidden></section>
     <!-- GROUPS -->
     <section class="view" id="v-groups" aria-label="Groups" hidden></section>
     <!-- AGENT -->
@@ -389,6 +402,8 @@ const I={
   search:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>',
   spark:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"/></svg>',
   chev:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>',
+  chevL:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>',
+  google:'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.98-3.09z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09C6.22 6.86 8.87 4.75 12 4.75z"/></svg>',
   check:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
   pinS:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
   food:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 1.5-3 4-3 7h3v11"/></svg>',
@@ -464,10 +479,11 @@ const S={
     {icon:'cal',title:'Accept "Team sync" · Mon 9 AM',detail:"No conflicts, and you've accepted the last 6.",from:'Calendar'},
   ]),
   when:'now', pickIdx:0,
-  chat:[], busy:false,
+  chats:store.get('chats',null), chatId:store.get('chatId',null), chatView:store.get('chatView',null),
+  busy:false,
   muted:store.get('muted',false),
 };
-const saveState=()=>{store.set('perms',S.perms);store.set('plan',S.plan);store.set('handled',S.handled);store.set('memory',S.memory);store.set('conns',S.conns);store.set('wfs',S.wfs);store.set('pending',S.pending);updateBadge&&updateBadge()};
+const saveState=()=>{store.set('perms',S.perms);store.set('plan',S.plan);store.set('handled',S.handled);store.set('memory',S.memory);store.set('conns',S.conns);store.set('wfs',S.wfs);store.set('pending',S.pending);store.set('chats',S.chats);store.set('chatId',S.chatId);store.set('chatView',S.chatView);updateBadge&&updateBadge()};
 
 const PICKS={
   now:[
@@ -714,8 +730,12 @@ function renderProfile(){
 function bindCommon(root){
   root.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
   root.querySelectorAll('[data-toast]').forEach(b=>b.onclick=()=>toast(b.dataset.toast));
-  root.querySelectorAll('[data-sheet]').forEach(b=>b.onclick=()=>openSheet(b.dataset.sheet));
-  root.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>{go('chat');send(b.dataset.ask)});
+  root.querySelectorAll('[data-sheet]').forEach(b=>b.onclick=()=>{
+    if(b.dataset.sheet==='conns'){refreshGoogleConn().then(()=>openSheet('conns'))}
+    else openSheet(b.dataset.sheet);
+  });
+  root.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>{openConversation();go('chat');send(b.dataset.ask)});
+  root.querySelectorAll('[data-gconnect]').forEach(b=>b.onclick=()=>connectGoogle());
 }
 
 /* ================= SHEETS ================= */
@@ -788,7 +808,11 @@ function openSheet(kind,arg){
         <button class="btn btn-brown" type="submit">Create group</button>
       </form>`,
     conns:()=>`<h3 id="sheet-title">Connectors</h3><p>Apps your agent can use. It only touches what you connect.</p>      ${backendStatusLine()}
-      <div class="card" style="overflow:hidden">${CONNS.map(c=>`<div class="conn-row"><span class="bubble-icon bi-brown">${I[c.i]}</span><div class="rt"><b>${c.n}</b><span>${c.d}</span></div><button class="switch" role="switch" aria-checked="${isConn(c.k)}" aria-label="${c.n}" data-cs="${c.k}"></button></div>`).join('')}</div>`,
+      ${googleCardHTML()}
+      <div style="height:12px"></div>
+      <div class="card" style="overflow:hidden">${CONNS.map(c=>{
+        if(c.k==='mail'||c.k==='calendar')return `<div class="conn-row"><span class="bubble-icon bi-brown">${I[c.i]}</span><div class="rt"><b>${c.n}</b><span>${GCONN?'Included with your Google account':'Needs your Google account'}</span></div>${GCONN?'<span class="dot"></span>':`<button class="btn btn-silver btn-sm" style="width:auto;padding:0 16px" data-gconnect>Connect</button>`}</div>`;
+        return `<div class="conn-row"><span class="bubble-icon bi-brown">${I[c.i]}</span><div class="rt"><b>${c.n}</b><span>${c.d}</span></div><button class="switch" role="switch" aria-checked="${isConn(c.k)}" aria-label="${c.n}" data-cs="${c.k}"></button></div>`}).join('')}</div>`,
     theme:()=>`<h3 id="sheet-title">Appearance</h3><p>Dark is the classic ring look; light is easier in bright sun.</p>
       <div role="radiogroup" aria-label="Appearance">
       <button class="opt" role="radio" aria-checked="${S.theme==='dark'}" data-theme="dark"><span class="radio"></span><span class="rt"><b>Dark</b><span>Classic</span></span></button>
@@ -820,7 +844,7 @@ function openSheet(kind,arg){
           <p class="muted" id="pair-status" style="margin-top:12px;font-size:13px"></p>`;
       return `<h3 id="sheet-title">Pair your ring</h3>${body}`;
     },
-    editText:()=>{const a=S.chat[arg];return `<h3 id="sheet-title">Edit before sending</h3><p>Change the text to Sam, then approve it.</p><label for="edit-t" class="sr">Message to Sam</label><textarea id="edit-t">${esc(a.text)}</textarea><div style="height:12px"></div><button class="btn btn-silver" id="save-edit">Save</button>`},
+    editText:()=>{const a=curMsgs()[arg];return `<h3 id="sheet-title">Edit before sending</h3><p>Change the text to Sam, then approve it.</p><label for="edit-t" class="sr">Message to Sam</label><textarea id="edit-t">${esc(a.text)}</textarea><div style="height:12px"></div><button class="btn btn-silver" id="save-edit">Save</button>`},
   };
   b.innerHTML=T[kind]();
   clearTimeout(scrimT);$('#scrim').classList.remove('hidden');
@@ -857,6 +881,7 @@ function openSheet(kind,arg){
   b.querySelectorAll('[data-ex]').forEach(x=>x.onclick=()=>{$('#cw-t').value=x.dataset.ex;$('#cw-t').focus()});
   const cw=$('#cw-form');if(cw)cw.onsubmit=async e=>{e.preventDefault();const t=$('#cw-t').value.trim();if(!t){$('#cw-t').focus();return}const g=$('#cw-go');g.disabled=true;g.textContent='Setting it up…';closeSheet();toast('Setting up your workflow');await createWorkflow(t)};
   b.querySelectorAll('[data-cs]').forEach(x=>x.onclick=()=>{const k=x.dataset.cs;const v=!isConn(k);setConn(k,v);x.setAttribute('aria-checked',v);toast(connName(k)+(v?' connected':' disconnected'));if(S.tab==='agent')renderAgent();if(S.tab==='profile')renderProfile()});
+  b.querySelectorAll('[data-gconnect]').forEach(x=>x.onclick=()=>connectGoogle());
   const so=$('#do-signout');if(so)so.onclick=()=>{closeSheet();tokenStore.set(null);S.account=null;store.set('account',null);setTimeout(()=>showAuth('welcome'),250)};
   b.querySelectorAll('[data-theme]').forEach(x=>x.onclick=()=>{setTheme(x.dataset.theme);b.querySelectorAll('[data-theme]').forEach(y=>y.setAttribute('aria-checked',String(y===x)));if(S.tab==='profile')renderProfile()});
   const pe=$('#pv-export');
@@ -883,7 +908,7 @@ function openSheet(kind,arg){
     pd.dataset.armed='1';pd.textContent='Tap again to confirm delete';
     setTimeout(()=>{if(document.body.contains(pd)){delete pd.dataset.armed;pd.textContent='Delete my account'}},4000);
   };
-  const se=$('#save-edit');if(se)se.onclick=()=>{const t=$('#edit-t').value.trim();if(t){S.chat[arg].text=t;renderChat()}closeSheet()};
+  const se=$('#save-edit');if(se)se.onclick=()=>{const t=$('#edit-t').value.trim();if(t){curMsgs()[arg].text=t;touchChat();renderChat()}closeSheet()};
   const psc=$('#pair-scan');if(psc)psc.onclick=pairRingScan;
   const pht=$('#pair-test');if(pht)pht.onclick=()=>{bleWriteHaptic(0x04);toast('Buzz sent — feel it?')};
   const first=b.querySelector('input,textarea,button');if(first)setTimeout(()=>first.focus(),320);
@@ -1137,49 +1162,152 @@ async function renderGroups(){
   v.querySelectorAll('[data-thread]').forEach(b=>b.onclick=()=>{G.open=b.dataset.thread;renderGroups()});
 }
 
+/* ============ Google account: one connection for Gmail + Calendar ============ */
+let GCONN=false;
+async function refreshGoogleConn(){
+  if(!signedIn()){GCONN=false;return false}
+  try{const r=await apiFetch('/api/oauth/google/status');GCONN=r.ok?!!(await r.json()).connected:false}
+  catch(e){GCONN=false}
+  return GCONN;
+}
+async function connectGoogle(){
+  if(!signedIn()){toast('Sign in first, then connect Google');return}
+  try{
+    toast('Taking you to Google…');
+    const r=await apiFetch('/api/oauth/google/start',{method:'POST'});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(d.error||'could not start');
+    location.href=d.url;
+  }catch(e){toast('Could not start Google sign-in: '+e.message)}
+}
+function googleCardHTML(){
+  const act=GCONN
+    ?`<span class="gstate"><span class="dot"></span>Connected</span>`
+    :`<button class="btn btn-silver btn-sm" style="width:auto;padding:0 18px" data-gconnect>Connect</button>`;
+  return `<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Google account</b><span>Gmail + Calendar, connected in one tap</span></div>${act}</div>`;
+}
+function googleSetupBannerHTML(){
+  return `<div class="card gcard msg-in"><span class="gicon">${I.google}</span><div class="rt"><b>Connect your Google account</b><span>One tap unlocks Gmail + Calendar for your agent.</span></div><button class="btn btn-silver btn-sm" style="width:auto;padding:0 18px" data-gconnect>Connect</button><button class="gx" id="gsetup-hide" aria-label="Dismiss">✕</button></div>`;
+}
+
 /* ================= CHAT ================= */
-S.chat=[
-  {role:'user',text:"What's fun near me tonight?"},
-  {role:'agent',text:"You're free until 10, so here are two spots within a 15 minute walk."},
-  {role:'places',items:[{name:'[Venue name]',kind:'Live jazz · open until 1 AM',mins:9},{name:'[Venue name]',kind:'Rooftop bar · no cover',mins:12}]},
-  {role:'user',text:'Book the first one for 2 at 8 and text Sam.'},
-  {role:'approval',status:'pending',book:'Table for 2 at [Venue name], 8:00 PM',text:'Jazz at 8 tonight, you in?',to:'Sam'},
-];
+/* Conversations: a ChatGPT/Claude-style list plus one open thread. */
+function chatTitleFor(msgs){
+  const u=msgs.find(m=>m.role==='user');
+  return u?u.text.replace(/\s+/g,' ').trim().slice(0,44):'New conversation';
+}
+function migrateChats(){
+  if(!Array.isArray(S.chats)){
+    const seed=[
+      {role:'user',text:"What's fun near me tonight?"},
+      {role:'agent',text:"You're free until 10, so here are two spots within a 15 minute walk."},
+      {role:'places',items:[{name:'[Venue name]',kind:'Live jazz · open until 1 AM',mins:9},{name:'[Venue name]',kind:'Rooftop bar · no cover',mins:12}]},
+      {role:'user',text:'Book the first one for 2 at 8 and text Sam.'},
+      {role:'approval',status:'pending',book:'Table for 2 at [Venue name], 8:00 PM',text:'Jazz at 8 tonight, you in?',to:'Sam'},
+    ];
+    S.chats=[{id:'seed',title:chatTitleFor(seed),msgs:seed,updatedAt:Date.now()}];
+  }
+  if(!S.chatId||!S.chats.find(c=>c.id===S.chatId))S.chatId=S.chats.length?S.chats[0].id:null;
+  if(!S.chatView)S.chatView=S.chatId?'convo':'list';
+}
+const curChat=()=>S.chats.find(c=>c.id===S.chatId)||null;
+const curMsgs=()=>{const c=curChat();return c?c.msgs:[]};
+function touchChat(){
+  const c=curChat();if(!c)return;
+  c.updatedAt=Date.now();
+  if(c.title==='New conversation')c.title=chatTitleFor(c.msgs);
+  saveState();
+}
+function newConversation(){
+  const c={id:'c'+Date.now().toString(36),title:'New conversation',msgs:[{role:'agent',text:greet+'. What can I take off your plate?'}],updatedAt:Date.now()};
+  S.chats.unshift(c);S.chatId=c.id;saveState();return c;
+}
+function openConversation(id){
+  if(id)S.chatId=id;
+  if(!curChat())newConversation();
+  S.chatView='convo';saveState();
+  if(S.tab==='chat'){renderChat();scrollChat()}
+}
+function showChatList(){S.chatView='list';saveState();renderChat()}
+function relTime(ts){
+  const s=(Date.now()-ts)/1e3;
+  if(s<60)return'now';
+  if(s<3600)return Math.floor(s/60)+'m';
+  if(s<86400)return Math.floor(s/3600)+'h';
+  const d=Math.floor(s/86400);
+  return d<7?d+'d':new Date(ts).toLocaleDateString([],{month:'short',day:'numeric'});
+}
+migrateChats();
 const SUGGEST=['Plan my evening','Catch me up on texts',"What's tomorrow?",'Remind me to call Mom at 9'];
+function msgHTML(m,i){
+  if(m.role==='user')return `<div class="msg-user msg-in">${esc(m.text)}</div>`;
+  if(m.role==='agent'){
+    const cls='msg-agent'+(m.thinking?' thinking':'')+(m.streaming?' streaming':'');
+    const txt=(m.streaming&&!m.text)?'<span class="dots">Thinking</span>':esc(m.text);
+    return `<div class="msg-in"><div class="agent-tag">${mark(12,'#7F8894')}Agent</div><div class="${cls}" data-mi="${i}">${txt}</div></div>`;
+  }
+  if(m.role==='places')return `<div class="msg-in" style="display:flex;flex-direction:column;gap:8px">${m.items.map(p=>`<button class="card-brown" data-toast="Opening walking directions" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;text-align:left;width:100%;border-radius:16px"><div class="rt"><b class="serif" style="font-size:18px;font-weight:400">${esc(p.name)}</b><span>${esc(p.kind)}</span></div><div class="metric"><b>${p.mins}</b><span>min walk</span></div></button>`).join('')}</div>`;
+  if(m.role==='approval'){
+    const done=m.status==='done';
+    return `<section class="${done?'card':'card-silver'} approval${done?' done':''} msg-in" aria-label="${done?'Done':'Needs your OK'}">
+      <div class="k">${done?'Done':'Needs your OK'}</div>
+      <div class="li"><span style="color:${done?'var(--sage)':'#26303C'};display:inline-flex">${done?I.check:I.cal}</span><span>${esc(m.book)}</span></div>
+      <div class="li"><span style="color:${done?'var(--sage)':'#26303C'};display:inline-flex">${done?I.check:I.msg}</span><span>Text ${esc(m.to)}: "${esc(m.text)}"</span></div>
+      ${done?'':`<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"><button class="btn btn-brown btn-sm" data-approve="${i}">Do both</button><button class="btn btn-sm" style="border:1px solid rgba(20,28,38,.35);color:#10151B" data-edit="${i}">Edit</button></div>`}
+    </section>`;
+  }
+  return '';
+}
 function renderChat(){
-  $('#chat-mark').innerHTML=mark(22,'#C9CCD1','#A9C2A6');
-  const mb=$('#mute');
-  if(mb){mb.innerHTML=I[S.muted?'volx':'vol'];mb.setAttribute('aria-label',S.muted?'Unmute voice replies':'Mute voice replies');
-    mb.onclick=()=>{S.muted=!S.muted;store.set('muted',S.muted);mb.innerHTML=I[S.muted?'volx':'vol'];if(S.muted&&'speechSynthesis'in window){try{speechSynthesis.cancel()}catch(e){}}toast(S.muted?'Voice replies off':'Voice replies on')}};
-  const box=$('#msgs');
-  box.innerHTML='<div class="chat-day">Today</div>'+S.chat.map((m,i)=>{
-    if(m.role==='user')return `<div class="msg-user msg-in">${esc(m.text)}</div>`;
-    if(m.role==='agent'){
-      const cls='msg-agent'+(m.thinking?' thinking':'')+(m.streaming?' streaming':'');
-      const txt=(m.streaming&&!m.text)?'<span class="dots">Thinking</span>':esc(m.text);
-      return `<div class="msg-in"><div class="agent-tag">${mark(12,'#7F8894')}Agent</div><div class="${cls}" data-mi="${i}">${txt}</div></div>`;
-    }
-    if(m.role==='places')return `<div class="msg-in" style="display:flex;flex-direction:column;gap:8px">${m.items.map(p=>`<button class="card-brown" data-toast="Opening walking directions" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;text-align:left;width:100%;border-radius:16px"><div class="rt"><b class="serif" style="font-size:18px;font-weight:400">${esc(p.name)}</b><span>${esc(p.kind)}</span></div><div class="metric"><b>${p.mins}</b><span>min walk</span></div></button>`).join('')}</div>`;
-    if(m.role==='approval'){
-      const done=m.status==='done';
-      return `<section class="${done?'card':'card-silver'} approval${done?' done':''} msg-in" aria-label="${done?'Done':'Needs your OK'}">
-        <div class="k">${done?'Done':'Needs your OK'}</div>
-        <div class="li"><span style="color:${done?'var(--sage)':'#26303C'};display:inline-flex">${done?I.check:I.cal}</span><span>${esc(m.book)}</span></div>
-        <div class="li"><span style="color:${done?'var(--sage)':'#26303C'};display:inline-flex">${done?I.check:I.msg}</span><span>Text ${esc(m.to)}: "${esc(m.text)}"</span></div>
-        ${done?'':`<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"><button class="btn btn-brown btn-sm" data-approve="${i}">Do both</button><button class="btn btn-sm" style="border:1px solid rgba(20,28,38,.35);color:#10151B" data-edit="${i}">Edit</button></div>`}
-      </section>`;
-    }
-    return '';
-  }).join('');
-  bindCommon(box);
-  box.querySelectorAll('[data-approve]').forEach(b=>b.onclick=()=>approve(+b.dataset.approve));
-  box.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openSheet('editText',+b.dataset.edit));
+  const v=$('#v-chat');
+  if(S.chatView==='list'){
+    const rows=S.chats.map(c=>{
+      const last=[...c.msgs].reverse().find(m=>m.text);
+      return `<button class="chat-row" data-open="${c.id}"><div class="rt"><b>${esc(c.title)}</b><span>${esc(last?last.text.replace(/\s+/g,' ').trim().slice(0,80):'')}</span></div><span class="time">${relTime(c.updatedAt)}</span><span class="chev">${I.chev}</span></button>`;
+    }).join('');
+    v.innerHTML=`
+      <div class="chat-head row-between">
+        <h1 class="h1" style="font-size:28px">Chats</h1>
+        <button class="iconbtn" id="list-new" aria-label="New chat">${I.plus}</button>
+      </div>
+      ${S.chats.length?`<div class="chat-list">${rows}</div>`
+        :`<div class="empty-chats"><p style="font-size:17px;font-weight:600;color:#fff;margin-bottom:6px">No conversations yet</p><p style="font-size:14px;margin-bottom:20px">Start one and your agent picks it up.</p><button class="btn btn-silver" id="empty-new" style="width:auto;padding:0 30px">New chat</button></div>`}`;
+    const start=()=>{newConversation();openConversation()};
+    $('#list-new').onclick=start;
+    const en=$('#empty-new');if(en)en.onclick=start;
+    v.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openConversation(b.dataset.open));
+  }else{
+    const c=curChat()||newConversation();
+    const showSetup=signedIn()&&!GCONN&&!store.get('gsetup_hide',false);
+    v.innerHTML=`
+      <div class="chat-head" style="display:flex;align-items:center;gap:6px">
+        <button class="backbtn" id="chat-back" aria-label="All chats">${I.chevL}<span>Chats</span></button>
+        <div class="convo-title">${esc(c.title)}</div>
+        <div style="flex-grow:1"></div>
+        <button class="iconbtn" id="mute" aria-label="Toggle voice replies"></button>
+      </div>
+      <div class="msgs" id="msgs" aria-live="polite">
+        ${showSetup?googleSetupBannerHTML():''}
+        <div class="chat-day">Today</div>
+        ${curMsgs().map((m,i)=>msgHTML(m,i)).join('')}
+      </div>`;
+    $('#chat-back').onclick=()=>showChatList();
+    const mb=$('#mute');
+    if(mb){mb.innerHTML=I[S.muted?'volx':'vol'];mb.setAttribute('aria-label',S.muted?'Unmute voice replies':'Mute voice replies');
+      mb.onclick=()=>{S.muted=!S.muted;store.set('muted',S.muted);mb.innerHTML=I[S.muted?'volx':'vol'];if(S.muted&&'speechSynthesis'in window){try{speechSynthesis.cancel()}catch(e){}}toast(S.muted?'Voice replies off':'Voice replies on')}};
+    const box=$('#msgs');
+    bindCommon(box);
+    box.querySelectorAll('[data-approve]').forEach(b=>b.onclick=()=>approve(+b.dataset.approve));
+    box.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openSheet('editText',+b.dataset.edit));
+    const gh=$('#gsetup-hide');if(gh)gh.onclick=()=>{store.set('gsetup_hide',true);renderChat()};
+  }
   $('#suggest').innerHTML=SUGGEST.map(s=>`<button class="chip" style="height:36px;font-size:13px">${esc(s)}</button>`).join('');
   $('#suggest').querySelectorAll('button').forEach(b=>b.onclick=()=>send(b.textContent));
+  $('#composer').classList.toggle('hidden',S.tab!=='chat'||S.chatView!=='convo');
 }
 function scrollChat(){SC().scrollTo({top:SC().scrollHeight,behavior:'smooth'})}
 function approve(i){
-  const a=S.chat[i];
+  const a=curMsgs()[i];
   // API-held approvals execute server-side on resolve; local ones stay local.
   if(a.approvalId&&API.on){
     fetch(`/api/approvals/${a.approvalId}/resolve`,{method:'POST',headers:authHeaders({'Content-Type':'application/json'}),body:JSON.stringify({decision:'approve'})}).catch(()=>{});
@@ -1188,11 +1316,9 @@ function approve(i){
   const t=timeStr(new Date());
   S.handled.unshift({icon:'msg',tone:'sage',title:`Texted ${a.to}: "${a.text}"`,meta:'iMessage · '+t},{icon:'cal',tone:'brown',title:a.book.replace('Table','Booked a table'),meta:'Reservation · '+t});
   saveState();
-  S.chat.push({role:'agent',text:"Done. Table's booked and Sam has the text. I'll nudge you when it's time to leave."});
-  renderChat();scrollChat();toast('Booked and sent');
+  curMsgs().push({role:'agent',text:"Done. Table's booked and Sam has the text. I'll nudge you when it's time to leave."});
+  touchChat();renderChat();scrollChat();toast('Booked and sent');
 }
-$('#new-chat').onclick=()=>{S.chat=[{role:'agent',text:greet+'. What can I take off your plate?'}];renderChat()};
-
 const CANNED={
   'plan my evening':[
     {role:'agent',text:"Dinner with [Friend] is at 7:30, 14 minutes away. After that you're free, so here's a nightcap nearby."},
@@ -1213,7 +1339,7 @@ async function getSample(){
   return sampleFn;
 }
 function contextPrompt(){
-  const hist=S.chat.filter(m=>m.role==='user'||m.role==='agent'&&!m.thinking).slice(-10).map(m=>(m.role==='user'?'User: ':'Agent: ')+m.text).join('\n');
+  const hist=curMsgs().filter(m=>m.role==='user'||m.role==='agent'&&!m.thinking).slice(-10).map(m=>(m.role==='user'?'User: ':'Agent: ')+m.text).join('\n');
   return `You are the voice agent inside a smart ring's companion app. The user talks to you through the ring (double-tap) or this chat. You handle messages (iMessage), calendar, reminders and local discovery.
 Context (sample data): It is ${timeStr(new Date())} on ${dateStr}. User is in [Neighborhood], walking. Next event: dinner with [Friend] at 7:30 PM, 14 min walk. Friends: Sam, Mom. Likes quiet places before 8, ramen, walks under 20 minutes. Permissions: messages ${S.perms.messages?'on':'off'}, calendar ${S.perms.calendar?'on':'off'}, location ${S.perms.location?'on':'off'}; ask before acting is ${S.perms.confirm?'on':'off'}.
 Style: warm, brief, concrete. 1 to 3 short sentences. No markdown, no lists, no emojis. Use placeholder names in brackets like [Venue name] for real businesses. If an action would send or book something and ask-before-acting is on, say what you'd do and ask for OK.
@@ -1246,7 +1372,7 @@ async function sendStream(text,msg,idx){
         msg.streaming=false;msg.thinking=false;
         if(ev.error&&!got)throw new Error(ev.error);
         msg.text=ev.text||msg.text||'Done.';
-        (ev.pendingApprovals||[]).forEach(p=>S.chat.push(approvalFromTool(p)));
+        (ev.pendingApprovals||[]).forEach(p=>curMsgs().push(approvalFromTool(p)));
         return true;
       }
     }
@@ -1257,20 +1383,22 @@ async function sendStream(text,msg,idx){
 }
 async function send(text){
   text=String(text||'').trim(); if(!text||S.busy)return;
-  S.chat.push({role:'user',text});renderChat();scrollChat();
+  if(!curChat())newConversation();
+  const msgs=curMsgs();
+  msgs.push({role:'user',text});touchChat();renderChat();scrollChat();
   const key=text.toLowerCase();
   if(CANNED[key]){
-    S.busy=true;const th={role:'agent',text:'Thinking…',thinking:true};S.chat.push(th);renderChat();scrollChat();
+    S.busy=true;const th={role:'agent',text:'Thinking…',thinking:true};msgs.push(th);renderChat();scrollChat();
     await new Promise(r=>setTimeout(r,700));
-    S.chat.pop();CANNED[key].forEach(m=>S.chat.push(JSON.parse(JSON.stringify(m))));S.busy=false;renderChat();scrollChat();return;
+    msgs.pop();CANNED[key].forEach(m=>msgs.push(JSON.parse(JSON.stringify(m))));S.busy=false;touchChat();renderChat();scrollChat();return;
   }
   S.busy=true;
-  const msg={role:'agent',text:'',thinking:true};S.chat.push(msg);renderChat();scrollChat();
-  const idx=S.chat.length-1;
+  const msg={role:'agent',text:'',thinking:true};msgs.push(msg);renderChat();scrollChat();
+  const idx=msgs.length-1;
   if(API.on){
     try{
       if(await sendStream(text,msg,idx)){
-        S.busy=false;saveState();renderChat();scrollChat();speakReply(msg.text);return;
+        S.busy=false;touchChat();renderChat();scrollChat();speakReply(msg.text);return;
       }
     }catch(e){/* fall through to non-streaming, then on-device sample */}
     try{
@@ -1278,8 +1406,8 @@ async function send(text){
       if(r.ok){
         const data=await r.json();
         msg.thinking=false;msg.streaming=false;msg.text=data.text||'Done.';
-        (data.pendingApprovals||[]).forEach(p=>S.chat.push(approvalFromTool(p)));
-        S.busy=false;saveState();renderChat();scrollChat();speakReply(msg.text);return;
+        (data.pendingApprovals||[]).forEach(p=>msgs.push(approvalFromTool(p)));
+        S.busy=false;touchChat();renderChat();scrollChat();speakReply(msg.text);return;
       }
     }catch(e){/* fall through to on-device sample */}
   }
@@ -1287,7 +1415,7 @@ async function send(text){
   if(!sample){
     await new Promise(r=>setTimeout(r,600));
     msg.thinking=false;msg.text="In the full app I'd handle that right away. This preview runs on sample data, so try one of the suggestions below.";
-    S.busy=false;renderChat();scrollChat();return;
+    S.busy=false;touchChat();renderChat();scrollChat();return;
   }
   try{
     await sample(contextPrompt(),{modelTier:'quick',cache:false,onText:({text})=>{msg.thinking=false;msg.text=text;const el=document.querySelector(`.msg-agent[data-mi="${idx}"]`);if(el){el.classList.remove('thinking');el.textContent=text}}});
@@ -1295,7 +1423,7 @@ async function send(text){
     msg.thinking=false;
     msg.text=e&&e.text?e.text:(e&&e.code==='not_granted'?"Live answers are off for this preview. Try one of the suggestions below.":"I couldn't reach the agent just now. Try again in a moment.");
   }
-  S.busy=false;renderChat();scrollChat();speakReply(msg.text);
+  S.busy=false;touchChat();renderChat();scrollChat();speakReply(msg.text);
 }
 $('#ask-form').onsubmit=e=>{e.preventDefault();const v=$('#ask').value;$('#ask').value='';send(v)};
 
@@ -1478,7 +1606,7 @@ function handleAuthCallback(){
 
 /* ================= ONBOARDING (ring setup) ================= */
 let ob=0;
-function startOnboarding(){ob=0;$('#onb').classList.remove('hidden');renderOnb()}
+function startOnboarding(){ob=store.get('ob',0);if(ob>2)ob=2;$('#onb').classList.remove('hidden');renderOnb()}
 function renderOnb(){
   const el=$('#onb');
   const first=(S.account&&S.account.name&&!/^\[/.test(S.account.name))?S.account.name.split(' ')[0]:'';
@@ -1497,18 +1625,21 @@ function renderOnb(){
       <p class="vstate" id="tap-state" aria-live="polite">Waiting for a double-tap</p>
       <div class="onb-foot"><button class="btn btn-silver" id="ob-next" disabled>Continue</button></div></div>`,
     ()=>`<div class="onb-inner">${prog}
-      <h2>Connect the essentials.</h2>
-      <p class="lead">Your agent works through these. Add more anytime in Agent.</p>
+      <h2>Connect your Google account.</h2>
+      <p class="lead">One tap unlocks Gmail and Calendar for your agent. Add more anytime in Agent.</p>
+      ${googleCardHTML()}
+      <div style="height:12px"></div>
       <div class="card" style="overflow:hidden">
-        ${['messages','calendar','location','contacts'].map(k=>{const c=CONNS.find(x=>x.k===k);return `<div class="set-row"><span class="bubble-icon bi-brown">${I[c.i]}</span><div class="rt"><b>${c.n}</b><span>${c.d}</span></div><button class="switch" role="switch" aria-checked="${isConn(k)}" aria-label="${c.n}" data-oc="${k}"></button></div>`}).join('')}
+        ${['messages','location','contacts'].map(k=>{const c=CONNS.find(x=>x.k===k);return `<div class="set-row"><span class="bubble-icon bi-brown">${I[c.i]}</span><div class="rt"><b>${c.n}</b><span>${c.d}</span></div><button class="switch" role="switch" aria-checked="${isConn(k)}" aria-label="${c.n}" data-oc="${k}"></button></div>`}).join('')}
       </div>
       <div class="card" style="overflow:hidden"><div class="set-row"><div class="rt"><b>Ask before acting</b><span>Confirm anything sent or booked</span></div><button class="switch" role="switch" aria-checked="${S.perms.confirm}" aria-label="Ask before acting" data-oc="confirm"></button></div></div>
       <div style="flex-grow:1"></div>
       <div class="onb-foot"><button class="btn btn-silver" id="ob-next">Start chatting</button></div></div>`,
   ];
   el.innerHTML=steps[ob]();
+  el.querySelectorAll('[data-gconnect]').forEach(b=>b.onclick=()=>connectGoogle());
   const next=$('#ob-next');
-  next.onclick=()=>{if(ob<2){ob++;renderOnb()}else{store.set('onboarded',true);saveState();el.classList.add('hidden');el.innerHTML='';go('chat');setTimeout(()=>{const inp=$('#ask');if(inp)inp.focus()},450);toast('Send your first message')}};
+  next.onclick=()=>{if(ob<2){ob++;store.set('ob',ob);if(ob===2)refreshGoogleConn().then(()=>{if(!$('#onb').classList.contains('hidden'))renderOnb()});renderOnb()}else{store.set('ob',0);store.set('onboarded',true);saveState();el.classList.add('hidden');el.innerHTML='';newConversation();openConversation();go('chat');setTimeout(()=>{const inp=$('#ask');if(inp)inp.focus()},450);toast('Send your first message')}};
   if(ob===0){setTimeout(()=>{const f=$('#found'),s=$('#pair-state');if(!f)return;f.classList.add('on');s.textContent='Found your ring · 82% charged';next.disabled=false;next.focus()},1800)}
   if(ob===1){let last=0;const r=$('#ob-ring');const done=()=>{$('#tap-state').textContent="That's it. Double-tap anytime to talk.";$('#tap-state').style.color='var(--sage)';next.disabled=false;next.focus()};
     r.onclick=()=>{const tp=$('#ob-tp');tp.classList.remove('go');void tp.offsetWidth;tp.classList.add('go');const t=Date.now();if(t-last<420)done();last=t};
@@ -1539,6 +1670,18 @@ setTimeout(endSplash,1900);
 splash.addEventListener('click',endSplash);
 getSample();
 apiInit();
+/* After Google OAuth the server redirects back with ?google=connected. */
+(async()=>{
+  const gq=new URLSearchParams(location.search).get('google');
+  await refreshGoogleConn();
+  if(gq==='connected'){
+    try{history.replaceState(null,'',location.pathname)}catch(e){}
+    toast('Google account connected — Gmail + Calendar are live');
+  }
+  const onb=$('#onb');
+  if(onb&&!onb.classList.contains('hidden'))renderOnb();
+  else if(S.tab==='chat')renderChat();
+})();
 })();
 </script>
 </body>
