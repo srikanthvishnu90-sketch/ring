@@ -73,8 +73,45 @@ async function signInWithPassword(email, password) {
   return { access_token: data.access_token, user: data.user };
 }
 
-// Validate a JWT against GoTrue. Returns { id, email } on success.
-// Throws { code: 'UNAUTHORIZED' } for bad/expired tokens.
+// Create a brand-new account (signup): admin createUser with the email
+// pre-confirmed, then sign straight in so the user lands in the app with a
+// session. Distinct from login: this path creates; login only authenticates.
+// Throws EMAIL_EXISTS (409-worthy) when the address is already registered.
+async function signUpWithPassword(email, password, name) {
+  ensureConfigured();
+  const em = typeof email === 'string' ? email.trim().toLowerCase() : '';
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) {
+    throw authError('a valid email is required', 'BAD_EMAIL');
+  }
+  if (!password || typeof password !== 'string' || password.length < 8) {
+    throw authError('password must be at least 8 characters', 'BAD_PASSWORD');
+  }
+  const svc = env('SUPABASE_SERVICE_KEY');
+  if (!svc) throw authError('signup is not configured', 'NOT_CONFIGURED');
+  const r = await fetch(`${sbUrl()}/auth/v1/admin/users`, {
+    method: 'POST',
+    headers: { apikey: svc, Authorization: `Bearer ${svc}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: em,
+      password,
+      email_confirm: true,
+      user_metadata: { name: typeof name === 'string' ? name.trim().slice(0, 80) : '' },
+    }),
+  });
+  if (!r.ok) {
+    const text = await r.text();
+    if (/already registered|already exists|duplicate/i.test(text)) {
+      throw authError('an account with this email already exists — log in instead', 'EMAIL_EXISTS', { status: 409 });
+    }
+    if (r.status === 422 || r.status === 400) {
+      throw authError(`could not create the account: ${text.slice(0, 160)}`, 'SIGNUP_FAILED', { status: 400 });
+    }
+    throw authError('could not create the account', 'SIGNUP_FAILED', { status: r.status });
+  }
+  const created = await r.json();
+  const sess = await signInWithPassword(em, password);
+  return { ...sess, user: { id: created.id, email: created.email } };
+}
 async function validateToken(jwt) {
   ensureConfigured();
   const r = await fetch(`${sbUrl()}/auth/v1/user`, {
@@ -136,4 +173,4 @@ async function optionalUser(req, res, next) {
   next();
 }
 
-module.exports = { sendMagicLink, signInWithPassword, validateToken, bearerToken, requireUser, optionalUser };
+module.exports = { sendMagicLink, signInWithPassword, signUpWithPassword, validateToken, bearerToken, requireUser, optionalUser };

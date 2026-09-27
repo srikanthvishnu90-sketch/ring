@@ -12,10 +12,10 @@
 :root{
   --black:#000000; --surface:#121212; --surface-2:#1A1A1A;
   --brown:#C7D0DB; --brown-2:#1D232B; --brown-line:#38414D; --brown-hi:#E9EEF5;
-  --mercury:linear-gradient(135deg,#F5F9FE 0%,#CBD7E8 40%,#A9BDD5 70%,#93A8C2 100%);
-  --silver:#C9CCD1; --silver-hi:#DDE0E4;
-  --silver-grad:linear-gradient(135deg,#EDEFF2 0%,#BFC3CA 42%,#DCDFE3 68%,#A9AEB6 100%);
-  --silver-card:radial-gradient(85% 70% at 18% 0%,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 70%),linear-gradient(158deg,#E6E8EB 0%,#C4C8CE 55%,#A9AEB6 100%);
+  --mercury:linear-gradient(135deg,#FFFFFF 0%,#F1F4F9 35%,#DDE3ED 70%,#CBD4E2 100%);
+  --silver:#D8DCE2; --silver-hi:#E8EBEF;
+  --silver-grad:linear-gradient(135deg,#FAFBFC 0%,#D8DCE2 42%,#ECEFF3 68%,#C6CCD5 100%);
+  --silver-card:radial-gradient(85% 70% at 18% 0%,rgba(255,255,255,.7) 0%,rgba(255,255,255,0) 70%),linear-gradient(158deg,#F4F6F9 0%,#D9DEE5 55%,#C3CAD4 100%);
   --brown-card:radial-gradient(85% 60% at 22% 10%,rgba(190,212,242,.14) 0%,rgba(190,212,242,0) 70%),linear-gradient(158deg,rgba(255,255,255,.07) 0%,rgba(0,0,0,0) 45%,rgba(0,0,0,.32) 100%),#1D232B;
   --sage:#A9C2A6; --sage-dark:#2F5236;
   --text:#FFFFFF; --ink:#10151B; --muted:#9AA4AF; --muted-2:#7F8894;
@@ -512,7 +512,7 @@ function go(tab){
   ['home','chat','groups','agent','profile'].forEach(t=>{$('#v-'+t).hidden=t!==tab});
   document.querySelectorAll('.tab').forEach(b=>{if(b.dataset.tab===tab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
   $('#composer').classList.toggle('hidden',tab!=='chat');
-  if(tab==='home')renderHome();
+  if(tab==='home'){renderHome();refreshGoogleConn().then(()=>{if(S.tab==='home')renderHome()})}
   if(tab==='groups')renderGroups();
   if(tab==='agent')renderAgent();
   if(tab==='profile'){renderProfile();if(signedIn())loadMemories().then(()=>{if(S.tab==='profile')renderProfile()})}
@@ -549,6 +549,8 @@ function renderHome(){
 
   <button class="btn btn-silver" id="talk">${I.mic}<span>Double-tap your ring or talk here</span></button>
 
+  ${signedIn()&&!GCONN&&!store.get('gsetup_hide',false)?googleSetupBannerHTML():''}
+
   <section class="card-brown" aria-label="Next up" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px">
     <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
       <div class="sub" style="font-size:12px">Next up · 7:30 PM</div>
@@ -565,6 +567,7 @@ function renderHome(){
     </div>
   </section>`;
   bindCommon(v);
+  const ghb=v.querySelector('#gsetup-hide');if(ghb)ghb.onclick=()=>{store.set('gsetup_hide',true);renderHome()};
   const arc=v.querySelector('.gauge-arc');
   if(arc){const full=arc.getAttribute('stroke-dasharray');arc.style.strokeDasharray='0 691.2';requestAnimationFrame(()=>requestAnimationFrame(()=>{arc.style.strokeDasharray=full}))}
   $('#talk').onclick=()=>openVoice();
@@ -1498,13 +1501,23 @@ function renderAuth(){
       <h2>Your assistant, on your finger.</h2>
       <p class="lead">Double-tap your ring and just talk. It texts, plans and finds places for you, while your phone stays in your pocket.</p>
       <div class="onb-foot">
-        <button class="btn btn-silver" data-to="magic">Continue with email</button>
-        <p class="sub" style="text-align:center;margin:6px 0 0;font-size:12px">We’ll send you a magic link — no password needed.</p>
-        <button class="btn btn-ghost" data-to="login" style="margin-top:10px">Log in with password</button>
+        <button class="btn btn-silver" data-to="signup">Create account</button>
+        <button class="btn btn-ghost" data-to="login" style="margin-top:10px">Log in</button>
+        <button data-to="magic" style="background:none;border:none;color:rgba(255,255,255,.62);text-decoration:underline;font-size:13px;margin:12px auto 0;display:block;cursor:pointer">Continue with an email link instead</button>
       </div></div>`,
+    signup:()=>`<div class="onb-inner">${backBtn}
+      <h2>Create your account</h2>
+      <p class="lead">New here? Pick a name, email and password — your account is ready instantly, no email round-trip.</p>
+      <form id="su-form" novalidate style="display:flex;flex-direction:column;gap:10px;margin:0">
+        ${field('su-name','Name','text','name')}
+        ${field('su-email','Email','email','email')}
+        ${field('su-pass','Password (8+ characters)','password','new-password')}
+        <button class="btn btn-silver" type="submit" id="su-go">Create account</button>
+      </form>
+      <p class="sub" style="text-align:center;margin:10px 0 0;font-size:13px">Already have an account? <button data-to="login" style="background:none;border:none;color:#fff;text-decoration:underline;font:inherit;cursor:pointer;padding:0">Log in</button></p></div>`,
     magic:()=>`<div class="onb-inner">${backBtn}
-      <h2>Sign in</h2>
-      <p class="lead">Enter your email and we’ll send you a magic link. Tap it on this device and you’re in — no password to remember.</p>
+      <h2>Email link</h2>
+      <p class="lead">Prefer no password? Enter your email and we’ll send a sign-in link. Tap it on this device and you’re in.</p>
       <form id="ml-form" novalidate style="display:flex;flex-direction:column;gap:10px;margin:0">
         ${field('ml-email','Email','email','email')}
         <button class="btn btn-silver" type="submit" id="ml-go">Send magic link</button>
@@ -1516,7 +1529,7 @@ function renderAuth(){
       <div class="onb-foot"><button class="btn btn-ghost" id="ml-resend">Resend link</button></div></div>`,
     login:()=>`<div class="onb-inner">${backBtn}
       <h2>Log in</h2>
-      <p class="lead">Enter your email and password to sign in.</p>
+      <p class="lead">Welcome back — sign in to your existing account.</p>
       <form id="pw-form" novalidate style="display:flex;flex-direction:column;gap:10px;margin:0">
         ${field('pw-email','Email','email','email')}
         ${field('pw-pass','Password','password','current-password')}
@@ -1555,6 +1568,40 @@ function renderAuth(){
       toast('New link sent');
     }catch(e){toast('Could not resend — try again')}
   };
+  const sf=$('#su-form');
+  if(sf){sf.onsubmit=async e=>{e.preventDefault();
+      const nm=$('#su-name').value.trim(),m=$('#su-email').value.trim(),p=$('#su-pass').value;
+      setErr('su-name',nm?'':'Enter your name');
+      setErr('su-email',EMAIL_RE.test(m)?'':'Enter a valid email');
+      setErr('su-pass',p.length>=8?'':'Use at least 8 characters');
+      if(!nm||!EMAIL_RE.test(m)||p.length<8){(!nm?$('#su-name'):!EMAIL_RE.test(m)?$('#su-email'):$('#su-pass')).focus();return}
+      pendingAcc={email:m};
+      if(!API.on){ // static preview — local account, straight into onboarding
+        finishAuth({name:nm,email:m},true);return;
+      }
+      const go=$('#su-go');go.disabled=true;go.textContent='Creating…';
+      const reenable=()=>{go.disabled=false;go.textContent='Create account'};
+      try{
+        const r=await fetch('/api/auth/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:nm,email:m,password:p})});
+        const d=await r.json().catch(()=>({}));
+        if(r.status===409||d.code==='EMAIL_EXISTS'){ // fundamental guard: signup never signs into an existing account
+          const w=$('#su-email-err');w.textContent='';
+          w.appendChild(document.createTextNode('This email already has an account — '));
+          const l=document.createElement('button');l.type='button';l.textContent='log in instead';
+          l.style.cssText='background:none;border:none;color:#fff;text-decoration:underline;font:inherit;cursor:pointer;padding:0';
+          l.onclick=()=>{authView='login';renderAuth()};
+          w.appendChild(l);reenable();return;
+        }
+        if(!r.ok||!d.access_token)throw new Error(d.code||'signup failed');
+        tokenStore.set(d.access_token);
+        const me=await apiFetch('/api/auth/me').then(x=>x.ok?x.json():null);
+        finishAuth({name:nm,email:(me&&me.email)||m},true);
+        toast('Account created');
+      }catch(err){
+        setErr('su-pass','Could not create the account — try again in a moment');
+        reenable();
+      }
+    };setTimeout(()=>$('#su-name').focus(),50)}
   const pf=$('#pw-form');
   if(pf){pf.onsubmit=async e=>{e.preventDefault();
       const m=$('#pw-email').value.trim(),p=$('#pw-pass').value;
@@ -1581,10 +1628,16 @@ function renderAuth(){
       }
     };setTimeout(()=>$('#pw-email').focus(),50)}
 }
+function resetDeviceForNewAccount(){
+  // Signup starts a pristine device slate: no previous account's chats,
+  // onboarding progress, or setup-banner state leaks into the new account.
+  S.chats=[];S.chatId=null;S.chatView='list';S.google={connected:false};
+  store.set('chats',[]);store.set('ob',0);store.set('onboarded',false);store.set('gsetup_hide',0);
+}
 function finishAuth(acc,isNew){
   S.account=acc;store.set('account',acc);
   hideAuth();
-  if(isNew){store.set('onboarded',false);startOnboarding()}
+  if(isNew){resetDeviceForNewAccount();startOnboarding()}
   else{store.set('onboarded',true);go('home');toast('Welcome back')}
 }
 /* Magic-link callback: Supabase drops the session in the URL hash. */

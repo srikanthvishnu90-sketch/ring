@@ -34,7 +34,7 @@ const { TOOLS, runAgentTurn, runAgentTurnStream, llmConfigured } = require('./li
 const approvals = require('./lib/approvals');
 const threads = require('./lib/threads');
 const memory = require('./lib/memory');
-const { sendMagicLink, signInWithPassword, requireUser, optionalUser, validateToken, bearerToken } = require('./lib/auth');
+const { sendMagicLink, signInWithPassword, signUpWithPassword, requireUser, optionalUser, validateToken, bearerToken } = require('./lib/auth');
 const { issueState, verifyState, COOKIE_NAME } = require('./lib/oauth_state');
 const cookie = require('cookie');
 const { processVoice, processVoiceStream } = require('./lib/voice');
@@ -176,6 +176,18 @@ app.post('/api/auth/otp', async (req, res) => {
     res.json({ ok: true });
   } catch (e) {
     res.status(e.code === 'BAD_EMAIL' ? 400 : 500).json({ error: e.message, code: e.code });
+  }
+});
+
+// --- Auth: signup (creates a NEW account) vs login (authenticates an existing one)
+app.post('/api/auth/signup', async (req, res) => {
+  try {
+    const s = await signUpWithPassword(req.body?.email, req.body?.password, req.body?.name);
+    res.status(201).json({ ok: true, access_token: s.access_token, refresh_token: s.refresh_token, user: s.user });
+  } catch (e) {
+    const bad = e.code === 'BAD_EMAIL' || e.code === 'BAD_PASSWORD' || e.code === 'SIGNUP_FAILED';
+    const status = e.code === 'EMAIL_EXISTS' ? 409 : bad ? 400 : 500;
+    res.status(status).json({ error: e.message, code: e.code });
   }
 });
 
