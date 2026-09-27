@@ -549,7 +549,7 @@ function renderHome(){
 
   <button class="btn btn-silver" id="talk">${I.mic}<span>Double-tap your ring or talk here</span></button>
 
-  ${signedIn()&&!GCONN&&!store.get('gsetup_hide',false)?googleSetupBannerHTML():''}
+  ${signedIn()?homeConnectorsHTML():''}
 
   <section class="card-brown" aria-label="Next up" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px">
     <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
@@ -567,7 +567,6 @@ function renderHome(){
     </div>
   </section>`;
   bindCommon(v);
-  const ghb=v.querySelector('#gsetup-hide');if(ghb)ghb.onclick=()=>{store.set('gsetup_hide',true);renderHome()};
   const arc=v.querySelector('.gauge-arc');
   if(arc){const full=arc.getAttribute('stroke-dasharray');arc.style.strokeDasharray='0 691.2';requestAnimationFrame(()=>requestAnimationFrame(()=>{arc.style.strokeDasharray=full}))}
   $('#talk').onclick=()=>openVoice();
@@ -1189,6 +1188,13 @@ function googleCardHTML(){
     :`<button class="btn btn-silver btn-sm" style="width:auto;padding:0 18px" data-gconnect>Connect</button>`;
   return `<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Google account</b><span>Gmail + Calendar, connected in one tap</span></div>${act}</div>`;
 }
+function homeConnectorsHTML(){
+  const g=GCONN
+    ?`<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Google account</b><span>Gmail + Calendar</span></div><span class="gstate"><span class="dot"></span>Connected</span></div>`
+    :`<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Connect your Google account</b><span>One tap unlocks Gmail + Calendar for your agent.</span></div><button class="btn btn-silver btn-sm" style="width:auto;padding:0 18px" data-gconnect>Connect</button></div>`;
+  const rows=CONNS.filter(c=>c.k!=='mail'&&c.k!=='calendar').map(c=>`<div class="conn-row"><span class="bubble-icon bi-brown">${I[c.i]}</span><div class="rt"><b>${c.n}</b><span>${c.d}</span></div><button class="switch" role="switch" aria-checked="${isConn(c.k)}" aria-label="${c.n}" data-cs="${c.k}"></button></div>`).join('');
+  return `<section aria-label="Connectors" style="display:flex;flex-direction:column;gap:10px"><div class="row-between"><h2 class="h2">Connectors</h2></div>${g}<div class="card" style="overflow:hidden">${rows}</div></section>`;
+}
 function googleSetupBannerHTML(){
   return `<div class="card gcard msg-in"><span class="gicon">${I.google}</span><div class="rt"><b>Connect your Google account</b><span>One tap unlocks Gmail + Calendar for your agent.</span></div><button class="btn btn-silver btn-sm" style="width:auto;padding:0 18px" data-gconnect>Connect</button><button class="gx" id="gsetup-hide" aria-label="Dismiss">✕</button></div>`;
 }
@@ -1733,6 +1739,7 @@ apiInit();
   }
   const onb=$('#onb');
   if(onb&&!onb.classList.contains('hidden'))renderOnb();
+  else if(S.tab==='home')renderHome();
   else if(S.tab==='chat')renderChat();
 })();
 })();
