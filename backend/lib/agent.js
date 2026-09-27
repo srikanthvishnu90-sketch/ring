@@ -58,7 +58,18 @@ const _RAW_TOOLS = [
     }),
     schema: { type: 'object', properties: { slug: { type: 'string' }, city: { type: 'string' }, date: { type: 'string' }, dateTime: { type: 'string' }, seats: { type: 'number' } }, required: ['slug'] },
     describe: 'Build prefilled booking deep links for a restaurant',
-  },];
+  },
+  {
+    name: 'memory_save', risk: 'low', fn: async ({ userId, key, value }) => memory.save(userId, { key, value, kind: 'fact' }),
+    schema: { type: 'object', properties: { key: { type: 'string', description: 'Short snake_case label, e.g. maya_dietary' }, value: { type: 'string', description: 'The fact to remember' } }, required: ['key', 'value'] },
+    describe: 'Remember a durable fact about the user or someone they mention (dietary needs, preferences, birthdays)',
+  },
+  {
+    name: 'memory_list', risk: 'low', fn: async ({ userId }) => (await memory.list(userId)).map((m) => ({ key: m.key, value: m.value })),
+    schema: { type: 'object', properties: {} },
+    describe: 'List what you remember about the user',
+  },
+];
 
 // Legacy entries win on name collisions: a connector-contributed tool can
 // never shadow an existing one.
@@ -68,7 +79,7 @@ const TOOLS = [
   ..._RAW_TOOLS,
 ];
 
-const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. You can search email, manage the calendar, find restaurants, build ride and booking links, and coordinate group plans. Be concise and plainspoken. Never claim a booking or message is done until its tool confirms it — and anything that spends money or sends as the user needs their explicit approval first.`;
+const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. You can search email, manage the calendar, find restaurants, build ride and booking links, coordinate group plans, and remember durable facts about the user and the people they mention (use memory_save when they tell you something to remember, memory_list to recall). Be concise and plainspoken. Never claim a booking or message is done until its tool confirms it — and anything that spends money or sends as the user needs their explicit approval first.`;
 
 const DEMO_PROMPT_SUFFIX = `
 

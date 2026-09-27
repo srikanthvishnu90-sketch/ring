@@ -1110,20 +1110,23 @@ async function renderGroups(){
   }
   if(!G.open){
     try{G.threads=await apiJSON('/api/threads')}catch(e){G.threads=[]}
+    const joinForm=`<form id="g-join" style="display:flex;gap:8px;margin-top:14px"><input id="g-code" placeholder="Have an invite code? Paste it here" autocomplete="off" aria-label="Invite code" style="flex:1;min-width:0;height:44px;padding:0 16px;border-radius:22px;border:1px solid rgba(201,204,209,.28);background:var(--surface);font-size:15px;color:#fff"><button class="btn btn-brown btn-sm" style="width:auto;padding:0 18px">Join</button></form>`;
     v.innerHTML=head+(G.threads.length
-      ?`<div style="display:flex;flex-direction:column;gap:10px">${G.threads.map(t=>{const last=(t.messages||[])[0];return `<button class="card-brown" data-thread="${t.id}" style="text-align:left;width:100%;padding:14px 16px;border-radius:16px"><div class="rt"><b class="serif" style="font-size:19px;font-weight:400">${esc(t.name)}</b><span>${esc((t.members||[]).join(', ')||'Just you')}</span>${last?`<span style="margin-top:4px;color:var(--muted)">${esc(last.from)}: ${esc(last.text.slice(0,60))}</span>`:''}</div></button>`}).join('')}</div>`
-      :`<div class="card" style="padding:18px"><b class="serif" style="font-size:19px;font-weight:400">No groups yet.</b><p style="margin-top:8px;font-size:14.5px;color:var(--muted)">Start one, add people, and mention <b>@ring</b> whenever you want the agent to weigh in — or book something for everyone.</p></div>`);
+      ?`<div style="display:flex;flex-direction:column;gap:10px">${G.threads.map(t=>{const last=(t.messages||[])[0];return `<button class="card-brown" data-thread="${t.id}" style="text-align:left;width:100%;padding:14px 16px;border-radius:16px"><div class="rt"><b class="serif" style="font-size:19px;font-weight:400">${esc(t.name)}</b><span>${esc((t.members||[]).join(', ')||'Just you')}</span>${last?`<span style="margin-top:4px;color:var(--muted)">${esc(last.from)}: ${esc(last.text.slice(0,60))}</span>`:''}</div></button>`}).join('')}</div>`+joinForm
+      :`<div class="card" style="padding:18px"><b class="serif" style="font-size:19px;font-weight:400">No groups yet.</b><p style="margin-top:8px;font-size:14.5px;color:var(--muted)">Start one, add people, and mention <b>@ring</b> whenever you want the agent to weigh in — or book something for everyone.</p></div>`+joinForm);
+    const jf=$('#g-join');if(jf)jf.onsubmit=async e=>{e.preventDefault();const code=$('#g-code').value.trim();if(!code)return;try{const t=await apiJSON('/api/threads/join',{method:'POST',body:JSON.stringify({code})});G.open=t.id;renderGroups()}catch(err){toast('That code did not work')}};
   }else{
     const t=G.threads.find(x=>x.id===G.open)||{name:'Group'};
     let msgs=[];
     try{msgs=await apiJSON(`/api/threads/${G.open}/messages`)}catch(e){}
     G.seen=new Set(msgs.map(m=>m.id).filter(Boolean));
     v.innerHTML=head.replace('>Groups</h1>',`>${esc(t.name)}</h1>`)+`
-      <div style="margin:-14px 0 4px"><button class="chip" id="g-back" style="height:32px;font-size:13px">‹ All groups</button></div>
+      <div style="margin:-14px 0 4px;display:flex;gap:8px"><button class="chip" id="g-back" style="height:32px;font-size:13px">‹ All groups</button><button class="chip" id="g-invite" style="height:32px;font-size:13px">Invite</button></div>
       <div class="msgs" id="g-msgs" style="min-height:40vh" aria-live="polite">${msgs.map(gMsgHTML).join('')}</div>
       <form id="g-form" style="display:flex;gap:8px;margin-top:8px"><input id="g-input" placeholder="Message @ring to bring in the agent…" autocomplete="off" aria-label="Group message" style="flex:1;min-width:0;height:48px;padding:0 18px;border-radius:24px;border:1px solid rgba(201,204,209,.28);background:var(--surface);font-size:16px;color:#fff"><button class="btn btn-brown btn-sm" style="width:auto;padding:0 18px">Send</button></form>`;
     const box=$('#g-msgs');box.scrollTop=box.scrollHeight;
     $('#g-back').onclick=()=>{closeThread();renderGroups()};
+    $('#g-invite').onclick=async()=>{try{const r=await apiJSON(`/api/threads/${G.open}/invite`);const code=r.code;try{await navigator.clipboard.writeText(code);toast('Invite code copied — share it with anyone')}catch(e){prompt('Share this invite code:',code)}}catch(e){toast('Could not make an invite code')}};
     $('#g-form').onsubmit=async e=>{e.preventDefault();const inp=$('#g-input');const text=inp.value.trim();if(!text)return;inp.value='';try{await apiJSON(`/api/threads/${G.open}/messages`,{method:'POST',body:JSON.stringify({from:'you',text})})}catch(err){}};
     openThreadStream();
   }
