@@ -7,7 +7,9 @@
 //   POST /api/approvals/:id/resolve   → { decision: 'approve'|'decline' } → executes on approve
 //   GET/POST /api/threads             → group chats
 //   GET  /api/threads/:id/messages    → thread history
-//   POST /api/threads/:id/messages    → post; @agent mention triggers the agent loop
+//   POST /api/threads/:id/messages    → post; @agent mention triggers the agent loop (real tools for members)
+//   GET  /api/threads/:id/invite      → stateless invite code (members only)
+//   POST /api/threads/join            → join a thread with an invite code
 //   GET  /api/threads/:id/stream      → SSE live updates
 //   GET  /auth/google                 → start Google OAuth (Gmail + Calendar)
 //   POST /api/chat/stream             → SSE token streaming (+ held approvals)
@@ -396,7 +398,7 @@ app.post('/api/telegram/webhook', async (req, res) => {
   connectors.telegram.sendChatAction({ chat_id: chatId }).catch(() => {});
   let tgHistory = [];
   try { tgHistory = await threads.getRecentMessages(th.id, 8); } catch { /* best effort */ }
-  const stored = await threads.postMessage(th.id, { from, text });
+  const stored = await threads.postMessage(th.id, { from, text, skipMention: true });
 
   // Answer back in Telegram. Errors here must never fail the webhook
   // (a 5xx makes Telegram retry and the user gets double replies).
@@ -599,10 +601,37 @@ app.post('/api/threads/:id/messages', requireUser, async (req, res) => {
   const { from, text } = req.body || {};
   if (!text) return res.status(400).json({ error: 'text is required' });
   try {
-    const msg = await threads.postMessage(req.params.id, { from: from || req.userEmail || 'you', text });
+    // Authenticated member post: threads.postMessage runs the @agent turn
+    // in REAL mode (tools as req.userId, approvals they own). Webhook paths
+    // call postMessage without userId and stay in the demo sandbox.
+    const msg = await threads.postMessage(req.params.id, { from: from || req.userEmail || 'you', text, userId: req.userId });
     res.json(msg);
   } catch (e) {
     res.status(e.code === 'NOT_FOUND' ? 404 : 500).json({ error: e.message });
+  }
+});
+
+// Invite code for a thread (members only). Share the code with anyone you
+// want in the chat; they join via POST /api/threads/join. Stateless HMAC —
+// no DB column needed, codes can't be forged.
+app.get('/api/threads/:id/invite', requireUser, async (req, res) => {
+  const th = await requireThreadMember(req, res);
+  if (!th) return;
+  try {
+    res.json({ code: threads.createInviteCode(req.params.id) });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/threads/join', requireUser, async (req, res) => {
+  const { code } = req.body || {};
+  if (!code) return res.status(400).json({ error: 'code is required' });
+  try {
+    res.json(await threads.joinThreadByInvite(String(code).trim(), req.userId));
+  } catch (e) {
+    const status = e.code === 'BAD_INVITE' ? 400 : e.code === 'NOT_FOUND' ? 404 : 500;
+    res.status(status).json({ error: e.message, code: e.code });
   }
 });
 

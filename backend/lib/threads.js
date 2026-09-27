@@ -9,8 +9,11 @@
 // in-memory otherwise. Realtime: SSE at GET /api/threads/:id/stream covers
 // same-instance clients; broadcast() also fans out through Supabase Realtime
 // Broadcast so websocket subscribers get messages posted on any instance.
+const crypto = require('node:crypto');
+const { env } = require('./config');
 const { runAgentTurn } = require('./agent');
 const approvals = require('./approvals');
+const memory = require('./memory');
 const { broadcastRealtime } = require('./realtime');
 const { ENABLED, sbRequest, eq } = require('./supabase');
 
@@ -173,7 +176,7 @@ async function storeMessage(threadId, { from, text, pendingApprovals }) {
   return msg;
 }
 
-async function postMessage(threadId, { from, text }) {
+async function postMessage(threadId, { from, text, userId, skipMention }) {
   const th = await getThread(threadId);
   if (!th) throw Object.assign(new Error('thread not found'), { code: 'NOT_FOUND' });
 
@@ -181,18 +184,28 @@ async function postMessage(threadId, { from, text }) {
   broadcast(threadId, { type: 'message', message: msg });
 
   // @agent mention → agent turn with thread context.
-  // Runs in DEMO MODE (simulated tools, 'demo'-owned cards) until thread
-  // membership/ownership is enforced: an unauthenticated thread post must
-  // never be able to trigger real tool calls or create executable cards.
-  if (new RegExp(`@${AGENT_NAME}\\b`, 'i').test(text)) {
+  //
+  // Trust model: the app route (POST /api/threads/:id/messages) enforces
+  // requireUser + requireThreadMember, so a caller that passes `userId` is
+  // an authenticated member — they get a REAL turn: low-risk tools run as
+  // them, medium/high-risk tools become approval cards they own (the same
+  // ownership policy as 1:1 chat). Everyone else — Telegram/SMS/webhook
+  // posts and the bot's own echoes — stays in the DEMO sandbox: simulated
+  // tools only, 'demo'-owned cards that can never execute anything real.
+  // Bot echoes are skipped entirely so a reply containing "@ring" can never
+  // trigger the agent again.
+  const isBotEcho = /^(agent|ring assistant)$/i.test(from || '');
+  if (!skipMention && !isBotEcho && new RegExp(`@${AGENT_NAME}\\b`, 'i').test(text)) {
+    const real = !!userId && userId !== 'demo' && userId !== 'local';
+    const ownerId = real ? userId : 'demo';
     const history = (await dbOrMemHistory(threadId))
       .slice(-12).map((m) => `${m.from}: ${m.text}`).join('\n');
     let reply;
     try {
       reply = await runAgentTurn({
         text: `You are @${AGENT_NAME} in the group chat "${th.name}" with members: ${th.members.join(', ') || 'unknown'}. Recent messages:\n${history}\n\nRespond to the latest message from ${from}. If they want options (restaurants, times), offer 2-3 concrete options and say you'll book once they pick one.`,
-        userId: 'demo',
-        demo: true,
+        userId: ownerId,
+        demo: !real,
         threadId,
       });
     } catch (e) {
@@ -200,8 +213,14 @@ async function postMessage(threadId, { from, text }) {
     }
     const held = [];
     for (const t of (reply.toolsUsed || []).filter((t) => t.risk !== 'low')) {
-      const rec = await approvals.create({ toolName: t.name, args: t.args, userId: 'demo', threadId });
+      const rec = await approvals.create({ toolName: t.name, args: t.args, userId: ownerId, threadId });
       held.push({ id: rec.id, name: rec.tool, risk: rec.risk, args: rec.args });
+    }
+    // Memory learning for real turns (fire-and-forget, same as 1:1 routes).
+    if (real) {
+      memory.extract(ownerId, `Group chat "${th.name}" — ${from}: ${text}\nAgent: ${reply.text}`)
+        .then((facts) => Promise.all(facts.map((f) => memory.save(ownerId, f))))
+        .catch(() => {});
     }
     const amsg = await storeMessage(threadId, {
       from: 'agent',
@@ -232,4 +251,51 @@ async function getRecentMessages(threadId, limit = 10) {
   return all.slice(-lim);
 }
 
-module.exports = { createThread, getThread, listThreads, postMessage, subscribe, unsubscribe, getRecentMessages, isMember, AGENT_NAME };
+// ---- Thread invites (stateless) ------------------------------------------
+// An invite code is base64url(threadId) + '.' + HMAC-SHA256, so joining
+// needs no schema change and no server-side state: anyone holding the code
+// can join, nobody can forge one without the secret. Share the code however
+// you like — text it, QR it, read it aloud.
+function inviteSecret() {
+  const s = env('SESSION_SECRET', '');
+  if (!s) throw new Error('invites not configured — set SESSION_SECRET');
+  return s;
+}
+
+function createInviteCode(threadId) {
+  const id = Buffer.from(String(threadId), 'utf8').toString('base64url');
+  const sig = crypto.createHmac('sha256', inviteSecret() + ':thread-invite').update(id).digest('base64url');
+  return `${id}.${sig}`;
+}
+
+async function addMember(threadId, userId) {
+  const th = await getThread(threadId);
+  if (!th) throw Object.assign(new Error('thread not found'), { code: 'NOT_FOUND' });
+  if (isMember(th, userId)) return th;
+  const members = [...(th.members || []), userId];
+  if (ENABLED) {
+    await sbRequest(`/${THREADS_TBL}?id=eq.${eq(threadId)}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ members }),
+    });
+  } else {
+    const mem = memThreads.get(threadId);
+    if (mem) mem.members = members;
+  }
+  return { ...th, members };
+}
+
+async function joinThreadByInvite(code, userId) {
+  const [id, sig] = String(code || '').split('.');
+  if (!id || !sig) throw Object.assign(new Error('invalid invite code'), { code: 'BAD_INVITE' });
+  const expected = crypto.createHmac('sha256', inviteSecret() + ':thread-invite').update(id).digest('base64url');
+  const a = Buffer.from(sig);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+    throw Object.assign(new Error('invalid invite code'), { code: 'BAD_INVITE' });
+  }
+  const threadId = Buffer.from(id, 'base64url').toString('utf8');
+  return addMember(threadId, userId);
+}
+
+module.exports = { createThread, getThread, listThreads, postMessage, subscribe, unsubscribe, getRecentMessages, isMember, createInviteCode, joinThreadByInvite, addMember, AGENT_NAME };
