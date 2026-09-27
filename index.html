@@ -11,13 +11,14 @@
 <style>
 :root{
   --black:#000000; --surface:#121212; --surface-2:#1A1A1A;
-  --brown:#22140F; --brown-2:#1A100B; --brown-line:#33231A; --brown-hi:#3D271C;
+  --brown:#C7D0DB; --brown-2:#1D232B; --brown-line:#38414D; --brown-hi:#E9EEF5;
+  --mercury:linear-gradient(135deg,#F5F9FE 0%,#CBD7E8 40%,#A9BDD5 70%,#93A8C2 100%);
   --silver:#C9CCD1; --silver-hi:#DDE0E4;
   --silver-grad:linear-gradient(135deg,#EDEFF2 0%,#BFC3CA 42%,#DCDFE3 68%,#A9AEB6 100%);
   --silver-card:radial-gradient(85% 70% at 18% 0%,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 70%),linear-gradient(158deg,#E6E8EB 0%,#C4C8CE 55%,#A9AEB6 100%);
-  --brown-card:radial-gradient(85% 60% at 22% 10%,rgba(255,232,210,.10) 0%,rgba(255,232,210,0) 70%),linear-gradient(158deg,rgba(255,255,255,.035) 0%,rgba(0,0,0,0) 45%,rgba(0,0,0,.30) 100%),#22140F;
+  --brown-card:radial-gradient(85% 60% at 22% 10%,rgba(190,212,242,.14) 0%,rgba(190,212,242,0) 70%),linear-gradient(158deg,rgba(255,255,255,.07) 0%,rgba(0,0,0,0) 45%,rgba(0,0,0,.32) 100%),#1D232B;
   --sage:#A9C2A6; --sage-dark:#2F5236;
-  --text:#FFFFFF; --ink:#16110E; --muted:#A89C92; --muted-2:#8F857D;
+  --text:#FFFFFF; --ink:#10151B; --muted:#9AA4AF; --muted-2:#7F8894;
   --line:rgba(255,255,255,.09); --line-soft:rgba(255,255,255,.06);
   --amber:#F5B731; --red:#FF3B30;
   --serif:'Newsreader','Times New Roman',serif;
@@ -34,28 +35,28 @@
 /* ---------- light theme ---------- */
 :root[data-theme="light"]{
   --black:#F6F3EE; --text:#171310; --surface:#FFFFFF; --surface-2:#F1ECE5;
-  --brown:#2B1D14; --brown-2:#EFE7DC; --brown-line:#E2D6C4; --brown-hi:#D8C9B4;
-  --silver:#4A443D; --silver-hi:#171310;
-  --silver-grad:linear-gradient(135deg,#2B1D14 0%,#4A3222 100%);
+  --brown:#26303C; --brown-2:#E8EDF3; --brown-line:#D1D9E3; --brown-hi:#A9B4C2;
+  --silver:#5B6572; --silver-hi:#171310;
+  --silver-grad:linear-gradient(135deg,#FFFFFF 0%,#D8DEE7 55%,#B6BFCB 100%);
   --silver-card:linear-gradient(158deg,#FFFFFF 0%,#F1ECE5 100%);
-  --brown-card:linear-gradient(158deg,#2B1D14 0%,#1C110C 100%);
+  --brown-card:linear-gradient(158deg,#26303C 0%,#131922 100%);
   --sage:#2F5236; --sage-dark:#2F5236;
-  --muted:#6E655B; --muted-2:#8A7F72;
+  --muted:#6E7683; --muted-2:#8A93A0;
   --line:rgba(23,19,16,.12); --line-soft:rgba(23,19,16,.07);
   --ink:#FFFFFF;
   color-scheme:light;
 }
-:root[data-theme="light"] .msg-user{background:#2B1D14;color:#fff}
-:root[data-theme="light"] .btn-silver{color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 10px 28px rgba(43,29,20,.18)}
-:root[data-theme="light"] .btn-brown{background:#2B1D14;color:#fff}
+:root[data-theme="light"] .msg-user{background:#26303C;color:#fff}
+:root[data-theme="light"] .btn-silver{color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 10px 28px rgba(38,48,60,.18)}
+:root[data-theme="light"] .btn-brown{background:#26303C;color:#fff}
 :root[data-theme="light"] .tabbar{background:rgba(246,243,238,.94)}
 :root[data-theme="light"] .chat-head{background:var(--black)}
 :root[data-theme="light"] .composer{background:var(--black)}
 :root[data-theme="light"] .badge-silver{color:#fff}
 :root[data-theme="light"] .pill-sage{color:#2F5236;background:rgba(47,82,54,.12)}
 :root[data-theme="light"] .sheet{background:#FBF9F6}
-:root[data-theme="light"] .splash{background:radial-gradient(85% 50% at 28% 16%,rgba(43,29,20,.06) 0%,rgba(43,29,20,0) 70%),radial-gradient(120% 80% at 50% 44%,#EFE7DC 0%,#E7DDD0 48%,#D9CBB6 100%)}
-:root[data-theme="light"] .voice{background:radial-gradient(70% 45% at 50% 42%,rgba(43,29,20,.10) 0%,rgba(43,29,20,0) 100%),#F6F3EE}
+:root[data-theme="light"] .splash{background:radial-gradient(85% 50% at 28% 16%,rgba(120,140,168,.08) 0%,rgba(120,140,168,0) 70%),radial-gradient(120% 80% at 50% 44%,#EFF2F7 0%,#E1E7EF 48%,#CBD3DF 100%)}
+:root[data-theme="light"] .voice{background:radial-gradient(70% 45% at 50% 42%,rgba(120,140,168,.12) 0%,rgba(120,140,168,0) 100%),#F6F8FB}
 :root[data-theme="light"] .onb{background:var(--black)}
 html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
 *,*::before,*::after{box-sizing:border-box}
@@ -76,7 +77,7 @@ a{color:inherit}
 #scroller::-webkit-scrollbar{display:none}
 .sbar,.island,.homebar{display:none}
 @media (min-width:600px){
-  body{display:flex;align-items:center;justify-content:center;background:radial-gradient(60% 50% at 50% 40%,#1A100B 0%,#120C09 55%,#070504 100%)}
+  body{display:flex;align-items:center;justify-content:center;background:radial-gradient(60% 50% at 50% 40%,#141920 0%,#0E1218 55%,#06080B 100%)}
   #device{width:393px;height:852px;flex-shrink:0;border-radius:56px;--st:54px;--sb:30px;box-shadow:0 0 0 11px #0B0B0B,0 0 0 12.5px #3C3F44,0 0 0 14px #1A1A1A,0 40px 90px rgba(0,0,0,.65);transform-origin:center center}
   .sbar{display:flex;position:absolute;top:0;left:0;right:0;height:54px;padding:18px 34px 0 44px;justify-content:space-between;align-items:flex-start;font-weight:600;font-size:16px;z-index:80;pointer-events:none;color:#fff;letter-spacing:.01em}
   .island{display:block;position:absolute;top:11px;left:50%;width:124px;height:36px;margin-left:-62px;border-radius:20px;background:#000;z-index:81;pointer-events:none}
@@ -103,7 +104,7 @@ a{color:inherit}
 .btn{height:52px;border-radius:26px;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;transition:transform .12s ease,opacity .2s}
 .btn:active{transform:scale(.985)}
 .btn-silver{background:var(--silver-grad);color:var(--ink);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 10px 28px rgba(201,204,209,.14)}
-.btn-brown{background:var(--brown);color:#fff;border:1px solid var(--brown-line)}
+.btn-brown{background:var(--mercury);color:#0C1219;border:1px solid rgba(233,238,245,.45);box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 10px 28px rgba(147,168,194,.16)}
 .btn-ghost{border:1px solid rgba(201,204,209,.5);color:#fff}
 .btn-sm{height:44px;border-radius:22px;font-size:15px;white-space:nowrap}
 .btn[disabled]{opacity:.45;pointer-events:none}
@@ -126,7 +127,7 @@ a{color:inherit}
 .list-row+.list-row{border-top:1px solid var(--line-soft)}
 .bubble-icon{width:36px;height:36px;border-radius:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .bi-sage{background:rgba(169,194,166,.14);color:var(--sage)}
-.bi-brown{background:var(--brown);color:#E9DDD2}
+.bi-brown{background:var(--mercury);color:#0C1219}
 .bi-silver{background:rgba(201,204,209,.12);color:var(--silver)}
 .rt{display:flex;flex-direction:column;gap:2px;min-width:0;flex-grow:1}
 .rt b{font-size:15px;font-weight:500}
@@ -163,7 +164,7 @@ a{color:inherit}
 .chat-head{position:sticky;top:0;z-index:5;background:var(--black);margin:calc(-1 * (var(--st) + 20px)) -20px 0;padding:calc(var(--st) + 14px) 20px 12px;border-bottom:1px solid var(--line-soft)}
 .msgs{display:flex;flex-direction:column;gap:14px;padding-bottom:128px}
 .chat-day{align-self:center;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);padding:2px 0}
-.msg-user{align-self:flex-end;max-width:80%;padding:11px 16px;border-radius:20px 20px 6px 20px;background:var(--brown);font-size:15px;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg-user{align-self:flex-end;max-width:80%;padding:11px 16px;border-radius:20px 20px 6px 20px;background:var(--mercury);color:#0C1219;font-size:15px;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}
 .msg-agent{font-size:15px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
 .msg-agent.thinking{color:var(--muted);font-style:italic}
 .msg-agent.streaming::after{content:'▍';margin-left:2px;color:var(--silver);animation:caretBlink 1s steps(1) infinite}
@@ -216,7 +217,7 @@ a{color:inherit}
 
 /* ---------- full-screen: splash, voice, onboarding ---------- */
 .full{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column}
-.splash{background:radial-gradient(85% 50% at 28% 16%,rgba(255,232,210,.10) 0%,rgba(255,232,210,0) 70%),linear-gradient(118deg,rgba(255,240,225,0) 36%,rgba(255,240,225,.04) 46%,rgba(255,240,225,0) 56%),radial-gradient(120% 80% at 50% 44%,#2A1A14 0%,#22140F 48%,#0D0705 100%);align-items:center;justify-content:center;transition:opacity .45s ease}
+.splash{background:radial-gradient(85% 50% at 28% 16%,rgba(190,212,242,.12) 0%,rgba(190,212,242,0) 70%),linear-gradient(118deg,rgba(200,220,245,0) 36%,rgba(200,220,245,.05) 46%,rgba(200,220,245,0) 56%),radial-gradient(120% 80% at 50% 44%,#232B36 0%,#1A2029 48%,#0B0E13 100%);align-items:center;justify-content:center;transition:opacity .45s ease}
 .splash.out{opacity:0;pointer-events:none}
 .mk-arc{stroke-dasharray:100;stroke-dashoffset:100;animation:mkArc .7s cubic-bezier(.65,0,.35,1) forwards}
 .mk-dot{transform-box:fill-box;transform-origin:center;transform:scale(0);animation:mkDot .35s cubic-bezier(.34,1.56,.64,1) .65s forwards}
@@ -227,7 +228,7 @@ a{color:inherit}
 @keyframes mkDot{to{transform:scale(1)}}
 @keyframes mkPulse{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(3.4)}}
 
-.voice{background:radial-gradient(70% 45% at 50% 42%,rgba(61,39,28,.55) 0%,rgba(34,20,15,.2) 55%,rgba(0,0,0,0) 100%),#000;align-items:center;justify-content:space-between;padding:calc(28px + var(--st)) 24px calc(32px + var(--sb));opacity:0;transition:opacity .25s}
+.voice{background:radial-gradient(70% 45% at 50% 42%,rgba(70,95,125,.5) 0%,rgba(40,55,75,.2) 55%,rgba(0,0,0,0) 100%),#000;align-items:center;justify-content:space-between;padding:calc(28px + var(--st)) 24px calc(32px + var(--sb));opacity:0;transition:opacity .25s}
 .voice.on{opacity:1}
 .voice-orb{position:relative;width:180px;height:180px;display:flex;align-items:center;justify-content:center}
 .voice-orb .wave{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(201,204,209,.5);animation:wave 1.8s ease-out infinite;opacity:0}
@@ -410,9 +411,9 @@ const ringArt=(size,charge)=>{
   const C=2*Math.PI*110, on=charge==null?0:C*charge/100;
   return `<svg width="${size}" height="${size}" viewBox="0 0 240 240" role="img" aria-label="Your ring${charge!=null?', '+charge+' percent charged':''}">
   <defs>
-    <radialGradient id="glow${size}" cx="50%" cy="52%" r="50%"><stop offset="0%" stop-color="#3D271C" stop-opacity=".75"/><stop offset="60%" stop-color="#22140F" stop-opacity=".35"/><stop offset="100%" stop-color="#22140F" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glow${size}" cx="50%" cy="52%" r="50%"><stop offset="0%" stop-color="#5B7186" stop-opacity=".75"/><stop offset="60%" stop-color="#2A3542" stop-opacity=".35"/><stop offset="100%" stop-color="#2A3542" stop-opacity="0"/></radialGradient>
     <linearGradient id="metal${size}" x1="0" y1="0" x2=".35" y2="1"><stop offset="0%" stop-color="#F4F5F7"/><stop offset="38%" stop-color="#C6CAD0"/><stop offset="62%" stop-color="#9DA3AB"/><stop offset="80%" stop-color="#D5D8DC"/><stop offset="100%" stop-color="#737980"/></linearGradient>
-    <linearGradient id="lining${size}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4A3124"/><stop offset="100%" stop-color="#1C110C"/></linearGradient>
+    <linearGradient id="lining${size}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3A4450"/><stop offset="100%" stop-color="#12161D"/></linearGradient>
   </defs>
   <circle cx="120" cy="120" r="104" fill="url(#glow${size})"/>
   ${charge!=null?`<circle cx="120" cy="120" r="110" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"/>
@@ -420,7 +421,7 @@ const ringArt=(size,charge)=>{
   <path fill-rule="evenodd" fill="url(#lining${size})" d="M 68 116 a 52 30 0 1 0 104 0 a 52 30 0 1 0 -104 0 Z M 70 127 a 50 28 0 1 0 100 0 a 50 28 0 1 0 -100 0 Z"/>
   <path fill-rule="evenodd" fill="url(#metal${size})" d="M 54 126 a 66 44 0 1 0 132 0 a 66 44 0 1 0 -132 0 Z M 68 116 a 52 30 0 1 0 104 0 a 52 30 0 1 0 -104 0 Z"/>
   <path d="M 60 114 A 66 44 0 0 1 180 114" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="1.4"/>
-  <circle cx="146" cy="165" r="2.6" fill="#1A100B"/>
+  <circle cx="146" cy="165" r="2.6" fill="#1D232B"/>
 </svg>`};
 
 let toastT;
@@ -589,9 +590,9 @@ function renderAgent(){
   </header>
 
   ${S.pending.length?`<button class="alert-bar" data-sheet="pending">
-    <span class="bubble-icon" style="background:#22140F;color:#fff">${I.bell}</span>
-    <span class="rt"><b style="font-weight:600">${S.pending.length} ${S.pending.length>1?'things need':'thing needs'} your OK</b><span style="color:rgba(22,17,14,.7)">Review before your agent acts</span></span>
-    <span style="color:#22140F;display:inline-flex">${I.chev}</span></button>`:''}
+    <span class="bubble-icon" style="background:#1D232B;color:#fff">${I.bell}</span>
+    <span class="rt"><b style="font-weight:600">${S.pending.length} ${S.pending.length>1?'things need':'thing needs'} your OK</b><span style="color:rgba(20,28,38,.7)">Review before your agent acts</span></span>
+    <span style="color:#26303C;display:inline-flex">${I.chev}</span></button>`:''}
 
   <section aria-label="Workflows" style="display:flex;flex-direction:column;gap:10px">
     <div class="row-between"><h2 class="h2">Workflows</h2><span class="pill-sage">${on} on</span></div>
@@ -607,7 +608,7 @@ function renderAgent(){
   <section aria-label="Connectors" style="display:flex;flex-direction:column;gap:10px">
     <div class="row-between"><h2 class="h2">Connectors</h2><button class="link" data-sheet="conns">Manage</button></div>
     <div class="conn-grid">
-      ${connected.slice(0,7).map(c=>`<button class="conn card-brown" data-conn="${c.k}"><span class="ci" style="background:#22140F;color:#E9DDD2">${I[c.i]}<i class="ok"></i></span><span>${c.n}</span></button>`).join('')}
+      ${connected.slice(0,7).map(c=>`<button class="conn card-brown" data-conn="${c.k}"><span class="ci" style="background:#1D232B;color:#D8E0EA">${I[c.i]}<i class="ok"></i></span><span>${c.n}</span></button>`).join('')}
       <button class="conn card" data-sheet="conns" style="color:var(--silver)" style="color:var(--silver)"><span class="ci" style="border:1px dashed rgba(201,204,209,.5)">${I.plus}</span><span>Add</span></button>
     </div>
   </section>`;
@@ -667,7 +668,7 @@ function renderProfile(){
   const nav=(id,l,r,st)=>`<button class="nav-row" data-sheet="${id}"${st?` style="${st}"`:''}><span style="font-size:15px;font-weight:500">${l}</span><span style="display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted)">${r||''}${I.chev}</span></button>`;
   v.innerHTML=`
   <header style="display:flex;align-items:center;gap:14px;padding-top:12px">
-    <div aria-hidden="true" class="serif" style="width:62px;height:62px;border-radius:31px;background:var(--brown);border:1.5px solid var(--silver);display:flex;align-items:center;justify-content:center;font-size:25px;flex-shrink:0">${esc((acc.name||'Y').trim().charAt(0).toUpperCase())}</div>
+    <div aria-hidden="true" class="serif" style="width:62px;height:62px;border-radius:31px;background:var(--mercury);color:#0C1219;border:1.5px solid var(--silver);display:flex;align-items:center;justify-content:center;font-size:25px;flex-shrink:0">${esc((acc.name||'Y').trim().charAt(0).toUpperCase())}</div>
     <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
       <h1 class="h1" style="font-size:27px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(acc.name)}</h1>
       ${acc.email?`<span class="sub" style="overflow:hidden;text-overflow:ellipsis">${esc(acc.email)}</span>`:''}
@@ -1027,13 +1028,13 @@ function approvalLabel(p){
 }
 function gMsgHTML(m){
   if(m.from==='agent'){
-    return `<div><div class="agent-tag">${mark(12,'#8F857D')}Agent</div><div class="msg-agent">${esc(m.text)}</div>${(m.pendingApprovals||[]).map(p=>`
+    return `<div><div class="agent-tag">${mark(12,'#7F8894')}Agent</div><div class="msg-agent">${esc(m.text)}</div>${(m.pendingApprovals||[]).map(p=>`
       <section class="card-silver approval" aria-label="Needs your OK" style="margin-top:8px">
         <div class="k">Needs your OK</div>
-        <div class="li"><span style="color:#22140F;display:inline-flex">${I.cal}</span><span>${esc(approvalLabel(p))}</span></div>
+        <div class="li"><span style="color:#26303C;display:inline-flex">${I.cal}</span><span>${esc(approvalLabel(p))}</span></div>
         <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
           <button class="btn btn-brown btn-sm" data-gapprove="${p.id}">Approve</button>
-          <button class="btn btn-sm" style="border:1px solid rgba(22,17,14,.35);color:#16110E" data-gdecline="${p.id}">Decline</button>
+          <button class="btn btn-sm" style="border:1px solid rgba(20,28,38,.35);color:#10151B" data-gdecline="${p.id}">Decline</button>
         </div>
       </section>`).join('')}</div>`;
   }
@@ -1156,16 +1157,16 @@ function renderChat(){
     if(m.role==='agent'){
       const cls='msg-agent'+(m.thinking?' thinking':'')+(m.streaming?' streaming':'');
       const txt=(m.streaming&&!m.text)?'<span class="dots">Thinking</span>':esc(m.text);
-      return `<div class="msg-in"><div class="agent-tag">${mark(12,'#8F857D')}Agent</div><div class="${cls}" data-mi="${i}">${txt}</div></div>`;
+      return `<div class="msg-in"><div class="agent-tag">${mark(12,'#7F8894')}Agent</div><div class="${cls}" data-mi="${i}">${txt}</div></div>`;
     }
     if(m.role==='places')return `<div class="msg-in" style="display:flex;flex-direction:column;gap:8px">${m.items.map(p=>`<button class="card-brown" data-toast="Opening walking directions" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;text-align:left;width:100%;border-radius:16px"><div class="rt"><b class="serif" style="font-size:18px;font-weight:400">${esc(p.name)}</b><span>${esc(p.kind)}</span></div><div class="metric"><b>${p.mins}</b><span>min walk</span></div></button>`).join('')}</div>`;
     if(m.role==='approval'){
       const done=m.status==='done';
       return `<section class="${done?'card':'card-silver'} approval${done?' done':''} msg-in" aria-label="${done?'Done':'Needs your OK'}">
         <div class="k">${done?'Done':'Needs your OK'}</div>
-        <div class="li"><span style="color:${done?'var(--sage)':'#22140F'};display:inline-flex">${done?I.check:I.cal}</span><span>${esc(m.book)}</span></div>
-        <div class="li"><span style="color:${done?'var(--sage)':'#22140F'};display:inline-flex">${done?I.check:I.msg}</span><span>Text ${esc(m.to)}: "${esc(m.text)}"</span></div>
-        ${done?'':`<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"><button class="btn btn-brown btn-sm" data-approve="${i}">Do both</button><button class="btn btn-sm" style="border:1px solid rgba(22,17,14,.35);color:#16110E" data-edit="${i}">Edit</button></div>`}
+        <div class="li"><span style="color:${done?'var(--sage)':'#26303C'};display:inline-flex">${done?I.check:I.cal}</span><span>${esc(m.book)}</span></div>
+        <div class="li"><span style="color:${done?'var(--sage)':'#26303C'};display:inline-flex">${done?I.check:I.msg}</span><span>Text ${esc(m.to)}: "${esc(m.text)}"</span></div>
+        ${done?'':`<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"><button class="btn btn-brown btn-sm" data-approve="${i}">Do both</button><button class="btn btn-sm" style="border:1px solid rgba(20,28,38,.35);color:#10151B" data-edit="${i}">Edit</button></div>`}
       </section>`;
     }
     return '';
