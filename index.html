@@ -1372,6 +1372,7 @@ function renderAuth(){
       <div class="onb-foot">
         <button class="btn btn-silver" data-to="magic">Continue with email</button>
         <p class="sub" style="text-align:center;margin:6px 0 0;font-size:12px">We’ll send you a magic link — no password needed.</p>
+        <button class="btn btn-ghost" data-to="login" style="margin-top:10px">Log in with password</button>
       </div></div>`,
     magic:()=>`<div class="onb-inner">${backBtn}
       <h2>Sign in</h2>
@@ -1385,6 +1386,14 @@ function renderAuth(){
       <p class="lead">We sent a sign-in link to <span style="color:#fff">${esc(pendingAcc?pendingAcc.email:'your email')}</span>. Tap it on this device and you’re in.</p>
       <div style="flex-grow:1"></div>
       <div class="onb-foot"><button class="btn btn-ghost" id="ml-resend">Resend link</button></div></div>`,
+    login:()=>`<div class="onb-inner">${backBtn}
+      <h2>Log in</h2>
+      <p class="lead">Enter your email and password to sign in.</p>
+      <form id="pw-form" novalidate style="display:flex;flex-direction:column;gap:10px;margin:0">
+        ${field('pw-email','Email','email','email')}
+        ${field('pw-pass','Password','password','current-password')}
+        <button class="btn btn-silver" type="submit" id="pw-go">Log in</button>
+      </form></div>`,
   };
   el.innerHTML=V[authView]();
   el.scrollTop=0;
@@ -1418,6 +1427,31 @@ function renderAuth(){
       toast('New link sent');
     }catch(e){toast('Could not resend — try again')}
   };
+  const pf=$('#pw-form');
+  if(pf){pf.onsubmit=async e=>{e.preventDefault();
+      const m=$('#pw-email').value.trim(),p=$('#pw-pass').value;
+      setErr('pw-email',EMAIL_RE.test(m)?'':'Enter a valid email');
+      setErr('pw-pass',p?'':'Enter your password');
+      if(!EMAIL_RE.test(m)||!p){($('#pw-email').value&&EMAIL_RE.test(m)?$('#pw-pass'):$('#pw-email')).focus();return}
+      const go=$('#pw-go');go.disabled=true;go.textContent='Logging in…';
+      try{
+        const r=await fetch('/api/auth/password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:m,password:p})});
+        const d=await r.json().catch(()=>({}));
+        if(!r.ok||!d.access_token)throw new Error(d.code||'login failed');
+        tokenStore.set(d.access_token);
+        const me=await apiFetch('/api/auth/me').then(x=>x.ok?x.json():null);
+        if(me&&me.email){
+          const nm=me.email.split('@')[0].replace(/[._-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+          S.account={name:nm,email:me.email};store.set('account',S.account);
+          hideAuth();loadMemories();
+          if(store.get('onboarded',false))go('home');else startOnboarding();
+          toast('Signed in');
+        }else{throw new Error('session failed')}
+      }catch(err){
+        setErr('pw-pass','Invalid email or password');
+        go.disabled=false;go.textContent='Log in';
+      }
+    };setTimeout(()=>$('#pw-email').focus(),50)}
 }
 function finishAuth(acc,isNew){
   S.account=acc;store.set('account',acc);

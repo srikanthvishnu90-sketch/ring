@@ -33,7 +33,7 @@ const { TOOLS, runAgentTurn, runAgentTurnStream, llmConfigured } = require('./li
 const approvals = require('./lib/approvals');
 const threads = require('./lib/threads');
 const memory = require('./lib/memory');
-const { sendMagicLink, requireUser, optionalUser, validateToken, bearerToken } = require('./lib/auth');
+const { sendMagicLink, signInWithPassword, requireUser, optionalUser, validateToken, bearerToken } = require('./lib/auth');
 const { issueState, verifyState, COOKIE_NAME } = require('./lib/oauth_state');
 const cookie = require('cookie');
 const { processVoice, processVoiceStream } = require('./lib/voice');
@@ -175,6 +175,17 @@ app.post('/api/auth/otp', async (req, res) => {
     res.json({ ok: true });
   } catch (e) {
     res.status(e.code === 'BAD_EMAIL' ? 400 : 500).json({ error: e.message, code: e.code });
+  }
+});
+
+// --- Auth: email + password login (demo/testing accounts) -----------------
+app.post('/api/auth/password', async (req, res) => {
+  try {
+    const { access_token } = await signInWithPassword(req.body?.email, req.body?.password);
+    res.json({ ok: true, access_token });
+  } catch (e) {
+    const bad = e.code === 'BAD_EMAIL' || e.code === 'BAD_PASSWORD' || e.code === 'BAD_CREDENTIALS';
+    res.status(bad ? 401 : 500).json({ error: bad ? 'invalid email or password' : e.message, code: e.code });
   }
 });
 

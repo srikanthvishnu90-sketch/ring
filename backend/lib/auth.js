@@ -1,4 +1,5 @@
-// Auth: Supabase GoTrue (magic link), passwordless by design.
+// Auth: Supabase GoTrue. Magic link (passwordless) is the primary sign-in;
+// email + password login is also supported for demo/testing accounts.
 //
 // Flow: client collects an email → POST /api/auth/otp → GoTrue emails a
 // magic link → user taps it → GoTrue returns a JWT → client sends it as
@@ -6,6 +7,9 @@
 // JWT against GoTrue and stamps req.userId with the Supabase user id, so
 // durable rows (approvals, threads, messages, memories, tool runs) become
 // per-user instead of the shared 'local' identity.
+//
+// Password flow: client collects email + password → POST /api/auth/password
+// → GoTrue resource-owner grant returns a session JWT → same Bearer usage.
 const { env } = require('./config');
 
 const sbUrl = () => env('SUPABASE_URL');
@@ -42,6 +46,31 @@ async function sendMagicLink(email) {
     throw authError(`magic link failed: ${text.slice(0, 200)}`, 'OTP_FAILED', { status: r.status });
   }
   return { ok: true };
+}
+
+// Sign in with email + password via GoTrue's resource-owner grant.
+// Returns { access_token, user } on success; throws BAD_CREDENTIALS on a
+// wrong email/password so callers can return 401 without leaking which part
+// was wrong.
+async function signInWithPassword(email, password) {
+  ensureConfigured();
+  if (!email || typeof email !== 'string' || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim())) {
+    throw authError('a valid email is required', 'BAD_EMAIL');
+  }
+  if (!password || typeof password !== 'string') {
+    throw authError('a password is required', 'BAD_PASSWORD');
+  }
+  const r = await fetch(`${sbUrl()}/auth/v1/token?grant_type=password`, {
+    method: 'POST',
+    headers: { apikey: sbAnon(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
+  });
+  if (!r.ok) {
+    throw authError('invalid email or password', 'BAD_CREDENTIALS', { status: r.status });
+  }
+  const data = await r.json();
+  if (!data.access_token) throw authError('login failed', 'LOGIN_FAILED');
+  return { access_token: data.access_token, user: data.user };
 }
 
 // Validate a JWT against GoTrue. Returns { id, email } on success.
@@ -107,4 +136,4 @@ async function optionalUser(req, res, next) {
   next();
 }
 
-module.exports = { sendMagicLink, validateToken, bearerToken, requireUser, optionalUser };
+module.exports = { sendMagicLink, signInWithPassword, validateToken, bearerToken, requireUser, optionalUser };
