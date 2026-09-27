@@ -11,6 +11,24 @@
 
 ---
 
+---
+
+## Strict scoring charter — 2026-09-27 (owner-ordered: "very very very strict")
+
+A point is earned only when **all** of these hold. If any one fails, the score is 0 for that line — no partial credit unless the rubric line explicitly allows it.
+
+1. **Production only.** Merged to `main`, deployed to https://ringsss.vercel.app, and the *running deployment* verified to contain the change. Code on a branch = 0. Deployed but untested = 0. Localhost = 0.
+2. **Real device, real account.** Verified on Vishnu's actual iPhone against production — by him or by an agent driving his real account. Never a simulator, never the demo sandbox, never a staging trick.
+3. **Both testing principles.** (a) It does the literal thing asked. (b) Judged in retrospect, it served the underlying intent — a technically-correct but useless outcome scores 0.
+4. **Evidence attached.** Every credited point cites: commit hash, deploy time, the exact test performed, the date, and who verified. No evidence = no point, no matter how confident the claim.
+5. **No weasel words.** "Configured" ≠ working. A deep link ≠ a booking. A demo turn ≠ a capability. "Almost" = 0.
+6. **Trust/safety is a gate, not a trade.** A capability point earned by bypassing an approval, leaking data, or widening access scores 0 — and the corresponding safety point is lost too.
+7. **Excluded by owner order (score 0 until he says otherwise):** all of category 3 (voice & hardware) and anything depending on Stripe. They sit at 0 by decree, not by merit — they are explicitly last.
+
+**Re-score protocol:** re-score on every material change; report the delta (before → after) with the evidence for each moved point. The 2026-09-21 re-score (**49/100**) is the baseline. Never move the number silently.
+
+---
+
 ## 1. Conversational intelligence — 15 pts (bar: Claude)
 
 | # | Benchmark | Pts |
