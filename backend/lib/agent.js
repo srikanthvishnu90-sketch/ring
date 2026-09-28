@@ -159,7 +159,7 @@ const _RAW_TOOLS = [
   {
     name: 'calendar_from_email', risk: 'medium', fn: calendar.eventFromEmail,
     schema: { type: 'object', properties: { messageId: { type: 'string', description: 'Gmail message id from gmail_search' } }, required: ['messageId'] },
-    describe: 'Parse an invite/booking email and stage event fields for approval (does not create anything)',
+    describe: 'Parse a real personal meeting invite or booking email and stage event fields for approval (does not create anything). Prefer .ics attachments or event details sent to the user personally; never stage marketing/promotional "you\'re invited" emails — if none exists, say so honestly.',
   },
   {
     name: 'calendar_reminders', risk: 'low', fn: calendar.reminders,
