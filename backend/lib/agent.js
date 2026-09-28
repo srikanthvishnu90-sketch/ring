@@ -571,7 +571,7 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
       if (tool.risk === 'low') {
         try {
           const out = await tool.fn({ userId, ...tc.args });
-          results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 2000)}`);
+          results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 6000)}`);
           logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
         } catch (e) {
           results.push(`${tc.name} → ERROR ${e.code || ''}: ${e.message}`.slice(0, 400));
@@ -657,7 +657,7 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
       if (tool.risk === 'low') {
         try {
           const out = await tool.fn({ userId, ...tc.args });
-          results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 2000)}`);
+          results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 6000)}`);
           // Audit (fire-and-forget; logToolRun never throws).
           logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
         } catch (e) {

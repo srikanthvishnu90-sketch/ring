@@ -180,6 +180,10 @@ async function triageMessages({ userId, maxResults = 10 }) {
   }
   const counts = { urgent: 0, 'needs-reply': 0, fyi: 0 };
   for (const it of items) counts[it.category]++;
+  // Actionable first: if a downstream consumer truncates the payload, the
+  // urgent / needs-reply items must survive, not the promo noise.
+  const rank = { urgent: 0, 'needs-reply': 1, fyi: 2 };
+  items.sort((a, b) => rank[a.category] - rank[b.category]);
   return { counts, messages: items };
 }
 
