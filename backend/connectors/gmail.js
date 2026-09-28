@@ -184,7 +184,17 @@ async function triageMessages({ userId, maxResults = 10 }) {
   // urgent / needs-reply items must survive, not the promo noise.
   const rank = { urgent: 0, 'needs-reply': 1, fyi: 2 };
   items.sort((a, b) => rank[a.category] - rank[b.category]);
-  return { counts, messages: items };
+  // Pre-digested action list: short imperative lines up top so the agent
+  // relays each one instead of skimming past a long JSON array.
+  const actionItems = items
+    .filter((it) => it.category === 'urgent' || it.category === 'needs-reply')
+    .map((it) => {
+      const name = (it.from || '').split('<')[0].trim().replace(/^"|"$/g, '') || it.from;
+      const subj = it.subject || '(no subject)';
+      const snip = (it.snippet || '').split(/(?<=[.!?])\s+/)[0].slice(0, 140);
+      return `${name} — ${subj}: ${snip}`;
+    });
+  return { counts, actionItems, messages: items };
 }
 
 // --- Thread (4) ------------------------------------------------------------
