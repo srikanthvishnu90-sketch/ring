@@ -524,35 +524,45 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
   const first = await call(prompt, onToken, tools, streamOpts);
 
   const toolsUsed = [];
-  const results = [];
-  for (const tc of first.toolCalls) {
-    const tool = tools.find((t) => t.name === tc.name);
-    if (!tool) continue;
-    toolsUsed.push({ name: tool.name, risk: tool.risk, args: tc.args });
-    if (tool.risk === 'low') {
-      try {
-        const out = await tool.fn({ userId, ...tc.args });
-        results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 2000)}`);
-        logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
-      } catch (e) {
-        results.push(`${tc.name} → ERROR ${e.code || ''}: ${e.message}`.slice(0, 400));
-        logToolRun({ userId, tool: tool.name, args: tc.args, result: { error: e.message, code: e.code }, status: 'failed' }).catch(() => {});
-      }
-    } else {
-      results.push(`${tc.name} → HELD for user approval`);
-    }
-  }
-
+  const allResults = [];
+  // Multi-round agent loop (same fix as runAgentTurn): keep executing tool
+  // calls and re-prompting until the model answers with no further tool
+  // calls, bounded at MAX_ROUNDS.
+  const MAX_ROUNDS = 5;
+  let pending = first.toolCalls || [];
   let finalText = first.text;
-  if (first.toolCalls.length) {
+  let rounds = 0;
+  while (pending.length && rounds < MAX_ROUNDS) {
+    rounds++;
+    const results = [];
+    for (const tc of pending) {
+      const tool = tools.find((t) => t.name === tc.name);
+      if (!tool) continue;
+      toolsUsed.push({ name: tool.name, risk: tool.risk, args: tc.args });
+      if (tool.risk === 'low') {
+        try {
+          const out = await tool.fn({ userId, ...tc.args });
+          results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 2000)}`);
+          logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
+        } catch (e) {
+          results.push(`${tc.name} → ERROR ${e.code || ''}: ${e.message}`.slice(0, 400));
+          logToolRun({ userId, tool: tool.name, args: tc.args, result: { error: e.message, code: e.code }, status: 'failed' }).catch(() => {});
+        }
+      } else {
+        results.push(`${tc.name} → HELD for user approval`);
+      }
+    }
+    allResults.push(...results);
+    const roundBase = finalText;
     const follow = await call(
-      `${prompt}\n\nTool results:\n${results.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
-      (tok) => { finalText += ''; if (onToken) onToken(tok); },
+      `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
+      (tok) => { if (onToken) onToken(tok); },
       tools,
       streamOpts
     );
     // follow.text was already streamed token-by-token; rebuild final text.
-    if (follow.text) finalText = first.text + follow.text;
+    if (follow.text) finalText = roundBase + follow.text;
+    pending = follow.toolCalls || [];
   }
   return { text: finalText, toolsUsed, mode: 'live' };
 }
@@ -587,34 +597,45 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
   const first = await call(prompt, tools, callOpts);
 
   const toolsUsed = [];
-  const results = [];
-  for (const tc of first.toolCalls) {
-    const tool = tools.find((t) => t.name === tc.name);
-    if (!tool) continue;
-    toolsUsed.push({ name: tool.name, risk: tool.risk, args: tc.args });
-    if (tool.risk === 'low') {
-      try {
-        const out = await tool.fn({ userId, ...tc.args });
-        results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 2000)}`);
-        // Audit (fire-and-forget; logToolRun never throws).
-        logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
-      } catch (e) {
-        results.push(`${tc.name} → ERROR ${e.code || ''}: ${e.message}`.slice(0, 400));
-        logToolRun({ userId, tool: tool.name, args: tc.args, result: { error: e.message, code: e.code }, status: 'failed' }).catch(() => {});
-      }
-    } else {
-      results.push(`${tc.name} → HELD for user approval`);
-    }
-  }
-
+  const allResults = [];
+  // Multi-round agent loop: keep executing the model's tool calls and
+  // re-prompting with results until it answers with no further tool calls
+  // (bounded so a confused model can't spin forever). Without this, any
+  // two-step flow (e.g. gmail_search → gmail_read) dies after round one
+  // and the user gets an empty reply.
+  const MAX_ROUNDS = 5;
+  let pending = first.toolCalls || [];
   let finalText = first.text;
-  if (first.toolCalls.length) {
+  let rounds = 0;
+  while (pending.length && rounds < MAX_ROUNDS) {
+    rounds++;
+    const results = [];
+    for (const tc of pending) {
+      const tool = tools.find((t) => t.name === tc.name);
+      if (!tool) continue;
+      toolsUsed.push({ name: tool.name, risk: tool.risk, args: tc.args });
+      if (tool.risk === 'low') {
+        try {
+          const out = await tool.fn({ userId, ...tc.args });
+          results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 2000)}`);
+          // Audit (fire-and-forget; logToolRun never throws).
+          logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
+        } catch (e) {
+          results.push(`${tc.name} → ERROR ${e.code || ''}: ${e.message}`.slice(0, 400));
+          logToolRun({ userId, tool: tool.name, args: tc.args, result: { error: e.message, code: e.code }, status: 'failed' }).catch(() => {});
+        }
+      } else {
+        results.push(`${tc.name} → HELD for user approval`);
+      }
+    }
+    allResults.push(...results);
     const follow = await call(
-      `${prompt}\n\nTool results:\n${results.join('\n')}\n\nNow reply to the user concisely${tg ? ' — one or two short texts' : ' (1-3 short sentences)'}. If something is held for approval, say what you're waiting on.`,
+      `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely${tg ? ' — one or two short texts' : ' (1-3 short sentences)'}. If something is held for approval, say what you're waiting on.`,
       tools,
       callOpts
     );
     if (follow.text) finalText = follow.text;
+    pending = follow.toolCalls || [];
   }
   return { text: finalText, toolsUsed, mode: 'live' };
 }
