@@ -106,7 +106,7 @@ const _RAW_TOOLS = [
     describe: 'Forward an email to someone (always needs approval)',
   },
   {
-    name: 'gmail_draft', risk: 'low', fn: gmail.createDraft,
+    name: 'gmail_draft', risk: 'medium', fn: gmail.createDraft,
     schema: { type: 'object', properties: { to: { type: 'string' }, subject: { type: 'string' }, body: { type: 'string' } }, required: ['to'] },
     describe: 'Save a Gmail draft and return its draft id',
   },
@@ -116,17 +116,17 @@ const _RAW_TOOLS = [
     describe: 'Move an email to Trash (needs confirmation)',
   },
   {
-    name: 'gmail_archive', risk: 'low', fn: gmail.archiveMessage,
+    name: 'gmail_archive', risk: 'medium', fn: gmail.archiveMessage,
     schema: { type: 'object', properties: { id: { type: 'string', description: 'Message id from gmail_search' } }, required: ['id'] },
     describe: 'Archive an email (remove from inbox)',
   },
   {
-    name: 'gmail_mark', risk: 'low', fn: gmail.markMessage,
+    name: 'gmail_mark', risk: 'medium', fn: gmail.markMessage,
     schema: { type: 'object', properties: { id: { type: 'string', description: 'Message id from gmail_search' }, read: { type: 'boolean' } }, required: ['id', 'read'] },
     describe: 'Mark an email read or unread',
   },
   {
-    name: 'gmail_star', risk: 'low', fn: gmail.starMessage,
+    name: 'gmail_star', risk: 'medium', fn: gmail.starMessage,
     schema: { type: 'object', properties: { id: { type: 'string', description: 'Message id from gmail_search' }, starred: { type: 'boolean' } }, required: ['id', 'starred'] },
     describe: 'Star or unstar an email',
   },
