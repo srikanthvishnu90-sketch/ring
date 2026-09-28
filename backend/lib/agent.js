@@ -556,8 +556,8 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
   const allResults = [];
   // Multi-round agent loop (same fix as runAgentTurn): keep executing tool
   // calls and re-prompting until the model answers with no further tool
-  // calls, bounded at MAX_ROUNDS.
-  const MAX_ROUNDS = 5;
+  // calls, bounded at MAX_ROUNDS (12: enough for exhaustive multi-thread reads).
+  const MAX_ROUNDS = 12;
   let pending = first.toolCalls || [];
   let finalText = first.text;
   let rounds = 0;
@@ -632,7 +632,7 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
   // (bounded so a confused model can't spin forever). Without this, any
   // two-step flow (e.g. gmail_search → gmail_read) dies after round one
   // and the user gets an empty reply.
-  const MAX_ROUNDS = 5;
+  const MAX_ROUNDS = 12;
   let pending = first.toolCalls || [];
   let finalText = first.text;
   let rounds = 0;
