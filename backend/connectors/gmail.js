@@ -47,6 +47,7 @@ async function searchMessages({ userId, query, maxResults = 5 }) {
   return {
     messages: full.map((m) => ({
       id: m.id,
+      threadId: m.threadId,
       subject: header(m, 'Subject'),
       from: header(m, 'From'),
       date: header(m, 'Date'),
