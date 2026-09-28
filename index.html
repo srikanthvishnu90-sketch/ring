@@ -121,6 +121,7 @@ a{color:inherit}
 
 .dot{width:7px;height:7px;border-radius:4px;background:var(--sage);display:inline-block;flex-shrink:0}
 .pill-sage{font-size:12px;font-weight:600;color:var(--sage);padding:4px 10px;border-radius:12px;background:rgba(169,194,166,.14)}
+.pill-soon{font-size:12px;font-weight:600;color:var(--muted);padding:4px 10px;border-radius:12px;background:rgba(201,204,209,.14);flex-shrink:0}
 .badge-silver{font-size:12px;font-weight:600;color:var(--ink);padding:4px 10px;border-radius:12px;background:var(--silver-grad);align-self:flex-start}
 
 .list-row{display:flex;align-items:center;gap:12px;padding:12px 14px;text-align:left;width:100%;min-height:60px}
@@ -592,12 +593,16 @@ const CONNS=[
 const isConn=k=>k in S.perms?!!S.perms[k]:!!S.conns[k];
 function setConn(k,v){if(k in S.perms)S.perms[k]=v;else S.conns[k]=v;saveState()}
 const connName=k=>(CONNS.find(c=>c.k===k)||{n:k}).n;
+/* Connectors the app can't really connect yet: shown as "Soon", never a fake switch. */
+const CONN_soon=()=>CONNS.filter(c=>c.k!=='mail'&&c.k!=='calendar');
+function connRowHTML(c){
+  return `<div class="conn-row"><span class="bubble-icon bi-brown">${I[c.i]}</span><div class="rt"><b>${c.n}</b><span>${c.d}</span></div><span class="pill-soon">Soon</span></div>`;
+}
 function updateBadge(){const b=$('#agent-badge');if(!b)return;const n=S.pending.length;b.textContent=n;b.classList.toggle('hidden',!n)}
 
 function renderAgent(){
   const v=$('#v-agent');
   const on=S.wfs.filter(w=>w.on).length;
-  const connected=CONNS.filter(c=>isConn(c.k));
   v.innerHTML=`
   <header class="head">
     <div style="display:flex;flex-direction:column;gap:4px">
@@ -626,8 +631,8 @@ function renderAgent(){
   <section aria-label="Connectors" style="display:flex;flex-direction:column;gap:10px">
     <div class="row-between"><h2 class="h2">Connectors</h2><button class="link" data-sheet="conns">Manage</button></div>
     <div class="conn-grid">
-      ${connected.slice(0,7).map(c=>`<button class="conn card-brown" data-conn="${c.k}"><span class="ci" style="background:#1D232B;color:#D8E0EA">${I[c.i]}<i class="ok"></i></span><span>${c.n}</span></button>`).join('')}
-      <button class="conn card" data-sheet="conns" style="color:var(--silver)" style="color:var(--silver)"><span class="ci" style="border:1px dashed rgba(201,204,209,.5)">${I.plus}</span><span>Add</span></button>
+      ${GCONN?`<button class="conn card-brown" data-conn="google"><span class="ci" style="background:#1D232B;color:#D8E0EA">${I.google}<i class="ok"></i></span><span>Google</span></button>`:''}
+      <button class="conn card" data-sheet="conns" style="color:var(--silver)"><span class="ci" style="border:1px dashed rgba(201,204,209,.5)">${I.plus}</span><span>${GCONN?'Add':'Connect'}</span></button>
     </div>
   </section>`;
   bindCommon(v);
@@ -812,9 +817,7 @@ function openSheet(kind,arg){
     conns:()=>`<h3 id="sheet-title">Connectors</h3><p>Apps your agent can use. It only touches what you connect.</p>      ${backendStatusLine()}
       ${googleCardHTML()}
       <div style="height:12px"></div>
-      <div class="card" style="overflow:hidden">${CONNS.map(c=>{
-        if(c.k==='mail'||c.k==='calendar')return `<div class="conn-row"><span class="bubble-icon bi-brown">${I[c.i]}</span><div class="rt"><b>${c.n}</b><span>${GCONN?'Included with your Google account':'Needs your Google account'}</span></div>${GCONN?'<span class="dot"></span>':`<button class="btn btn-silver btn-sm" style="width:auto;padding:0 16px" data-gconnect>Connect</button>`}</div>`;
-        return `<div class="conn-row"><span class="bubble-icon bi-brown">${I[c.i]}</span><div class="rt"><b>${c.n}</b><span>${c.d}</span></div><button class="switch" role="switch" aria-checked="${isConn(c.k)}" aria-label="${c.n}" data-cs="${c.k}"></button></div>`}).join('')}</div>`,
+      <div class="card" style="overflow:hidden">${CONN_soon().map(connRowHTML).join('')}</div>`,
     theme:()=>`<h3 id="sheet-title">Appearance</h3><p>Dark is the classic ring look; light is easier in bright sun.</p>
       <div role="radiogroup" aria-label="Appearance">
       <button class="opt" role="radio" aria-checked="${S.theme==='dark'}" data-theme="dark"><span class="radio"></span><span class="rt"><b>Dark</b><span>Classic</span></span></button>
@@ -882,7 +885,6 @@ function openSheet(kind,arg){
   const wd=$('#wf-del');if(wd)wd.onclick=()=>{S.wfs.splice(arg,1);saveState();renderAgent();closeSheet();toast('Workflow deleted')};
   b.querySelectorAll('[data-ex]').forEach(x=>x.onclick=()=>{$('#cw-t').value=x.dataset.ex;$('#cw-t').focus()});
   const cw=$('#cw-form');if(cw)cw.onsubmit=async e=>{e.preventDefault();const t=$('#cw-t').value.trim();if(!t){$('#cw-t').focus();return}const g=$('#cw-go');g.disabled=true;g.textContent='Setting it up…';closeSheet();toast('Setting up your workflow');await createWorkflow(t)};
-  b.querySelectorAll('[data-cs]').forEach(x=>x.onclick=()=>{const k=x.dataset.cs;const v=!isConn(k);setConn(k,v);x.setAttribute('aria-checked',v);toast(connName(k)+(v?' connected':' disconnected'));if(S.tab==='agent')renderAgent();if(S.tab==='profile')renderProfile()});
   b.querySelectorAll('[data-gconnect]').forEach(x=>x.onclick=()=>connectGoogle());
   const so=$('#do-signout');if(so)so.onclick=()=>{closeSheet();tokenStore.set(null);S.account=null;store.set('account',null);setTimeout(()=>showAuth('welcome'),250)};
   b.querySelectorAll('[data-theme]').forEach(x=>x.onclick=()=>{setTheme(x.dataset.theme);b.querySelectorAll('[data-theme]').forEach(y=>y.setAttribute('aria-checked',String(y===x)));if(S.tab==='profile')renderProfile()});
@@ -1192,7 +1194,7 @@ function homeConnectorsHTML(){
   const g=GCONN
     ?`<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Google account</b><span>Gmail + Calendar</span></div><span class="gstate"><span class="dot"></span>Connected</span></div>`
     :`<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Connect your Google account</b><span>One tap unlocks Gmail + Calendar for your agent.</span></div><button class="btn btn-silver btn-sm" style="width:auto;padding:0 18px" data-gconnect>Connect</button></div>`;
-  const rows=CONNS.filter(c=>c.k!=='mail'&&c.k!=='calendar').map(c=>`<div class="conn-row"><span class="bubble-icon bi-brown">${I[c.i]}</span><div class="rt"><b>${c.n}</b><span>${c.d}</span></div><button class="switch" role="switch" aria-checked="${isConn(c.k)}" aria-label="${c.n}" data-cs="${c.k}"></button></div>`).join('');
+  const rows=CONN_soon().map(connRowHTML).join('');
   return `<section aria-label="Connectors" style="display:flex;flex-direction:column;gap:10px"><div class="row-between"><h2 class="h2">Connectors</h2></div>${g}<div class="card" style="overflow:hidden">${rows}</div></section>`;
 }
 function googleSetupBannerHTML(){
