@@ -8,6 +8,8 @@
 const { env } = require('./config');
 const { logToolRun } = require('./audit');
 const memory = require('./memory');
+const health = require('./health');
+const notes = require('./notes');
 const gmail = require('../connectors/gmail');
 const calendar = require('../connectors/calendar');
 const places = require('../connectors/places');
@@ -83,6 +85,53 @@ const _RAW_TOOLS = [
     name: 'memory_list', risk: 'low', fn: async ({ userId }) => (await memory.list(userId)).map((m) => ({ key: m.key, value: m.value })),
     schema: { type: 'object', properties: {} },
     describe: 'List what you remember about the user',
+  },
+  // --- Health tracker ------------------------------------------------------
+  {
+    name: 'health_log', risk: 'low', fn: async ({ userId, metric, value, unit, note }) => health.log(userId, { metric, value, unit, note }),
+    schema: { type: 'object', properties: { metric: { type: 'string', description: 'One of: steps, sleep_hours, water_ml, weight_kg, workout_minutes, mood, energy' }, value: { description: 'Number or flexible string like "8k", "2.5"' }, unit: { type: 'string', description: 'Optional unit hint, e.g. L for water, lbs for weight' }, note: { type: 'string' } }, required: ['metric', 'value'] },
+    describe: 'Log a health metric for the user (steps, sleep_hours, water_ml, weight_kg, workout_minutes, mood 1-5, energy 1-5)',
+  },
+  {
+    name: 'health_today', risk: 'low', fn: async ({ userId }) => health.today(userId),
+    schema: { type: 'object', properties: {} },
+    describe: "Show today's logged health metrics, grouped by metric",
+  },
+  {
+    name: 'health_trends', risk: 'low', fn: async ({ userId, metric, days }) => health.trends(userId, { metric, days }),
+    schema: { type: 'object', properties: { metric: { type: 'string', description: 'One of: steps, sleep_hours, water_ml, weight_kg, workout_minutes, mood, energy' }, days: { type: 'number', description: 'Lookback window in days (default 7, max 90)' } }, required: ['metric'] },
+    describe: 'Show daily trends for one health metric over the past N days, with min/max/avg',
+  },
+  {
+    name: 'health_summary', risk: 'low', fn: async ({ userId, days }) => health.summary(userId, { days }),
+    schema: { type: 'object', properties: { days: { type: 'number', description: 'Lookback window in days (default 7, max 90)' } } },
+    describe: 'Per-metric totals/averages across all health metrics over the past N days',
+  },
+  // --- Notes ---------------------------------------------------------------
+  {
+    name: 'note_save', risk: 'low', fn: async ({ userId, title, content, tags }) => notes.save(userId, { title, content, tags }),
+    schema: { type: 'object', properties: { title: { type: 'string' }, content: { type: 'string' }, tags: { type: 'array', items: { type: 'string' }, description: 'Optional tags' } }, required: ['title', 'content'] },
+    describe: 'Save a note with a title and content',
+  },
+  {
+    name: 'note_list', risk: 'low', fn: async ({ userId, limit }) => notes.list(userId, { limit }),
+    schema: { type: 'object', properties: { limit: { type: 'number' } } },
+    describe: 'List recent notes (titles only), newest first',
+  },
+  {
+    name: 'note_search', risk: 'low', fn: async ({ userId, query }) => notes.search(userId, { query }),
+    schema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] },
+    describe: 'Search notes by keyword across titles and content',
+  },
+  {
+    name: 'note_get', risk: 'low', fn: async ({ userId, id }) => notes.get(userId, { id }),
+    schema: { type: 'object', properties: { id: { type: 'string', description: 'Note id from note_list or note_search' } }, required: ['id'] },
+    describe: 'Read a full note by id',
+  },
+  {
+    name: 'note_delete', risk: 'low', fn: async ({ userId, id }) => notes.remove(userId, { id }),
+    schema: { type: 'object', properties: { id: { type: 'string', description: 'Note id from note_list or note_search' } }, required: ['id'] },
+    describe: 'Delete a note by id',
   },
   // --- Gmail extended (features 3-6, 8-14) --------------------------------
   {
@@ -187,6 +236,7 @@ const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. Yo
 - Inbox intel: meeting prep (attendees + related mail), trip confirmations pulled into itineraries with staged calendar events, RSVPs (approval), follow-up radar for unanswered mail, subscription detection from receipts, spending recaps, contact lookup from inbox history, deadline watching with staged reminders.
 - Real outcomes: book restaurant tables for real (confirmation reference required — never claim booked without one), change/cancel reservations, cancel subscriptions with proof, book rides (confirm before ordering), find tonight's restaurants, log into websites and complete tasks (per-action approval, vaulted credentials), fill web forms, check order/delivery status, live price checks, diagnose and fix messed-up reservations.
 - Memory + groups: remember durable facts, recall them, reply as @ring in group chats, run polls to plan with friends and lock a time, daily briefs, draft messages (never send without approval), learn routines, smart nudges.
+- Health + notes: log health metrics (steps, sleep, water, weight, workouts, mood, energy), show today's metrics, per-metric trends and multi-day summaries; save, list, search, read, and delete notes.
 Be concise and plainspoken. Never claim a booking, cancellation, message, or send is done until its tool returns proof — and anything that spends money or sends as the user needs their explicit approval first.
 Exhaustiveness: when the user asks about a topic as a whole ("all the emails about X", "everything on Y"), miss nothing — start with the BROADEST query (one or two words, e.g. just "ring") with maxResults 30, enumerate every matching threadId, then read each candidate thread; never rely on narrow phrasings that silently drop threads with different subject lines. One broad search is enough — scan its ENTIRE thread list before reading anything, then batch-read every thread where the other party replied. Prefer reading threads over running more searches; don't burn your budget re-searching. and never present a partial count as the complete picture. If you cannot verify completeness, say what you covered and what you might have missed. When the user asks for a specific number ("give me 5"), do the opposite: read each candidate thread fully and rank by substance.
 Approval mechanics: when the user asks for something that needs approval (reply, forward, send, draft, trash, archive, mark, star, create/reschedule/cancel events, bookings, orders, logins), CALL the tool with the exact arguments — the system automatically holds it for the user's approval instead of executing it. Never substitute a text question ("should I do X?") for the tool call; the approval card is how the user confirms.`;
