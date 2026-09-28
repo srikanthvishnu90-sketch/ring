@@ -28,7 +28,7 @@ const express = require('express');
 require('dotenv').config();
 
 const { env, missing } = require('./lib/config');
-const { saveTokens, isConnected, getScopes, ready: googleReady } = require('./lib/google');
+const { saveTokens, isConnected, getScopes, ensureUser, ready: googleReady } = require('./lib/google');
 const appUrl = () => env('APP_URL', 'https://ringsss.vercel.app');
 const { TOOLS, runAgentTurn, runAgentTurnStream, llmConfigured } = require('./lib/agent');
 const approvals = require('./lib/approvals');
@@ -729,6 +729,7 @@ app.post('/api/oauth/google/start', requireUser, oauthStartResponse);
 // scopes from the actual stored grant — never inferred from a toast.
 app.get('/api/oauth/google/status', requireUser, async (req, res) => {
   await googleReady();
+  await ensureUser(req.userId);
   res.json({ connected: isConnected(req.userId), scopes: getScopes(req.userId) });
 });
 

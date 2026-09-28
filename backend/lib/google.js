@@ -39,6 +39,26 @@ function loadFromFile() {
   } catch (e) { /* no saved tokens yet */ }
 }
 
+// Lazy per-user load: picks up rows written by another process (or linked
+// manually) without waiting for a restart. Called on cache miss.
+async function ensureUser(userId) {
+  const key = userId || 'local';
+  if (store.has(key) || !USE_SUPABASE) return;
+  try {
+    const rows = await sbRequest(`/${SB_TABLE}?select=user_id,access_token,refresh_token,expires_at,scope,token_type&user_id=eq.${encodeURIComponent(key)}`);
+    const row = (rows || [])[0];
+    if (row && row.access_token) {
+      store.set(key, {
+        access_token: row.access_token,
+        refresh_token: row.refresh_token,
+        expires_at: Number(row.expires_at) || 0,
+        scope: row.scope,
+        token_type: row.token_type,
+      });
+    }
+  } catch (e) { /* miss stays a miss */ }
+}
+
 async function persistToSupabase() {
   const rows = [];
   for (const [userId, t] of store) {
@@ -111,6 +131,7 @@ function getScopes(userId) {
 
 async function getAccessToken(userId) {
   const key = userId || 'local';
+  await ensureUser(key);
   const t = store.get(key);
   if (!t) throw new Error('Google not connected — visit /auth/google to connect');
   if (Date.now() < t.expires_at - 60000) return t.access_token;
@@ -142,4 +163,4 @@ async function gfetch(userId, url, opts = {}) {
   return data;
 }
 
-module.exports = { saveTokens, isConnected, getScopes, getAccessToken, gfetch, ready, usesSupabase: () => USE_SUPABASE };
+module.exports = { saveTokens, isConnected, getScopes, getAccessToken, gfetch, ready, ensureUser, usesSupabase: () => USE_SUPABASE };
