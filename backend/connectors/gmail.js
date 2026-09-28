@@ -85,6 +85,8 @@ async function readMessage({ userId, id }) {
 
 async function sendMessage({ userId, to, subject, body }) {
   guard();
+  if (!to) throw new Error('recipient is required');
+  if (!body) throw new Error('email body is required');
   const raw = Buffer.from(
     `To: ${to}\r\nSubject: ${subject}\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n${body}`,
     'utf8'
