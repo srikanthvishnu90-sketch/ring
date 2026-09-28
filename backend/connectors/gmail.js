@@ -248,7 +248,7 @@ async function createDraft({ userId, to, subject, body }) {
   guard();
   if (!to) throw new Error('recipient is required');
   const raw = mimeRaw({ To: to, Subject: subject || '' }, body || '');
-  const d = await gfetch(userId, 'https://gmail.googleapis.com/gmail/v1/users/me/drafts/create', {
+  const d = await gfetch(userId, 'https://gmail.googleapis.com/gmail/v1/users/me/drafts', {
     method: 'POST',
     body: JSON.stringify({ message: { raw } }),
   });
