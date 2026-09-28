@@ -124,7 +124,7 @@ function triageOne(m) {
   }
   if (URGENT_RE.test(text)) {
     const kw = (text.match(URGENT_RE) || [])[0];
-    return { category: 'urgent', reason: `Matched "${kw}" in subject/snippet` };
+    return { category: 'urgent', reason: `Matched "${kw}" in subject/snippet`, signal: kw };
   }
   // Bulk/newsletter senders next: a promo subject with a rhetorical "?"
   // must not outrank the sender signal and land in needs-reply.
@@ -133,20 +133,23 @@ function triageOne(m) {
   }
   if (REPLY_RE.test(text)) {
     const kw = (text.match(REPLY_RE) || [])[0];
-    return { category: 'needs-reply', reason: `Asks for a response ("${kw}")` };
+    return { category: 'needs-reply', reason: `Asks for a response ("${kw}")`, signal: kw };
   }
   return { category: 'fyi', reason: 'No urgency or reply request detected' };
 }
 
-async function triageMessages({ userId, maxResults = 10 }) {
+async function triageMessages({ userId, maxResults = 25 }) {
   guard();
   const me = (
     await gfetch(userId, 'https://gmail.googleapis.com/gmail/v1/users/me/profile').catch(() => ({}))
   ).emailAddress || '';
   const meLow = me.toLowerCase();
+  // Fetch enough messages to cover the whole 2-day window: the newest N
+  // messages can span fewer threads than maxResults when bulk mail arrives
+  // in bursts, so over-fetch messages before collapsing to threads.
   const list = await gfetch(
     userId,
-    `https://gmail.googleapis.com/gmail/v1/users/me/messages?q=${encodeURIComponent('in:inbox newer_than:2d')}&maxResults=25`
+    `https://gmail.googleapis.com/gmail/v1/users/me/messages?q=${encodeURIComponent('in:inbox newer_than:2d')}&maxResults=80`
   );
   const full = await Promise.all(
     (list.messages || []).map((m) =>
@@ -191,7 +194,20 @@ async function triageMessages({ userId, maxResults = 10 }) {
     .map((it) => {
       const name = (it.from || '').split('<')[0].trim().replace(/^"|"$/g, '') || it.from;
       const subj = it.subject || '(no subject)';
-      const snip = (it.snippet || '').split(/(?<=[.!?])\s+/)[0].slice(0, 140);
+      let snip = it.snippet || '';
+      // Center on the sentence carrying the reply signal, so the action
+      // itself is named — not a pleasantry from the first sentence.
+      if (it.signal) {
+        const idx = snip.toLowerCase().indexOf(it.signal.toLowerCase());
+        if (idx >= 0) {
+          const start = Math.max(0, idx - 70);
+          snip = (start > 0 ? '…' : '') + snip.slice(start, idx + 90).trim();
+        } else {
+          snip = snip.slice(0, 140);
+        }
+      } else {
+        snip = snip.slice(0, 140);
+      }
       return `${name} — ${subj}: ${snip}`;
     });
   return { counts, actionItems, messages: items };
