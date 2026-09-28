@@ -99,22 +99,33 @@ async function sendMessage({ userId, to, subject, body }) {
 }
 
 // --- Triage (3) ------------------------------------------------------------
-// List unread inbox and bucket each message into urgent / needs-reply / fyi
-// with a one-line reason. Categorization is a deterministic heuristic; the
-// agent refines from full content before acting on anything.
+// Scan the recent inbox (read AND unread — unread-only triage misses action
+// items the user has already glanced at), collapse to one entry per thread
+// (its latest message), and bucket each into urgent / needs-reply / fyi.
+// Threads where the user already has the last word are excluded: nothing to
+// reply to. Categorization is a deterministic heuristic; the agent refines
+// from full content before acting on anything.
 const URGENT_RE = /\b(urgent|asap|action required|payment failed|declined|overdue|expires? (today|tomorrow)|security alert|unauthorized|immediately)\b/i;
-const REPLY_RE = /(\?|please let me know|can you|please confirm|need your|reply|rsvp|action needed|follow up)/i;
+const REPLY_RE = /(\?|let me know|can you|please confirm|need your|reply|rsvp|action needed|follow up|verify)/i;
 const FYI_RE = /^(unsubscribe|newsletter|promotion|noreply|no-reply|donotreply)/i;
 
 function triageOne(m) {
   const subject = header(m, 'Subject');
   const from = header(m, 'From');
+  const labels = m.labelIds || [];
   const text = `${subject} ${m.snippet || ''}`;
+  // Gmail's own bulk categories first: a promo "?" must never read as needs-reply.
+  if (
+    (labels.includes('CATEGORY_PROMOTIONS') || labels.includes('CATEGORY_SOCIAL')) &&
+    !URGENT_RE.test(text)
+  ) {
+    return { category: 'fyi', reason: 'Promotional/social bulk mail' };
+  }
   if (URGENT_RE.test(text)) {
     const kw = (text.match(URGENT_RE) || [])[0];
     return { category: 'urgent', reason: `Matched "${kw}" in subject/snippet` };
   }
-  // Bulk/newsletter senders first: a promo subject with a rhetorical "?"
+  // Bulk/newsletter senders next: a promo subject with a rhetorical "?"
   // must not outrank the sender signal and land in needs-reply.
   if (FYI_RE.test(from) || FYI_RE.test(subject)) {
     return { category: 'fyi', reason: 'Bulk/newsletter-style sender, no action implied' };
@@ -128,9 +139,13 @@ function triageOne(m) {
 
 async function triageMessages({ userId, maxResults = 10 }) {
   guard();
+  const me = (
+    await gfetch(userId, 'https://gmail.googleapis.com/gmail/v1/users/me/profile').catch(() => ({}))
+  ).emailAddress || '';
+  const meLow = me.toLowerCase();
   const list = await gfetch(
     userId,
-    `https://gmail.googleapis.com/gmail/v1/users/me/messages?q=${encodeURIComponent('is:unread in:inbox')}&maxResults=${maxResults}`
+    `https://gmail.googleapis.com/gmail/v1/users/me/messages?q=${encodeURIComponent('in:inbox newer_than:2d')}&maxResults=25`
   );
   const full = await Promise.all(
     (list.messages || []).map((m) =>
@@ -140,13 +155,27 @@ async function triageMessages({ userId, maxResults = 10 }) {
       )
     )
   );
-  const items = full.map((m) => ({
-    id: m.id,
-    subject: header(m, 'Subject'),
-    from: header(m, 'From'),
-    date: header(m, 'Date'),
-    ...triageOne(m),
-  }));
+  // One entry per thread: messages.list is newest-first, so the first
+  // message seen per thread is its latest.
+  const latestByThread = new Map();
+  for (const m of full) {
+    if (!latestByThread.has(m.threadId)) latestByThread.set(m.threadId, m);
+  }
+  const items = [];
+  for (const m of latestByThread.values()) {
+    const from = header(m, 'From') || '';
+    // User already has the last word — nothing needs a reply.
+    if (meLow && from.toLowerCase().includes(meLow)) continue;
+    items.push({
+      id: m.id,
+      subject: header(m, 'Subject'),
+      from,
+      date: header(m, 'Date'),
+      unread: (m.labelIds || []).includes('UNREAD'),
+      ...triageOne(m),
+    });
+    if (items.length >= maxResults) break;
+  }
   const counts = { urgent: 0, 'needs-reply': 0, fyi: 0 };
   for (const it of items) counts[it.category]++;
   return { counts, messages: items };
