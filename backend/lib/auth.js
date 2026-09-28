@@ -123,15 +123,20 @@ async function sendPasswordRecovery(email) {
     throw authError('a valid email is required', 'BAD_EMAIL');
   }
   const redirect = `${appUrl()}/?recovery=1`;
-  try {
-    const r = await fetch(`${sbUrl()}/auth/v1/recover?redirect_to=${encodeURIComponent(redirect)}`, {
-      method: 'POST',
-      headers: { apikey: sbAnon(), 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: em }),
-    });
-    if (!r.ok) console.error('[auth] recover failed:', r.status, (await r.text()).slice(0, 160));
-  } catch (e) {
-    console.error('[auth] recover error:', e.message);
+  const r = await fetch(`${sbUrl()}/auth/v1/recover?redirect_to=${encodeURIComponent(redirect)}`, {
+    method: 'POST',
+    headers: { apikey: sbAnon(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: em }),
+  });
+  if (!r.ok) {
+    const text = await r.text();
+    // GoTrue returns 200 for unknown addresses (no enumeration). A 429
+    // means this address hit the email rate limit — surface it honestly so
+    // the UI can say "wait and try again" instead of "check your inbox".
+    if (r.status === 429 || /over_email_send_rate_limit|rate[_ ]limit/i.test(text)) {
+      throw authError('too many reset emails sent — wait a little and try again', 'RATE_LIMITED', { status: 429 });
+    }
+    console.error('[auth] recover failed:', r.status, text.slice(0, 160));
   }
   return { ok: true };
 }

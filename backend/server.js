@@ -224,6 +224,7 @@ app.post('/api/auth/recover', async (req, res) => {
     res.json({ ok: true });
   } catch (e) {
     if (e.code === 'BAD_EMAIL') return res.status(400).json({ error: e.message, code: e.code });
+    if (e.code === 'RATE_LIMITED') return res.status(429).json({ error: e.message, code: e.code });
     res.json({ ok: true });
   }
 });

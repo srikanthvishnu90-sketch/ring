@@ -1749,19 +1749,27 @@ function renderAuth(){
       if(!EMAIL_RE.test(m)){$('#fg-email').focus();return}
       pendingAcc={email:m};
       const go=$('#fg-go');go.disabled=true;go.textContent='Sending…';
+      const reenableFg=()=>{go.disabled=false;go.textContent='Send reset link'};
       try{
-        await fetch('/api/auth/recover',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:m})});
+        const r=await fetch('/api/auth/recover',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:m})});
+        const d=await r.json().catch(()=>({}));
+        if(r.status===429||d.code==='RATE_LIMITED'){
+          setErr('fg-email','Too many reset emails sent — wait a few minutes, then try again');
+          reenableFg();return;
+        }
+        if(!r.ok)throw new Error('send failed');
         authView='forgotsent';renderAuth();
       }catch(err){
         setErr('fg-email','Could not send the link — try again in a moment');
-        go.disabled=false;go.textContent='Send reset link';
+        reenableFg();
       }
     };setTimeout(()=>$('#fg-email').focus(),50)}
   const fr=$('#fg-resend');
   if(fr)fr.onclick=async ()=>{
     try{
-      await fetch('/api/auth/recover',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:pendingAcc&&pendingAcc.email})});
-      toast('New link sent');
+      const r=await fetch('/api/auth/recover',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:pendingAcc&&pendingAcc.email})});
+      const d=await r.json().catch(()=>({}));
+      toast(r.status===429||d.code==='RATE_LIMITED'?'Wait a few minutes before resending':'New link sent');
     }catch(e){toast('Could not resend — try again')}
   };
   /* Set the new password with the token from the reset link. */
@@ -1778,8 +1786,8 @@ function renderAuth(){
         if(!r.ok)throw new Error(d.code||'reset failed');
         recoveryToken=null;
         try{history.replaceState(null,'',location.pathname)}catch(e2){}
-        authView='login';renderAuth();
-        toast('Password updated — log in with your new password');
+        if(S.account){hideAuth();toast('Password updated')}
+        else{authView='login';renderAuth();toast('Password updated — log in with your new password')}
       }catch(err){
         setErr('rs-pass',err.message==='BAD_TOKEN'?'This reset link is invalid or expired — request a new one':'Could not update — try again in a moment');
         go.disabled=false;go.textContent='Update password';
@@ -1891,7 +1899,8 @@ handleAuthCallback();
 go('home');
 const splash=$('#splash');
 const endSplash=()=>{if(splash.classList.contains('out'))return;splash.classList.add('out');setTimeout(()=>splash.remove(),460);
-  if(!S.account)showAuth(cameFromRecovery&&recoveryToken?'reset':'welcome');else if(!store.get('onboarded',false))startOnboarding()};
+  if(cameFromRecovery&&recoveryToken)showAuth('reset');
+  else if(!S.account)showAuth('welcome');else if(!store.get('onboarded',false))startOnboarding()};
 setTimeout(endSplash,1900);
 splash.addEventListener('click',endSplash);
 getSample();
