@@ -1627,12 +1627,33 @@ function renderAuth(){
         ${field('pw-email','Email','email','email')}
         ${field('pw-pass','Password','password','current-password')}
         <button class="btn btn-silver" type="submit" id="pw-go">Log in</button>
+      </form>
+      <p class="sub" style="text-align:center;margin:10px 0 0;font-size:13px"><button data-to="forgot" style="background:none;border:none;color:rgba(255,255,255,.72);text-decoration:underline;font:inherit;cursor:pointer;padding:0">Forgot password?</button></p></div>`,
+    forgot:()=>`<div class="onb-inner">${backBtn}
+      <h2>Reset password</h2>
+      <p class="lead">Enter your account email and we'll send you a reset link.</p>
+      <form id="fg-form" novalidate style="display:flex;flex-direction:column;gap:10px;margin:0">
+        ${field('fg-email','Email','email','email')}
+        <button class="btn btn-silver" type="submit" id="fg-go">Send reset link</button>
+      </form></div>`,
+    forgotsent:()=>`<div class="onb-inner">${backBtn}
+      <h2>Check your inbox</h2>
+      <p class="lead">We sent a password reset link to <span style="color:#fff">${esc(pendingAcc?pendingAcc.email:'your email')}</span>. Tap it on this device to choose a new password.</p>
+      <div style="flex-grow:1"></div>
+      <div class="onb-foot"><button class="btn btn-ghost" id="fg-resend">Resend link</button></div></div>`,
+    reset:()=>`<div class="onb-inner">${backBtn}
+      <h2>Choose a new password</h2>
+      <p class="lead">Enter a new password for your account.</p>
+      <form id="rs-form" novalidate style="display:flex;flex-direction:column;gap:10px;margin:0">
+        ${field('rs-pass','New password (8+ characters)','password','new-password')}
+        ${field('rs-pass2','Confirm new password','password','new-password')}
+        <button class="btn btn-silver" type="submit" id="rs-go">Update password</button>
       </form></div>`,
   };
   el.innerHTML=V[authView]();
   el.scrollTop=0;
   el.querySelectorAll('[data-to]').forEach(b=>b.onclick=()=>{authView=b.dataset.to;renderAuth()});
-  const back=$('#au-back');if(back)back.onclick=()=>{authView=authView==='sent'?'magic':'welcome';renderAuth()};
+  const back=$('#au-back');if(back)back.onclick=()=>{authView=authView==='sent'?'magic':authView==='forgot'?'login':authView==='forgotsent'?'forgot':'welcome';renderAuth()};
   const setErr=(id,m)=>{const e=$('#'+id+'-err');if(e)e.textContent=m||'';const i=$('#'+id);if(i)i.setAttribute('aria-invalid',m?'true':'false')};
   const ml=$('#ml-form');
   if(ml){ml.onsubmit=async e=>{e.preventDefault();
@@ -1720,6 +1741,50 @@ function renderAuth(){
         go.disabled=false;go.textContent='Log in';
       }
     };setTimeout(()=>$('#pw-email').focus(),50)}
+  /* Forgot password: request a reset link. */
+  const fg=$('#fg-form');
+  if(fg){fg.onsubmit=async e=>{e.preventDefault();
+      const m=$('#fg-email').value.trim();
+      setErr('fg-email',EMAIL_RE.test(m)?'':'Enter a valid email');
+      if(!EMAIL_RE.test(m)){$('#fg-email').focus();return}
+      pendingAcc={email:m};
+      const go=$('#fg-go');go.disabled=true;go.textContent='Sending…';
+      try{
+        await fetch('/api/auth/recover',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:m})});
+        authView='forgotsent';renderAuth();
+      }catch(err){
+        setErr('fg-email','Could not send the link — try again in a moment');
+        go.disabled=false;go.textContent='Send reset link';
+      }
+    };setTimeout(()=>$('#fg-email').focus(),50)}
+  const fr=$('#fg-resend');
+  if(fr)fr.onclick=async ()=>{
+    try{
+      await fetch('/api/auth/recover',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:pendingAcc&&pendingAcc.email})});
+      toast('New link sent');
+    }catch(e){toast('Could not resend — try again')}
+  };
+  /* Set the new password with the token from the reset link. */
+  const rs=$('#rs-form');
+  if(rs){rs.onsubmit=async e=>{e.preventDefault();
+      const p1=$('#rs-pass').value,p2=$('#rs-pass2').value;
+      setErr('rs-pass',p1.length>=8?'':'Use at least 8 characters');
+      setErr('rs-pass2',p1===p2&&p2?'':'Passwords do not match');
+      if(p1.length<8||p1!==p2){(p1.length<8?$('#rs-pass'):$('#rs-pass2')).focus();return}
+      const go=$('#rs-go');go.disabled=true;go.textContent='Updating…';
+      try{
+        const r=await fetch('/api/auth/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:recoveryToken&&recoveryToken.token,isHash:!!(recoveryToken&&recoveryToken.isHash),password:p1})});
+        const d=await r.json().catch(()=>({}));
+        if(!r.ok)throw new Error(d.code||'reset failed');
+        recoveryToken=null;
+        try{history.replaceState(null,'',location.pathname)}catch(e2){}
+        authView='login';renderAuth();
+        toast('Password updated — log in with your new password');
+      }catch(err){
+        setErr('rs-pass',err.message==='BAD_TOKEN'?'This reset link is invalid or expired — request a new one':'Could not update — try again in a moment');
+        go.disabled=false;go.textContent='Update password';
+      }
+    };setTimeout(()=>$('#rs-pass').focus(),50)}
 }
 function resetDeviceForNewAccount(){
   // Signup starts a pristine device slate: no previous account's chats,
@@ -1732,6 +1797,20 @@ function finishAuth(acc,isNew){
   hideAuth();
   if(isNew){resetDeviceForNewAccount();startOnboarding()}
   else{store.set('onboarded',true);go('home');toast('Welcome back')}
+}
+/* Password-recovery callback: the reset link returns to /?recovery=1 carrying
+   a single-use token — PKCE (?token_hash=…&type=recovery) or implicit
+   (#access_token=…&type=recovery). Stash it and route to the reset view. */
+let recoveryToken=null;
+function handleRecoveryCallback(){
+  const q=new URLSearchParams(location.search||''),h=new URLSearchParams((location.hash||'').replace(/^#/,''));
+  const isRec=q.get('type')==='recovery'||h.get('type')==='recovery'||q.get('recovery')==='1';
+  if(!isRec)return false;
+  const acc=h.get('access_token'),tok=acc||h.get('token_hash')||q.get('token_hash');
+  if(!tok)return false;
+  try{history.replaceState(null,'',location.pathname)}catch(e){}
+  recoveryToken={token:tok,isHash:!acc};
+  return true;
 }
 /* Magic-link callback: Supabase drops the session in the URL hash. */
 function handleAuthCallback(){
@@ -1807,11 +1886,12 @@ paintIcons();
 fitDevice();tickClock();setInterval(tickClock,30000);
 document.documentElement.dataset.theme=S.theme;
 setupMic();
+const cameFromRecovery=handleRecoveryCallback();
 handleAuthCallback();
 go('home');
 const splash=$('#splash');
 const endSplash=()=>{if(splash.classList.contains('out'))return;splash.classList.add('out');setTimeout(()=>splash.remove(),460);
-  if(!S.account)showAuth('welcome');else if(!store.get('onboarded',false))startOnboarding()};
+  if(!S.account)showAuth(cameFromRecovery&&recoveryToken?'reset':'welcome');else if(!store.get('onboarded',false))startOnboarding()};
 setTimeout(endSplash,1900);
 splash.addEventListener('click',endSplash);
 getSample();

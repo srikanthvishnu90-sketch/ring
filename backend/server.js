@@ -34,7 +34,7 @@ const { TOOLS, runAgentTurn, runAgentTurnStream, llmConfigured } = require('./li
 const approvals = require('./lib/approvals');
 const threads = require('./lib/threads');
 const memory = require('./lib/memory');
-const { sendMagicLink, signInWithPassword, signUpWithPassword, requireUser, optionalUser, validateToken, bearerToken } = require('./lib/auth');
+const { sendMagicLink, signInWithPassword, signUpWithPassword, sendPasswordRecovery, resetPasswordWithRecovery, requireUser, optionalUser, validateToken, bearerToken } = require('./lib/auth');
 const { issueState, verifyState, COOKIE_NAME } = require('./lib/oauth_state');
 const cookie = require('cookie');
 const { processVoice, processVoiceStream } = require('./lib/voice');
@@ -213,6 +213,31 @@ app.post('/api/auth/password', async (req, res) => {
 
 app.get('/api/auth/me', requireUser, (req, res) => {
   res.json({ id: req.userId, email: req.userEmail });
+});
+
+// --- Auth: forgot password -------------------------------------------------
+// POST /api/auth/recover {email} → emails a reset link. Always returns ok so
+// the response never reveals whether the address is registered.
+app.post('/api/auth/recover', async (req, res) => {
+  try {
+    await sendPasswordRecovery(req.body?.email);
+    res.json({ ok: true });
+  } catch (e) {
+    if (e.code === 'BAD_EMAIL') return res.status(400).json({ error: e.message, code: e.code });
+    res.json({ ok: true });
+  }
+});
+
+// POST /api/auth/reset-password {token, isHash, password} → sets the new
+// password using the single-use token from the reset link.
+app.post('/api/auth/reset-password', async (req, res) => {
+  try {
+    await resetPasswordWithRecovery(req.body?.token, !!req.body?.isHash, req.body?.password);
+    res.json({ ok: true });
+  } catch (e) {
+    const bad = e.code === 'BAD_PASSWORD' || e.code === 'BAD_TOKEN';
+    res.status(bad ? 400 : 500).json({ error: e.message, code: e.code });
+  }
 });
 
 // --- Memories ------------------------------------------------------------

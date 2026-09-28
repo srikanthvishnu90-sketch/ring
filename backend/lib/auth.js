@@ -112,6 +112,65 @@ async function signUpWithPassword(email, password, name) {
   const sess = await signInWithPassword(em, password);
   return { ...sess, user: { id: created.id, email: created.email } };
 }
+// Password recovery, step 1: email a reset link. Always resolves ok — the
+// response never reveals whether the address is registered (GoTrue itself
+// returns 200 for unknown emails). The link returns to the app with a
+// single-use recovery token.
+async function sendPasswordRecovery(email) {
+  ensureConfigured();
+  const em = typeof email === 'string' ? email.trim().toLowerCase() : '';
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) {
+    throw authError('a valid email is required', 'BAD_EMAIL');
+  }
+  const redirect = `${appUrl()}/?recovery=1`;
+  try {
+    const r = await fetch(`${sbUrl()}/auth/v1/recover?redirect_to=${encodeURIComponent(redirect)}`, {
+      method: 'POST',
+      headers: { apikey: sbAnon(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: em }),
+    });
+    if (!r.ok) console.error('[auth] recover failed:', r.status, (await r.text()).slice(0, 160));
+  } catch (e) {
+    console.error('[auth] recover error:', e.message);
+  }
+  return { ok: true };
+}
+
+// Password recovery, step 2: set the new password with the recovery token.
+// Accepts the access_token from an implicit recovery link, or the token_hash
+// from a PKCE recovery link (verified server-side first, never trusted raw).
+async function resetPasswordWithRecovery(token, isHash, newPassword) {
+  ensureConfigured();
+  if (!newPassword || typeof newPassword !== 'string' || newPassword.length < 8) {
+    throw authError('password must be at least 8 characters', 'BAD_PASSWORD');
+  }
+  if (!token || typeof token !== 'string') {
+    throw authError('this reset link is invalid or expired — request a new one', 'BAD_TOKEN');
+  }
+  let accessToken = token;
+  if (isHash) {
+    const v = await fetch(`${sbUrl()}/auth/v1/verify`, {
+      method: 'POST',
+      headers: { apikey: sbAnon(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token_hash: token, type: 'recovery' }),
+    });
+    const vd = await v.json().catch(() => ({}));
+    if (!v.ok || !vd.access_token) {
+      throw authError('this reset link is invalid or expired — request a new one', 'BAD_TOKEN');
+    }
+    accessToken = vd.access_token;
+  }
+  const r = await fetch(`${sbUrl()}/auth/v1/user`, {
+    method: 'PUT',
+    headers: { apikey: sbAnon(), Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: newPassword }),
+  });
+  if (!r.ok) {
+    throw authError('this reset link is invalid or expired — request a new one', 'BAD_TOKEN', { status: r.status });
+  }
+  return { ok: true };
+}
+
 async function validateToken(jwt) {
   ensureConfigured();
   const r = await fetch(`${sbUrl()}/auth/v1/user`, {
@@ -173,4 +232,4 @@ async function optionalUser(req, res, next) {
   next();
 }
 
-module.exports = { sendMagicLink, signInWithPassword, signUpWithPassword, validateToken, bearerToken, requireUser, optionalUser };
+module.exports = { sendMagicLink, signInWithPassword, signUpWithPassword, sendPasswordRecovery, resetPasswordWithRecovery, validateToken, bearerToken, requireUser, optionalUser };
