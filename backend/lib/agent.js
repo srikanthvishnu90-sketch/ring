@@ -212,6 +212,33 @@ Use their first name now and then, naturally — not in every message.
 Reply in the same language they write in.
 If they refer to something from earlier in this chat, use the recent conversation below for context.`;
 
+// Per-turn date/timezone context. The model has no clock, so without this
+// relative dates ("tomorrow") default to wrong days and bare times to UTC.
+// Vishnu's standing timezone is Europe/Rome.
+function tzOffsetISO(tz, date) {
+  const dtf = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+  });
+  const parts = Object.fromEntries(dtf.formatToParts(date).map((p) => [p.type, p.value]));
+  const asUTC = Date.UTC(+parts.year, +parts.month - 1, +parts.day, +parts.hour, +parts.minute, +parts.second);
+  const diffMin = Math.round((asUTC - date.getTime()) / 60000);
+  const a = Math.abs(diffMin);
+  return `${diffMin >= 0 ? '+' : '-'}${String(Math.floor(a / 60)).padStart(2, '0')}:${String(a % 60).padStart(2, '0')}`;
+}
+function withTimeContext(base) {
+  const tz = 'Europe/Rome';
+  const now = new Date();
+  const dateStr = new Intl.DateTimeFormat('en-GB', {
+    timeZone: tz, weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+  }).format(now);
+  const timeStr = new Intl.DateTimeFormat('en-GB', {
+    timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false,
+  }).format(now);
+  const offset = tzOffsetISO(tz, now);
+  return `${base}\n\nCurrent date/time: ${dateStr}, ${timeStr} in the user's timezone (${tz}, UTC${offset}). Interpret relative dates ("today", "tomorrow", "next Friday") and bare times in this timezone, and pass event start/end as ISO datetimes with this numeric offset (e.g. 2026-09-29T10:00:00${offset}) — never bare UTC "Z" times.`;
+}
+
 const TG_DEMO_SUFFIX = `
 
 DEMO MODE: every tool is simulated sample data — nothing touches real accounts. Never claim a real email was sent, event created, or action happened. Do NOT announce "demo mode" unprompted; only mention signing into the Ring app when they ask you to do something real.`;
@@ -521,7 +548,7 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
 
   const provider = env('LLM_PROVIDER', 'openai');
   const call = provider === 'anthropic' ? callAnthropicStream : callOpenAIStream;
-  const streamOpts = { system: SYSTEM_PROMPT + (voice ? VOICE_STYLE : ''), ...(maxTokens || voice ? { maxTokens: maxTokens || 150 } : {}) };
+  const streamOpts = { system: withTimeContext(SYSTEM_PROMPT + (voice ? VOICE_STYLE : '')), ...(maxTokens || voice ? { maxTokens: maxTokens || 150 } : {}) };
   const first = await call(prompt, onToken, tools, streamOpts);
 
   const toolsUsed = [];
@@ -583,7 +610,7 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
   const tools = demo ? DEMO_TOOLS : TOOLS;
   if (!llmConfigured()) return { ...cannedReply(text), mode: demo ? 'canned-demo' : 'canned' };
 
-  const system = SYSTEM_PROMPT + (tg ? TG_STYLE(tg.name) : '') + (voice ? VOICE_STYLE : '');
+  const system = withTimeContext(SYSTEM_PROMPT + (tg ? TG_STYLE(tg.name) : '') + (voice ? VOICE_STYLE : ''));
   const memBlock = demo ? '' : await memory.contextBlock(userId, text).catch(() => '');
   const histBlock = tg ? tgHistoryBlock(tg.history) : '';
   const prompt = (memBlock ? `${memBlock}\n\n` : '')
