@@ -15,7 +15,7 @@ const threadId = process.argv[3] || ('bench-' + Date.now());
   console.log(JSON.stringify({
     threadId,
     mode: r.mode,
-    toolsUsed: (r.toolsUsed || []).map((t) => t.name),
+    toolsUsed: (r.toolsUsed || []).map((t) => ({ name: t.name, args: t.args })),
     reply: r.text,
   }));
 })().catch((e) => { console.error('ERROR:', e.message); process.exit(1); });
