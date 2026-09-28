@@ -277,7 +277,7 @@ function demoResult(name, args) {
     case 'dining_links':
       return { demo: true, opentable: 'https://www.opentable.com/?demo=1', note: 'Demo mode: simulated deep links.' };
     case 'gmail_triage': return { demo: true, counts: { urgent: 1, 'needs-reply': 0, fyi: 0 }, messages: [{ id: 'demo-msg-1', subject: 'Demo: payment failed', from: 'billing@example.com', category: 'urgent', reason: 'Demo mode: simulated. Sign in to triage your real inbox.' }] };
-    case 'gmail_thread': return { demo: true, threadId: a.threadId || 'demo-t1', messageCount: 2, participants: ['demo@example.com'], summary: 'Demo mode: simulated thread. Sign in for the real thing.', actionItems: [] };
+    case 'gmail_thread': return { demo: true, threadId: a.threadId || 'demo-t1', messageCount: 2, participants: ['demo@example.com'], firstDate: new Date().toISOString(), lastDate: new Date().toISOString(), summary: 'Demo mode: simulated thread. Sign in for the real thing.', actionItems: [] };
     case 'gmail_reply': return { demo: true, sent: false, note: 'Demo mode: no reply was sent. Sign in to reply for real.' };
     case 'gmail_forward': return { demo: true, sent: false, note: 'Demo mode: nothing was forwarded. Sign in to forward for real.' };
     case 'gmail_draft': return { demo: true, created: false, note: 'Demo mode: no draft was saved. Sign in to draft for real.' };
