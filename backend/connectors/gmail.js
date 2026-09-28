@@ -30,30 +30,50 @@ function guard() {
 const header = (m, name) =>
   (m.payload?.headers || []).find((h) => h.name.toLowerCase() === name.toLowerCase())?.value || '';
 
-async function searchMessages({ userId, query, maxResults = 5 }) {
+async function searchMessages({ userId, query, maxResults = 30 }) {
   guard();
-  const list = await gfetch(
-    userId,
-    `https://gmail.googleapis.com/gmail/v1/users/me/messages?q=${encodeURIComponent(query)}&maxResults=${maxResults}`
-  );
-  const full = await Promise.all(
-    (list.messages || []).map((m) =>
-      gfetch(
-        userId,
-        `https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`
+  // maxResults counts THREADS, not messages: page through matches
+  // (newest-first) until we have that many unique threads, so a broad
+  // query's older threads are never silently cut off by a message cap.
+  const seen = new Set();
+  const threads = [];
+  let pageToken = null;
+  let fetchedMsgs = 0;
+  const MSG_CAP = 300;
+  do {
+    let url =
+      `https://gmail.googleapis.com/gmail/v1/users/me/messages` +
+      `?q=${encodeURIComponent(query)}&maxResults=${Math.min(100, MSG_CAP - fetchedMsgs)}`;
+    if (pageToken) url += `&pageToken=${encodeURIComponent(pageToken)}`;
+    const list = await gfetch(userId, url);
+    const batch = list.messages || [];
+    fetchedMsgs += batch.length;
+    const full = await Promise.all(
+      batch.map((m) =>
+        gfetch(
+          userId,
+          `https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`
+        )
       )
-    )
-  );
-  return {
-    messages: full.map((m) => ({
-      id: m.id,
-      threadId: m.threadId,
-      subject: header(m, 'Subject'),
-      from: header(m, 'From'),
-      date: header(m, 'Date'),
-      snippet: m.snippet,
-    })),
-  };
+    );
+    // Collapse to one entry per thread (matches arrive newest-first, so
+    // the first message seen per thread is its latest).
+    for (const m of full) {
+      if (seen.has(m.threadId)) continue;
+      seen.add(m.threadId);
+      threads.push({
+        threadId: m.threadId,
+        subject: header(m, 'Subject'),
+        from: header(m, 'From'),
+        to: header(m, 'To'),
+        date: header(m, 'Date'),
+        snippet: (m.snippet || '').slice(0, 80),
+      });
+      if (threads.length >= maxResults) break;
+    }
+    pageToken = list.nextPageToken;
+  } while (pageToken && threads.length < maxResults && fetchedMsgs < MSG_CAP);
+  return { threads, hasMore: !!pageToken && threads.length >= maxResults };
 }
 
 // Walk a Gmail payload tree and return the first text/plain body (base64url).
@@ -155,7 +175,7 @@ async function triageMessages({ userId, maxResults = 25 }) {
     (list.messages || []).map((m) =>
       gfetch(
         userId,
-        `https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`
+        `https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Date`
       )
     )
   );

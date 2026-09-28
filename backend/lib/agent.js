@@ -23,12 +23,12 @@ const _RAW_TOOLS = [
   {
     name: 'gmail_search', risk: 'low', fn: gmail.searchMessages,
     schema: { type: 'object', properties: { query: { type: 'string' }, maxResults: { type: 'number' } }, required: ['query'] },
-    describe: 'Search the user\'s email. Returns messages newest-first with threadId; pass a high maxResults (e.g. 30) when the question needs full coverage of a topic.',
+    describe: 'Search the user\'s email. Returns unique THREADS newest-first (one entry per thread: threadId, subject, from, date, snippet) — read candidates with gmail_thread. Pass a high maxResults (e.g. 30) when the question needs full coverage of a topic.',
   },
   {
     name: 'gmail_read', risk: 'low', fn: gmail.readMessage,
     schema: { type: 'object', properties: { id: { type: 'string', description: 'Message id from gmail_search' } }, required: ['id'] },
-    describe: 'Read the full body of an email',
+    describe: 'Read the full body of a single email by message id',
   },
   {
     name: 'gmail_send', risk: 'high', fn: gmail.sendMessage,
@@ -571,7 +571,7 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
       if (tool.risk === 'low') {
         try {
           const out = await tool.fn({ userId, ...tc.args });
-          results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 6000)}`);
+          results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 10000)}`);
           logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
         } catch (e) {
           results.push(`${tc.name} → ERROR ${e.code || ''}: ${e.message}`.slice(0, 400));
@@ -657,7 +657,7 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
       if (tool.risk === 'low') {
         try {
           const out = await tool.fn({ userId, ...tc.args });
-          results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 6000)}`);
+          results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 10000)}`);
           // Audit (fire-and-forget; logToolRun never throws).
           logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
         } catch (e) {
