@@ -718,7 +718,7 @@ function googleAuthUrl(state) {
     client_id: env('GOOGLE_CLIENT_ID'),
     redirect_uri: env('GOOGLE_REDIRECT_URI'),
     response_type: 'code',
-    scope: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/calendar.events',
+    scope: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/calendar.events',
     access_type: 'offline',
     prompt: 'consent',
     state,

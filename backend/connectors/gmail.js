@@ -18,7 +18,7 @@ function status() {
     // GET /api/oauth/google/status.
     connected: false,
     perUser: '/api/oauth/google/status',
-    scopes: ['gmail.readonly', 'gmail.send'],
+    scopes: ['gmail.readonly', 'gmail.send', 'gmail.modify'],
   };
 }
 
