@@ -341,6 +341,7 @@ async function findReceipts({ userId, days = 30 }) {
       id: m.id,
       merchant,
       amount,
+      order: extractReceiptOrderNo(m),
       date: header(m, 'Date'),
       subject: header(m, 'Subject'),
     };
@@ -352,6 +353,18 @@ async function findReceipts({ userId, days = 30 }) {
 // the message body, fall back to the first $X.XX anywhere; treat $0 as null
 // (promo "$0 delivery" copy is not a purchase amount).
 const TOTAL_RE = /(?:grand total|order total|total|amount (?:due|charged)|charged|balance)\D{0,40}(\$[\d,]+\.\d{2})/i;
+// Order/confirmation number: shipping/confirmation emails for one order share
+// it, so spending totals can dedupe them across days.
+const ORDER_NO_RE = /(?:order|confirm(?:ation|ed)?|receipt)[\s#:]*([A-Z0-9][A-Z0-9-]{4,39})/i;
+function extractReceiptOrderNo(m) {
+  let bodyText = '';
+  try {
+    const raw = findTextBody(m.payload);
+    if (raw) bodyText = Buffer.from(raw, 'base64url').toString('utf8');
+  } catch { /* subject only */ }
+  const mt = (`${header(m, 'Subject')}\n${bodyText}`).match(ORDER_NO_RE);
+  return mt ? mt[1] : null;
+}
 function extractReceiptAmount(m) {
   let bodyText = '';
   try {

@@ -11,7 +11,7 @@
 //
 // All parsing helpers are pure and exported under `pure` for unit tests
 // (no grant, no network).
-const { searchMessages, readMessage, sendMessage } = require('./gmail');
+const { searchMessages, readMessage, sendMessage, findReceipts } = require('./gmail');
 const { listEvents } = require('./calendar');
 const { gfetch } = require('../lib/google');
 const memory = require('../lib/memory');
@@ -289,50 +289,92 @@ async function followup({ userId, days = 7 }) {
 }
 
 async function subscriptions({ userId }) {
-  const { messages: hits = [] } = await searchMessages({
-    userId,
-    query: 'subject:(receipt OR invoice OR "payment confirmation" OR "subscription renewed" OR billing) newer_than:180d',
-    maxResults: 20,
-  });
+  // findReceipts fetches full bodies and extracts totals from the message
+  // body; metadata-only subject/snippet parsing never sees receipt amounts.
+  const { receipts = [] } = await findReceipts({ userId, days: 180 });
   const groups = new Map();
-  for (const h of hits) {
-    const r = parseReceipt(h);
-    if (r.amount == null) continue;
-    const key = `${r.merchant.toLowerCase()}|${r.amount.toFixed(2)}`;
-    if (!groups.has(key)) groups.set(key, { merchant: r.merchant, amount: r.amount, currency: r.currency, dates: [] });
+  const seen = new Set(); // same order sent twice (confirmation + shipping) is one charge
+  for (const r of receipts) {
+    if (isPromoReceipt(r)) continue;
+    const num = receiptAmount(r);
+    if (num == null) continue;
+    const dk = dedupeKey(r, num);
+    if (seen.has(dk)) continue;
+    seen.add(dk);
+    const merchant = (r.merchant || 'Unknown').trim();
+    const key = `${merchant.toLowerCase()}|${num.toFixed(2)}`;
+    if (!groups.has(key)) groups.set(key, { merchant, amount: num, currency: 'USD', dates: [] });
     if (r.date) groups.get(key).dates.push(r.date);
   }
-  const subs = [...groups.values()].map((g) => ({
-    merchant: g.merchant,
-    amount: g.amount,
-    currency: g.currency,
-    occurrences: g.dates.length,
-    cadence: detectCadence(g.dates),
-    lastSeen: g.dates.length ? g.dates.slice().sort().reverse()[0] : null,
-  }));
+  const subs = [...groups.values()]
+    .filter((g) => g.dates.length >= 2) // recurring only: one-off purchases are not subscriptions
+    .map((g) => ({
+      merchant: g.merchant,
+      amount: g.amount,
+      currency: g.currency,
+      occurrences: g.dates.length,
+      cadence: detectCadence(g.dates),
+      lastSeen: g.dates.length ? g.dates.slice().sort().reverse()[0] : null,
+    }));
   subs.sort((a, b) => b.occurrences - a.occurrences || (b.amount || 0) - (a.amount || 0));
   return { subscriptions: subs };
 }
 
+// Receipt amount: extractReceiptAmount returns a string like "$12.34" or null.
+function receiptAmount(r) {
+  const num = typeof r.amount === 'string' ? parseFloat(r.amount.replace(/[$,]/g, '')) : r.amount;
+  return num == null || !Number.isFinite(num) || num <= 0 ? null : num;
+}
+
+// Marketing emails that mention dollar amounts ("40% off", "$20 off your
+// next order") are not purchases — exclude by subject signals.
+const PROMO_SUBJECT_RE = /promo|coupon|% ?off|off your next|\u{1F389}|deal|sale/iu;
+function isPromoReceipt(r) { return PROMO_SUBJECT_RE.test(r.subject || ''); }
+
+// findReceipts extracts the order/confirmation number from subject+body, so
+// confirmation + shipping emails for one order are counted once even when
+// sent on different days.
+function normSubject(r) {
+  return (r.subject || '').replace(/^(?:(?:fwd|re)\s*:\s*)+/i, '').trim().toLowerCase();
+}
+function dedupeKey(r, num) {
+  const ono = r.order;
+  if (ono) return `order:${String(ono).toLowerCase()}|${num.toFixed(2)}`;
+  let day = '';
+  try { day = new Date(r.date).toISOString().slice(0, 10); } catch { day = r.date || ''; }
+  // Subject-based: catches forwarded copies of the same confirmation
+  // ("Fwd: Confirmation: ..." vs the original) even when the From differs.
+  return `sub:${normSubject(r)}|${num.toFixed(2)}|${day}`;
+}
+
 async function spending({ userId, days = 30 }) {
   const d = Math.min(Math.max(days | 0 || 30, 1), 365);
-  const { messages: hits = [] } = await searchMessages({
-    userId,
-    query: `subject:(receipt OR invoice OR "payment confirmation" OR "your order" OR "transaction") newer_than:${d}d`,
-    maxResults: 20,
-  });
+  // Full-body receipt scan (findReceipts): amounts live in message bodies,
+  // never in metadata subjects/snippets.
+  const { receipts = [] } = await findReceipts({ userId, days: d });
+  // Process originals before forwarded copies so dedupe keeps the real
+  // merchant name ("Life Time Lake Zurich", not "Vishnu Srikanth").
+  const ordered = [...receipts].sort(
+    (a, b) => (/^\s*(fwd|re)\s*:/i.test(a.subject || '') ? 1 : 0) - (/^\s*(fwd|re)\s*:/i.test(b.subject || '') ? 1 : 0)
+  );
   const byMerchant = new Map();
   const byCategory = new Map();
+  const seen = new Set(); // dedupe confirmation/shipping/forwarded copies of one order
   let total = 0;
   let count = 0;
-  for (const h of hits) {
-    const r = parseReceipt(h);
-    if (r.amount == null) continue;
+  for (const r of ordered) {
+    if (isPromoReceipt(r)) continue;
+    const num = receiptAmount(r);
+    if (num == null) continue;
+    const merchant = (r.merchant || 'Unknown').trim();
+    const key = dedupeKey(r, num);
+    if (seen.has(key)) continue;
+    seen.add(key);
     count++;
-    total += r.amount;
-    byMerchant.set(r.merchant, (byMerchant.get(r.merchant) || 0) + r.amount);
-    const cat = categorizeMerchant(r.merchant);
-    byCategory.set(cat, (byCategory.get(cat) || 0) + r.amount);
+    total += num;
+    byMerchant.set(merchant, (byMerchant.get(merchant) || 0) + num);
+    const cat = categorizeMerchant(merchant);
+    byCategory.set(cat, (byCategory.get(cat) || 0) + num);
   }
   const sortDesc = (m) => [...m.entries()].sort((a, b) => b[1] - a[1]).map(([k, v]) => ({ name: k, total: Math.round(v * 100) / 100 }));
   return {
