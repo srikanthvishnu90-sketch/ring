@@ -593,6 +593,17 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
     if (follow.text) finalText = roundBase + follow.text;
     pending = follow.toolCalls || [];
   }
+  // Round cap hit mid-research: one final tool-free call so the user gets a
+  // synthesized answer instead of a stale/empty reply.
+  if (pending.length) {
+    const wrap = await call(
+      `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nYou have reached your research limit. Write your best complete answer from the results above. If coverage is partial, say exactly what you checked and what you didn't get to — never present a partial count as the whole.`,
+      (tok) => { if (onToken) onToken(tok); },
+      [],
+      streamOpts
+    );
+    if (wrap.text) finalText = finalText + wrap.text;
+  }
   return { text: finalText, toolsUsed, mode: 'live' };
 }
 function cannedReply(text) {
@@ -665,6 +676,16 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
     );
     if (follow.text) finalText = follow.text;
     pending = follow.toolCalls || [];
+  }
+  // If the round cap hit mid-research, never return an empty or stale reply:
+  // one final tool-free call synthesizes everything gathered so far.
+  if (pending.length) {
+    const wrap = await call(
+      `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nYou have reached your research limit. Write your best complete answer from the results above. If coverage is partial, say exactly what you checked and what you didn't get to — never present a partial count as the whole.`,
+      [],
+      callOpts
+    );
+    if (wrap.text) finalText = wrap.text;
   }
   return { text: finalText, toolsUsed, mode: 'live' };
 }
