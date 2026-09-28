@@ -125,9 +125,6 @@ a{color:inherit}
 .pill-soon{font-size:12px;font-weight:600;color:var(--muted);padding:4px 10px;border-radius:12px;background:rgba(201,204,209,.14);flex-shrink:0}
 .pill-amber{font-size:12px;font-weight:600;color:#E8A33D;padding:4px 10px;border-radius:12px;background:rgba(232,163,61,.14);flex-shrink:0}
 .pill-live{font-size:12px;font-weight:600;color:var(--ink);padding:4px 10px;border-radius:12px;background:var(--silver-grad);flex-shrink:0}
-.cap-head{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:0 2px 8px}
-.cap-row{background:none;border:none;color:inherit;cursor:pointer;font:inherit}
-.cap-row:active{background:rgba(201,204,209,.08)}
 .badge-silver{font-size:12px;font-weight:600;color:var(--ink);padding:4px 10px;border-radius:12px;background:var(--silver-grad);align-self:flex-start}
 
 .list-row{display:flex;align-items:center;gap:12px;padding:12px 14px;text-align:left;width:100%;min-height:60px}
@@ -558,7 +555,6 @@ function renderHome(){
 
   ${signedIn()?homeConnectorsHTML():''}
 
-  ${capSectionHTML()}
 
   <section class="card-brown" aria-label="Next up" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px">
     <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
@@ -1208,78 +1204,6 @@ function homeConnectorsHTML(){
     :`<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Connect your Google account</b><span>One tap unlocks Gmail + Calendar for your agent.</span></div><button class="btn btn-silver btn-sm" style="width:auto;padding:0 18px" data-gconnect>Connect</button></div>`;
   const rows=CONN_soon().map(connRowHTML).join('');
   return `<section aria-label="Connectors" style="display:flex;flex-direction:column;gap:10px"><div class="row-between"><h2 class="h2">Connectors</h2></div>${g}<div class="card" style="overflow:hidden">${rows}</div></section>`;
-}
-/* ============ What Ring can do: the 50 capabilities ============ */
-/* gate: google = unlocks when /api/oauth/google/status says connected (GCONN);
-   live = works now; setup = needs a key Vishnu must add. */
-/* rows: [group, name, one-line description, gate, chat prompt] */
-const CAPS=[
-['Email','Search email','Find any email instantly','google','Search my email for recent receipts'],
-['Email','Read emails','Read full emails','google','Read me my most recent email'],
-['Email','Inbox triage','Urgent, needs-reply, or FYI','google','Triage my inbox — what needs my reply today?'],
-['Email','Thread summaries','Summarize any thread','google','Summarize my most recent email thread'],
-['Email','Reply','Reply — you approve the exact text','google','Draft a reply to my most recent email for my approval'],
-['Email','Forward','Forward — you approve','google','Forward my most recent email to Mom for my approval'],
-['Email','Compose + send','Compose and send — you approve','google','Compose an email to the team about Friday for my approval'],
-['Email','Drafts','Save drafts','google','Save a draft email about dinner plans'],
-['Email','Delete','Delete emails','google','Delete the oldest email in my inbox'],
-['Email','Archive','Archive emails','google','Archive everything in my inbox from last week'],
-['Email','Mark read/unread','Mark emails read or unread','google','Mark my unread emails as read'],
-['Email','Star','Star or unstar emails','google','Show me my starred emails'],
-['Email','Receipts','Find receipts and orders','google','Find my recent receipts and orders'],
-['Email','Attachments','Find attachments','google','Find my recent email attachments'],
-['Calendar','See events',"What's on your calendar",'google',"What's on my calendar today?"],
-['Calendar','Create event','Create event — you confirm','google','Add a coffee meeting tomorrow at 3 PM — confirm with me first'],
-['Calendar','Reschedule','Reschedule — you confirm','google','Reschedule my next meeting to Thursday — confirm with me first'],
-['Calendar','Cancel event','Cancel event — you confirm','google','Cancel my next meeting — confirm with me first'],
-['Calendar','Free time','Find free time','google','Find free time on my calendar this week'],
-['Calendar','Conflicts','Check conflicts','google','Check my calendar for conflicts'],
-['Calendar','Morning briefing','Morning briefing','google','Give me my morning briefing'],
-['Calendar','Email invite → event','Turn an email invite into an event','google','Turn the latest email invite into a calendar event'],
-['Calendar','Reminders','Pre-event reminders','google','Remind me 15 minutes before my next event'],
-['Calendar','Week preview','Week preview','google','Show me a preview of this week'],
-['Inbox intel','Meeting prep','Meeting prep','google','Prep me for my next meeting'],
-['Inbox intel','Trip itineraries','Trip confirmations into an itinerary','google','Build an itinerary from my trip confirmation emails'],
-['Inbox intel','RSVP','RSVP from email — you approve','google','RSVP to the latest event invite — ask me before sending'],
-['Inbox intel','Follow-up radar','Follow-up radar','google','Show me my follow-up radar'],
-['Inbox intel','Subscriptions','Find subscriptions','google','Find my subscriptions from my email'],
-['Inbox intel','Spending recap','Spending recap','google','Give me a recap of my spending this month'],
-['Inbox intel','Find anyone','Find anyone from your inbox','google','Find my accountant in my inbox'],
-['Inbox intel','Deadline watcher','Deadline watcher','google','Watch my inbox for deadlines'],
-['Real-world outcomes','Book a table','Book a table — real confirmation','live','Book a table for two tonight'],
-['Real-world outcomes','Change booking','Change or cancel a booking','live','Change my restaurant booking to 8 PM'],
-['Real-world outcomes','Cancel subscriptions','Cancel subscriptions — real proof','live','Find and cancel my unused subscriptions'],
-['Real-world outcomes','Book a ride','Book a ride — you confirm','live','Book me a ride home — confirm with me first'],
-['Real-world outcomes',"Tonight's finder","Tonight's restaurant finder",'live','Find me a restaurant for tonight'],
-['Real-world outcomes','Log in + do tasks','Log into sites and do tasks — you approve','setup','Log into my gym account and check my membership — ask me first'],
-['Real-world outcomes','Fill web forms','Fill web forms — you approve','setup','Fill a web form for me — ask me first'],
-['Real-world outcomes','Order status','Order and delivery status','live',"What's the status of my orders?"],
-['Real-world outcomes','Price checks','Live price checks','live','Check the live price of a pair of AirPods for me'],
-['Real-world outcomes','Fix reservations','Fix messed-up reservations','live','Fix my restaurant reservation'],
-['Social + memory','Remember','Remember anything','live','Remember that my favorite coffee is a flat white'],
-['Social + memory','Recall','Recall everything','live','What do you remember about me?'],
-['Social + memory','Group replies','Real replies in group chats','live','Reply to the group chat'],
-['Social + memory','Plan with friends','Plan with friends: poll and lock','live','Start a plan with my friends for Saturday'],
-['Social + memory','Daily brief','Daily brief','live','Give me my daily brief'],
-['Social + memory','Draft messages','Draft messages — never sends','live','Draft a message to Sam for me'],
-['Social + memory','Learn routines','Learns your routines','live','What routines have you learned about me?'],
-['Social + memory','Smart nudges','Smart nudges','live','Nudge me about anything I should know today'],
-];
-const CAP_GROUPS=['Email','Calendar','Inbox intel','Real-world outcomes','Social + memory'];
-function capPill(gate){
-  if(gate==='google')return GCONN?'<span class="pill-sage">Connected</span>':'<span class="pill-soon">Locked</span>';
-  if(gate==='setup')return '<span class="pill-amber">Setup needed</span>';
-  return '<span class="pill-live">Live</span>';
-}
-function capSectionHTML(){
-  return `<section id="capabilities" aria-label="What Ring can do" style="display:flex;flex-direction:column;gap:14px">
-  <div class="row-between"><h2 class="h2">What Ring can do</h2></div>
-  ${CAP_GROUPS.map(g=>`
-  <div><div class="cap-head">${g}</div>
-  <div class="card" style="overflow:hidden">${CAPS.filter(c=>c[0]===g).map(c=>`
-    <button class="list-row cap-row" data-ask="${esc(c[4])}"><div class="rt"><b>${esc(c[1])}</b><span>${esc(c[2])}</span></div>${capPill(c[3])}</button>`).join('')}
-  </div></div>`).join('')}
-  </section>`;
 }
 
 function googleSetupBannerHTML(){
