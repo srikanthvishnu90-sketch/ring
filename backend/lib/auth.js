@@ -100,7 +100,7 @@ async function signUpWithPassword(email, password, name) {
   });
   if (!r.ok) {
     const text = await r.text();
-    if (/already registered|already exists|duplicate/i.test(text)) {
+    if (/already registered|already been registered|already exists|email_exists|duplicate/i.test(text)) {
       throw authError('an account with this email already exists — log in instead', 'EMAIL_EXISTS', { status: 409 });
     }
     if (r.status === 422 || r.status === 400) {
