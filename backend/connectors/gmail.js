@@ -44,13 +44,15 @@ async function searchMessages({ userId, query, maxResults = 5 }) {
       )
     )
   );
-  return full.map((m) => ({
-    id: m.id,
-    subject: header(m, 'Subject'),
-    from: header(m, 'From'),
-    date: header(m, 'Date'),
-    snippet: m.snippet,
-  }));
+  return {
+    messages: full.map((m) => ({
+      id: m.id,
+      subject: header(m, 'Subject'),
+      from: header(m, 'From'),
+      date: header(m, 'Date'),
+      snippet: m.snippet,
+    })),
+  };
 }
 
 // Walk a Gmail payload tree and return the first text/plain body (base64url).
@@ -327,7 +329,7 @@ async function findReceipts({ userId, days = 30 }) {
       )
     )
   );
-  return full.map((m) => {
+  const receipts = full.map((m) => {
     const from = header(m, 'From');
     const merchant = from.replace(/<[^>]*>/, '').replace(/"/g, '').trim() || from;
     const amount = (m.snippet || '').match(AMOUNT_RE);
@@ -339,6 +341,7 @@ async function findReceipts({ userId, days = 30 }) {
       subject: header(m, 'Subject'),
     };
   });
+  return { receipts };
 }
 
 // --- Attachments (14) --------------------------------------------------------
