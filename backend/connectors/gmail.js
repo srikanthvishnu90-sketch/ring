@@ -173,6 +173,7 @@ async function triageMessages({ userId, maxResults = 10 }) {
       from,
       date: header(m, 'Date'),
       unread: (m.labelIds || []).includes('UNREAD'),
+      snippet: (m.snippet || '').slice(0, 220),
       ...triageOne(m),
     });
     if (items.length >= maxResults) break;
