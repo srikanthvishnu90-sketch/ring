@@ -112,12 +112,14 @@ function triageOne(m) {
     const kw = (text.match(URGENT_RE) || [])[0];
     return { category: 'urgent', reason: `Matched "${kw}" in subject/snippet` };
   }
+  // Bulk/newsletter senders first: a promo subject with a rhetorical "?"
+  // must not outrank the sender signal and land in needs-reply.
+  if (FYI_RE.test(from) || FYI_RE.test(subject)) {
+    return { category: 'fyi', reason: 'Bulk/newsletter-style sender, no action implied' };
+  }
   if (REPLY_RE.test(text)) {
     const kw = (text.match(REPLY_RE) || [])[0];
     return { category: 'needs-reply', reason: `Asks for a response ("${kw}")` };
-  }
-  if (FYI_RE.test(from) || FYI_RE.test(subject)) {
-    return { category: 'fyi', reason: 'Bulk/newsletter-style sender, no action implied' };
   }
   return { category: 'fyi', reason: 'No urgency or reply request detected' };
 }
