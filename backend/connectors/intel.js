@@ -201,7 +201,7 @@ async function meetingPrep({ userId, eventId }) {
   const seen = new Set();
   const related = [];
   for (const q of queries) {
-    const hits = await searchMessages({ userId, query: q, maxResults: 5 });
+    const { messages: hits = [] } = await searchMessages({ userId, query: q, maxResults: 5 });
     for (const h of hits) {
       if (seen.has(h.id)) continue;
       seen.add(h.id);
@@ -226,7 +226,7 @@ async function meetingPrep({ userId, eventId }) {
 async function trip({ userId, days = 90 }) {
   const d = Math.min(Math.max(days | 0 || 90, 1), 365);
   const q = `subject:(itinerary OR confirmation OR "e-ticket" OR "booking confirmation" OR reservation) newer_than:${d}d`;
-  const hits = await searchMessages({ userId, query: q, maxResults: 20 });
+  const { messages: hits = [] } = await searchMessages({ userId, query: q, maxResults: 20 });
   const bookings = [];
   const seen = new Set();
   for (const h of hits) {
@@ -268,10 +268,12 @@ async function rsvp({ userId, messageId, response }) {
 
 async function followup({ userId, days = 7 }) {
   const d = Math.min(Math.max(days | 0 || 7, 1), 90);
-  const [sent, received] = await Promise.all([
+  const [sentRes, recvRes] = await Promise.all([
     searchMessages({ userId, query: `in:sent newer_than:${d}d`, maxResults: 20 }),
     searchMessages({ userId, query: `in:inbox newer_than:${d}d`, maxResults: 20 }),
   ]);
+  const sent = sentRes.messages || [];
+  const received = recvRes.messages || [];
   const sentUnanswered = sent.map((m) => ({
     id: m.id, to: m.to || m.from, subject: m.subject, date: m.date,
     note: 'sent in window; reply status not tracked — confirm before nudging',
@@ -287,7 +289,7 @@ async function followup({ userId, days = 7 }) {
 }
 
 async function subscriptions({ userId }) {
-  const hits = await searchMessages({
+  const { messages: hits = [] } = await searchMessages({
     userId,
     query: 'subject:(receipt OR invoice OR "payment confirmation" OR "subscription renewed" OR billing) newer_than:180d',
     maxResults: 20,
@@ -314,7 +316,7 @@ async function subscriptions({ userId }) {
 
 async function spending({ userId, days = 30 }) {
   const d = Math.min(Math.max(days | 0 || 30, 1), 365);
-  const hits = await searchMessages({
+  const { messages: hits = [] } = await searchMessages({
     userId,
     query: `subject:(receipt OR invoice OR "payment confirmation" OR "your order" OR "transaction") newer_than:${d}d`,
     maxResults: 20,
@@ -345,7 +347,7 @@ async function spending({ userId, days = 30 }) {
 async function contact({ userId, name }) {
   if (!name || !name.trim()) throw new Error('name is required');
   const remembered = await memory.recall(userId, name, 5).catch(() => []);
-  const hits = await searchMessages({ userId, query: `"${name.trim()}"`, maxResults: 10 });
+  const { messages: hits = [] } = await searchMessages({ userId, query: `"${name.trim()}"`, maxResults: 10 });
   const seen = new Set();
   const contacts = [];
   for (const h of hits) {
@@ -365,7 +367,7 @@ async function contact({ userId, name }) {
 
 async function deadlines({ userId, days = 14 }) {
   const d = Math.min(Math.max(days | 0 || 14, 1), 90);
-  const hits = await searchMessages({ userId, query: `in:inbox newer_than:${d}d`, maxResults: 20 });
+  const { messages: hits = [] } = await searchMessages({ userId, query: `in:inbox newer_than:${d}d`, maxResults: 20 });
   const found = [];
   const seen = new Set();
   for (const h of hits.slice(0, 8)) {
