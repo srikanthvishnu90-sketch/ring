@@ -329,23 +329,42 @@ async function findReceipts({ userId, days = 30 }) {
     (list.messages || []).map((m) =>
       gfetch(
         userId,
-        `https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`
+        `https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=full`
       )
     )
   );
   const receipts = full.map((m) => {
     const from = header(m, 'From');
     const merchant = from.replace(/<[^>]*>/, '').replace(/"/g, '').trim() || from;
-    const amount = (m.snippet || '').match(AMOUNT_RE);
+    const amount = extractReceiptAmount(m);
     return {
       id: m.id,
       merchant,
-      amount: amount ? amount[0] : null,
+      amount,
       date: header(m, 'Date'),
       subject: header(m, 'Subject'),
     };
   });
   return { receipts };
+}
+
+// Amount extraction for receipts: prefer a total near total-like keywords in
+// the message body, fall back to the first $X.XX anywhere; treat $0 as null
+// (promo "$0 delivery" copy is not a purchase amount).
+const TOTAL_RE = /(?:grand total|order total|total|amount (?:due|charged)|charged|balance)\D{0,40}(\$[\d,]+\.\d{2})/i;
+function extractReceiptAmount(m) {
+  let bodyText = '';
+  try {
+    const raw = findTextBody(m.payload);
+    if (raw) bodyText = Buffer.from(raw, 'base64url').toString('utf8');
+  } catch { /* fall through to snippet */ }
+  const hay = `${bodyText}\n${m.snippet || ''}`;
+  const total = hay.match(TOTAL_RE);
+  const pick = (total && total[1]) || (hay.match(AMOUNT_RE) || [])[0];
+  if (!pick) return null;
+  const num = parseFloat(pick.replace(/[$,]/g, ''));
+  if (!num || num <= 0) return null; // "$0 delivery" promos are not amounts
+  return pick;
 }
 
 // --- Attachments (14) --------------------------------------------------------
