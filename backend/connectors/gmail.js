@@ -246,7 +246,25 @@ async function readThread({ userId, threadId }) {
   const participants = [...new Set(msgs.map((m) => header(m, 'From')).filter(Boolean))];
   const dates = msgs.map((m) => header(m, 'Date')).filter(Boolean);
   const subjects = [...new Set(msgs.map((m) => header(m, 'Subject')).filter(Boolean))];
-  const bodies = msgs.map((m) => m.snippet || '').filter(Boolean);
+  // Full text of each message (truncated): snippets alone mislead
+  // categorization (a polite "thank you for reaching out" can precede a
+  // decline buried mid-body). Fetch bodies in parallel.
+  const fullBodies = await Promise.all(
+    msgs.map(async (m) => {
+      try {
+        const fm = await gfetch(
+          userId,
+          `https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=full`
+        );
+        const raw = findTextBody(fm.payload);
+        const txt = raw ? Buffer.from(raw, 'base64url').toString('utf8') : '';
+        return txt.replace(/\s+/g, ' ').trim().slice(0, 1200);
+      } catch {
+        return m.snippet || '';
+      }
+    })
+  );
+  const bodies = fullBodies.filter(Boolean);
   const actions = bodies
     .flatMap((s) => s.split(/(?<=[.!?])\s+/))
     .filter((s) => /(\?|please|could you|need|action|deadline|due)/i.test(s))
@@ -258,9 +276,11 @@ async function readThread({ userId, threadId }) {
     firstDate: dates[0] || null,
     lastDate: dates[dates.length - 1] || null,
     subjects,
-    summary: bodies[0]
-      ? `Started: "${bodies[0].slice(0, 160)}"${bodies.length > 1 ? ` … Latest: "${bodies[bodies.length - 1].slice(0, 160)}"` : ''}`
-      : 'No message bodies available.',
+    messages: msgs.map((m, i) => ({
+      from: header(m, 'From'),
+      date: header(m, 'Date'),
+      body: fullBodies[i] || '',
+    })),
     actionItems: actions,
   };
 }
