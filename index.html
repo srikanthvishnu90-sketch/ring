@@ -1028,6 +1028,8 @@ function approvalFromTool(p){
   const base={approvalId:p.id,status:'pending',role:'approval'};
   if(p.name==='gmail_send')return{...base,book:`Send email to ${a.to}`,text:(a.subject?a.subject+': ':'')+(a.body||''),to:a.to||''};
   if(p.name==='calendar_create')return{...base,book:`Add to calendar: ${a.summary||'Event'}`,text:`${a.start||''}${a.location?' · '+a.location:''}`,to:'Calendar'};
+  if(p.name==='calendar_update')return{...base,book:`Change calendar event`,text:`${a.summary||a.id||'Event'}`,to:'Calendar'};
+  if(p.name==='calendar_delete')return{...base,book:`Delete calendar event`,text:`${a.summary||a.id||'Event'}`,to:'Calendar'};
   return{...base,book:p.name,text:JSON.stringify(a).slice(0,140),to:''};
 }
 function backendStatusLine(){
@@ -1053,6 +1055,8 @@ function approvalLabel(p){
   const a=p.args||{};
   if(p.name==='gmail_send')return `Send email to ${a.to||'?'}`;
   if(p.name==='calendar_create')return `Add to calendar: ${a.summary||'event'}`;
+  if(p.name==='calendar_update')return `Change calendar event: ${a.summary||a.id||'event'}`;
+  if(p.name==='calendar_delete')return `Delete calendar event${a.summary?': '+a.summary:''}`;
   return p.describe||p.name;
 }
 function gMsgHTML(m){

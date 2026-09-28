@@ -48,6 +48,34 @@ async function searchMessages({ userId, query, maxResults = 5 }) {
   }));
 }
 
+// Walk a Gmail payload tree and return the first text/plain body (base64url).
+function findTextBody(payload) {
+  if (!payload) return null;
+  if (payload.mimeType === 'text/plain' && payload.body && payload.body.data) return payload.body.data;
+  for (const part of payload.parts || []) {
+    const hit = findTextBody(part);
+    if (hit) return hit;
+  }
+  return (payload.body && payload.body.data) || null;
+}
+
+async function readMessage({ userId, id }) {
+  guard();
+  if (!id) throw new Error('message id is required');
+  const m = await gfetch(
+    userId,
+    `https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(id)}?format=full`
+  );
+  const raw = findTextBody(m.payload);
+  return {
+    id: m.id,
+    subject: header(m, 'Subject'),
+    from: header(m, 'From'),
+    date: header(m, 'Date'),
+    body: raw ? Buffer.from(raw, 'base64url').toString('utf8').slice(0, 8000) : '',
+  };
+}
+
 async function sendMessage({ userId, to, subject, body }) {
   guard();
   const raw = Buffer.from(
@@ -61,4 +89,4 @@ async function sendMessage({ userId, to, subject, body }) {
   return { id: sent.id, to, subject };
 }
 
-module.exports = { requiredEnv, status, searchMessages, sendMessage };
+module.exports = { requiredEnv, status, searchMessages, readMessage, sendMessage };

@@ -101,6 +101,14 @@ function isConnected(userId) {
   return store.has(userId || 'local');
 }
 
+// Granted OAuth scopes for the stored grant (from the token response's
+// `scope` field). Lets the app show what access was actually approved,
+// instead of inferring it from a toast.
+function getScopes(userId) {
+  const t = store.get(userId || 'local');
+  return t && t.scope ? String(t.scope).split(' ').filter(Boolean) : [];
+}
+
 async function getAccessToken(userId) {
   const key = userId || 'local';
   const t = store.get(key);
@@ -134,4 +142,4 @@ async function gfetch(userId, url, opts = {}) {
   return data;
 }
 
-module.exports = { saveTokens, isConnected, getAccessToken, gfetch, ready, usesSupabase: () => USE_SUPABASE };
+module.exports = { saveTokens, isConnected, getScopes, getAccessToken, gfetch, ready, usesSupabase: () => USE_SUPABASE };

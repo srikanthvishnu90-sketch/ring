@@ -56,4 +56,32 @@ async function createEvent({ userId, summary, start, end, location, description 
   return { id: created.id, summary: created.summary, link: created.htmlLink };
 }
 
-module.exports = { requiredEnv, status, listEvents, createEvent };
+async function updateEvent({ userId, id, summary, start, end, location, description }) {
+  guard();
+  if (!id) throw new Error('event id is required');
+  const body = {};
+  if (summary !== undefined) body.summary = summary;
+  if (location !== undefined) body.location = location;
+  if (description !== undefined) body.description = description;
+  if (start !== undefined) body.start = { dateTime: start };
+  if (end !== undefined) body.end = { dateTime: end };
+  const updated = await gfetch(
+    userId,
+    `https://www.googleapis.com/calendar/v3/calendars/primary/events/${encodeURIComponent(id)}`,
+    { method: 'PATCH', body: JSON.stringify(body) }
+  );
+  return { id: updated.id, summary: updated.summary, link: updated.htmlLink };
+}
+
+async function deleteEvent({ userId, id }) {
+  guard();
+  if (!id) throw new Error('event id is required');
+  await gfetch(
+    userId,
+    `https://www.googleapis.com/calendar/v3/calendars/primary/events/${encodeURIComponent(id)}`,
+    { method: 'DELETE' }
+  );
+  return { id, deleted: true };
+}
+
+module.exports = { requiredEnv, status, listEvents, createEvent, updateEvent, deleteEvent };

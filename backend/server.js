@@ -28,7 +28,7 @@ const express = require('express');
 require('dotenv').config();
 
 const { env, missing } = require('./lib/config');
-const { saveTokens, isConnected, ready: googleReady } = require('./lib/google');
+const { saveTokens, isConnected, getScopes, ready: googleReady } = require('./lib/google');
 const appUrl = () => env('APP_URL', 'https://ringsss.vercel.app');
 const { TOOLS, runAgentTurn, runAgentTurnStream, llmConfigured } = require('./lib/agent');
 const approvals = require('./lib/approvals');
@@ -716,9 +716,11 @@ function oauthStartResponse(req, res) {
 // JWT, then navigates the browser to the returned URL.
 app.post('/api/oauth/google/start', requireUser, oauthStartResponse);
 
-// Per-user Google connection state for the app's setup UI.
-app.get('/api/oauth/google/status', requireUser, (req, res) => {
-  res.json({ connected: isConnected(req.userId) });
+// Per-user Google connection state for the app's setup UI. Reports the
+// scopes from the actual stored grant — never inferred from a toast.
+app.get('/api/oauth/google/status', requireUser, async (req, res) => {
+  await googleReady();
+  res.json({ connected: isConnected(req.userId), scopes: getScopes(req.userId) });
 });
 
 // Browser entry point: a plain navigation can't carry the Bearer token, so

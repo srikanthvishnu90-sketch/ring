@@ -26,6 +26,11 @@ const _RAW_TOOLS = [
     describe: 'Search the user\'s email',
   },
   {
+    name: 'gmail_read', risk: 'low', fn: gmail.readMessage,
+    schema: { type: 'object', properties: { id: { type: 'string', description: 'Message id from gmail_search' } }, required: ['id'] },
+    describe: 'Read the full body of an email',
+  },
+  {
     name: 'gmail_send', risk: 'high', fn: gmail.sendMessage,
     schema: { type: 'object', properties: { to: { type: 'string' }, subject: { type: 'string' }, body: { type: 'string' } }, required: ['to', 'subject', 'body'] },
     describe: 'Send an email as the user (always needs approval)',
@@ -39,6 +44,16 @@ const _RAW_TOOLS = [
     name: 'calendar_create', risk: 'medium', fn: calendar.createEvent,
     schema: { type: 'object', properties: { summary: { type: 'string' }, start: { type: 'string' }, end: { type: 'string' }, location: { type: 'string' }, description: { type: 'string' } }, required: ['summary', 'start', 'end'] },
     describe: 'Create a calendar event (needs confirmation)',
+  },
+  {
+    name: 'calendar_update', risk: 'medium', fn: calendar.updateEvent,
+    schema: { type: 'object', properties: { id: { type: 'string' }, summary: { type: 'string' }, start: { type: 'string' }, end: { type: 'string' }, location: { type: 'string' }, description: { type: 'string' } }, required: ['id'] },
+    describe: 'Change a calendar event (needs confirmation)',
+  },
+  {
+    name: 'calendar_delete', risk: 'medium', fn: calendar.deleteEvent,
+    schema: { type: 'object', properties: { id: { type: 'string', description: 'Event id from calendar_list' } }, required: ['id'] },
+    describe: 'Delete a calendar event (needs confirmation)',
   },
   {
     name: 'places_search', risk: 'low', fn: places.search,
@@ -79,7 +94,7 @@ const TOOLS = [
   ..._RAW_TOOLS,
 ];
 
-const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. You can search email, manage the calendar, find restaurants, build ride and booking links, coordinate group plans, and remember durable facts about the user and the people they mention (use memory_save when they tell you something to remember, memory_list to recall). Be concise and plainspoken. Never claim a booking or message is done until its tool confirms it — and anything that spends money or sends as the user needs their explicit approval first.`;
+const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. You can search and read email, manage the calendar (list, create, change, and cancel events), find restaurants, build ride and booking links, coordinate group plans, and remember durable facts about the user and the people they mention (use memory_save when they tell you something to remember, memory_list to recall). Be concise and plainspoken. Never claim a booking or message is done until its tool confirms it — and anything that spends money or sends as the user needs their explicit approval first.`;
 
 const DEMO_PROMPT_SUFFIX = `
 
@@ -138,6 +153,11 @@ function demoResult(name, args) {
       };
     case 'gmail_send':
       return { demo: true, sent: false, note: 'Demo mode: no email was actually sent. Sign in to send real email.' };
+    case 'gmail_read':
+      return {
+        demo: true, id: a.id || 'demo-msg-1', subject: 'Demo: your inbox at a glance',
+        from: 'demo@example.com', body: 'Demo mode: simulated email body. Sign in to read your real email.',
+      };
     case 'calendar_list':
       return {
         demo: true,
@@ -150,6 +170,10 @@ function demoResult(name, args) {
       };
     case 'calendar_create':
       return { demo: true, created: false, note: 'Demo mode: no calendar event was actually created. Sign in for the real thing.' };
+    case 'calendar_update':
+      return { demo: true, updated: false, note: 'Demo mode: no calendar event was actually changed. Sign in for the real thing.' };
+    case 'calendar_delete':
+      return { demo: true, deleted: false, note: 'Demo mode: no calendar event was actually deleted. Sign in for the real thing.' };
     case 'places_search':
       return {
         demo: true,
