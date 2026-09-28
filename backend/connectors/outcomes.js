@@ -107,10 +107,11 @@ function placesKeyed() {
 async function findReceipts(userId, query, maxResults = 5) {
   try {
     const gmail = require('./gmail');
-    const msgs = await gmail.searchMessages({ userId, query, maxResults });
+    const res = await gmail.searchMessages({ userId, query, maxResults });
+    const msgs = Array.isArray(res) ? res : (res && res.messages) || [];
     return {
       searched: true,
-      receipts: (msgs || []).map((m) => ({
+      receipts: msgs.map((m) => ({
         id: m.id, subject: m.subject, from: m.from, date: m.date, snippet: m.snippet,
       })),
     };
