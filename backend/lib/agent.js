@@ -84,6 +84,93 @@ const _RAW_TOOLS = [
     schema: { type: 'object', properties: {} },
     describe: 'List what you remember about the user',
   },
+  // --- Gmail extended (features 3-6, 8-14) --------------------------------
+  {
+    name: 'gmail_triage', risk: 'low', fn: gmail.triageMessages,
+    schema: { type: 'object', properties: { maxResults: { type: 'number' } } },
+    describe: 'List unread inbox bucketed into urgent / needs-reply / fyi, each with a one-line reason',
+  },
+  {
+    name: 'gmail_thread', risk: 'low', fn: gmail.readThread,
+    schema: { type: 'object', properties: { threadId: { type: 'string', description: 'Thread id from gmail_search' } }, required: ['threadId'] },
+    describe: 'Fetch a full email thread: summary, participants, key dates, action items',
+  },
+  {
+    name: 'gmail_reply', risk: 'high', fn: gmail.replyMessage,
+    schema: { type: 'object', properties: { id: { type: 'string', description: 'Message id from gmail_search' }, body: { type: 'string' } }, required: ['id', 'body'] },
+    describe: 'Reply to an email as the user, threaded (always needs approval of the exact body)',
+  },
+  {
+    name: 'gmail_forward', risk: 'high', fn: gmail.forwardMessage,
+    schema: { type: 'object', properties: { id: { type: 'string', description: 'Message id from gmail_search' }, to: { type: 'string' } }, required: ['id', 'to'] },
+    describe: 'Forward an email to someone (always needs approval)',
+  },
+  {
+    name: 'gmail_draft', risk: 'low', fn: gmail.createDraft,
+    schema: { type: 'object', properties: { to: { type: 'string' }, subject: { type: 'string' }, body: { type: 'string' } }, required: ['to'] },
+    describe: 'Save a Gmail draft and return its draft id',
+  },
+  {
+    name: 'gmail_delete', risk: 'medium', fn: gmail.trashMessage,
+    schema: { type: 'object', properties: { id: { type: 'string', description: 'Message id from gmail_search' } }, required: ['id'] },
+    describe: 'Move an email to Trash (needs confirmation)',
+  },
+  {
+    name: 'gmail_archive', risk: 'low', fn: gmail.archiveMessage,
+    schema: { type: 'object', properties: { id: { type: 'string', description: 'Message id from gmail_search' } }, required: ['id'] },
+    describe: 'Archive an email (remove from inbox)',
+  },
+  {
+    name: 'gmail_mark', risk: 'low', fn: gmail.markMessage,
+    schema: { type: 'object', properties: { id: { type: 'string', description: 'Message id from gmail_search' }, read: { type: 'boolean' } }, required: ['id', 'read'] },
+    describe: 'Mark an email read or unread',
+  },
+  {
+    name: 'gmail_star', risk: 'low', fn: gmail.starMessage,
+    schema: { type: 'object', properties: { id: { type: 'string', description: 'Message id from gmail_search' }, starred: { type: 'boolean' } }, required: ['id', 'starred'] },
+    describe: 'Star or unstar an email',
+  },
+  {
+    name: 'gmail_receipts', risk: 'low', fn: gmail.findReceipts,
+    schema: { type: 'object', properties: { days: { type: 'number', description: 'Lookback window, 1-365, default 30' } } },
+    describe: 'Find order confirmations and receipts: merchant, amount, date',
+  },
+  {
+    name: 'gmail_attachments', risk: 'low', fn: gmail.findAttachments,
+    schema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] },
+    describe: 'Find messages with attachments: filename, type, size, message id',
+  },
+  // --- Calendar extended (features 19-24) ----------------------------------
+  {
+    name: 'calendar_freetime', risk: 'low', fn: calendar.freeTime,
+    schema: { type: 'object', properties: { date: { type: 'string', description: 'YYYY-MM-DD, defaults to today' }, durationMin: { type: 'number' }, startHour: { type: 'number' }, endHour: { type: 'number' } } },
+    describe: 'Find free time slots in a day given existing events',
+  },
+  {
+    name: 'calendar_conflict', risk: 'low', fn: calendar.conflict,
+    schema: { type: 'object', properties: { start: { type: 'string', description: 'Range start, ISO 8601' }, end: { type: 'string', description: 'Range end, ISO 8601' } }, required: ['start', 'end'] },
+    describe: 'Check whether a time range conflicts with existing events',
+  },
+  {
+    name: 'calendar_briefing', risk: 'low', fn: calendar.briefing,
+    schema: { type: 'object', properties: {} },
+    describe: "Morning briefing: today's events plus which ones need prep",
+  },
+  {
+    name: 'calendar_from_email', risk: 'medium', fn: calendar.eventFromEmail,
+    schema: { type: 'object', properties: { messageId: { type: 'string', description: 'Gmail message id from gmail_search' } }, required: ['messageId'] },
+    describe: 'Parse an invite/booking email and stage event fields for approval (does not create anything)',
+  },
+  {
+    name: 'calendar_reminders', risk: 'low', fn: calendar.reminders,
+    schema: { type: 'object', properties: {} },
+    describe: 'Upcoming events in the next 48h that need reminders, with lead times',
+  },
+  {
+    name: 'calendar_week', risk: 'low', fn: calendar.week,
+    schema: { type: 'object', properties: {} },
+    describe: '7-day calendar preview grouped by day',
+  },
 ];
 
 // Legacy entries win on name collisions: a connector-contributed tool can
@@ -94,7 +181,13 @@ const TOOLS = [
   ..._RAW_TOOLS,
 ];
 
-const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. You can search and read email, manage the calendar (list, create, change, and cancel events), find restaurants, build ride and booking links, coordinate group plans, and remember durable facts about the user and the people they mention (use memory_save when they tell you something to remember, memory_list to recall). Be concise and plainspoken. Never claim a booking or message is done until its tool confirms it — and anything that spends money or sends as the user needs their explicit approval first.`;
+const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. You can:
+- Email: search, read full messages and threads, triage the inbox (urgent/needs-reply/fyi), reply and forward (always with approval of the exact text), save drafts, delete, archive, mark read/unread, star, find receipts and attachments.
+- Calendar: list, create, reschedule, and cancel events (changes need confirmation), find free time, check conflicts, morning briefings, turn invite emails into staged events, pre-event reminders, week previews.
+- Inbox intel: meeting prep (attendees + related mail), trip confirmations pulled into itineraries with staged calendar events, RSVPs (approval), follow-up radar for unanswered mail, subscription detection from receipts, spending recaps, contact lookup from inbox history, deadline watching with staged reminders.
+- Real outcomes: book restaurant tables for real (confirmation reference required — never claim booked without one), change/cancel reservations, cancel subscriptions with proof, book rides (confirm before ordering), find tonight's restaurants, log into websites and complete tasks (per-action approval, vaulted credentials), fill web forms, check order/delivery status, live price checks, diagnose and fix messed-up reservations.
+- Memory + groups: remember durable facts, recall them, reply as @ring in group chats, run polls to plan with friends and lock a time, daily briefs, draft messages (never send without approval), learn routines, smart nudges.
+Be concise and plainspoken. Never claim a booking, cancellation, message, or send is done until its tool returns proof — and anything that spends money or sends as the user needs their explicit approval first.`;
 
 const DEMO_PROMPT_SUFFIX = `
 
@@ -183,6 +276,46 @@ function demoResult(name, args) {
       return { demo: true, url: 'https://m.uber.com/?demo=1', note: 'Demo mode: simulated deep link.' };
     case 'dining_links':
       return { demo: true, opentable: 'https://www.opentable.com/?demo=1', note: 'Demo mode: simulated deep links.' };
+    case 'gmail_triage': return { demo: true, counts: { urgent: 1, 'needs-reply': 1, fyi: 1 }, messages: [{ id: 'demo-msg-1', subject: 'Demo: payment failed', from: 'billing@example.com', category: 'urgent', reason: 'Demo mode: simulated. Sign in to triage your real inbox.' }] };
+    case 'gmail_thread': return { demo: true, threadId: a.threadId || 'demo-t1', messageCount: 2, participants: ['demo@example.com'], summary: 'Demo mode: simulated thread. Sign in for the real thing.', actionItems: [] };
+    case 'gmail_reply': return { demo: true, sent: false, note: 'Demo mode: no reply was sent. Sign in to reply for real.' };
+    case 'gmail_forward': return { demo: true, sent: false, note: 'Demo mode: nothing was forwarded. Sign in to forward for real.' };
+    case 'gmail_draft': return { demo: true, created: false, note: 'Demo mode: no draft was saved. Sign in to draft for real.' };
+    case 'gmail_delete': return { demo: true, trashed: false, note: 'Demo mode: nothing was trashed. Sign in for the real thing.' };
+    case 'gmail_archive': return { demo: true, archived: false, note: 'Demo mode: nothing was archived. Sign in for the real thing.' };
+    case 'gmail_mark': return { demo: true, note: 'Demo mode: read state unchanged. Sign in for the real thing.' };
+    case 'gmail_star': return { demo: true, note: 'Demo mode: star unchanged. Sign in for the real thing.' };
+    case 'gmail_receipts': return { demo: true, receipts: [{ merchant: 'Demo Store', amount: '$24.99', date: new Date().toISOString(), note: 'Demo mode: simulated. Sign in for real receipts.' }] };
+    case 'gmail_attachments': return { demo: true, attachments: [{ filename: 'demo.pdf', mimeType: 'application/pdf', size: 12345, messageId: 'demo-msg-1', note: 'Demo mode: simulated. Sign in for real attachments.' }] };
+    case 'calendar_freetime': return { demo: true, slots: [{ start: '09:30', end: '10:30' }, { start: '14:00', end: '16:00' }], note: 'Demo mode: sample free slots. Sign in for the real thing.' };
+    case 'calendar_conflict': return { demo: true, conflict: false, note: 'Demo mode: no conflicts found. Sign in for the real thing.' };
+    case 'calendar_briefing': return { demo: true, events: [{ summary: 'Team standup', start: '09:00' }], note: 'Demo mode: sample briefing. Sign in for the real thing.' };
+    case 'calendar_from_email': return { demo: true, staged: true, created: false, note: 'Demo mode: staged fields only, nothing created. Sign in for the real thing.' };
+    case 'calendar_reminders': return { demo: true, reminders: [], note: 'Demo mode: no reminders. Sign in for the real thing.' };
+    case 'calendar_week': return { demo: true, days: [], note: 'Demo mode: empty week. Sign in for the real thing.' };
+    case 'intel_meeting_prep': return { demo: true, brief: 'Demo mode: simulated meeting prep. Sign in for the real thing.' };
+    case 'intel_trip': return { demo: true, stagedOnly: true, bookings: [], stagedEvents: [], note: 'Demo mode: simulated trip pull. Sign in for the real thing.' };
+    case 'intel_rsvp': return { demo: true, sent: false, note: 'Demo mode: no RSVP was sent. Sign in for the real thing.' };
+    case 'intel_followup': return { demo: true, sentUnanswered: [], unrepliedImportant: [], note: 'Demo mode: simulated follow-up radar.' };
+    case 'intel_subscriptions': return { demo: true, subscriptions: [{ merchant: 'Demo Monthly', amount: 9.99, currency: 'USD', cadence: 'monthly', note: 'Demo mode: simulated.' }] };
+    case 'intel_spending': return { demo: true, total: 0, byMerchant: [], byCategory: [], note: 'Demo mode: simulated spending recap.' };
+    case 'intel_contact': return { demo: true, contacts: [], note: 'Demo mode: simulated contact search.' };
+    case 'intel_deadlines': return { demo: true, stagedOnly: true, deadlines: [], stagedReminders: [], note: 'Demo mode: simulated deadline watch.' };
+    case 'dining_book': return { demo: true, booked: false, tier: 'handoff', note: 'Demo mode: nothing was booked. Sign in for real booking.' };
+    case 'dining_change': return { demo: true, changed: false, cancelled: false, note: 'Demo mode: no reservation was changed or cancelled.' };
+    case 'subscription_cancel': return { demo: true, cancelled: false, note: 'Demo mode: nothing was cancelled. Sign in for the real thing.' };
+    case 'ride_book': return { demo: true, ordered: false, link: 'https://m.uber.com/?demo=1', note: 'Demo mode: no ride was ordered.' };
+    case 'dining_tonight': return { demo: true, options: [{ name: 'Demo Bistro', rating: 4.5, availabilityNote: 'Demo mode: simulated options.' }] };
+    case 'web_login_task': return { demo: true, completed: false, note: 'Demo mode: no login was performed.' };
+    case 'web_form_fill': return { demo: true, filled: false, note: 'Demo mode: nothing was filled.' };
+    case 'order_status': return { demo: true, found: false, note: 'Demo mode: sign in to check real orders.' };
+    case 'price_check': return { demo: true, checked: false, note: 'Demo mode: no live price was checked.' };
+    case 'reservation_fix': return { demo: true, diagnosed: false, applied: false, note: 'Demo mode: nothing was diagnosed or fixed.' };
+    case 'group_plan': return { demo: true, note: 'Demo mode: no plan was created. Sign in for the real thing.' };
+    case 'daily_brief': return { demo: true, brief: 'Demo mode: simulated daily brief. Sign in for the real thing.' };
+    case 'draft_message': return { demo: true, draft: true, text: 'Demo mode: simulated draft.', note: 'DRAFT ONLY — never sent.' };
+    case 'routine_learn': return { demo: true, routines: [], note: 'Demo mode: no routines learned.' };
+    case 'smart_nudge': return { demo: true, nudges: [], note: 'Demo mode: no nudges.' };
     default:
       return { demo: true, simulated: true, note: `Demo mode: ${name} was not actually executed. Sign in for the real thing.` };
   }

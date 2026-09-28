@@ -52,6 +52,15 @@ const connectors = {
 };
 const { connectorStatus } = require('./connectors/registry');
 
+// Wire the browser-automation driver into the outcomes executor (tier 2).
+// Null when BROWSERBASE keys are absent — outcomes then honestly reports
+// browser_not_configured instead of pretending.
+try {
+  const outcomes = require('./connectors/outcomes');
+  const { createDriver } = require('./lib/browser_driver');
+  outcomes.setBrowserDriver(createDriver());
+} catch (e) { /* outcomes unavailable — tools report their own errors */ }
+
 const app = express();
 // /api/voice carries base64 audio — give it a bigger body; everything else
 // stays at 1mb.

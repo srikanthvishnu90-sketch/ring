@@ -14,8 +14,11 @@ const twilio = require('./twilio');
 const telegram = require('./telegram');
 const stripe = require('./stripe');
 const webhooks = require('./webhooks');
+const intel = require('./intel');
+const outcomes = require('./outcomes');
+const social = require('./social');
 
-const CONNECTORS = { gmail, calendar, places, uber, dining, twilio, telegram, stripe, webhooks };
+const CONNECTORS = { gmail, calendar, places, uber, dining, twilio, telegram, stripe, webhooks, intel, outcomes, social };
 
 function allConnectors() {
   return Object.values(CONNECTORS);
