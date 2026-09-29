@@ -117,7 +117,16 @@ async function cancelSubscription(ctx, job) {
   const bodyAfter = await page.textContent('body').catch(() => '');
   const passField = await page.$('input[type="password"]').catch(() => null);
   if (passField && password) {
-    await passField.fill(password);
+    // Click to focus, clear, then type character-by-character.
+    // fill() can mishandle special chars like $ in some sites.
+    await passField.click().catch(() => {});
+    await page.keyboard.press('ControlOrMeta+a').catch(() => {});
+    await page.keyboard.press('Backspace').catch(() => {});
+    await page.waitForTimeout(300);
+    await passField.pressSequentially(password, { delay: 30 }).catch(async () => {
+      // Fallback to fill if pressSequentially not available
+      await passField.fill(password);
+    });
     ctx.log('password_filled', {});
     const submitBtn = await page.$('button[type="submit"], button:has-text("Continue"), button:has-text("Sign in"), button:has-text("Log in")');
     if (submitBtn) await submitBtn.click();
