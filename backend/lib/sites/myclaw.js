@@ -122,8 +122,49 @@ async function cancelSubscription(ctx, job) {
     const submitBtn = await page.$('button[type="submit"], button:has-text("Continue"), button:has-text("Sign in"), button:has-text("Log in")');
     if (submitBtn) await submitBtn.click();
     else await page.keyboard.press('Enter');
-    await page.waitForTimeout(5000);
     ctx.log('password_submitted', { url: page.url() });
+
+    // Wait for login to resolve: either we leave the login page (success),
+    // an error appears (failure), or we timeout. The site shows "Signing in..."
+    // while processing — don't declare failure during that state.
+    let loginResolved = false;
+    for (let i = 0; i < 12; i++) {
+      await page.waitForTimeout(2500);
+      const url = page.url();
+      const bodyText = await page.textContent('body').catch(() => '');
+
+      // Success: navigated away from /login
+      if (!url.includes('/login')) {
+        ctx.log('login_ok', { url });
+        loginResolved = true;
+        break;
+      }
+
+      // Failure: explicit error message
+      if (/invalid.*credential|incorrect.*password|wrong.*password|login.*failed/i.test(bodyText || '')) {
+        await ctx.screenshot('myclaw-login-failed');
+        return { ok: false, code: 'login_failed', note: 'MyClaw rejected the credentials. Screenshot captured.' };
+      }
+
+      // Still processing ("Signing in...") — keep waiting
+      if (/signing in/i.test(bodyText || '')) {
+        continue;
+      }
+
+      // Login form gone but still on /login? Check for password field.
+      const stillHasPassword = await page.$('input[type="password"]').catch(() => null);
+      if (!stillHasPassword) {
+        // Form is gone, likely success — verify by checking URL or content
+        ctx.log('login_form_gone', { url });
+        loginResolved = true;
+        break;
+      }
+    }
+
+    if (!loginResolved) {
+      await ctx.screenshot('myclaw-login-timeout');
+      return { ok: false, code: 'login_timeout', note: 'Login did not resolve after 30s. Screenshot captured.' };
+    }
   } else if (/check your email|magic link|sent.*link|verify.*email/i.test(bodyAfter || '')) {
     await ctx.screenshot('myclaw-magic-link');
     return {
@@ -137,13 +178,7 @@ async function cancelSubscription(ctx, job) {
     return { ok: false, code: 'login_blocked', note: 'After email, no password field appeared — the site may require OAuth or a magic link. Screenshot captured.' };
   }
 
-  // Verify login succeeded.
-  const stillLogin = await page.$('input[type="email"], input[type="password"]').catch(() => null);
-  if (stillLogin) {
-    await ctx.screenshot('myclaw-login-failed');
-    return { ok: false, code: 'login_failed', note: 'Login form still present after submit — credentials likely rejected. Screenshot captured.' };
-  }
-  ctx.log('login_ok', { url: page.url() });
+  // Login is now resolved by the wait loop above. Proceed to cancellation.
   return cancelFromDashboard(ctx, job);
 }
 
