@@ -248,7 +248,51 @@ async function cancelFromDashboard(ctx, job) {
 module.exports = {
   'cancel-subscription': cancelSubscription,
   'reset-password': resetPassword,
+  'cancel-via-reset': cancelViaReset,
 };
+
+// Cancel using a password-reset link for authentication.
+// Vishnu approved the cancellation. The reset link provides a one-time
+// authenticated session — we use it to reach billing and cancel directly.
+async function cancelViaReset(ctx, job) {
+  const page = ctx.page;
+  ctx.log('myclaw_cancel_via_reset_start', {});
+
+  if (!job.reset_link) {
+    return { ok: false, code: 'no_reset_link', note: 'No reset link provided.' };
+  }
+
+  // Navigate to the reset link (authenticates the session).
+  await page.goto(job.reset_link, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
+  await page.waitForTimeout(5000);
+  ctx.log('reset_link_opened', { url: page.url() });
+
+  // Check if we're authenticated (no login form).
+  const loginForm = await page.$('input[type="email"], input[type="password"]').catch(() => null);
+  // If there's a password reset form, we're on the reset page — that's fine,
+  // it means the link is valid. We need to get to the app.
+  // Try navigating to the app dashboard.
+  await page.goto('https://myclaw.ai/dashboard', { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {});
+  await page.waitForTimeout(3000);
+
+  const stillLogin = await page.$('input[type="email"]').catch(() => null);
+  if (stillLogin) {
+    // Try app subdomain.
+    await page.goto('https://app.myclaw.ai', { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {});
+    await page.waitForTimeout(3000);
+  }
+
+  const loginCheck = await page.$('input[type="email"], input[type="password"]').catch(() => null);
+  if (loginCheck) {
+    await ctx.screenshot('myclaw-cancelviareset-not-auth');
+    return { ok: false, code: 'not_authenticated', note: 'Reset link did not provide an authenticated session. Screenshot captured.' };
+  }
+
+  ctx.log('authenticated_via_reset', { url: page.url() });
+
+  // Now use the shared cancellation logic from an authenticated state.
+  return cancelFromDashboard(ctx, job);
+}
 
 // Password reset flow: request reset link via "Forgot password?", then
 // set a new password when the link is provided.
