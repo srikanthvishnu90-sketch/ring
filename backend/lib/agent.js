@@ -582,7 +582,7 @@ async function processToolCalls({ toolCalls, tools, userId, toolsUsed, allResult
         logToolRun({ userId, tool: tool.name, args: tc.args, result: { error: e.message, code: e.code }, status: 'failed' }).catch(() => {});
       }
     } else {
-      results.push(`${tc.name} → HELD for user approval`);
+      results.push(`${tc.name} → HELD for user approval. Do NOT call ${tc.name} again for this — tell the user it is waiting for their approval.`);
     }
   }
   allResults.push(...results);
@@ -614,9 +614,34 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
   let pending = first.toolCalls || [];
   let finalText = first.text;
   let rounds = 0;
+  // Name of the medium/high-risk tool held in the previous round, when the
+  // whole round was just that one held call. Breaks "held → re-call" loops
+  // where the model keeps re-issuing an already-held action instead of
+  // telling the user it's waiting for approval (which would otherwise stack
+  // duplicate approval cards up to MAX_ROUNDS).
+  let lastHeldName = null;
   while (pending.length && rounds < MAX_ROUNDS) {
     rounds++;
+    const roundNames = [...new Set(pending.map((c) => c.name))];
+    if (roundNames.length === 1 && roundNames[0] === lastHeldName) {
+      // Loop: same held action re-issued. Don't execute it again — end the
+      // turn with a text reply about the waiting approval instead.
+      pending = [];
+      const closer = await call(
+        `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nThe ${lastHeldName} action above is already held for the user's approval — do not call any tool. Reply to the user concisely (1-3 short sentences) saying what is waiting on their approval.`,
+        (tok) => { if (onToken) onToken(tok); },
+        [],
+        streamOpts
+      );
+      if (closer.text) finalText = finalText + closer.text;
+      break;
+    }
+    const usedBefore = toolsUsed.length;
     await processToolCalls({ toolCalls: pending, tools, userId, toolsUsed, allResults });
+    const justUsed = toolsUsed.slice(usedBefore);
+    lastHeldName = (justUsed.length > 0
+      && justUsed.every((t) => t.risk !== 'low' && t.name === justUsed[0].name))
+      ? justUsed[0].name : null;
     const roundBase = finalText;
     const follow = await call(
       `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
@@ -751,9 +776,29 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
   let pending = first.toolCalls || [];
   let finalText = first.text;
   let rounds = 0;
+  // Same "held → re-call" loop breaker as runAgentTurnStream: stops the
+  // model re-issuing an already-held action round after round instead of
+  // telling the user it's waiting for approval.
+  let lastHeldName = null;
   while (pending.length && rounds < MAX_ROUNDS) {
     rounds++;
+    const roundNames = [...new Set(pending.map((c) => c.name))];
+    if (roundNames.length === 1 && roundNames[0] === lastHeldName) {
+      pending = [];
+      const closer = await call(
+        `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nThe ${lastHeldName} action above is already held for the user's approval — do not call any tool. Reply to the user concisely${tg ? ' — one or two short texts' : ' (1-3 short sentences)'} saying what is waiting on their approval.`,
+        [],
+        callOpts
+      );
+      if (closer.text) finalText = closer.text;
+      break;
+    }
+    const usedBefore = toolsUsed.length;
     await processToolCalls({ toolCalls: pending, tools, userId, toolsUsed, allResults });
+    const justUsed = toolsUsed.slice(usedBefore);
+    lastHeldName = (justUsed.length > 0
+      && justUsed.every((t) => t.risk !== 'low' && t.name === justUsed[0].name))
+      ? justUsed[0].name : null;
     const follow = await call(
       `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely${tg ? ' — one or two short texts' : ' (1-3 short sentences)'}. If something is held for approval, say what you're waiting on.`,
       tools,
