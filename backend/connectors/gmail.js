@@ -30,6 +30,46 @@ function guard() {
 const header = (m, name) =>
   (m.payload?.headers || []).find((h) => h.name.toLowerCase() === name.toLowerCase())?.value || '';
 
+// Run async fn over items with at most `limit` in flight. Gmail's per-user
+// rate limit punishes burst fan-out (30 threads x metadata+body via
+// Promise.all = 60 concurrent requests -> 429s), so batch readers stay
+// sequential-ish here.
+async function mapLimit(items, limit, fn) {
+  const results = new Array(items.length);
+  let i = 0;
+  async function worker() {
+    while (i < items.length) {
+      const idx = i++;
+      results[idx] = await fn(items[idx], idx);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return results;
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// gfetch with backoff on rate-limit responses. A 429 is transient —
+// retrying a few seconds later usually succeeds — so a whole-topic read
+// degrades to "unknown, retry me" only after real retries, never on the
+// first 429.
+async function gfetchRetry(userId, url, opts, tries = 4) {
+  let delay = 1500;
+  for (let n = 0; n < tries; n++) {
+    try {
+      return await gfetch(userId, url, opts);
+    } catch (e) {
+      const transient = /429|rate|quota|exhausted|too many/i.test(e.message || '');
+      if (transient && n < tries - 1) {
+        await sleep(delay);
+        delay *= 2;
+        continue;
+      }
+      throw e;
+    }
+  }
+}
+
 async function searchMessages({ userId, query, maxResults = 30 }) {
   guard();
   // maxResults counts THREADS, not messages: page through matches
@@ -45,16 +85,17 @@ async function searchMessages({ userId, query, maxResults = 30 }) {
       `https://gmail.googleapis.com/gmail/v1/users/me/messages` +
       `?q=${encodeURIComponent(query)}&maxResults=${Math.min(100, MSG_CAP - fetchedMsgs)}`;
     if (pageToken) url += `&pageToken=${encodeURIComponent(pageToken)}`;
-    const list = await gfetch(userId, url);
+    const list = await gfetchRetry(userId, url);
     const batch = list.messages || [];
     fetchedMsgs += batch.length;
-    const full = await Promise.all(
-      batch.map((m) =>
-        gfetch(
+    const full = await mapLimit(
+      batch,
+      5,
+      (m) =>
+        gfetchRetry(
           userId,
           `https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`
         )
-      )
     );
     // Collapse to one entry per thread (matches arrive newest-first, so
     // the first message seen per thread is its latest).
@@ -347,10 +388,12 @@ async function readThreads({ userId, threadIds }) {
   } catch {
     owner = '';
   }
-  const threads = await Promise.all(
-    ids.map(async (threadId) => {
+  const threads = await mapLimit(
+    ids,
+    5,
+    async (threadId) => {
       try {
-        const t = await gfetch(
+        const t = await gfetchRetry(
           userId,
           `https://gmail.googleapis.com/gmail/v1/users/me/threads/${encodeURIComponent(threadId)}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`
         );
@@ -363,7 +406,7 @@ async function readThreads({ userId, threadIds }) {
           .find((m) => !owner || !header(m, 'From').toLowerCase().includes(owner));
         if (!inbound) return { threadId, vendor, stance: 'no-reply', detail: null };
         try {
-          const fm = await gfetch(
+          const fm = await gfetchRetry(
             userId,
             `https://gmail.googleapis.com/gmail/v1/users/me/messages/${inbound.id}?format=full`
           );
@@ -375,12 +418,15 @@ async function readThreads({ userId, threadIds }) {
           const detail = (stance === 'declined' ? extractDecline(fullTxt) || fullTxt : fullTxt).slice(0, 150);
           return { threadId, vendor, stance, detail: detail || null };
         } catch {
-          return { threadId, vendor, stance: 'replied', detail: (inbound.snippet || '').slice(0, 150) || null };
+          // Full text unavailable even after retries: report unknown, NEVER
+          // categorize from the snippet (a polite snippet opening is not a
+          // positive follow-up). The model must list these as unreadable.
+          return { threadId, vendor, stance: 'unknown', detail: 'Full reply text unavailable (temporary API limit) — not categorized.' };
         }
       } catch (e) {
         return { threadId, vendor: '', stance: 'error', detail: e.message.slice(0, 100) };
       }
-    })
+    }
   );
   const counts = {};
   for (const t of threads) counts[t.stance] = (counts[t.stance] || 0) + 1;
