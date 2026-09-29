@@ -359,6 +359,24 @@ function cleanBodyText(txt) {
   return /<[a-z][^>]*>/i.test(t) ? htmlToText(t) : t;
 }
 
+// Pull commercial terms out of a vendor reply: money amounts and the
+// sentences around pricing keywords (MOQ, NRE, lead time...). Deterministic,
+// so quote-comparison answers carry the actual numbers without depending on
+// the model choosing follow-up reads.
+function extractTerms(text) {
+  const sentences = (text || '').split(/(?<=[.!?])\s+/);
+  const hits = [];
+  for (const s of sentences) {
+    const hasMoney = /\$[\d,]+(\.\d+)?(\s?(k|K|million|M))?\b/.test(s);
+    const hasKw = /\b(MOQ|NRE|lead time|unit price|quotation|deposit|payment term|sample cost)\b/i.test(s);
+    if ((hasMoney || hasKw) && !/unsubscribe|privacy policy/i.test(s)) {
+      hits.push(s.trim());
+      if (hits.length >= 4) break;
+    }
+  }
+  return hits.join(' ').slice(0, 180);
+}
+
 // Pull the decline sentence(s) out of a longer reply so a polite opening
 // never buries the verdict (the failure this tool exists to prevent).
 function extractDecline(text) {
@@ -416,7 +434,10 @@ async function readThreads({ userId, threadIds }) {
           );
           const stance = classifyStance(fullTxt);
           const detail = (stance === 'declined' ? extractDecline(fullTxt) || fullTxt : fullTxt).slice(0, 150);
-          return { threadId, vendor, stance, detail: detail || null };
+          // Commercial terms ride along on interested/quoted rows so quote
+          // comparisons carry the numbers without extra follow-up calls.
+          const terms = (stance === 'interested' || stance === 'quoted') ? extractTerms(fullTxt) || null : null;
+          return { threadId, vendor, stance, detail: detail || null, ...(terms ? { terms } : {}) };
         } catch {
           // Full text unavailable even after retries: report unknown, NEVER
           // categorize from the snippet (a polite snippet opening is not a

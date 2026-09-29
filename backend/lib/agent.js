@@ -98,7 +98,7 @@ const _RAW_TOOLS = [
   {
     name: 'gmail_threads', risk: 'low', fn: gmail.readThreads,
     schema: { type: 'object', properties: { threadIds: { type: 'array', items: { type: 'string' }, description: 'Thread ids from gmail_search, newest first (max 30 per call)' } }, required: ['threadIds'] },
-    describe: 'Batch-read up to 30 threads in ONE call: one compact row per thread with vendor, stance signal (interested/quoted/declined/bounced/replied/no-reply/unknown — VERIFY against the detail text; never categorize unknown rows from snippets), and the key detail (declines show the decline sentence itself). After a broad gmail_search on a whole-topic question, pass ALL candidate threadIds here in a single call — complete coverage, no per-thread calls needed.',
+    describe: 'Batch-read up to 30 threads in ONE call: one compact row per thread with vendor, stance signal (interested/quoted/declined/bounced/replied/no-reply/unknown — VERIFY against the detail text; never categorize unknown rows from snippets), the key detail (declines show the decline sentence itself), and extracted commercial terms (dollar amounts, MOQ/NRE/lead-time sentences) on interested/quoted rows. After a broad gmail_search on a whole-topic question, pass ALL candidate threadIds here in a single call — complete coverage, no per-thread calls needed.',
   },
   {
     name: 'gmail_reply', risk: 'high', fn: gmail.replyMessage,
