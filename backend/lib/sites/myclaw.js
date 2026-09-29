@@ -123,10 +123,12 @@ async function cancelSubscription(ctx, job) {
     await page.keyboard.press('ControlOrMeta+a').catch(() => {});
     await page.keyboard.press('Backspace').catch(() => {});
     await page.waitForTimeout(300);
-    await passField.pressSequentially(password, { delay: 30 }).catch(async () => {
-      // Fallback to fill if pressSequentially not available
+    try {
+      await passField.type(password, { delay: 30 });
+    } catch (e) {
+      // Fallback to fill if type not available
       await passField.fill(password);
-    });
+    }
     ctx.log('password_filled', {});
     const submitBtn = await page.$('button[type="submit"], button:has-text("Continue"), button:has-text("Sign in"), button:has-text("Log in")');
     if (submitBtn) await submitBtn.click();
