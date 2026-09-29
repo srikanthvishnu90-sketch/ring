@@ -18,6 +18,9 @@
 //      site?: 'uber' | 'resy' | ...,   // site module at lib/sites/<site>.js
 //      sessionId?: string,             // resume a live session from a prior phase
 //      userId?: string,
+//      keepAlive?: boolean,            // after a terminal done/failure, leave
+//                                      // the session LIVE (e.g. trip tracking
+//                                      // after ordering). Caller must close it.
 //      ...siteParams }                 // pickup/dropoff, restaurant/date, otp, ...
 //
 //  Result out (execute() NEVER throws — failures are values):
@@ -268,6 +271,10 @@ async function executeInner(job, deps = {}) {
     if (!proof) {
       await endSession(sessionId, session.bb_session_id);
       return { ok: false, code: 'no_proof', sessionId, note: 'Site module returned phase "done" without a confirmation artifact — treated as NOT done. Session closed.', steps: out.steps || [] };
+    }
+    if (job.keepAlive) {
+      try { await sessions.touch(sessionId); } catch { /* best effort */ }
+      return stripSensitive({ ...out, phase: 'done', sessionId, keptAlive: true });
     }
     await endSession(sessionId, session.bb_session_id);
     return stripSensitive({ ...out, phase: 'done', sessionId });
