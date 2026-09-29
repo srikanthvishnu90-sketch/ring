@@ -53,17 +53,21 @@ const connectors = {
 const { connectorStatus } = require('./connectors/registry');
 
 // Wire the browser-automation driver into the outcomes executor (tier 2).
-// Browserbase cloud driver when keys are present; otherwise Ring's LOCAL
-// Chromium driver (development/testing on this machine). Either way Ring
+// Browserbase cloud driver when keys are present. Ring's LOCAL Chromium
+// driver ONLY when RING_LOCAL_BROWSER=1 (development/testing on a machine
+// with Playwright Chromium — NEVER on Vercel/serverless). Either way Ring
 // opens its own browser — never Muse's.
 try {
   const outcomes = require('./connectors/outcomes');
   const bbKeys = (process.env.BROWSERBASE_API_KEY || '') && (process.env.BROWSERBASE_PROJECT_ID || '');
+  const useLocal = process.env.RING_LOCAL_BROWSER === '1';
   const { createDriver } = bbKeys
     ? require('./lib/browser_driver')
-    : require('./lib/local_driver');
+    : useLocal
+      ? require('./lib/local_driver')
+      : require('./lib/browser_driver'); // no keys + not local → cloud driver reports "not configured"
   outcomes.setBrowserDriver(createDriver());
-  console.log(`[ring] browser driver: ${bbKeys ? 'browserbase (cloud)' : 'local chromium'}`);
+  console.log(`[ring] browser driver: ${bbKeys ? 'browserbase (cloud)' : useLocal ? 'local chromium (dev)' : 'browserbase (no keys)'}`);
 } catch (e) { /* outcomes unavailable — tools report their own errors */ }
 
 const app = express();
