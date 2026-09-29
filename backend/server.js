@@ -53,12 +53,17 @@ const connectors = {
 const { connectorStatus } = require('./connectors/registry');
 
 // Wire the browser-automation driver into the outcomes executor (tier 2).
-// Null when BROWSERBASE keys are absent — outcomes then honestly reports
-// browser_not_configured instead of pretending.
+// Browserbase cloud driver when keys are present; otherwise Ring's LOCAL
+// Chromium driver (development/testing on this machine). Either way Ring
+// opens its own browser — never Muse's.
 try {
   const outcomes = require('./connectors/outcomes');
-  const { createDriver } = require('./lib/browser_driver');
+  const bbKeys = (process.env.BROWSERBASE_API_KEY || '') && (process.env.BROWSERBASE_PROJECT_ID || '');
+  const { createDriver } = bbKeys
+    ? require('./lib/browser_driver')
+    : require('./lib/local_driver');
   outcomes.setBrowserDriver(createDriver());
+  console.log(`[ring] browser driver: ${bbKeys ? 'browserbase (cloud)' : 'local chromium'}`);
 } catch (e) { /* outcomes unavailable — tools report their own errors */ }
 
 const app = express();
@@ -104,8 +109,27 @@ app.get('/api/connectors', (req, res) => {
   );
 });
 
+// Image attachments for chat turns (benchmark 1.4). The client sends
+// data-URLs (downscaled client-side); we validate strictly and hand the
+// parts to the agent loop, which maps them to provider vision blocks.
+// Returns [] for "none", or null when the input is malformed.
+function sanitizeAttachments(attachments) {
+  if (attachments == null) return [];
+  if (!Array.isArray(attachments) || attachments.length > 4) return null;
+  const out = [];
+  for (const a of attachments) {
+    if (!a || typeof a !== 'object') return null;
+    const { mime, dataUrl } = a;
+    if (typeof mime !== 'string' || !mime.startsWith('image/')) return null;
+    if (typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) return null;
+    if (dataUrl.length > 6_500_000) return null; // ~4.9MB binary
+    out.push({ mime: mime.slice(0, 64), dataUrl });
+  }
+  return out;
+}
+
 app.post('/api/chat', async (req, res) => {
-  const { text, threadId, tz } = req.body || {};
+  const { text, threadId, tz, attachments } = req.body || {};
   // Caller identity: a valid Supabase JWT → real user id; anything else →
   // the 'demo' sandbox. Demo turns run simulated tools only and can never
   // create real approval cards. There is no unauthenticated 'local'
@@ -115,8 +139,10 @@ app.post('/api/chat', async (req, res) => {
   const userId = authed ? req.userId : 'demo';
   const demo = !authed;
   if (!text || typeof text !== 'string') return res.status(400).json({ error: 'text is required' });
+  const parts = sanitizeAttachments(attachments);
+  if (parts === null) return res.status(400).json({ error: 'invalid attachments (images only, max 4, each under ~5MB)' });
   try {
-    const reply = await runAgentTurn({ text, userId, threadId, demo, tz });
+    const reply = await runAgentTurn({ text, userId, threadId, demo, tz, attachments: parts });
 
     // Approval gate: medium/high-risk calls are HELD as approval records —
     // never executed silently. The client renders them as approval cards and
@@ -145,11 +171,13 @@ app.post('/api/chat', async (req, res) => {
 // POST /api/chat/stream → SSE: `data: {"token":"..."}` … then
 // `data: {"done":true, ...full reply...}`. Same approval gating as /api/chat.
 app.post('/api/chat/stream', async (req, res) => {
-  const { text, threadId, tz } = req.body || {};
+  const { text, threadId, tz, attachments } = req.body || {};
   const authed = req.userId && req.userId !== 'local';
   const userId = authed ? req.userId : 'demo';
   const demo = !authed;
   if (!text || typeof text !== 'string') return res.status(400).json({ error: 'text is required' });
+  const parts = sanitizeAttachments(attachments);
+  if (parts === null) return res.status(400).json({ error: 'invalid attachments (images only, max 4, each under ~5MB)' });
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
@@ -158,7 +186,7 @@ app.post('/api/chat/stream', async (req, res) => {
   const send = (obj) => res.write(`data: ${JSON.stringify(obj)}\n\n`);
   try {
     const reply = await runAgentTurnStream({
-      text, userId, threadId, demo, tz,
+      text, userId, threadId, demo, tz, attachments: parts,
       onToken: (token) => send({ token }),
     });
     const held = [];

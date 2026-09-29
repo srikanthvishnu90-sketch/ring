@@ -129,9 +129,9 @@ const _RAW_TOOLS = [
     describe: 'Read a full note by id',
   },
   {
-    name: 'note_delete', risk: 'low', fn: async ({ userId, id }) => notes.remove(userId, { id }),
+    name: 'note_delete', risk: 'high', fn: async ({ userId, id }) => notes.remove(userId, { id }),
     schema: { type: 'object', properties: { id: { type: 'string', description: 'Note id from note_list or note_search' } }, required: ['id'] },
-    describe: 'Delete a note by id',
+    describe: 'Delete a note by id (destructive — always needs approval)',
   },
   // --- Gmail extended (features 3-6, 8-14) --------------------------------
   {
@@ -242,6 +242,8 @@ const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. Yo
 - Real outcomes: book restaurant tables for real (confirmation reference required — never claim booked without one), change/cancel reservations, cancel subscriptions with proof, book rides (confirm before ordering), find tonight's restaurants, log into websites and complete tasks (per-action approval, vaulted credentials), fill web forms, check order/delivery status, live price checks, diagnose and fix messed-up reservations.
 - Memory + groups: remember durable facts, recall them, reply as @ring in group chats, run polls to plan with friends and lock a time, daily briefs, draft messages (never send without approval), learn routines, smart nudges.
 - Health + notes: log health metrics (steps, sleep, water, weight, workouts, mood, energy), show today's metrics, per-metric trends and multi-day summaries; save, list, search, read, and delete notes.
+Deliverables: when the user asks for something they will keep or share — an itinerary, a comparison, a plan, a document, a write-up — put the deliverable itself in its own surface: wrap it in a fenced code block whose info string starts with doc: followed by the title (opening fence line "doc:Trip Itinerary", then the full markdown content, then a closing fence). Keep 1-2 sentences of chat text outside the block; the block is the document. Never dump a long document as plain chat text when this surface fits.
+Images: the user can attach photos/screenshots to a message — you will see them as images alongside their text. Look at them and answer grounded in what they show; say what you see before interpreting it. If an image is unreadable, say so instead of guessing.
 Be concise and plainspoken. Never claim a booking, cancellation, message, or send is done until its tool returns proof — and anything that spends money or sends as the user needs their explicit approval first.
 Exhaustiveness: when the user asks about a topic as a whole ("all the emails about X", "everything on Y"), miss nothing — start with the BROADEST query (one or two words, e.g. just "ring") with maxResults 30, scan its ENTIRE thread list, then call gmail_threads ONCE with ALL candidate threadIds (newest first, up to 30 in the single call — that one call is the complete read; never re-include threadIds you already read, and never fall back to one-by-one gmail_thread calls for a whole-topic question). State the thread count you read (e.g. "read 27 of 27 threads") so completeness is checkable. Then enumerate EVERY thread in your answer — group by stance, name each contact/vendor, one line each. The stance field is a first-pass signal (interested/quoted/declined/bounced/replied/no-reply/unknown): verify it against the reply text, and never silently drop a thread from the enumeration — a thread you read but don't mention is a miss. Rows with stance 'unknown' or 'error' could not be fully read (temporary API limit): list them separately as unreadable and NEVER categorize them from their snippet — a polite snippet opening is not a positive follow-up. If more than a couple of rows are unknown, say the answer is partial and retry the batch once after a short wait rather than guessing. Never rely on narrow phrasings that silently drop threads with different subject lines. Prefer reading threads over running more searches; don't burn your budget re-searching. Synthesize ONLY from thread content you actually read — never from snippets. Reply-stance honesty: a contact's stance (interested / declined / quoted / waiting on them / waiting on you) comes only from message text you have read. A polite acknowledgment ("thanks for reaching out", "received your details") is NOT interest — if the same message declines, report it as declined. Never list something as submitted, completed, paid, or confirmed unless a message you read says so. This covers third-party portal steps too (income-verification portals, ID-verification links): a later "thanks, everything is updated" email confirms only the specific items the thread shows were sent — a portal step with no confirmation message of its own is "status unknown / still outstanding", never "submitted". Worked example of this exact trap: Joseph's email says income verification goes through the SNAPPT portal, and a later Joseph email says "thanks for sending these over, they have been updated" — that confirms the documents the thread shows were emailed (application, ID, tax bills), NOT the SNAPPT portal step. Report SNAPPT as "required via portal; no confirmation — status unknown", never as submitted. If you cannot verify completeness, say what you covered and what you might have missed. When the user asks for a specific number ("give me 5"), read each candidate thread fully and rank by substance.
 Approval mechanics: when the user asks for something that needs approval (reply, forward, send, draft, trash, archive, mark, star, create/reschedule/cancel events, bookings, orders, logins), CALL the tool with the exact arguments — the system automatically holds it for the user's approval instead of executing it. Never substitute a text question ("should I do X?") for the tool call; the approval card is how the user confirms. Honesty rule: if your reply says you submitted, staged, or are holding something for approval, you MUST have called the corresponding tool in this turn. Never describe a tool call you did not make — no approval card exists unless the tool was actually called.`;
@@ -425,13 +427,36 @@ function llmConfigured() {
 // Both providers normalize to { text, toolCalls: [{id, name, args}] }.
 // OPENAI_BASE_URL lets the OpenAI path point at any OpenAI-compatible
 // endpoint (e.g. Gemini's: https://generativelanguage.googleapis.com/v1beta/openai).
+
+// Build the user message content for a turn. `prompt` is the text; `parts`
+// is an optional array of { mime, dataUrl } image attachments (validated
+// upstream). With no parts this returns the plain string — behavior is
+// identical to before. With parts it returns the provider's content-block
+// array so the model can actually see the images.
+function userContent(prompt, parts, provider) {
+  if (!Array.isArray(parts) || !parts.length) return prompt;
+  const out = [{ type: 'text', text: String(prompt || '') }];
+  for (const p of parts) {
+    if (!p || typeof p.dataUrl !== 'string' || !p.dataUrl.startsWith('data:image/')) continue;
+    if (provider === 'anthropic') {
+      const comma = p.dataUrl.indexOf(',');
+      out.push({
+        type: 'image',
+        source: { type: 'base64', media_type: String(p.mime || 'image/jpeg'), data: p.dataUrl.slice(comma + 1) },
+      });
+    } else {
+      out.push({ type: 'image_url', image_url: { url: p.dataUrl } });
+    }
+  }
+  return out.length > 1 ? out : prompt;
+}
 async function callOpenAI(prompt, tools = TOOLS, opts = {}) {
   const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
   const body = {
     model: env('AGENT_MODEL', 'gpt-4o'),
     messages: [
       { role: 'system', content: opts.system || SYSTEM_PROMPT },
-      { role: 'user', content: prompt },
+      { role: 'user', content: userContent(prompt, opts.parts, 'openai') },
     ],
     tools: tools.map((t) => ({ type: 'function', function: { name: t.name, description: t.describe, parameters: t.schema } })),
   };
@@ -459,7 +484,7 @@ async function callAnthropic(prompt, tools = TOOLS, opts = {}) {
     model: env('AGENT_MODEL', 'claude-sonnet-4-5'),
     max_tokens: opts.maxTokens || 1024,
     system: opts.system || SYSTEM_PROMPT,
-    messages: [{ role: 'user', content: prompt }],
+    messages: [{ role: 'user', content: userContent(prompt, opts.parts, 'anthropic') }],
     tools: tools.map((t) => ({ name: t.name, description: t.describe, input_schema: t.schema })),
   };
   const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -498,7 +523,7 @@ async function callOpenAIStream(prompt, onToken, tools = TOOLS, opts = {}) {
       ...(opts.maxTokens ? { max_tokens: opts.maxTokens } : {}),
       messages: [
         { role: 'system', content: opts.system || SYSTEM_PROMPT },
-        { role: 'user', content: prompt },
+        { role: 'user', content: userContent(prompt, opts.parts, 'openai') },
       ],
       tools: tools.map((t) => ({ type: 'function', function: { name: t.name, description: t.describe, parameters: t.schema } })),
     }),
@@ -555,7 +580,7 @@ async function callAnthropicStream(prompt, onToken, tools = TOOLS, opts = {}) {
       max_tokens: opts.maxTokens || 1024,
       stream: true,
       system: opts.system || SYSTEM_PROMPT,
-      messages: [{ role: 'user', content: prompt }],
+      messages: [{ role: 'user', content: userContent(prompt, opts.parts, 'anthropic') }],
       tools: tools.map((t) => ({ name: t.name, description: t.describe, input_schema: t.schema })),
     }),
   });
@@ -644,7 +669,7 @@ async function processToolCalls({ toolCalls, tools, userId, toolsUsed, allResult
   allResults.push(...results);
 }
 
-async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', onToken, demo = false, maxTokens = null, voice = false, tz = null }) {
+async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', onToken, demo = false, maxTokens = null, voice = false, tz = null, attachments = null }) {
   const tools = demo ? DEMO_TOOLS : TOOLS;
   if (!llmConfigured()) {
     const c = cannedReply(text);
@@ -658,8 +683,12 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
 
   const provider = env('LLM_PROVIDER', 'openai');
   const call = provider === 'anthropic' ? callAnthropicStream : callOpenAIStream;
-  const streamOpts = { system: withTimeContext(SYSTEM_PROMPT + (voice ? VOICE_STYLE : ''), tz), ...(maxTokens || voice ? { maxTokens: maxTokens || 150 } : {}) };
+  // Image attachments ride on the FIRST call only (the model keeps them in
+  // context for follow-up rounds); later rounds re-send text only.
+  const firstParts = Array.isArray(attachments) && attachments.length ? attachments : null;
+  const streamOpts = { system: withTimeContext(SYSTEM_PROMPT + (voice ? VOICE_STYLE : ''), tz), ...(maxTokens || voice ? { maxTokens: maxTokens || 150 } : {}), ...(firstParts ? { parts: firstParts } : {}) };
   const first = await call(prompt, onToken, tools, streamOpts);
+  delete streamOpts.parts; // images ride the first call only; follow-ups are text-only
 
   const toolsUsed = [];
   const allResults = [];
@@ -802,7 +831,7 @@ function cannedReply(text) {
   return { text: 'Got it — say more and I\'ll take it from there.', toolsUsed: [] };
 }
 
-async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo = false, telegram = null, maxTokens = null, voice = false, tz = null }) {
+async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo = false, telegram = null, maxTokens = null, voice = false, tz = null, attachments = null }) {
   const tg = telegram && telegram.style === 'telegram' ? telegram : null;
   const tools = demo ? DEMO_TOOLS : TOOLS;
   if (!llmConfigured()) return { ...cannedReply(text), mode: demo ? 'canned-demo' : 'canned' };
@@ -818,8 +847,11 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
   const provider = env('LLM_PROVIDER', 'openai');
   const call = provider === 'anthropic' ? callAnthropic : callOpenAI;
   // Voice turns get a tight token cap: shorter replies = faster first audio.
-  const callOpts = { system, ...(maxTokens ? { maxTokens } : voice ? { maxTokens: 150 } : tg ? { maxTokens: 320 } : {}) };
+  // Image attachments ride on the FIRST call only (the model keeps them in
+  // context for follow-up rounds); later rounds re-send text only.
+  const callOpts = { system, ...(maxTokens ? { maxTokens } : voice ? { maxTokens: 150 } : tg ? { maxTokens: 320 } : {}), ...(Array.isArray(attachments) && attachments.length ? { parts: attachments } : {}) };
   const first = await call(prompt, tools, callOpts);
+  delete callOpts.parts;
 
   const toolsUsed = [];
   const allResults = [];
