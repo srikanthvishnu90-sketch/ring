@@ -285,6 +285,108 @@ async function readThread({ userId, threadId }) {
   };
 }
 
+// First-pass reply-stance signal from the latest inbound text. The agent
+// MUST verify against latestReply.body before finalizing — this is a hint,
+// not a verdict.
+function classifyStance(text) {
+  const t = (text || '').toLowerCase();
+  if (/(undeliverable|delivery (status )?fail|address not found|mailbox unavailable|bounced)/.test(t)) return 'bounced';
+  if (/(do not|don't|does not|doesn't) (provide|offer|manufacture)|unable to|cannot support|can't support|not taking|declin|pass(ing)? on|outside (of )?our (scope|business|product)|not (a |our )(product|service|business)|no longer|discontinu/.test(t)) return 'declined';
+  if (/(nre|moq|unit price|quotation|quote|prototype cost|\$\s?\d)/.test(t)) return 'quoted';
+  if (/(interested|would love|happy to|excited|let's|schedule a call|please (share|send)|send us|nda|next step)/.test(t)) return 'interested';
+  return t ? 'replied' : 'no-reply';
+}
+
+// Strip HTML to readable text for HTML-only emails (marketing/portal mail
+// often has no text/plain part — without this the detail is <meta> garbage).
+function htmlToText(html) {
+  return (html || '')
+    .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function cleanBodyText(txt) {
+  const t = (txt || '').trim();
+  return /<[a-z][^>]*>/i.test(t) ? htmlToText(t) : t;
+}
+
+// Pull the decline sentence(s) out of a longer reply so a polite opening
+// never buries the verdict (the failure this tool exists to prevent).
+function extractDecline(text) {
+  const pat = /(do not|don't|does not|doesn't) (provide|offer|manufacture)|unable to|cannot support|can't support|not taking|declin|pass(ing)? on|outside (of )?our (scope|business|product)|not (a |our )(product|service|business)|no longer|discontinu/i;
+  const hits = (text || '').split(/(?<=[.!?])\s+/).filter((s) => pat.test(s));
+  return hits.slice(0, 3).join(' ');
+}
+
+// --- Batch thread read ------------------------------------------------------
+// Read up to 30 threads in ONE tool call, so whole-topic questions
+// ("all the emails about X") get complete coverage in a single round — the
+// tool does the exhaustive fetching (it doesn't get lazy), the model
+// synthesizes. Returns one compact row per thread: vendor, a first-pass
+// stance signal (interested/quoted/declined/bounced/replied/no-reply —
+// VERIFY against the detail text before trusting it), and the key detail:
+// for declines, the decline sentence(s) themselves (a polite opening never
+// buries the verdict); otherwise the opening of the latest reply from the
+// other party. Full bodies stay one gmail_thread call away.
+async function readThreads({ userId, threadIds }) {
+  guard();
+  const ids = [...new Set(threadIds || [])].slice(0, 30);
+  if (!ids.length) throw new Error('threadIds is required (array of thread ids from gmail_search)');
+  let owner = '';
+  try {
+    const prof = await gfetch(userId, 'https://gmail.googleapis.com/gmail/v1/users/me/profile');
+    owner = (prof.emailAddress || '').toLowerCase();
+  } catch {
+    owner = '';
+  }
+  const threads = await Promise.all(
+    ids.map(async (threadId) => {
+      try {
+        const t = await gfetch(
+          userId,
+          `https://gmail.googleapis.com/gmail/v1/users/me/threads/${encodeURIComponent(threadId)}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`
+        );
+        const msgs = t.messages || [];
+        const participants = [...new Set(msgs.map((m) => header(m, 'From')).filter(Boolean))];
+        const vendor = (participants.find((p) => !owner || !p.toLowerCase().includes(owner)) || participants[0] || '').slice(0, 60);
+        // Newest message not from the account owner = the latest follow-up.
+        const inbound = [...msgs]
+          .reverse()
+          .find((m) => !owner || !header(m, 'From').toLowerCase().includes(owner));
+        if (!inbound) return { threadId, vendor, stance: 'no-reply', detail: null };
+        try {
+          const fm = await gfetch(
+            userId,
+            `https://gmail.googleapis.com/gmail/v1/users/me/messages/${inbound.id}?format=full`
+          );
+          const raw = findTextBody(fm.payload);
+          const fullTxt = cleanBodyText(
+            (raw ? Buffer.from(raw, 'base64url').toString('utf8').replace(/\s+/g, ' ').trim() : '') || inbound.snippet || ''
+          );
+          const stance = classifyStance(fullTxt);
+          const detail = (stance === 'declined' ? extractDecline(fullTxt) || fullTxt : fullTxt).slice(0, 150);
+          return { threadId, vendor, stance, detail: detail || null };
+        } catch {
+          return { threadId, vendor, stance: 'replied', detail: (inbound.snippet || '').slice(0, 150) || null };
+        }
+      } catch (e) {
+        return { threadId, vendor: '', stance: 'error', detail: e.message.slice(0, 100) };
+      }
+    })
+  );
+  const counts = {};
+  for (const t of threads) counts[t.stance] = (counts[t.stance] || 0) + 1;
+  return { readCount: threads.length, truncated: (threadIds || []).length > ids.length, counts, threads };
+}
+
 // Build a base64url RFC2822 message.
 function mimeRaw(headers, body) {
   const head = Object.entries(headers)
@@ -525,6 +627,7 @@ module.exports = {
   sendMessage,
   triageMessages,
   readThread,
+  readThreads,
   replyMessage,
   forwardMessage,
   createDraft,
