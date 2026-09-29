@@ -114,7 +114,13 @@ async function searchMessages({ userId, query, maxResults = 30 }) {
     }
     pageToken = list.nextPageToken;
   } while (pageToken && threads.length < maxResults && fetchedMsgs < MSG_CAP);
-  return { threads, hasMore: !!pageToken && threads.length >= maxResults };
+  // Compat: pre-103bef7 consumers read `.messages` (array of {id, subject,
+  // from, to, date, snippet}). Keep it alongside the new `.threads` shape.
+  const messages = threads.map((t) => ({
+    id: t.threadId, threadId: t.threadId,
+    subject: t.subject, from: t.from, to: t.to, date: t.date, snippet: t.snippet,
+  }));
+  return { threads, messages, hasMore: !!pageToken && threads.length >= maxResults };
 }
 
 // Walk a Gmail payload tree and return the first text/plain body (base64url).
