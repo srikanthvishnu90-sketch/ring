@@ -112,7 +112,27 @@ async function getBrowser() {
       err.code = 'NO_LOCAL_CHROMIUM';
       throw err;
     }
-    const launchOpts = { executablePath: exe, headless: true };
+    const launchOpts = {
+      executablePath: exe,
+      headless: true,
+      args: [
+        // Anti-bot detection: make headless Chromium look like a real browser
+        '--disable-blink-features=AutomationControlled',
+        '--disable-features=IsolateOrigins,site-per-process',
+        '--disable-site-isolation-trials',
+        '--disable-web-security',
+        '--disable-features=BlockInsecurePrivateNetworkRequests',
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--disable-gpu',
+        // Realistic window size
+        '--window-size=1920,1080',
+      ],
+    };
     const relay = await startRelay();
     if (relay) {
       _relayServer = relay.server;
@@ -153,6 +173,32 @@ async function resolveSession(job) {
     // Relay goes through the sandbox MITM proxy — accept its CA.
     ...(browser._relayActive ? { ignoreHTTPSErrors: true } : {}),
   });
+
+  // Anti-bot stealth: patch navigator.webdriver and other detection flags.
+  // Cloudflare and similar services check these to identify automated browsers.
+  await context.addInitScript(() => {
+    // Remove webdriver flag
+    Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+    // Patch plugins (headless has 0, real browsers have some)
+    Object.defineProperty(navigator, 'plugins', {
+      get: () => [
+        { name: 'Chrome PDF Plugin', filename: 'internal-pdf-viewer' },
+        { name: 'Chrome PDF Viewer', filename: 'mhjfbmdgcfjbbpaeojofohoefgiehjai' },
+        { name: 'Native Client', filename: 'internal-nacl-plugin' },
+      ],
+    });
+    // Patch languages
+    Object.defineProperty(navigator, 'languages', { get: () => ['en-US', 'en'] });
+    // Patch chrome object
+    window.chrome = { runtime: {} };
+    // Patch permissions
+    const originalQuery = window.navigator.permissions.query;
+    window.navigator.permissions.query = (parameters) => (
+      parameters.name === 'notifications'
+        ? Promise.resolve({ state: Notification.permission })
+        : originalQuery(parameters)
+    );
+  }).catch(() => {}); // Best effort — don't fail if init script errors
   const sessionId = `local-${randomUUID().slice(0, 8)}`;
   const rec = { id: sessionId, context, createdAt: Date.now(), lastTouch: Date.now(), userId: job.userId || null };
   _sessions.set(sessionId, rec);
