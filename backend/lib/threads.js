@@ -11,7 +11,10 @@
 // Broadcast so websocket subscribers get messages posted on any instance.
 const crypto = require('node:crypto');
 const { env } = require('./config');
-const { runAgentTurn } = require('./agent');
+// NOTE: do NOT require('./agent') eagerly here — this module is loaded
+// mid-cycle while agent.js is still initializing (agent -> registry ->
+// social -> threads), so its exports would be captured undefined. The agent
+// is required lazily at the call site below instead.
 const approvals = require('./approvals');
 const memory = require('./memory');
 const { broadcastRealtime } = require('./realtime');
@@ -202,6 +205,8 @@ async function postMessage(threadId, { from, text, userId, skipMention }) {
       .slice(-12).map((m) => `${m.from}: ${m.text}`).join('\n');
     let reply;
     try {
+      // Lazy require: agent.js is fully loaded by call time.
+      const { runAgentTurn } = require('./agent');
       reply = await runAgentTurn({
         text: `You are @${AGENT_NAME} in the group chat "${th.name}" with members: ${th.members.join(', ') || 'unknown'}. Recent messages:\n${history}\n\nRespond to the latest message from ${from}. If they want options (restaurants, times), offer 2-3 concrete options and say you'll book once they pick one.`,
         userId: ownerId,

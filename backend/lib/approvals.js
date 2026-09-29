@@ -9,7 +9,14 @@
 // instances — can never execute a tool twice. create() dedupes identical
 // pending approvals inside a short window and honors an explicit
 // idempotencyKey, so retried agent turns don't stack duplicate cards.
-const { TOOLS, DEMO_TOOLS } = require('./agent');
+// NOTE: lib/agent.js (transitively: connectors/registry -> social -> threads
+// -> this module) requires this file while it is still initializing, so an
+// eager require('./agent') here captures its half-built exports and
+// TOOLS/DEMO_TOOLS stay undefined forever — every create()/resolve() would
+// crash with "Cannot read properties of undefined (reading 'find')".
+// Resolve them lazily: by call time agent.js is always fully loaded.
+function agentTools() { return require('./agent').TOOLS; }
+function agentDemoTools() { return require('./agent').DEMO_TOOLS; }
 const { logToolRun } = require('./audit');
 const { ENABLED, sbRequest, eq } = require('./supabase');
 
@@ -102,7 +109,7 @@ function buildRec({ tool, args, userId, threadId, idempotencyKey }) {
 }
 
 async function create({ toolName, args, userId, threadId, idempotencyKey }) {
-  const tool = TOOLS.find((t) => t.name === toolName);
+  const tool = agentTools().find((t) => t.name === toolName);
   if (!tool) throw new Error('unknown tool: ' + toolName);
   const uid = userId || 'local';
   // Fail closed: the shared legacy 'local' identity may never own new cards.
@@ -167,7 +174,7 @@ async function listPending(userId) {
 }
 
 async function executeTool(rec, tools) {
-  const tool = (tools || TOOLS).find((t) => t.name === rec.tool);
+  const tool = (tools || agentTools()).find((t) => t.name === rec.tool);
   if (!tool) return { error: 'unknown tool: ' + rec.tool };
   try {
     const out = await tool.fn({ userId: rec.userId, ...rec.args });
@@ -182,7 +189,7 @@ async function executeTool(rec, tools) {
 // policy. Throws {code:'LEGACY_CARD'} or {code:'FORBIDDEN'} — never returns
 // a real toolset for a card that must not execute.
 function toolsetFor(rec, opts) {
-  if (rec.userId === 'demo') return DEMO_TOOLS;
+  if (rec.userId === 'demo') return agentDemoTools();
   if (rec.userId === 'local') {
     throw Object.assign(
       new Error('legacy approval can no longer be resolved — sign in and retry'),
@@ -192,7 +199,7 @@ function toolsetFor(rec, opts) {
   if (!opts || opts.executorUserId !== rec.userId) {
     throw Object.assign(new Error('forbidden'), { code: 'FORBIDDEN' });
   }
-  return TOOLS;
+  return agentTools();
 }
 
 async function resolve(id, decision, opts) {

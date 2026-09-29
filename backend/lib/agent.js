@@ -557,7 +557,12 @@ function claimsSelfSubmitted(text) {
     || /\b(held for your approval|waiting for your approval|pending approval|approval card|confirm the (action|prompt))\b/.test(t);
 }
 
-const HONESTY_CORRECTION = `Your last reply told the user you submitted, staged, or are holding an action for their approval, but you did not call any tool — so nothing was submitted. If the user asked you to do something that needs approval, CALL the exact tool now with the exact arguments; the system holds it for approval automatically. If you were only describing the approval queue or answering a question, reply briefly WITHOUT claiming you submitted anything.`;
+const HONESTY_CORRECTION = `Your last reply told the user you submitted, staged, or are holding an action for their approval, but you did not call any tool — so nothing was submitted and no approval exists. Correct this now with exactly one of: (a) a tool call with the exact arguments for the action the user asked for (the system holds it for approval automatically) — do this whenever the request is actionable; or (b) one brief sentence stating you did not submit anything, WITHOUT claiming you staged, held, or are waiting on anything.`;
+
+// Last-resort reply when the model keeps claiming it submitted/staged an
+// action without calling the tool: the turn must never end on the false
+// claim, so it ends on this explicit honest message instead.
+const HONEST_FALLBACK = `I wasn't able to stage that just now — nothing was submitted and no approval was created. Please try asking again.`;
 
 // One round of tool-call processing, shared by both turn functions so the
 // honesty guard reuses the exact same execution semantics as the main loop.
@@ -626,16 +631,19 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
   // Honesty guard: the model sometimes tells the user it submitted, staged,
   // or is holding an action for approval without ever calling the tool —
   // leaving the user waiting on a card that can never arrive. Detect that
-  // and run up to two corrective rounds so it actually calls the tool.
+  // and run up to two corrective rounds so it actually calls the tool. If
+  // it still won't, the turn ends on an explicit honest message — never on
+  // the false claim.
   let corrections = 0;
+  let retracted = false;
   while (corrections < 2 && rounds < MAX_ROUNDS && !pending.length
          && claimsSelfSubmitted(finalText)
          && !toolsUsed.some((t) => t.risk !== 'low')) {
     corrections++;
     rounds++;
     // The correction round is internal self-correction: its tokens are not
-    // streamed to the UI and its text never reaches the user — only the
-    // honest closing reply below is user-visible.
+    // streamed to the UI — only a real tool call or the honest closing
+    // reply below is user-visible.
     const fix = await call(
       `${prompt}\n\n${HONESTY_CORRECTION}`,
       () => {},
@@ -643,20 +651,50 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
       streamOpts
     );
     const fixCalls = fix.toolCalls || [];
-    if (fixCalls.length && rounds < MAX_ROUNDS) {
-      rounds++;
-      await processToolCalls({ toolCalls: fixCalls, tools, userId, toolsUsed, allResults });
+    if (fixCalls.length) {
+      // The model acted: execute the calls, then describe the real held
+      // action in one fresh reply that supersedes the false draft.
+      if (rounds < MAX_ROUNDS) {
+        rounds++;
+        await processToolCalls({ toolCalls: fixCalls, tools, userId, toolsUsed, allResults });
+      }
+      const follow = await call(
+        `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
+        (tok) => { if (onToken) onToken(tok); },
+        tools,
+        streamOpts
+      );
+      if (follow.text) {
+        finalText = follow.text;
+        retracted = true;
+      }
+      pending = follow.toolCalls || [];
+      break;
     }
-    const closeBase = finalText;
     const close = await call(
       `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
       (tok) => { if (onToken) onToken(tok); },
       tools,
       streamOpts
     );
-    // close.text was already streamed token-by-token; rebuild final text.
-    if (close.text) finalText = closeBase + close.text;
+    if (close.text && !claimsSelfSubmitted(close.text)) {
+      // Honest self-correction: replace the false draft, never append to it.
+      finalText = close.text;
+      retracted = true;
+      break;
+    }
+    // Still claiming (or empty): keep the streamed tokens in the transcript
+    // for now; the safety net below replaces them if nothing improves.
+    if (close.text) finalText = finalText + close.text;
     pending = close.toolCalls || [];
+  }
+  // Safety net: the model still claims a submission with no medium/high-risk
+  // tool call to back it — that claim is false. End the turn on an explicit
+  // honest message instead of the lie.
+  if (!retracted && claimsSelfSubmitted(finalText)
+      && !toolsUsed.some((t) => t.risk !== 'low')) {
+    if (onToken) onToken(HONEST_FALLBACK);
+    finalText = HONEST_FALLBACK;
   }
 
   // Round cap hit mid-research: one final tool-free call so the user gets a
@@ -727,27 +765,57 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
   // Honesty guard: the model sometimes tells the user it submitted, staged,
   // or is holding an action for approval without ever calling the tool —
   // leaving the user waiting on a card that can never arrive. Detect that
-  // and run up to two corrective rounds so it actually calls the tool.
+  // and run up to two corrective rounds so it actually calls the tool. If
+  // it still won't, the turn ends on an explicit honest message — never on
+  // the false claim.
   let corrections = 0;
+  let retracted = false;
   while (corrections < 2 && rounds < MAX_ROUNDS && !pending.length
          && claimsSelfSubmitted(finalText)
          && !toolsUsed.some((t) => t.risk !== 'low')) {
     corrections++;
     rounds++;
     const fix = await call(`${prompt}\n\n${HONESTY_CORRECTION}`, tools, callOpts);
-    if (fix.text) finalText = fix.text;
     const fixCalls = fix.toolCalls || [];
-    if (fixCalls.length && rounds < MAX_ROUNDS) {
-      rounds++;
-      await processToolCalls({ toolCalls: fixCalls, tools, userId, toolsUsed, allResults });
+    if (fixCalls.length) {
+      // The model acted: execute the calls, then describe the real held
+      // action in one fresh reply that supersedes the false draft.
+      if (rounds < MAX_ROUNDS) {
+        rounds++;
+        await processToolCalls({ toolCalls: fixCalls, tools, userId, toolsUsed, allResults });
+      }
+      const follow = await call(
+        `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
+        tools,
+        callOpts
+      );
+      if (follow.text) {
+        finalText = follow.text;
+        retracted = true;
+      }
+      pending = follow.toolCalls || [];
+      break;
     }
     const close = await call(
       `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
       tools,
       callOpts
     );
+    if (close.text && !claimsSelfSubmitted(close.text)) {
+      // Honest self-correction: replace the false draft, never append to it.
+      finalText = close.text;
+      retracted = true;
+      break;
+    }
     if (close.text) finalText = close.text;
     pending = close.toolCalls || [];
+  }
+  // Safety net: the model still claims a submission with no medium/high-risk
+  // tool call to back it — that claim is false. End the turn on an explicit
+  // honest message instead of the lie.
+  if (!retracted && claimsSelfSubmitted(finalText)
+      && !toolsUsed.some((t) => t.risk !== 'low')) {
+    finalText = HONEST_FALLBACK;
   }
 
   // If the round cap hit mid-research, never return an empty or stale reply:
