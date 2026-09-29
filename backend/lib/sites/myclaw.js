@@ -283,17 +283,49 @@ async function resetPassword(ctx, job) {
     ctx.log('new_password_filled', { fieldCount: passFields.length });
 
     // Submit the form.
-    const submitBtn = await page.$('button[type="submit"], button:has-text("Reset"), button:has-text("Save"), button:has-text("Continue")');
+    const submitBtn = await page.$('button[type="submit"], button:has-text("Reset"), button:has-text("Save"), button:has-text("Continue"), button:has-text("Update")');
     if (submitBtn) await submitBtn.click();
     else await page.keyboard.press('Enter');
-    await page.waitForTimeout(5000);
-    ctx.log('reset_submitted', { url: page.url() });
 
-    // Verify — check if we're logged in or need to login with new password.
-    const stillReset = await page.$('input[type="password"]').catch(() => null);
-    if (stillReset) {
+    // Wait for the update to complete — the button shows "Updating..." during submission.
+    // Wait up to 15 seconds for either success (redirect) or failure (error message).
+    ctx.log('reset_submitting', {});
+    let resetSuccess = false;
+    for (let i = 0; i < 15; i++) {
+      await page.waitForTimeout(1000);
+      const url = page.url();
+      // Success: redirected away from reset-password page.
+      if (!url.includes('reset-password') && !url.includes('auth/confirm')) {
+        resetSuccess = true;
+        ctx.log('reset_redirected', { url });
+        break;
+      }
+      // Check for success message on page.
+      const bodyText = await page.textContent('body').catch(() => '') || '';
+      if (/password.*updated|password.*changed|success/i.test(bodyText)) {
+        resetSuccess = true;
+        ctx.log('reset_success_msg', {});
+        break;
+      }
+      // Check for error message.
+      if (/error|failed|invalid|expired/i.test(bodyText)) {
+        ctx.log('reset_error_msg', { snippet: bodyText.slice(0, 200) });
+        break;
+      }
+    }
+    ctx.log('reset_submitted', { url: page.url(), success: resetSuccess });
+
+    if (!resetSuccess) {
+      // Final check — maybe it succeeded but we're still on the page.
+      const bodyText = await page.textContent('body').catch(() => '') || '';
+      if (/password.*updated|password.*changed|success|log in|sign in/i.test(bodyText)) {
+        resetSuccess = true;
+      }
+    }
+
+    if (!resetSuccess) {
       await ctx.screenshot('myclaw-reset-failed');
-      return { ok: false, code: 'reset_failed', note: 'Password fields still present after submit — reset may have failed. Screenshot captured.' };
+      return { ok: false, code: 'reset_failed', note: 'Password reset did not complete within 15 seconds. Screenshot captured.' };
     }
 
     ctx.log('reset_ok', {});
