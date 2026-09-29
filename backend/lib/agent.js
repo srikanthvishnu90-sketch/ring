@@ -189,7 +189,7 @@ const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. Yo
 - Memory + groups: remember durable facts, recall them, reply as @ring in group chats, run polls to plan with friends and lock a time, daily briefs, draft messages (never send without approval), learn routines, smart nudges.
 Be concise and plainspoken. Never claim a booking, cancellation, message, or send is done until its tool returns proof — and anything that spends money or sends as the user needs their explicit approval first.
 Exhaustiveness: when the user asks about a topic as a whole ("all the emails about X", "everything on Y"), miss nothing — start with the BROADEST query (one or two words, e.g. just "ring") with maxResults 30, enumerate every matching threadId, then read each candidate thread; never rely on narrow phrasings that silently drop threads with different subject lines. One broad search is enough — scan its ENTIRE thread list before reading anything, then batch-read every thread where the other party replied. Prefer reading threads over running more searches; don't burn your budget re-searching. and never present a partial count as the complete picture. If you cannot verify completeness, say what you covered and what you might have missed. When the user asks for a specific number ("give me 5"), do the opposite: read each candidate thread fully and rank by substance.
-Approval mechanics: when the user asks for something that needs approval (reply, forward, send, draft, trash, archive, mark, star, create/reschedule/cancel events, bookings, orders, logins), CALL the tool with the exact arguments — the system automatically holds it for the user's approval instead of executing it. Never substitute a text question ("should I do X?") for the tool call; the approval card is how the user confirms.`;
+Approval mechanics: when the user asks for something that needs approval (reply, forward, send, draft, trash, archive, mark, star, create/reschedule/cancel events, bookings, orders, logins), CALL the tool with the exact arguments — the system automatically holds it for the user's approval instead of executing it. Never substitute a text question ("should I do X?") for the tool call; the approval card is how the user confirms. Honesty rule: if your reply says you submitted, staged, or are holding something for approval, you MUST have called the corresponding tool in this turn. Never describe a tool call you did not make — no approval card exists unless the tool was actually called.`;
 
 const DEMO_PROMPT_SUFFIX = `
 
@@ -227,17 +227,23 @@ function tzOffsetISO(tz, date) {
   const a = Math.abs(diffMin);
   return `${diffMin >= 0 ? '+' : '-'}${String(Math.floor(a / 60)).padStart(2, '0')}:${String(a % 60).padStart(2, '0')}`;
 }
-function withTimeContext(base) {
-  const tz = 'Europe/Rome';
+function withTimeContext(base, tz) {
+  // Prefer the client's actual timezone (sent with chat turns); fall back to
+  // the stored default. A wrong "today" makes every relative date wrong, so
+  // never trust a hardcoded zone when the client told us where the user is.
+  let zone = 'Europe/Rome';
+  if (typeof tz === 'string' && tz) {
+    try { new Intl.DateTimeFormat('en-US', { timeZone: tz }); zone = tz; } catch { /* invalid zone: keep default */ }
+  }
   const now = new Date();
   const dateStr = new Intl.DateTimeFormat('en-GB', {
-    timeZone: tz, weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+    timeZone: zone, weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
   }).format(now);
   const timeStr = new Intl.DateTimeFormat('en-GB', {
-    timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false,
+    timeZone: zone, hour: '2-digit', minute: '2-digit', hour12: false,
   }).format(now);
-  const offset = tzOffsetISO(tz, now);
-  return `${base}\n\nCurrent date/time: ${dateStr}, ${timeStr} in the user's timezone (${tz}, UTC${offset}). Interpret relative dates ("today", "tomorrow", "next Friday") and bare times in this timezone, and pass event start/end as ISO datetimes with this numeric offset (e.g. 2026-09-29T10:00:00${offset}) — never bare UTC "Z" times.`;
+  const offset = tzOffsetISO(zone, now);
+  return `${base}\n\nCurrent date/time: ${dateStr}, ${timeStr} in the user's timezone (${zone}, UTC${offset}). Interpret relative dates ("today", "tomorrow", "next Friday") and bare times in this timezone, and pass event start/end as ISO datetimes with this numeric offset (e.g. 2026-09-29T10:00:00${offset}) — never bare UTC "Z" times.`;
 }
 
 const TG_DEMO_SUFFIX = `
@@ -535,7 +541,49 @@ async function callAnthropicStream(prompt, onToken, tools = TOOLS, opts = {}) {
   };
 }
 
-async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', onToken, demo = false, maxTokens = null, voice = false }) {
+// Honesty guard: the model sometimes tells the user it submitted, staged,
+// or is holding an action for approval without ever calling the tool —
+// leaving the user waiting on an approval card that can never arrive.
+// claimsSelfSubmitted detects that lie so the turn can be corrected.
+function claimsSelfSubmitted(text) {
+  if (!text || typeof text !== 'string') return false;
+  const t = text.toLowerCase();
+  // Describing the existing approval queue ("you have 2 items pending
+  // approval") is not a submission claim — only correct when the model
+  // implies IT submitted or staged something this turn.
+  if (/\b(you have|there are) \d+[^.\n]{0,80}pending approval\b/.test(t)) return false;
+  return /\bi(['’]ve| have) (submitted|staged|held|created a draft)\b/.test(t)
+    || /\bi(['’]m| am) (waiting on your approval|holding this for approval)\b/.test(t)
+    || /\b(held for your approval|waiting for your approval|pending approval|approval card|confirm the (action|prompt))\b/.test(t);
+}
+
+const HONESTY_CORRECTION = `Your last reply told the user you submitted, staged, or are holding an action for their approval, but you did not call any tool — so nothing was submitted. If the user asked you to do something that needs approval, CALL the exact tool now with the exact arguments; the system holds it for approval automatically. If you were only describing the approval queue or answering a question, reply briefly WITHOUT claiming you submitted anything.`;
+
+// One round of tool-call processing, shared by both turn functions so the
+// honesty guard reuses the exact same execution semantics as the main loop.
+async function processToolCalls({ toolCalls, tools, userId, toolsUsed, allResults }) {
+  const results = [];
+  for (const tc of toolCalls) {
+    const tool = tools.find((t) => t.name === tc.name);
+    if (!tool) continue;
+    toolsUsed.push({ name: tool.name, risk: tool.risk, args: tc.args });
+    if (tool.risk === 'low') {
+      try {
+        const out = await tool.fn({ userId, ...tc.args });
+        results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 10000)}`);
+        logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
+      } catch (e) {
+        results.push(`${tc.name} → ERROR ${e.code || ''}: ${e.message}`.slice(0, 400));
+        logToolRun({ userId, tool: tool.name, args: tc.args, result: { error: e.message, code: e.code }, status: 'failed' }).catch(() => {});
+      }
+    } else {
+      results.push(`${tc.name} → HELD for user approval`);
+    }
+  }
+  allResults.push(...results);
+}
+
+async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', onToken, demo = false, maxTokens = null, voice = false, tz = null }) {
   const tools = demo ? DEMO_TOOLS : TOOLS;
   if (!llmConfigured()) {
     const c = cannedReply(text);
@@ -549,7 +597,7 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
 
   const provider = env('LLM_PROVIDER', 'openai');
   const call = provider === 'anthropic' ? callAnthropicStream : callOpenAIStream;
-  const streamOpts = { system: withTimeContext(SYSTEM_PROMPT + (voice ? VOICE_STYLE : '')), ...(maxTokens || voice ? { maxTokens: maxTokens || 150 } : {}) };
+  const streamOpts = { system: withTimeContext(SYSTEM_PROMPT + (voice ? VOICE_STYLE : ''), tz), ...(maxTokens || voice ? { maxTokens: maxTokens || 150 } : {}) };
   const first = await call(prompt, onToken, tools, streamOpts);
 
   const toolsUsed = [];
@@ -563,25 +611,7 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
   let rounds = 0;
   while (pending.length && rounds < MAX_ROUNDS) {
     rounds++;
-    const results = [];
-    for (const tc of pending) {
-      const tool = tools.find((t) => t.name === tc.name);
-      if (!tool) continue;
-      toolsUsed.push({ name: tool.name, risk: tool.risk, args: tc.args });
-      if (tool.risk === 'low') {
-        try {
-          const out = await tool.fn({ userId, ...tc.args });
-          results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 10000)}`);
-          logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
-        } catch (e) {
-          results.push(`${tc.name} → ERROR ${e.code || ''}: ${e.message}`.slice(0, 400));
-          logToolRun({ userId, tool: tool.name, args: tc.args, result: { error: e.message, code: e.code }, status: 'failed' }).catch(() => {});
-        }
-      } else {
-        results.push(`${tc.name} → HELD for user approval`);
-      }
-    }
-    allResults.push(...results);
+    await processToolCalls({ toolCalls: pending, tools, userId, toolsUsed, allResults });
     const roundBase = finalText;
     const follow = await call(
       `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
@@ -593,6 +623,42 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
     if (follow.text) finalText = roundBase + follow.text;
     pending = follow.toolCalls || [];
   }
+  // Honesty guard: the model sometimes tells the user it submitted, staged,
+  // or is holding an action for approval without ever calling the tool —
+  // leaving the user waiting on a card that can never arrive. Detect that
+  // and run up to two corrective rounds so it actually calls the tool.
+  let corrections = 0;
+  while (corrections < 2 && rounds < MAX_ROUNDS && !pending.length
+         && claimsSelfSubmitted(finalText)
+         && !toolsUsed.some((t) => t.risk !== 'low')) {
+    corrections++;
+    rounds++;
+    // The correction round is internal self-correction: its tokens are not
+    // streamed to the UI and its text never reaches the user — only the
+    // honest closing reply below is user-visible.
+    const fix = await call(
+      `${prompt}\n\n${HONESTY_CORRECTION}`,
+      () => {},
+      tools,
+      streamOpts
+    );
+    const fixCalls = fix.toolCalls || [];
+    if (fixCalls.length && rounds < MAX_ROUNDS) {
+      rounds++;
+      await processToolCalls({ toolCalls: fixCalls, tools, userId, toolsUsed, allResults });
+    }
+    const closeBase = finalText;
+    const close = await call(
+      `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
+      (tok) => { if (onToken) onToken(tok); },
+      tools,
+      streamOpts
+    );
+    // close.text was already streamed token-by-token; rebuild final text.
+    if (close.text) finalText = closeBase + close.text;
+    pending = close.toolCalls || [];
+  }
+
   // Round cap hit mid-research: one final tool-free call so the user gets a
   // synthesized answer instead of a stale/empty reply.
   if (pending.length) {
@@ -617,12 +683,12 @@ function cannedReply(text) {
   return { text: 'Got it — say more and I\'ll take it from there.', toolsUsed: [] };
 }
 
-async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo = false, telegram = null, maxTokens = null, voice = false }) {
+async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo = false, telegram = null, maxTokens = null, voice = false, tz = null }) {
   const tg = telegram && telegram.style === 'telegram' ? telegram : null;
   const tools = demo ? DEMO_TOOLS : TOOLS;
   if (!llmConfigured()) return { ...cannedReply(text), mode: demo ? 'canned-demo' : 'canned' };
 
-  const system = withTimeContext(SYSTEM_PROMPT + (tg ? TG_STYLE(tg.name) : '') + (voice ? VOICE_STYLE : ''));
+  const system = withTimeContext(SYSTEM_PROMPT + (tg ? TG_STYLE(tg.name) : '') + (voice ? VOICE_STYLE : ''), tz);
   const memBlock = demo ? '' : await memory.contextBlock(userId, text).catch(() => '');
   const histBlock = tg ? tgHistoryBlock(tg.history) : '';
   const prompt = (memBlock ? `${memBlock}\n\n` : '')
@@ -649,26 +715,7 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
   let rounds = 0;
   while (pending.length && rounds < MAX_ROUNDS) {
     rounds++;
-    const results = [];
-    for (const tc of pending) {
-      const tool = tools.find((t) => t.name === tc.name);
-      if (!tool) continue;
-      toolsUsed.push({ name: tool.name, risk: tool.risk, args: tc.args });
-      if (tool.risk === 'low') {
-        try {
-          const out = await tool.fn({ userId, ...tc.args });
-          results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 10000)}`);
-          // Audit (fire-and-forget; logToolRun never throws).
-          logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
-        } catch (e) {
-          results.push(`${tc.name} → ERROR ${e.code || ''}: ${e.message}`.slice(0, 400));
-          logToolRun({ userId, tool: tool.name, args: tc.args, result: { error: e.message, code: e.code }, status: 'failed' }).catch(() => {});
-        }
-      } else {
-        results.push(`${tc.name} → HELD for user approval`);
-      }
-    }
-    allResults.push(...results);
+    await processToolCalls({ toolCalls: pending, tools, userId, toolsUsed, allResults });
     const follow = await call(
       `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely${tg ? ' — one or two short texts' : ' (1-3 short sentences)'}. If something is held for approval, say what you're waiting on.`,
       tools,
@@ -677,6 +724,32 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
     if (follow.text) finalText = follow.text;
     pending = follow.toolCalls || [];
   }
+  // Honesty guard: the model sometimes tells the user it submitted, staged,
+  // or is holding an action for approval without ever calling the tool —
+  // leaving the user waiting on a card that can never arrive. Detect that
+  // and run up to two corrective rounds so it actually calls the tool.
+  let corrections = 0;
+  while (corrections < 2 && rounds < MAX_ROUNDS && !pending.length
+         && claimsSelfSubmitted(finalText)
+         && !toolsUsed.some((t) => t.risk !== 'low')) {
+    corrections++;
+    rounds++;
+    const fix = await call(`${prompt}\n\n${HONESTY_CORRECTION}`, tools, callOpts);
+    if (fix.text) finalText = fix.text;
+    const fixCalls = fix.toolCalls || [];
+    if (fixCalls.length && rounds < MAX_ROUNDS) {
+      rounds++;
+      await processToolCalls({ toolCalls: fixCalls, tools, userId, toolsUsed, allResults });
+    }
+    const close = await call(
+      `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
+      tools,
+      callOpts
+    );
+    if (close.text) finalText = close.text;
+    pending = close.toolCalls || [];
+  }
+
   // If the round cap hit mid-research, never return an empty or stale reply:
   // one final tool-free call synthesizes everything gathered so far.
   if (pending.length) {

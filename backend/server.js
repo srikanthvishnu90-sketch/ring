@@ -105,7 +105,7 @@ app.get('/api/connectors', (req, res) => {
 });
 
 app.post('/api/chat', async (req, res) => {
-  const { text, threadId } = req.body || {};
+  const { text, threadId, tz } = req.body || {};
   // Caller identity: a valid Supabase JWT → real user id; anything else →
   // the 'demo' sandbox. Demo turns run simulated tools only and can never
   // create real approval cards. There is no unauthenticated 'local'
@@ -116,7 +116,7 @@ app.post('/api/chat', async (req, res) => {
   const demo = !authed;
   if (!text || typeof text !== 'string') return res.status(400).json({ error: 'text is required' });
   try {
-    const reply = await runAgentTurn({ text, userId, threadId, demo });
+    const reply = await runAgentTurn({ text, userId, threadId, demo, tz });
 
     // Approval gate: medium/high-risk calls are HELD as approval records —
     // never executed silently. The client renders them as approval cards and
@@ -145,7 +145,7 @@ app.post('/api/chat', async (req, res) => {
 // POST /api/chat/stream → SSE: `data: {"token":"..."}` … then
 // `data: {"done":true, ...full reply...}`. Same approval gating as /api/chat.
 app.post('/api/chat/stream', async (req, res) => {
-  const { text, threadId } = req.body || {};
+  const { text, threadId, tz } = req.body || {};
   const authed = req.userId && req.userId !== 'local';
   const userId = authed ? req.userId : 'demo';
   const demo = !authed;
@@ -158,7 +158,7 @@ app.post('/api/chat/stream', async (req, res) => {
   const send = (obj) => res.write(`data: ${JSON.stringify(obj)}\n\n`);
   try {
     const reply = await runAgentTurnStream({
-      text, userId, threadId, demo,
+      text, userId, threadId, demo, tz,
       onToken: (token) => send({ token }),
     });
     const held = [];

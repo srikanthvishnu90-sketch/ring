@@ -1369,10 +1369,11 @@ ${hist}
 
 Reply as the Agent to the user's last message.`;
 }
+function clientTZ(){try{return Intl.DateTimeFormat().resolvedOptions().timeZone||null}catch(e){return null}}
 /* Token-streaming chat. Returns true when the stream completed; throws when
    the caller should fall back to /api/chat or the on-device sample. */
 async function sendStream(text,msg,idx){
-  const r=await apiFetch('/api/chat/stream',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+  const r=await apiFetch('/api/chat/stream',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,tz:clientTZ()})});
   if(!r.ok||!r.body)throw new Error('stream unavailable');
   msg.streaming=true;msg.thinking=true;
   const paint=()=>{const el=document.querySelector(`.msg-agent[data-mi="${idx}"]`);if(el){el.classList.remove('thinking');el.classList.add('streaming');el.textContent=msg.text}};
@@ -1422,7 +1423,7 @@ async function send(text){
       }
     }catch(e){/* fall through to non-streaming, then on-device sample */}
     try{
-      const r=await apiFetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+      const r=await apiFetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,tz:clientTZ()})});
       if(r.ok){
         const data=await r.json();
         msg.thinking=false;msg.streaming=false;msg.text=data.text||'Done.';
