@@ -247,4 +247,235 @@ async function cancelFromDashboard(ctx, job) {
 
 module.exports = {
   'cancel-subscription': cancelSubscription,
+  'reset-password': resetPassword,
 };
+
+// Password reset flow: request reset link via "Forgot password?", then
+// set a new password when the link is provided.
+// Phase 1: job.email → submits reset request → returns need_input for reset_link
+// Phase 2: job.reset_link + job.new_password → sets password → logs in →
+//          finds billing → returns need_approval (does NOT cancel automatically)
+async function resetPassword(ctx, job) {
+  const page = ctx.page;
+  ctx.log('myclaw_reset_start', {});
+
+  // Continuation: reset link provided — navigate to it and set new password.
+  if (job.reset_link) {
+    ctx.log('reset_link_nav', {});
+    await page.goto(job.reset_link, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
+    await page.waitForTimeout(5000);
+
+    // Find new password + confirm password fields.
+    const passFields = await page.$$('input[type="password"]').catch(() => []);
+    if (passFields.length === 0) {
+      await ctx.screenshot('myclaw-reset-no-fields');
+      return { ok: false, code: 'reset_form_not_found', note: 'Reset link opened but no password fields found. Link may be expired. Screenshot captured.' };
+    }
+
+    if (!job.new_password) {
+      return { ok: false, code: 'no_new_password', note: 'Reset link valid but no new password provided. Re-invoke with new_password.' };
+    }
+
+    // Fill all password fields with the new password.
+    for (const field of passFields) {
+      await field.fill(job.new_password).catch(() => {});
+    }
+    ctx.log('new_password_filled', { fieldCount: passFields.length });
+
+    // Submit the form.
+    const submitBtn = await page.$('button[type="submit"], button:has-text("Reset"), button:has-text("Save"), button:has-text("Continue")');
+    if (submitBtn) await submitBtn.click();
+    else await page.keyboard.press('Enter');
+    await page.waitForTimeout(5000);
+    ctx.log('reset_submitted', { url: page.url() });
+
+    // Verify — check if we're logged in or need to login with new password.
+    const stillReset = await page.$('input[type="password"]').catch(() => null);
+    if (stillReset) {
+      await ctx.screenshot('myclaw-reset-failed');
+      return { ok: false, code: 'reset_failed', note: 'Password fields still present after submit — reset may have failed. Screenshot captured.' };
+    }
+
+    ctx.log('reset_ok', {});
+    // Now login with the new password and find billing (but don't cancel yet).
+    return loginAndFindBilling(ctx, job.email, job.new_password);
+  }
+
+  // ---- Phase 1: Request the reset link ---------------------------------
+  await page.goto('https://myclaw.ai', { waitUntil: 'domcontentloaded', timeout: 30000 });
+  ctx.log('goto_myclaw', { url: page.url() });
+
+  // Find login — try hamburger menu first (homepage has no visible login link).
+  const menuBtn = await page.$('button:has-text("☰"), button[aria-label*="menu" i], button[aria-label*="Menu" i]').catch(() => null);
+  if (menuBtn) {
+    await menuBtn.click().catch(() => {});
+    await page.waitForTimeout(2000);
+    ctx.log('menu_opened', {});
+  }
+
+  const loginSelectors = [
+    'a:has-text("Log in")', 'a:has-text("Login")', 'a:has-text("Sign in")',
+    'button:has-text("Log in")', 'button:has-text("Sign in")',
+    'a[href*="login"]', 'a[href*="signin"]',
+  ];
+  for (const sel of loginSelectors) {
+    try {
+      const el = await page.$(sel);
+      if (el) {
+        await el.click();
+        await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
+        ctx.log('login_link_clicked', { selector: sel });
+        break;
+      }
+    } catch { /* try next */ }
+  }
+
+  // If still on marketing page (no email form), try direct login URLs.
+  let emailForm = await page.$('input[type="email"]').catch(() => null);
+  if (!emailForm) {
+    for (const loginUrl of ['https://myclaw.ai/login', 'https://app.myclaw.ai/login', 'https://app.myclaw.ai']) {
+      await page.goto(loginUrl, { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {});
+      await page.waitForTimeout(3000);
+      emailForm = await page.$('input[type="email"]').catch(() => null);
+      if (emailForm) {
+        ctx.log('login_url_found', { url: loginUrl });
+        break;
+      }
+    }
+  }
+
+  // Enter email to get to password step (where "Forgot password?" lives).
+  const email = job.email;
+  if (!email) {
+    return { ok: false, code: 'no_email', note: 'No email provided for password reset.' };
+  }
+
+  if (!emailForm) {
+    await ctx.screenshot('myclaw-reset-no-email');
+    return { ok: false, code: 'email_form_not_found', note: 'Could not find email form on MyClaw login. Screenshot captured.' };
+  }
+
+  try {
+    await emailForm.fill(email);
+    ctx.log('email_filled', {});
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(4000);
+  } catch (e) {
+    await ctx.screenshot('myclaw-reset-email-error');
+    return { ok: false, code: 'email_fill_failed', note: 'Could not fill email form. Screenshot captured.' };
+  }
+
+  // Look for "Forgot password?" link.
+  const forgotSels = [
+    'a:has-text("Forgot password")', 'a:has-text("Forgot your password")',
+    'button:has-text("Forgot password")', 'a[href*="forgot"]', 'a[href*="reset"]',
+  ];
+  let forgotFound = false;
+  for (const sel of forgotSels) {
+    try {
+      const el = await page.$(sel);
+      if (el) {
+        await el.click();
+        await page.waitForTimeout(3000);
+        forgotFound = true;
+        ctx.log('forgot_clicked', { selector: sel });
+        break;
+      }
+    } catch { /* try next */ }
+  }
+
+  if (!forgotFound) {
+    await ctx.screenshot('myclaw-no-forgot');
+    return { ok: false, code: 'forgot_not_found', note: 'Could not find "Forgot password?" link. Screenshot captured.' };
+  }
+
+  // On the forgot password page — enter email again if needed and submit.
+  const resetEmailField = await page.$('input[type="email"]').catch(() => null);
+  if (resetEmailField) {
+    await resetEmailField.fill(email);
+    ctx.log('reset_email_filled', {});
+  }
+  const resetSubmit = await page.$('button[type="submit"], button:has-text("Send"), button:has-text("Reset"), button:has-text("Continue")');
+  if (resetSubmit) await resetSubmit.click();
+  else await page.keyboard.press('Enter');
+  await page.waitForTimeout(5000);
+  ctx.log('reset_requested', { url: page.url() });
+  await ctx.screenshot('myclaw-reset-sent');
+
+  return {
+    ok: true, phase: 'need_input',
+    prompt: 'Password reset link sent to your email. Paste the reset link here.',
+    fields: ['reset_link'],
+    note: 'Re-invoke with { sessionId, reset_link: "<url>", new_password: "<secure password>" } to continue.',
+  };
+}
+
+// Helper: login with credentials and navigate to billing, returning need_approval.
+// Does NOT click cancel — waits for human approval.
+async function loginAndFindBilling(ctx, email, password) {
+  const page = ctx.page;
+
+  // If not already logged in, do the login flow.
+  const loginForm = await page.$('input[type="email"], input[type="password"]').catch(() => null);
+  if (loginForm) {
+    ctx.log('login_required', {});
+    await page.goto('https://myclaw.ai/login', { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
+    await page.waitForSelector('input[type="email"]', { timeout: 20000 }).catch(() => {});
+    await page.fill('input[type="email"]', email).catch(() => {});
+    await page.keyboard.press('Enter').catch(() => {});
+    await page.waitForTimeout(4000);
+
+    const passField = await page.$('input[type="password"]').catch(() => null);
+    if (passField) {
+      await passField.fill(password);
+      const submitBtn = await page.$('button[type="submit"], button:has-text("Continue"), button:has-text("Sign in")');
+      if (submitBtn) await submitBtn.click();
+      else await page.keyboard.press('Enter');
+      await page.waitForTimeout(5000);
+    }
+  }
+
+  const stillLogin = await page.$('input[type="email"], input[type="password"]').catch(() => null);
+  if (stillLogin) {
+    await ctx.screenshot('myclaw-login-failed-newpw');
+    return { ok: false, code: 'login_failed', note: 'Still on login page after using new password. Screenshot captured.' };
+  }
+  ctx.log('login_ok_newpw', { url: page.url() });
+
+  // Find billing/subscription page.
+  const billingSels = [
+    'a:has-text("Billing")', 'a:has-text("Subscription")', 'a:has-text("Plan")',
+    'a[href*="billing"]', 'a[href*="subscription"]',
+  ];
+  for (const sel of billingSels) {
+    try {
+      const el = await page.$(sel);
+      if (el) {
+        await el.click();
+        await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
+        ctx.log('billing_nav', { selector: sel });
+        break;
+      }
+    } catch { /* try next */ }
+  }
+
+  // Get subscription details for the approval card.
+  const bodyText = await page.textContent('body').catch(() => '') || '';
+  await ctx.screenshot('myclaw-billing-found');
+
+  // Extract plan/price info for the approval summary.
+  const planMatch = bodyText.match(/(?:plan|subscription)[:\s]*([^\n]{1,60})/i);
+  const priceMatch = bodyText.match(/\$\s?(\d+(?:\.\d{2})?)\s*(?:\/|per)?\s*(?:month|mo|year|yr)?/i);
+
+  return {
+    ok: true, phase: 'need_approval',
+    summary: {
+      merchant: 'MyClaw',
+      action: 'Cancel subscription',
+      plan: planMatch ? planMatch[1].trim() : 'Unknown plan',
+      price: priceMatch ? priceMatch[0].trim() : 'Unknown price',
+      account: email,
+    },
+    note: 'Logged in with new password. Subscription found. Approve to cancel, or decline to keep it.',
+  };
+}
