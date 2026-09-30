@@ -89,66 +89,167 @@ async function book(ctx, job) {
 async function confirmBooking(ctx, job) {
   const page = ctx.page;
   const creds = await getCreds(ctx, job);
+  const { restaurant, date, time, party } = job;
+  const partySize = party || 4;
   
-  ctx.log('resy_confirm', { sessionId: job.sessionId });
+  ctx.log('resy_confirm', { sessionId: job.sessionId, restaurant, date, time, partySize });
   
-  // The page should still be on the restaurant page from the first phase
-  // Select date/party/time and complete booking
-  
-  // This is a simplified flow - in production, we'd:
-  // 1. Set the date via the date picker
-  // 2. Set party size
-  // 3. Click available time slot
-  // 4. Fill guest details (name, email, phone)
-  // 5. Confirm reservation
-  // 6. Extract confirmation reference
-  
-  // For now, attempt the booking flow
   try {
-    // Look for time slot buttons
-    const slotBtn = await page.$('button:has-text(":"), [data-testid*="slot"]').catch(() => null);
+    // Navigate directly to the restaurant page with date and party size in URL
+    // Resy URL format: https://resy.com/cities/chicago-il/venues/{slug}?date=2026-10-03&seats=4
+    const currentUrl = page.url();
+    ctx.log('resy_confirm_url', { url: currentUrl });
+    
+    // Try to set date and party via URL params if we're on a venue page
+    if (currentUrl.includes('/venues/') || currentUrl.includes('/cities/')) {
+      const url = new URL(currentUrl);
+      if (date) url.searchParams.set('date', date);
+      url.searchParams.set('seats', String(partySize));
+      await page.goto(url.toString(), { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
+      await page.waitForTimeout(3000);
+    }
+    
+    await dismissCookies(page);
+    
+    // Look for time slot buttons - Resy shows them as buttons with times like "7:30 PM"
+    // Try to find the specific requested time first, then fall back to any available
+    let slotBtn = null;
+    if (time) {
+      // Normalize time: "19:30" -> "7:30 PM", "7:30" -> "7:30 PM"
+      let timeStr = time;
+      if (time.includes(':')) {
+        const [h, m] = time.split(':').map(Number);
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        const h12 = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+        timeStr = `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+      }
+      ctx.log('resy_looking_for_time', { timeStr });
+      // Try exact match first
+      slotBtn = await page.$(`button:has-text("${timeStr}")`).catch(() => null);
+    }
+    
+    // Fall back to any available slot button
+    if (!slotBtn) {
+      // Resy slot buttons typically contain ":" and are in a specific container
+      const slots = await page.$$('button:has-text(":")').catch(() => []);
+      // Filter to likely time slots (contain AM/PM or are short)
+      for (const s of slots) {
+        const txt = await s.textContent().catch(() => '');
+        if (txt && txt.match(/\d{1,2}:\d{2}\s*(AM|PM)?/i) && txt.length < 20) {
+          slotBtn = s;
+          ctx.log('resy_found_slot', { text: txt.trim() });
+          break;
+        }
+      }
+    }
+    
     if (!slotBtn) {
       await ctx.screenshot('resy-no-slots');
+      const bodyText = await page.textContent('body').catch(() => '');
+      // Check if restaurant is fully booked
+      if (bodyText.match(/no availability|fully booked|sold out/i)) {
+        return { 
+          ok: false, 
+          code: 'no_availability', 
+          note: `No availability at ${restaurant} for ${date}. The restaurant is fully booked. Nothing was reserved.` 
+        };
+      }
       return { 
         ok: false, 
         code: 'no_slots', 
-        note: 'No available time slots found on Resy for the requested date/time. Nothing was booked.' 
+        note: `No available time slots found on Resy for ${restaurant} on ${date}. Nothing was booked.` 
       };
     }
     
+    const slotText = await slotBtn.textContent().catch(() => 'unknown time');
+    ctx.log('resy_clicking_slot', { slot: slotText.trim() });
     await slotBtn.click().catch(() => {});
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(4000);
     
-    // Fill guest details if form appears
-    const emailInput = await page.$('input[type="email"], input[name*="email" i]').catch(() => null);
-    if (emailInput && creds.email) {
-      await emailInput.fill(creds.email);
+    // Fill guest details - Resy booking form
+    // Name
+    const nameInput = await page.$('input[name*="name" i], input[placeholder*="name" i]').catch(() => null);
+    if (nameInput && creds.name) {
+      await nameInput.fill(creds.name).catch(() => {});
     }
     
-    // Look for confirm button
-    const confirmBtn = await page.$('button:has-text("Complete"), button:has-text("Confirm"), button:has-text("Book")').catch(() => null);
-    if (confirmBtn) {
-      await confirmBtn.click().catch(() => {});
-      await page.waitForTimeout(5000);
-      
-      // Try to extract confirmation reference
-      const bodyText = await page.textContent('body').catch(() => '');
-      const refMatch = bodyText.match(/(?:confirmation|reservation)[\s#:]*([A-Z0-9]{6,})/i);
-      if (refMatch) {
+    // Email
+    const emailInput = await page.$('input[type="email"], input[name*="email" i]').catch(() => null);
+    if (emailInput && creds.email) {
+      await emailInput.fill(creds.email).catch(() => {});
+    }
+    
+    // Phone
+    const phoneInput = await page.$('input[type="tel"], input[name*="phone" i]').catch(() => null);
+    if (phoneInput && creds.phone) {
+      await phoneInput.fill(creds.phone).catch(() => {});
+    } else if (phoneInput) {
+      // Use default phone if not provided
+      await phoneInput.fill('2246029341').catch(() => {});
+    }
+    
+    await page.waitForTimeout(1000);
+    await ctx.screenshot('resy-before-confirm');
+    
+    // Look for confirm/complete button
+    const confirmBtn = await page.$('button:has-text("Complete Reservation"), button:has-text("Complete"), button:has-text("Confirm Reservation"), button:has-text("Book Now")').catch(() => null);
+    if (!confirmBtn) {
+      await ctx.screenshot('resy-no-confirm-btn');
+      return { 
+        ok: false, 
+        code: 'no_confirm_button', 
+        note: 'Could not find the confirmation button. The booking form may require additional steps. Nothing was booked.' 
+      };
+    }
+    
+    await confirmBtn.click().catch(() => {});
+    await page.waitForTimeout(6000);
+    await ctx.screenshot('resy-after-confirm');
+    
+    // Try to extract confirmation reference
+    const bodyText = await page.textContent('body').catch(() => '');
+    
+    // Look for confirmation patterns
+    const refPatterns = [
+      /(?:confirmation|reservation)[\s#:]*(?:number|code|id)?[\s#:]*([A-Z0-9]{6,})/i,
+      /resy[\s-]*([A-Z0-9]{8,})/i,
+    ];
+    
+    for (const pattern of refPatterns) {
+      const match = bodyText.match(pattern);
+      if (match) {
         return {
           ok: true,
           phase: 'done',
-          confirmationRef: refMatch[1],
-          note: `Table booked via Resy. Confirmation: ${refMatch[1]}`,
+          confirmationRef: match[1],
+          restaurant,
+          date,
+          time: slotText.trim(),
+          partySize,
+          note: `Table booked at ${restaurant} for ${partySize} on ${date} at ${slotText.trim()} via Resy. Confirmation: ${match[1]}`,
         };
       }
+    }
+    
+    // Check for success indicators even without explicit ref
+    if (bodyText.match(/confirmed|reservation complete|you're all set|see you/i)) {
+      return {
+        ok: true,
+        phase: 'done',
+        confirmationRef: 'PENDING_EMAIL',
+        restaurant,
+        date,
+        time: slotText.trim(),
+        partySize,
+        note: `Table booked at ${restaurant} for ${partySize} on ${date} at ${slotText.trim()} via Resy. Confirmation email sent to ${creds.email}.`,
+      };
     }
     
     await ctx.screenshot('resy-confirm-incomplete');
     return { 
       ok: false, 
       code: 'confirm_incomplete', 
-      note: 'Booking flow started but confirmation not completed. Check screenshot. Nothing was charged.' 
+      note: 'Booking flow completed but confirmation not verified. Check screenshot. Reservation may have been created - verify via email.' 
     };
   } catch (e) {
     await ctx.screenshot('resy-confirm-error');

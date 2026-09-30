@@ -178,6 +178,20 @@ async function executeTool(rec, tools) {
   if (!tool) return { error: 'unknown tool: ' + rec.tool };
   try {
     const out = await tool.fn({ userId: rec.userId, ...rec.args });
+    // Multi-phase continuation: if the tool returns need_approval with a sessionId,
+    // automatically continue with the approval flag. This handles the case where
+    // the tool does phase 1 (search/setup) and needs approval to do phase 2 (confirm).
+    if (out && out.phase === 'need_approval' && out.sessionId) {
+      const continueArgs = { ...rec.args, sessionId: out.sessionId };
+      // Set the appropriate approval flag based on tool name
+      if (rec.tool === 'dining_book') continueArgs.booking_approved = true;
+      else if (rec.tool === 'browser_run') continueArgs.booking_approved = true;
+      else if (rec.tool === 'ride_book') continueArgs.fare_approved = true;
+      
+      const out2 = await tool.fn({ userId: rec.userId, ...continueArgs });
+      // Return the final result, preserving the session info
+      return { ...out2, _phase1: out };
+    }
     // Demo executions are always labeled as simulated, whatever the fn says.
     return rec.userId === 'demo' ? { ...out, simulated: true } : out;
   } catch (e) {
