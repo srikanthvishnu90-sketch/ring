@@ -129,6 +129,10 @@ async function phase1SelectSlot(ctx, job) {
     '[data-testid="time-slots"] a[role="button"]',
     'ul[data-test="time-slots"] a',
     '[data-test="time-slots"] a',
+    // OpenTable also renders the strip as <button>s (observed 2026-09-30).
+    'ul[data-test="time-slots"] button',
+    '[data-test="time-slots"] button',
+    '[data-testid="time-slots"] button',
   ];
 
   let slotButtons = [];
@@ -143,6 +147,25 @@ async function phase1SelectSlot(ctx, job) {
     if (!slotButtons.length) await page.waitForTimeout(1500);
   }
   ctx.log('dining_slots_found', { count: slotButtons.length });
+  if (!slotButtons.length) {
+    // Diagnose: did the strip render at all? (bot-degraded page vs markup change)
+    const stripDiag = await page.evaluate(() => {
+      const cands = [
+        document.querySelector('ul[data-test="time-slots"]'),
+        document.querySelector('[data-test="time-slots"]'),
+        document.querySelector('[data-testid="time-slots"]'),
+      ];
+      const el = cands.find(Boolean);
+      if (!el) return { strip: 'absent' };
+      return {
+        strip: 'present',
+        tag: el.tagName,
+        childCount: el.children.length,
+        html: el.innerHTML.slice(0, 400),
+      };
+    }).catch(() => ({ strip: 'eval_failed' }));
+    ctx.log('dining_slots_zero_diag', stripDiag);
+  }
 
   // OpenTable renders hidden duplicate slot elements (carousel clones). A
   // hidden element can never be clicked — filter to visible slots only before
@@ -229,7 +252,7 @@ async function phase1SelectSlot(ctx, job) {
     // Pick the first VISIBLE match: hidden duplicates (carousel clones) can
     // never receive a click. Fall back to the scanned handle only if no
     // visible candidate exists.
-    const candidates = await page.$$(`ul[data-test="time-slots"] a[role="button"]:has-text("${pickedText}")`).catch(() => []);
+    const candidates = await page.$$(`ul[data-test="time-slots"] a[role="button"]:has-text("${pickedText}"), ul[data-test="time-slots"] button:has-text("${pickedText}"), [data-test="time-slots"] button:has-text("${pickedText}")`).catch(() => []);
     let el = null;
     for (const c of candidates) {
       try {
