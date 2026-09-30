@@ -777,8 +777,8 @@ function oauthStartResponse(req, res) {
   }
   res.cookie(COOKIE_NAME, issued.nonce, {
     httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none',
+    secure: true,
     maxAge: 10 * 60 * 1000,
     path: '/',
   });
@@ -841,7 +841,7 @@ app.get('/auth/google/callback', async (req, res) => {
     return fail(status, e.message + '.');
   }
   // Single-use: clear the CSRF cookie now that the state is consumed.
-  res.cookie(COOKIE_NAME, '', { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 0 });
+  res.cookie(COOKIE_NAME, '', { httpOnly: true, sameSite: 'none', secure: true, path: '/', maxAge: 0 });
   try {
     const r = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
