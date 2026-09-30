@@ -1,8 +1,12 @@
 // backend/lib/sites/dining.js — Restaurant table booking via OpenTable.
 //
-// Single-phase flow: after user approves the booking card, ONE browser session
-// does the entire booking: navigate → select slot → fill details → confirm →
-// extract confirmation. No two-phase session handoff.
+// Two-phase flow (serverless-safe: each phase gets its own budget):
+//   Phase 1 (no job.sessionId): navigate → find slots → click the exact slot
+//     → wait for the booking details page → return need_approval + sessionId.
+//     The approval path (approvals.js executeTool) automatically continues.
+//   Phase 2 (job.sessionId set): reattach to the live session, resume the
+//     details page, fill guest info → confirm → extract confirmation → done.
+// Exact requested time is always required — never silently book nearby.
 
 const OPENTABLE_HOME = 'https://www.opentable.com';
 
@@ -27,8 +31,19 @@ async function getCreds(ctx, job) {
   };
 }
 
-// ---- book-table (single phase, runs after approval) ------------------------
+// ---- book-table (two phases; dispatched on job.sessionId) ------------------
 async function bookTable(ctx, job) {
+  if (job.sessionId) return phase2FillAndConfirm(ctx, job);
+  return phase1SelectSlot(ctx, job);
+}
+
+// Details-page form selectors, shared by both phases.
+const DETAILS_FORM_SEL = 'input#firstName, input[name="firstName"], input[type="email"]';
+
+// Phase 1: land on the restaurant page, find the exact slot, click it, and
+// wait for the booking details page. Returns need_approval + sessionId so the
+// approval path auto-continues into phase 2.
+async function phase1SelectSlot(ctx, job) {
   const page = ctx.page;
   const { restaurant, date, time, partySize } = job;
 
@@ -36,12 +51,7 @@ async function bookTable(ctx, job) {
     return { ok: false, code: 'missing_details', note: 'Need restaurant name, date, and party size. Nothing was attempted.' };
   }
 
-  const { email, phone, name } = await getCreds(ctx, job);
-  const nameParts = name.split(' ');
-  const firstName = nameParts[0] || 'Demo';
-  const lastName = nameParts.slice(1).join(' ') || 'User';
-
-  ctx.log('dining_start', { restaurant, date, time, partySize });
+  ctx.log('dining_phase1_start', { restaurant, date, time, partySize });
 
   // Build OpenTable URL with date/party params.
   // Format: https://www.opentable.com/r/{slug}?covers=4&dateTime=2026-10-03T19%3A30
@@ -133,8 +143,6 @@ async function bookTable(ctx, job) {
   }
 
   if (!slotButtons.length) {
-    // Take screenshot for debugging
-    const shot = await page.screenshot().catch(() => null);
     return {
       ok: false,
       code: 'no_availability',
@@ -198,10 +206,54 @@ async function bookTable(ctx, job) {
   const pickedText = (await targetButton.textContent().catch(() => '') || '').trim();
   ctx.log('dining_slot_click', { text: pickedText });
   await targetButton.click().catch(() => {});
-  await page.waitForTimeout(800);
 
-  // Now on the booking details page — fill guest info
+  // Wait for the booking details page (bounded — phase 2 waits more if needed).
+  let detailsReady = false;
+  try {
+    await page.waitForSelector(DETAILS_FORM_SEL, { timeout: 20000 });
+    detailsReady = true;
+  } catch { /* fall through to URL check */ }
+  if (!detailsReady) {
+    const u = page.url();
+    detailsReady = /booking/i.test(u);
+    ctx.log('dining_details_page_check', { url: u, detailsReady });
+  }
+  if (!detailsReady) {
+    return { ok: false, code: 'details_page_timeout', note: 'Selected the time slot but the booking details page did not load in time. Nothing was booked — please try again.' };
+  }
+
+  ctx.log('dining_phase1_done', { pickedText });
+  // need_approval + sessionId: the approval path auto-continues into phase 2
+  // with booking_approved=true. The user already approved via the card.
+  return {
+    ok: true,
+    phase: 'need_approval',
+    summary: { restaurant, date, time: pickedText || time, partySize },
+    note: `Slot selected at ${restaurant} (${pickedText || time}); continuing to guest details.`,
+  };
+}
+
+// Phase 2: resume the live session's details page, fill guest info, confirm,
+// and extract the confirmation reference.
+async function phase2FillAndConfirm(ctx, job) {
+  const page = ctx.page;
+  const { restaurant, date, time, partySize } = job;
+
+  ctx.log('dining_phase2_start', { url: page.url() });
+
+  const { email, phone, name } = await getCreds(ctx, job);
+  const nameParts = name.split(' ');
+  const firstName = nameParts[0] || 'Demo';
+  const lastName = nameParts.slice(1).join(' ') || 'User';
+
+  // The details page should be open from phase 1 — wait for the form.
+  try {
+    await page.waitForSelector(DETAILS_FORM_SEL, { timeout: 30000 });
+  } catch {
+    return { ok: false, code: 'details_form_missing', note: 'The booking details page did not load after selecting the slot. Nothing was booked — please try again.' };
+  }
   await dismissCookies(page);
+  ctx.log('dining_details_page_ready', { url: page.url() });
 
   // Fill first name, last name, email, phone
   const fillField = async (selectors, value) => {
@@ -284,9 +336,9 @@ async function bookTable(ctx, job) {
       confirmationRef: ref,
       restaurant,
       date,
-      time: pickedText || time,
+      time: time,
       partySize,
-      note: `Booked ${restaurant} for ${partySize} on ${date} at ${pickedText || time}. Confirmation: ${ref}`,
+      note: `Booked ${restaurant} for ${partySize} on ${date} at ${time}. Confirmation: ${ref}`,
     };
   }
 

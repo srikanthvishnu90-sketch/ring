@@ -199,12 +199,23 @@ async function runPhase({ connectUrl, job, siteFn, site }, deps = {}) {
     browser = await connectCdp(connectUrl);
     const contexts = browser.contexts();
     const context = contexts[0] || (await browser.newContext());
-    const page = await context.newPage({
-      viewport: { width: 390, height: 844 },
-      userAgent: MOBILE_UA,
-    });
+    // Continuation phase (job.sessionId set): resume the existing page where
+    // the previous phase left off — do NOT open a blank new tab. Fresh phase:
+    // create a new page as before.
+    let page;
+    const existingPages = context.pages();
+    if (job.sessionId && existingPages.length) {
+      page = existingPages[existingPages.length - 1];
+      await page.bringToFront().catch(() => {});
+      try { await page.setViewportSize({ width: 390, height: 844 }); } catch { /* best effort */ }
+    } else {
+      page = await context.newPage({
+        viewport: { width: 390, height: 844 },
+        userAgent: MOBILE_UA,
+      });
+    }
     ctx = makeCtx(page, job);
-    ctx.log('phase_start', { site, kind: job.kind });
+    ctx.log('phase_start', { site, kind: job.kind, resumed: !!(job.sessionId && existingPages.length) });
     const out = await siteFn(ctx, job);
     ctx.log('phase_end', { phase: out && out.phase, ok: out && out.ok });
     return { ...(out || {}), steps: ctx.steps, phaseMs: Date.now() - started };

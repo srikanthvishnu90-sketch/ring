@@ -174,7 +174,8 @@ const _RAW_TOOLS = [
   {
     name: 'dining_book', risk: 'high',
     fn: async (a) => {
-      // Use OpenTable via dining.js (single-phase browser flow).
+      // Use OpenTable via dining.js (two-phase browser flow: select slot, then
+      // fill details and confirm — chained automatically after approval).
       // Alla Vita and most Chicago restaurants are on OpenTable, not Resy.
       const driver = _pickDriver();
       const job = { site: 'dining', kind: 'book-table', userId: a.userId,
@@ -196,7 +197,7 @@ const _RAW_TOOLS = [
       sessionId: { type: 'string', description: 'Session to continue (for approval phases)' },
       booking_approved: { type: 'boolean', description: 'Set true to confirm an approval-phase booking' },
     }, required: ['restaurant', 'date', 'time', 'party'] },
-    describe: 'Book a real restaurant table via Resy. Single-phase: does the full booking in one browser session after approval. Returns done with confirmationRef on success, or an error code if no availability or booking fails.',
+    describe: 'Book a real restaurant table via OpenTable. Two-phase browser flow, chained automatically after approval: phase 1 selects the exact requested time slot, phase 2 fills guest details and confirms. Returns done with confirmationRef on success, or an error code if no availability or booking fails.',
   },
   {
     name: 'dining_change', risk: 'high',
