@@ -147,12 +147,13 @@ async function phase1SelectSlot(ctx, job) {
     if (!slotButtons.length) await page.waitForTimeout(1500);
   }
   ctx.log('dining_slots_found', { count: slotButtons.length });
+  let stripDiag = null;
   if (!slotButtons.length) {
     // Diagnose: did the strip render at all? Distinguish three cases:
     // (a) markup renamed (slot text present, selectors wrong),
     // (b) bot-degraded page (no slot text anywhere),
     // (c) genuine no-availability (page says so in text).
-    const stripDiag = await page.evaluate(() => {
+    stripDiag = await page.evaluate(() => {
       const cands = [
         document.querySelector('ul[data-test="time-slots"]'),
         document.querySelector('[data-test="time-slots"]'),
