@@ -55,9 +55,24 @@ async function bookTable(ctx, job) {
   await dismissCookies(page);
 
   // If direct URL didn't land on a restaurant page, search.
+  // Also verify the page shows the correct restaurant name (guessed slug may be wrong).
   const url = page.url();
   ctx.log('dining_landed', { url });
-  if (!url.includes('/r/') || url.includes('search')) {
+  let needSearch = !url.includes('/r/') || url.includes('search');
+  if (!needSearch) {
+    // Verify the page title contains the restaurant name
+    try {
+      const title = await page.title().catch(() => '');
+      const pageText = await page.$eval('h1', el => el.textContent).catch(() => '');
+      const restaurantLower = restaurant.toLowerCase();
+      if (!title.toLowerCase().includes(restaurantLower.split(' ')[0]) && 
+          !pageText.toLowerCase().includes(restaurantLower.split(' ')[0])) {
+        ctx.log('dining_wrong_restaurant', { title, pageText: pageText.slice(0, 100) });
+        needSearch = true;
+      }
+    } catch { /* proceed */ }
+  }
+  if (needSearch) {
     await page.goto(OPENTABLE_HOME, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
     await page.waitForTimeout(2000);
     await dismissCookies(page);
