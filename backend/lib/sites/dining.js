@@ -148,7 +148,10 @@ async function phase1SelectSlot(ctx, job) {
   }
   ctx.log('dining_slots_found', { count: slotButtons.length });
   if (!slotButtons.length) {
-    // Diagnose: did the strip render at all? (bot-degraded page vs markup change)
+    // Diagnose: did the strip render at all? Distinguish three cases:
+    // (a) markup renamed (slot text present, selectors wrong),
+    // (b) bot-degraded page (no slot text anywhere),
+    // (c) genuine no-availability (page says so in text).
     const stripDiag = await page.evaluate(() => {
       const cands = [
         document.querySelector('ul[data-test="time-slots"]'),
@@ -156,12 +159,19 @@ async function phase1SelectSlot(ctx, job) {
         document.querySelector('[data-testid="time-slots"]'),
       ];
       const el = cands.find(Boolean);
-      if (!el) return { strip: 'absent' };
+      const bodyText = (document.body ? document.body.innerText : '').slice(0, 600);
+      // Any element anywhere whose text looks like a reservable time slot?
+      const timeLike = Array.from(document.querySelectorAll('a,button')).filter((n) => {
+        const t = (n.textContent || '').trim();
+        return /reserve table at/i.test(t) || /^\d{1,2}:\d{2}\s*(AM|PM)$/i.test(t);
+      }).length;
       return {
-        strip: 'present',
-        tag: el.tagName,
-        childCount: el.children.length,
-        html: el.innerHTML.slice(0, 400),
+        strip: el ? 'present' : 'absent',
+        tag: el ? el.tagName : undefined,
+        childCount: el ? el.children.length : undefined,
+        timeLikeElsewhere: timeLike,
+        title: document.title,
+        bodyText,
       };
     }).catch(() => ({ strip: 'eval_failed' }));
     ctx.log('dining_slots_zero_diag', stripDiag);
