@@ -345,18 +345,33 @@ async function phase2FillAndConfirm(ctx, job) {
     await page.waitForSelector(DETAILS_FORM_SEL, { timeout: 45000 });
   } catch {
     ctx.log('dining_phase2_form_missing', { url: page.url() });
-    // Diagnose what the page actually shows: error state, CAPTCHA, login
-    // wall, spinner, or a form inside an iframe our selector can't see.
-    const diag = await page.evaluate(() => ({
-      title: document.title,
-      text: (document.body ? document.body.innerText : '').slice(0, 600),
-      inputCount: document.querySelectorAll('input').length,
-      inputs: Array.from(document.querySelectorAll('input'))
-        .map((i) => i.getAttribute('name') || i.getAttribute('type') || i.getAttribute('placeholder') || i.getAttribute('aria-label') || '?')
-        .slice(0, 20),
-      iframeCount: document.querySelectorAll('iframe').length,
-    })).catch(() => ({ evalFailed: true }));
-    ctx.log('dining_phase2_page_diag', diag);
+    // Compact probe: what IS on the page? (kept small so Vercel keeps the whole line)
+    const probe = await page.evaluate(() => {
+      const body = document.body ? document.body.innerText : '';
+      const test = (re) => re.test(body);
+      const one = (sel) => {
+        try { const el = document.querySelector(sel); return el ? (el.getAttribute('name') || el.id || el.type || 'found') : 'absent'; } catch { return 'err'; }
+      };
+      return {
+        title: document.title,
+        textLen: body.length,
+        hasFirstName: test(/first name/i),
+        hasPhoneField: test(/phone( number)?/i),
+        hasEmailField: test(/email/i),
+        hasCompleteBtn: test(/complete (your )?reservation|complete booking/i),
+        hasSignIn: test(/sign in to (complete|book)/i),
+        hasError: test(/no longer available|no longer valid|expired|something went wrong|not available/i),
+        hasCaptcha: test(/captcha|verify you are human/i),
+        sel_firstName: one('input#firstName'),
+        sel_name_firstName: one('input[name="firstName"]'),
+        sel_email: one('input[type="email"]'),
+        inputs: Array.from(document.querySelectorAll('input'))
+          .map((i) => i.getAttribute('name') || i.id || i.type || i.getAttribute('aria-label') || '?')
+          .join(',').slice(0, 160),
+        iframes: document.querySelectorAll('iframe').length,
+      };
+    }).catch(() => ({ evalFailed: true }));
+    ctx.log('dining_phase2_page_probe', probe);
     return { ok: false, code: 'details_form_missing', note: 'The booking details page did not load after selecting the slot. Nothing was booked — please try again.' };
   }
   await dismissCookies(page);
