@@ -10,7 +10,7 @@ async function dismissCookies(page) {
   for (const sel of ['button:has-text("Accept")', '#onetrust-accept-btn-handler', 'button:has-text("Got it")']) {
     try {
       const el = await page.$(sel).catch(() => null);
-      if (el) { await el.click().catch(() => {}); await page.waitForTimeout(800); }
+      if (el) { await el.click().catch(() => {}); await page.waitForTimeout(400); }
     } catch { /* next */ }
   }
 }
@@ -61,8 +61,8 @@ async function bookTable(ctx, job) {
   const dateTime = time ? `${date}T${time}` : date;
   const directUrl = `https://www.opentable.com/r/${slug}?covers=${partySize}&dateTime=${encodeURIComponent(dateTime)}`;
 
-  await page.goto(directUrl, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
-  await page.waitForTimeout(1500);
+  await page.goto(directUrl, { waitUntil: 'domcontentloaded', timeout: 20000 }).catch(() => {});
+  await page.waitForTimeout(800);
   await dismissCookies(page);
 
   // If direct URL didn't land on a restaurant page, search.
@@ -110,9 +110,9 @@ async function bookTable(ctx, job) {
   // ul[data-test="time-slots"]. Wait for the slots container to load.
   // The URL already has ?covers=4&dateTime=... so slots should be filtered.
   try {
-    await page.waitForSelector('ul[data-test="time-slots"], [data-testid="time-slots"]', { timeout: 10000 }).catch(() => {});
+    await page.waitForSelector('ul[data-test="time-slots"], [data-testid="time-slots"]', { timeout: 5000 }).catch(() => {});
   } catch { /* proceed to selector fallback */ }
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(1000);
 
   // Look for time slot links - OpenTable uses <a role="button"> not <button>
   // Container: ul[data-test="time-slots"], slots: a[role="button"] with aria-label
@@ -198,7 +198,7 @@ async function bookTable(ctx, job) {
   const pickedText = (await targetButton.textContent().catch(() => '') || '').trim();
   ctx.log('dining_slot_click', { text: pickedText });
   await targetButton.click().catch(() => {});
-  await page.waitForTimeout(1500);
+  await page.waitForTimeout(800);
 
   // Now on the booking details page — fill guest info
   await dismissCookies(page);
@@ -210,7 +210,7 @@ async function bookTable(ctx, job) {
         const el = await page.$(sel).catch(() => null);
         if (el) {
           await el.fill(value).catch(() => {});
-          await page.waitForTimeout(300);
+          await page.waitForTimeout(100);
           return true;
         }
       } catch { /* next */ }
@@ -263,7 +263,7 @@ async function bookTable(ctx, job) {
     return { ok: false, code: 'confirm_not_found', note: 'Could not find the reservation confirmation button. Nothing was booked.' };
   }
 
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(1000);
 
   // Extract confirmation
   const pageText = await page.content().catch(() => '');
