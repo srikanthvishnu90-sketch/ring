@@ -60,7 +60,7 @@ async function bookTable(ctx, job) {
   const directUrl = `https://www.opentable.com/r/${slug}?covers=${partySize}&dateTime=${encodeURIComponent(dateTime)}`;
 
   await page.goto(directUrl, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
-  await page.waitForTimeout(3000);
+  await page.waitForTimeout(1500);
   await dismissCookies(page);
 
   // If direct URL didn't land on a restaurant page, search.
@@ -83,7 +83,7 @@ async function bookTable(ctx, job) {
   }
   if (needSearch) {
     await page.goto(OPENTABLE_HOME, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(1000);
     await dismissCookies(page);
     // OpenTable homepage search input: #home-autocomplete-input
     // Placeholder: "Location, Restaurant, or Cuisine"
@@ -92,40 +92,22 @@ async function bookTable(ctx, job) {
       return { ok: false, code: 'search_not_found', note: 'Could not find OpenTable search. Nothing was booked.' };
     }
     await searchInput.fill(restaurant);
-    await page.waitForTimeout(2500);
+    await page.waitForTimeout(1000);
     const firstResult = await page.$('a[href*="/r/"]').catch(() => null);
     if (!firstResult) {
       return { ok: false, code: 'not_found', note: `Restaurant "${restaurant}" not found on OpenTable. Nothing was booked.` };
     }
     await firstResult.click().catch(() => {});
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(1500);
   }
 
   ctx.log('dining_restaurant_page', { url: page.url() });
 
   // Find available time slots. OpenTable shows them as <a role="button"> inside
   // ul[data-test="time-slots"]. First set the Time selector combobox to filter.
-  await page.waitForTimeout(3000);
+  await page.waitForTimeout(1000);
 
-  // Set the Time selector combobox to the requested time (acts as a filter)
-  if (time) {
-    try {
-      // Format time as "7:30 PM" for the combobox label
-      const [rh, rm] = time.split(':').map(Number);
-      const ampm = rh >= 12 ? 'PM' : 'AM';
-      const h12 = rh % 12 || 12;
-      const timeLabel = `${h12}:${String(rm).padStart(2, '0')} ${ampm}`;
-      const timeCombo = await page.$('[aria-label="Time selector"]').catch(() => null);
-      if (timeCombo) {
-        await timeCombo.selectOption({ label: timeLabel }).catch(() => {});
-        await page.waitForTimeout(2000);
-        ctx.log('dining_time_filter_set', { timeLabel });
-      }
-    } catch (e) {
-      ctx.log('dining_time_filter_failed', { error: String(e.message).slice(0, 100) });
-    }
-  }
-
+  // URL already has ?covers=4&dateTime=... so slots should be filtered.
   // Look for time slot links - OpenTable uses <a role="button"> not <button>
   // Container: ul[data-test="time-slots"], slots: a[role="button"] with aria-label
   // Format: "Reserve table at {Restaurant} at {TIME} on {Month Day}, for a party of {N}"
@@ -184,7 +166,7 @@ async function bookTable(ctx, job) {
   const pickedText = (await targetButton.textContent().catch(() => '') || '').trim();
   ctx.log('dining_slot_click', { text: pickedText });
   await targetButton.click().catch(() => {});
-  await page.waitForTimeout(3000);
+  await page.waitForTimeout(1500);
 
   // Now on the booking details page — fill guest info
   await dismissCookies(page);
@@ -249,7 +231,7 @@ async function bookTable(ctx, job) {
     return { ok: false, code: 'confirm_not_found', note: 'Could not find the reservation confirmation button. Nothing was booked.' };
   }
 
-  await page.waitForTimeout(5000);
+  await page.waitForTimeout(2000);
 
   // Extract confirmation
   const pageText = await page.content().catch(() => '');
