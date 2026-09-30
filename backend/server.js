@@ -28,7 +28,7 @@ const express = require('express');
 require('dotenv').config();
 
 const { env, missing } = require('./lib/config');
-const { saveTokens, isConnected, getScopes, ensureUser, ready: googleReady } = require('./lib/google');
+const { saveTokens, isConnected, getScopes, ensureUser, fetchGoogleEmail, ready: googleReady } = require('./lib/google');
 const appUrl = () => env('APP_URL', 'https://ringsss.vercel.app');
 const { TOOLS, runAgentTurn, runAgentTurnStream, llmConfigured } = require('./lib/agent');
 const approvals = require('./lib/approvals');
@@ -850,7 +850,16 @@ app.get('/auth/google/callback', async (req, res) => {
     });
     const tok = await r.json();
     if (!r.ok) throw new Error(tok.error_description || 'token exchange failed');
-    saveTokens(userId, tok);
+    // Multi-account: fetch the Google email so the token is stored under
+    // `userId:google:{email}` — connecting a second Google account no longer
+    // overwrites the first.
+    let googleEmail = null;
+    try {
+      googleEmail = await fetchGoogleEmail(tok.access_token);
+    } catch (e) {
+      console.error('[oauth] Failed to fetch Google email, saving as primary:', e.message);
+    }
+    saveTokens(userId, tok, googleEmail);
     // Back to the app — it picks up ?google=connected, refreshes its
     // connection state, and confirms with a toast.
     res.redirect(appUrl() + '?google=connected');

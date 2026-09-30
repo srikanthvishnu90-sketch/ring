@@ -1,8 +1,13 @@
 // Gmail connector — read + send via the Gmail API (OAuth 2.0).
 // Needs: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (+ per-user tokens from
 // /auth/google, kept server-side in lib/google.js — never in the repo).
+//
+// MULTI-ACCOUNT: searchMessages (and other read functions) search across ALL
+// Google accounts connected to the Ring user, merging results newest-first.
+// Each result includes `account` (the Google email) so the agent knows which
+// mailbox it came from.
 const { missing, NotConfigured } = require('../lib/config');
-const { gfetch } = require('../lib/google');
+const { gfetch, listGoogleAccounts } = require('../lib/google');
 
 const requiredEnv = ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET'];
 
@@ -72,6 +77,47 @@ async function gfetchRetry(userId, url, opts, tries = 4) {
 
 async function searchMessages({ userId, query, maxResults = 30 }) {
   guard();
+  // MULTI-ACCOUNT: search across ALL Google accounts connected to this Ring
+  // user, merge threads newest-first. Each thread carries `account` (Google
+  // email) so the agent knows which mailbox it came from.
+  const accounts = listGoogleAccounts(userId);
+  // Fallback: if no accounts listed (e.g. file backend not yet loaded),
+  // search the primary key directly for backward compat.
+  const keysToSearch = accounts.length > 0 ? accounts : [{ email: '(primary)', key: userId || 'local' }];
+
+  const seen = new Set(); // threadId -> dedupe across accounts
+  const allThreads = [];
+
+  for (const acct of keysToSearch) {
+    const threads = await searchSingleAccount(acct.key, query, maxResults);
+    for (const t of threads) {
+      // Dedupe by threadId across accounts (same thread shouldn't appear
+      // twice, but different accounts could theoretically share IDs)
+      const dedupeKey = `${acct.key}:${t.threadId}`;
+      if (seen.has(dedupeKey)) continue;
+      seen.add(dedupeKey);
+      allThreads.push({ ...t, account: acct.email });
+    }
+    if (allThreads.length >= maxResults) break;
+  }
+
+  // Sort merged results newest-first by date (Gmail returns newest-first per
+  // account, but merging needs a global sort)
+  allThreads.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+  const threads = allThreads.slice(0, maxResults);
+
+  // Compat: pre-103bef7 consumers read `.messages` (array of {id, subject,
+  // from, to, date, snippet}). Keep it alongside the new `.threads` shape.
+  const messages = threads.map((t) => ({
+    id: t.threadId, threadId: t.threadId,
+    subject: t.subject, from: t.from, to: t.to, date: t.date, snippet: t.snippet, account: t.account,
+  }));
+  const accountsSearched = keysToSearch.map((a) => a.email);
+  return { threads, messages, hasMore: allThreads.length >= maxResults, accountsSearched };
+}
+
+// Search a single Google account (identified by its token key).
+async function searchSingleAccount(accountKey, query, maxResults) {
   // maxResults counts THREADS, not messages: page through matches
   // (newest-first) until we have that many unique threads, so a broad
   // query's older threads are never silently cut off by a message cap.
@@ -85,7 +131,7 @@ async function searchMessages({ userId, query, maxResults = 30 }) {
       `https://gmail.googleapis.com/gmail/v1/users/me/messages` +
       `?q=${encodeURIComponent(query)}&maxResults=${Math.min(100, MSG_CAP - fetchedMsgs)}`;
     if (pageToken) url += `&pageToken=${encodeURIComponent(pageToken)}`;
-    const list = await gfetchRetry(userId, url);
+    const list = await gfetchRetry(accountKey, url);
     const batch = list.messages || [];
     fetchedMsgs += batch.length;
     const full = await mapLimit(
@@ -93,7 +139,7 @@ async function searchMessages({ userId, query, maxResults = 30 }) {
       5,
       (m) =>
         gfetchRetry(
-          userId,
+          accountKey,
           `https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=Date`
         )
     );
@@ -114,13 +160,7 @@ async function searchMessages({ userId, query, maxResults = 30 }) {
     }
     pageToken = list.nextPageToken;
   } while (pageToken && threads.length < maxResults && fetchedMsgs < MSG_CAP);
-  // Compat: pre-103bef7 consumers read `.messages` (array of {id, subject,
-  // from, to, date, snippet}). Keep it alongside the new `.threads` shape.
-  const messages = threads.map((t) => ({
-    id: t.threadId, threadId: t.threadId,
-    subject: t.subject, from: t.from, to: t.to, date: t.date, snippet: t.snippet,
-  }));
-  return { threads, messages, hasMore: !!pageToken && threads.length >= maxResults };
+  return threads;
 }
 
 // Walk a Gmail payload tree and return the first text/plain body (base64url).
@@ -134,21 +174,44 @@ function findTextBody(payload) {
   return (payload.body && payload.body.data) || null;
 }
 
-async function readMessage({ userId, id }) {
+async function readMessage({ userId, id, account }) {
   guard();
   if (!id) throw new Error('message id is required');
-  const m = await gfetch(
-    userId,
-    `https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(id)}?format=full`
-  );
-  const raw = findTextBody(m.payload);
-  return {
-    id: m.id,
-    subject: header(m, 'Subject'),
-    from: header(m, 'From'),
-    date: header(m, 'Date'),
-    body: raw ? Buffer.from(raw, 'base64url').toString('utf8').slice(0, 8000) : '',
-  };
+  // If account (Google email) is specified, use that account's token key.
+  // Otherwise, try all connected accounts until the message is found.
+  const accounts = listGoogleAccounts(userId);
+  let keysToTry;
+  if (account) {
+    const match = accounts.find((a) => a.email.toLowerCase() === account.toLowerCase());
+    keysToTry = match ? [match.key] : [userId || 'local'];
+  } else if (accounts.length > 0) {
+    keysToTry = accounts.map((a) => a.key);
+  } else {
+    keysToTry = [userId || 'local'];
+  }
+
+  let lastError = null;
+  for (const key of keysToTry) {
+    try {
+      const m = await gfetch(
+        key,
+        `https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(id)}?format=full`
+      );
+      const raw = findTextBody(m.payload);
+      return {
+        id: m.id,
+        subject: header(m, 'Subject'),
+        from: header(m, 'From'),
+        date: header(m, 'Date'),
+        body: raw ? Buffer.from(raw, 'base64url').toString('utf8').slice(0, 8000) : '',
+      };
+    } catch (e) {
+      lastError = e;
+      // Try next account (message might be in a different mailbox)
+      continue;
+    }
+  }
+  throw lastError || new Error('message not found in any connected account');
 }
 
 async function sendMessage({ userId, to, subject, body }) {

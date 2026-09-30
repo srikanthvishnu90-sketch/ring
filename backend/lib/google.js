@@ -3,6 +3,11 @@
 //   1. Supabase (SUPABASE_URL + SUPABASE_SERVICE_KEY) — ring_oauth_tokens table
 //   2. JSON file (default ~/.ring/tokens.json, override with GOOGLE_TOKEN_FILE)
 // Supabase is authoritative when configured; the file is the dev fallback.
+//
+// MULTI-ACCOUNT SUPPORT: A Ring user can connect multiple Google accounts.
+// Primary account: stored under `userId` (backward compat).
+// Additional accounts: stored under `userId:google:{email}`.
+// Use listGoogleAccounts(userId) to find all connected Google emails.
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -12,18 +17,31 @@ const { ENABLED: USE_SUPABASE, sbRequest } = require('./supabase');
 const TOKEN_FILE = env('GOOGLE_TOKEN_FILE') || path.join(os.homedir(), '.ring', 'tokens.json');
 const SB_TABLE = 'ring_oauth_tokens';
 
-const store = new Map(); // userId -> { access_token, refresh_token, expires_at, scope, token_type }
+const store = new Map(); // userId -> { access_token, refresh_token, expires_at, scope, token_type, googleEmail }
+
+function accountKey(userId, googleEmail) {
+  const base = userId || 'local';
+  return googleEmail ? `${base}:google:${googleEmail.toLowerCase()}` : base;
+}
+
+function parseAccountKey(key) {
+  const m = /^(.+):google:(.+)$/.exec(key || '');
+  return m ? { ringUserId: m[1], googleEmail: m[2] } : { ringUserId: key, googleEmail: null };
+}
 
 async function loadFromSupabase() {
   const rows = await sbRequest(`/${SB_TABLE}?select=user_id,access_token,refresh_token,expires_at,scope,token_type`);
   for (const row of rows || []) {
     if (row && row.access_token) {
+      const parsed = parseAccountKey(row.user_id);
       store.set(row.user_id, {
         access_token: row.access_token,
         refresh_token: row.refresh_token,
         expires_at: Number(row.expires_at) || 0,
         scope: row.scope,
         token_type: row.token_type,
+        googleEmail: parsed.googleEmail,
+        ringUserId: parsed.ringUserId,
       });
     }
   }
@@ -34,7 +52,10 @@ function loadFromFile() {
     const raw = fs.readFileSync(TOKEN_FILE, 'utf8');
     const obj = JSON.parse(raw);
     for (const [k, v] of Object.entries(obj)) {
-      if (v && v.access_token) store.set(k, { ...v, expires_at: v.expires_at || 0 });
+      if (v && v.access_token) {
+        const parsed = parseAccountKey(k);
+        store.set(k, { ...v, expires_at: v.expires_at || 0, googleEmail: parsed.googleEmail, ringUserId: parsed.ringUserId });
+      }
     }
   } catch (e) { /* no saved tokens yet */ }
 }
@@ -102,23 +123,62 @@ const bootLoad = (async () => {
 })();
 const ready = () => bootLoad.catch(() => {});
 
-function saveTokens(userId, tok) {
-  store.set(userId || 'local', {
+function saveTokens(userId, tok, googleEmail = null) {
+  const key = accountKey(userId, googleEmail);
+  const parsed = parseAccountKey(key);
+  store.set(key, {
     access_token: tok.access_token,
     refresh_token: tok.refresh_token,
     expires_at: Date.now() + (tok.expires_in || 3600) * 1000,
     scope: tok.scope,
     token_type: tok.token_type,
+    googleEmail: parsed.googleEmail,
+    ringUserId: parsed.ringUserId,
   });
   if (USE_SUPABASE) {
     persistToSupabase().catch(e => console.error('[google] Supabase token save failed:', e.message));
   } else {
     persistToFile();
   }
+  return key;
 }
 
 function isConnected(userId) {
-  return store.has(userId || 'local');
+  const base = userId || 'local';
+  // Connected if primary OR any additional Google account exists
+  if (store.has(base)) return true;
+  for (const key of store.keys()) {
+    if (key.startsWith(base + ':google:')) return true;
+  }
+  return false;
+}
+
+// List all Google account emails connected for a Ring user.
+// Returns [{ email, key }] — key is the token lookup key for gfetch.
+function listGoogleAccounts(userId) {
+  const base = userId || 'local';
+  const accounts = [];
+  // Ensure Supabase rows are loaded (lazy)
+  for (const [key, t] of store) {
+    if (key === base) {
+      accounts.push({ email: t.googleEmail || '(primary)', key });
+    } else if (key.startsWith(base + ':google:')) {
+      const parsed = parseAccountKey(key);
+      accounts.push({ email: parsed.googleEmail, key });
+    }
+  }
+  return accounts;
+}
+
+// Fetch the Google account email for an access token (used during OAuth
+// callback to store multi-account tokens under the composite key).
+async function fetchGoogleEmail(accessToken) {
+  const r = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/profile', {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error('Failed to fetch Google profile: ' + r.status);
+  return data.emailAddress || null;
 }
 
 // Granted OAuth scopes for the stored grant (from the token response's
@@ -148,7 +208,10 @@ async function getAccessToken(userId) {
   });
   const nt = await r.json();
   if (!r.ok) throw new Error('Google token refresh failed: ' + (nt.error_description || r.status));
-  saveTokens(key, { ...t, ...nt });
+  // Preserve the composite key structure on refresh: parse the key to get
+  // ringUserId and googleEmail, then save with those.
+  const parsed = parseAccountKey(key);
+  saveTokens(parsed.ringUserId, { ...t, ...nt }, parsed.googleEmail);
   return store.get(key).access_token;
 }
 
@@ -163,4 +226,4 @@ async function gfetch(userId, url, opts = {}) {
   return data;
 }
 
-module.exports = { saveTokens, isConnected, getScopes, getAccessToken, gfetch, ready, ensureUser, usesSupabase: () => USE_SUPABASE };
+module.exports = { saveTokens, isConnected, getScopes, getAccessToken, gfetch, ready, ensureUser, listGoogleAccounts, fetchGoogleEmail, accountKey, parseAccountKey, usesSupabase: () => USE_SUPABASE };
