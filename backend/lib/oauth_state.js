@@ -39,7 +39,7 @@ function unb64url(s) {
 // Issue a signed state token for an authenticated user. Returns
 // { state, nonce } — the caller stores the nonce in the CSRF cookie.
 function issueState(userId) {
-  if (!userId || userId === 'local' || userId === 'demo') {
+  if (!userId || userId === 'local') {
     throw Object.assign(new Error('OAuth requires a signed-in user'), { code: 'UNAUTHENTICATED' });
   }
   const payload = {
