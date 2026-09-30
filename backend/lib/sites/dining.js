@@ -140,16 +140,26 @@ async function bookTable(ctx, job) {
 
   ctx.log('dining_slots_found', { count: slotButtons.length });
 
-  // Pick the slot closest to requested time
-  let targetButton = slotButtons[0];
+  // Collect all available slot times for honest reporting
+  const availableTimes = [];
+  for (const btn of slotButtons) {
+    try {
+      const text = (await btn.textContent().catch(() => '') || '').trim();
+      const m = text.match(/(\d+:\d+\s*(?:AM|PM))/i);
+      if (m) availableTimes.push(m[1]);
+    } catch { /* next */ }
+  }
+  ctx.log('dining_available_times', { availableTimes });
+
+  // REQUIRE EXACT TIME MATCH — never silently book a nearby time.
+  // If the exact requested time is not available, report what IS available.
+  let targetButton = null;
   if (time) {
     const [rh, rm] = time.split(':').map(Number);
     const targetMin = rh * 60 + rm;
-    let bestDiff = Infinity;
     for (const btn of slotButtons) {
       try {
         const text = (await btn.textContent().catch(() => '') || '').trim();
-        // Parse "7:30 PM" format
         const m = text.match(/(\d+):(\d+)\s*(AM|PM)/i);
         if (m) {
           let h = parseInt(m[1]);
@@ -158,12 +168,23 @@ async function bookTable(ctx, job) {
           if (ap === 'PM' && h !== 12) h += 12;
           if (ap === 'AM' && h === 12) h = 0;
           const slotMin = h * 60 + min;
-          const diff = Math.abs(slotMin - targetMin);
-          if (diff < bestDiff) { bestDiff = diff; targetButton = btn; }
+          if (slotMin === targetMin) { targetButton = btn; break; }
         }
       } catch { /* next */ }
     }
-    ctx.log('dining_slot_picked', { bestDiffMin: bestDiff });
+    if (!targetButton) {
+      // Exact time not available — report honestly, do NOT book a different time
+      const timeStr = availableTimes.length ? availableTimes.join(', ') : 'none shown';
+      return {
+        ok: false,
+        code: 'time_unavailable',
+        note: `The requested time is not available at ${restaurant} for ${partySize} on ${date}. Available times: ${timeStr}. Nothing was booked. Please approve a different time to proceed.`,
+        availableTimes,
+      };
+    }
+    ctx.log('dining_slot_exact_match', { time });
+  } else {
+    targetButton = slotButtons[0];
   }
 
   const pickedText = (await targetButton.textContent().catch(() => '') || '').trim();
