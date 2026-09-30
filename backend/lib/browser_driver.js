@@ -108,12 +108,16 @@ async function bbFetch(path, { method = 'GET', body, timeoutMs = 25000 } = {}) {
 async function createBrowserbaseSession() {
   const projectId = env('BROWSERBASE_PROJECT_ID');
   // Owner-approved 2026-09-30: route browser traffic through Browserbase
-  // proxies (clean IPs) and enable advanced stealth for bot-protected sites
-  // (OpenTable/Akamai was Access-Denying our datacenter IPs). Both are billed
-  // extras; advancedStealth needs the Scale plan. Fall back gracefully when
-  // this plan rejects a flag — a working session always beats a hard fail.
+  // proxies (clean IPs) and enable Verified browser mode for bot-protected
+  // sites (OpenTable/Akamai was Access-Denying our datacenter IPs).
+  // browserSettings.advancedStealth is deprecated upstream (SDK 2.21.0:
+  // "use verified instead"), so the top tier is proxies + verified.
+  // Confirmed 2026-09-30 on the live dashboard: Developer plan ($20/mo,
+  // healthy/paid) includes 1 GB proxy bandwidth and supports proxies.
+  // Fall back gracefully when the plan rejects a flag — a working session
+  // always beats a hard fail.
   const attempts = [
-    { body: { projectId, keepAlive: true, proxies: true, browserSettings: { advancedStealth: true } }, label: 'proxy+stealth' },
+    { body: { projectId, keepAlive: true, proxies: true, browserSettings: { verified: true } }, label: 'proxy+verified' },
     { body: { projectId, keepAlive: true, proxies: true }, label: 'proxy' },
     { body: { projectId, keepAlive: true }, label: 'plain' },
   ];
