@@ -76,7 +76,9 @@ async function bookTable(ctx, job) {
     await page.goto(OPENTABLE_HOME, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
     await page.waitForTimeout(2000);
     await dismissCookies(page);
-    const searchInput = await page.$('input[placeholder*="Search" i], input[type="search"]').catch(() => null);
+    // OpenTable homepage search input: #home-autocomplete-input
+    // Placeholder: "Location, Restaurant, or Cuisine"
+    const searchInput = await page.$('#home-autocomplete-input, input[data-test="search-autocomplete-input"], input[placeholder="Location, Restaurant, or Cuisine"]').catch(() => null);
     if (!searchInput) {
       return { ok: false, code: 'search_not_found', note: 'Could not find OpenTable search. Nothing was booked.' };
     }
