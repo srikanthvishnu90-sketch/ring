@@ -144,13 +144,17 @@ async function bookTable(ctx, job) {
 
   ctx.log('dining_slots_found', { count: slotButtons.length });
 
-  // Collect all available slot times for honest reporting
+  // Collect all available slot times for honest reporting (deduplicated)
   const availableTimes = [];
+  const seenTimes = new Set();
   for (const btn of slotButtons) {
     try {
       const text = (await btn.textContent().catch(() => '') || '').trim();
       const m = text.match(/(\d+:\d+\s*(?:AM|PM))/i);
-      if (m) availableTimes.push(m[1]);
+      if (m && !seenTimes.has(m[1])) {
+        seenTimes.add(m[1]);
+        availableTimes.push(m[1]);
+      }
     } catch { /* next */ }
   }
   ctx.log('dining_available_times', { availableTimes });
