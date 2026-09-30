@@ -65,11 +65,27 @@ async function bookRide(ctx, job) {
       await loginBtn.click().catch(() => {});
       await page.waitForTimeout(3000);
     }
-    // Phone input.
-    const phoneSel = 'input[type="tel"], input[name="phone"], input[inputmode="tel"]';
+    // Phone input. Uber's form varies: dedicated tel input, or a combined
+    // "phone number or email" text input (placeholder-based). Try specific
+    // selectors first, then fall back to the placeholder.
+    const phoneSels = [
+      'input[type="tel"]',
+      'input[name="phone"]',
+      'input[inputmode="tel"]',
+      'input[placeholder*="phone number or email" i]',
+      'input[placeholder*="phone" i]',
+    ];
+    let phoneInput = null;
     try {
-      await page.waitForSelector(phoneSel, { timeout: 15000 });
-      await page.fill(phoneSel, phone);
+      for (const sel of phoneSels) {
+        try {
+          await page.waitForSelector(sel, { timeout: 5000 });
+          phoneInput = sel;
+          break;
+        } catch { /* try next */ }
+      }
+      if (!phoneInput) throw new Error('no phone input found');
+      await page.fill(phoneInput, phone);
       ctx.log('phone_filled', {});
       const contBtn = await page.$('button:has-text("Continue"), button[type="submit"]').catch(() => null);
       if (contBtn) await contBtn.click().catch(() => {});
@@ -223,8 +239,17 @@ async function setScheduledTime(ctx, job) {
 
     // The picker varies: try date input first, then time.
     // Strategy: look for date and time inputs/selects, fill them directly.
-    const dateStr = dt.toISOString().slice(0, 10); // YYYY-MM-DD
-    const timeStr = `${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
+    // Timezone-safe: the ISO string already encodes the intended LOCAL time
+    // (e.g. 2026-09-30T10:30:00-05:00 means 10:30 in -05:00). Extract the
+    // date/time components directly from the string — never use the Date
+    // object's server-local getHours()/getMinutes() or UTC toISOString(),
+    // which shift the wall-clock time on servers in other timezones.
+    const m = String(job.scheduled_time).match(/^(\d{4}-\d{2}-\d{2})[T ](\d{2}):(\d{2})/);
+    if (!m) {
+      return { ok: false, code: 'bad_schedule_time', note: `Could not extract date/time from scheduled_time: ${job.scheduled_time}` };
+    }
+    const dateStr = m[1]; // YYYY-MM-DD as written in the ISO string
+    const timeStr = `${m[2]}:${m[3]}`; // HH:MM as written in the ISO string
 
     // Try native date/time inputs.
     const dateInput = await page.$('input[type="date"]').catch(() => null);
