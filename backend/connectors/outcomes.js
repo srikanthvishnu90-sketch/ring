@@ -93,6 +93,25 @@ function proofOf(result) {
   return ref ? String(ref) : null;
 }
 
+// Phase-aware continuation: when the browser driver pauses mid-flow
+// (need_otp / need_input / need_approval), the session stays LIVE and the
+// agent must re-invoke the tool with { sessionId, ...phaseInputs }.
+// Returning this envelope (instead of falling through to Tier-3 handoff)
+// keeps the multi-step flow alive. Never throws.
+const CONTINUATION_PHASES = new Set(['need_otp', 'need_input', 'need_approval']);
+function browserContinuation(br) {
+  const r = br && br.ok && br.result;
+  if (r && CONTINUATION_PHASES.has(r.phase)) {
+    return {
+      paused: true, phase: r.phase, sessionId: r.sessionId || null,
+      prompt: r.prompt || null, summary: r.summary || null,
+      fields: r.fields || null, tier: 'browser',
+      note: 'Browser session is live and waiting. Re-invoke this tool with { sessionId, ... } plus the requested input to continue.',
+    };
+  }
+  return null;
+}
+
 // ---- Shared helpers ------------------------------------------------------
 function resyKeyed() {
   return missing(RESY_KEYS).length === 0;
@@ -157,7 +176,7 @@ function diningHandoffLinks({ restaurant, city, date, party = 2 }) {
 }
 
 // ---- 33. dining_book (high) ----------------------------------------------
-async function diningBook({ userId, restaurant, city, date, time, party = 2, venueId }) {
+async function diningBook({ userId, restaurant, city, date, time, party = 2, venueId, sessionId, ...phaseInputs }) {
   if (!restaurant || !date) {
     return { booked: false, error: 'missing_args', missing: [!restaurant && 'restaurant', !date && 'date'].filter(Boolean) };
   }
@@ -196,8 +215,10 @@ async function diningBook({ userId, restaurant, city, date, time, party = 2, ven
   }
 
   // Tier 2: browser books it.
-  const br = await browserRun({ kind: 'book', site: 'resy', restaurant, city, date, time, party, userId });
+  const br = await browserRun({ kind: 'book', site: 'resy', restaurant, city, date, time, party, userId, sessionId, ...phaseInputs });
   if (br.ok) {
+    const cont = browserContinuation(br);
+    if (cont) return cont;
     const ref = proofOf(br.result);
     if (ref) {
       return {
@@ -220,7 +241,7 @@ async function diningBook({ userId, restaurant, city, date, time, party = 2, ven
 }
 
 // ---- 34. dining_change (high) --------------------------------------------
-async function diningChange({ userId, ref, action = 'cancel', restaurant, date, time, party = 2, venueId }) {
+async function diningChange({ userId, ref, action = 'cancel', restaurant, date, time, party = 2, venueId, sessionId, ...phaseInputs }) {
   if (!ref) return { changed: false, cancelled: false, error: 'missing_args', missing: ['ref'] };
   const attempts = [];
   const isCancel = action === 'cancel';
@@ -244,8 +265,10 @@ async function diningChange({ userId, ref, action = 'cancel', restaurant, date, 
   }
 
   // Tier 2: browser executes the change/cancel.
-  const br = await browserRun({ kind: isCancel ? 'cancel' : 'change', site: 'resy', ref, restaurant, date, time, party, userId });
+  const br = await browserRun({ kind: isCancel ? 'cancel' : 'change', site: 'resy', ref, restaurant, date, time, party, userId, sessionId, ...phaseInputs });
   if (br.ok) {
+    const cont = browserContinuation(br);
+    if (cont) return cont;
     const proof = proofOf(br.result);
     if (proof) {
       return isCancel
@@ -289,7 +312,7 @@ function cancellationPlaybook(merchant) {
   };
 }
 
-async function subscriptionCancel({ userId, merchant, vault: vaultId }) {
+async function subscriptionCancel({ userId, merchant, vault: vaultId, sessionId, ...phaseInputs }) {
   if (!merchant) return { cancelled: false, error: 'missing_args', missing: ['merchant'] };
   const attempts = [];
 
@@ -305,8 +328,10 @@ async function subscriptionCancel({ userId, merchant, vault: vaultId }) {
   }
 
   // Tier 2: browser executes the cancellation.
-  const br = await browserRun({ kind: 'cancel-subscription', merchant, vaultId: loginHandle ? loginHandle.vault : null, receipts: receipts.receipts || [], userId });
+  const br = await browserRun({ kind: 'cancel-subscription', merchant, vaultId: loginHandle ? loginHandle.vault : null, receipts: receipts.receipts || [], userId, sessionId, ...phaseInputs });
   if (br.ok) {
+    const cont = browserContinuation(br);
+    if (cont) return cont;
     const proof = proofOf(br.result);
     if (proof) {
       return { cancelled: true, tier: 'browser', confirmationRef: proof, merchant, receipts: receipts.receipts || [], at: isoNow() };
@@ -328,7 +353,7 @@ async function subscriptionCancel({ userId, merchant, vault: vaultId }) {
 // ---- 36. ride_book (high) ------------------------------------------------
 // Approval for the ORDER is enforced by the 'high' risk tier (approval card
 // before fn runs). The tool itself still never claims ordered without proof.
-async function rideBook({ userId, pickup, dropoff }) {
+async function rideBook({ userId, pickup, dropoff, sessionId, ...phaseInputs }) {
   if (!pickup || !dropoff) {
     return { ordered: false, error: 'missing_args', missing: [!pickup && 'pickup', !dropoff && 'dropoff'].filter(Boolean) };
   }
@@ -364,8 +389,10 @@ async function rideBook({ userId, pickup, dropoff }) {
   }
 
   // Tier 2: browser orders the ride.
-  const br = await browserRun({ kind: 'book-ride', site: 'uber', pickup: from, dropoff: to, userId });
+  const br = await browserRun({ kind: 'book-ride', site: 'uber', pickup: from, dropoff: to, userId, sessionId, ...phaseInputs });
   if (br.ok) {
+    const cont = browserContinuation(br);
+    if (cont) return cont;
     const ref = proofOf(br.result);
     if (ref) {
       return { ordered: true, tier: 'browser', confirmationRef: ref, pickup: from, dropoff: to, at: isoNow() };
@@ -422,7 +449,7 @@ async function diningTonight({ city, cuisine, party = 2, time }) {
 // ---- 38. web_login_task (high) -------------------------------------------
 // Per-action approval is enforced by the 'high' risk tier (approval card).
 // The vault id is validated for PRESENCE only — values never enter tool I/O.
-async function webLoginTask({ userId, site, task, vault: vaultId }) {
+async function webLoginTask({ userId, site, task, vault: vaultId, sessionId, ...phaseInputs }) {
   if (!site || !task || !vaultId) {
     return { completed: false, error: 'missing_args', missing: [!site && 'site', !task && 'task', !vaultId && 'vault'].filter(Boolean) };
   }
@@ -437,8 +464,10 @@ async function webLoginTask({ userId, site, task, vault: vaultId }) {
   // Tier 2: browser logs in with vaulted creds and performs the task.
   // The driver resolves values via lib/vault internally — tool output never
   // sees them.
-  const br = await browserRun({ kind: 'login-task', site, task, vaultId, userId });
+  const br = await browserRun({ kind: 'login-task', site, task, vaultId, userId, sessionId, ...phaseInputs });
   if (br.ok) {
+    const cont = browserContinuation(br);
+    if (cont) return cont;
     const proof = proofOf(br.result);
     if (proof) {
       return { completed: true, tier: 'browser', confirmationRef: proof, site, task, at: isoNow() };
@@ -461,7 +490,7 @@ async function webLoginTask({ userId, site, task, vault: vaultId }) {
 // Sensitive identity fields need EXPLICIT per-field approval: pass
 // approvedFields: ['ssn', ...] listing each sensitive field you approve.
 // Any sensitive field NOT listed blocks the executor tier entirely.
-async function webFormFill({ userId, site, form, fields, approvedFields = [] }) {
+async function webFormFill({ userId, site, form, fields, approvedFields = [], sessionId, ...phaseInputs }) {
   if (!site || !form || !fields || typeof fields !== 'object') {
     return { filled: false, error: 'missing_args', missing: [!site && 'site', !form && 'form', !fields && 'fields'].filter(Boolean) };
   }
@@ -490,8 +519,10 @@ async function webFormFill({ userId, site, form, fields, approvedFields = [] }) 
   // NOTE: the job carries the real field values server-side so the driver can
   // fill them — job payloads are driver-input only. They are NEVER logged raw
   // (redact with vault.redact first) and NEVER appear in tool results.
-  const br = await browserRun({ kind: 'form-fill', site, form, fields, fieldNames: names, userId });
+  const br = await browserRun({ kind: 'form-fill', site, form, fields, fieldNames: names, userId, sessionId, ...phaseInputs });
   if (br.ok) {
+    const cont = browserContinuation(br);
+    if (cont) return cont;
     const proof = proofOf(br.result) || (br.result && br.result.submitted ? 'form-submitted' : null);
     if (proof) {
       return {
@@ -552,6 +583,8 @@ async function priceCheck({ userId, query }) {
     };
   }
   if (br.ok) {
+    const cont = browserContinuation(br);
+    if (cont) return cont;
     return { checked: false, tier: 'browser', query, error: 'no_results', at: isoNow(), note: 'Browser read returned no price data.' };
   }
   return {
@@ -612,6 +645,8 @@ async function reservationFix({ userId, ref, issue, applyFix = false, venueId })
   // Executor tier: browser applies the fix.
   const br = await browserRun({ kind: 'fix-reservation', site: 'resy', ref, issue: issueText, venueId, userId });
   if (br.ok) {
+    const cont = browserContinuation(br);
+    if (cont) return cont;
     const proof = proofOf(br.result);
     if (proof) {
       return { ...diagnosis, applied: true, needsApproval: false, tier: 'browser', confirmationRef: proof, at: isoNow() };
@@ -636,6 +671,8 @@ const tools = [
         time: { type: 'string', description: 'Preferred time, e.g. 19:30 or 7:30pm' },
         party: { type: 'number', description: 'Party size (default 2)' },
         venueId: { type: 'string', description: 'Resy venueId — enables the tier-1 API path' },
+        sessionId: { description: 'Resume a live browser session from a paused (need_otp/need_input/need_approval) result.' },
+        otp: { description: 'One-time code, when resuming a need_otp phase. Never invent one — ask the user.' },
       },
       required: ['restaurant', 'date'],
     },
@@ -653,6 +690,8 @@ const tools = [
         time: { type: 'string', description: 'New time (for change)' },
         party: { type: 'number', description: 'New party size (for change)' },
         venueId: { type: 'string', description: 'Resy venueId — enables slot lookup for changes' },
+        sessionId: { description: 'Resume a live browser session from a paused (need_otp/need_input/need_approval) result.' },
+        otp: { description: 'One-time code, when resuming a need_otp phase. Never invent one — ask the user.' },
       },
       required: ['ref'],
     },
@@ -665,6 +704,8 @@ const tools = [
       properties: {
         merchant: { type: 'string', description: 'Merchant/service name, e.g. Spotify' },
         vault: { type: 'string', description: 'Optional vault id with the merchant login (e.g. spotify_login)' },
+        sessionId: { description: 'Resume a live browser session from a paused (need_otp/need_input/need_approval) result.' },
+        otp: { description: 'One-time code, when resuming a need_otp phase. Never invent one — ask the user.' },
       },
       required: ['merchant'],
     },
@@ -677,6 +718,8 @@ const tools = [
       properties: {
         pickup: { description: '{lat,lng,label} or an address string (needs Places key for addresses)' },
         dropoff: { description: '{lat,lng,label} or an address string (needs Places key for addresses)' },
+        sessionId: { description: 'Resume a live browser session returned by a paused (need_otp/need_input/need_approval) result.' },
+        otp: { description: 'One-time code, when resuming a need_otp phase. Never invent one — ask the user.' },
       },
       required: ['pickup', 'dropoff'],
     },
@@ -704,6 +747,8 @@ const tools = [
         site: { type: 'string', description: 'Site domain, e.g. example.com' },
         task: { type: 'string', description: 'What to do once logged in' },
         vault: { type: 'string', description: 'Vault id holding the login (e.g. chase_login) — values never leave the vault' },
+        sessionId: { description: 'Resume a live browser session from a paused (need_otp/need_input/need_approval) result.' },
+        otp: { description: 'One-time code, when resuming a need_otp phase. Never invent one — ask the user.' },
       },
       required: ['site', 'task', 'vault'],
     },
@@ -718,6 +763,7 @@ const tools = [
         form: { type: 'string', description: 'Which form (e.g. "checkout", "address change")' },
         fields: { type: 'object', description: 'Field name -> value map. Values are redacted in transit.' },
         approvedFields: { type: 'array', items: { type: 'string' }, description: 'Sensitive fields you explicitly approve, per field' },
+        sessionId: { description: 'Resume a live browser session from a paused (need_otp/need_input/need_approval) result.' },
       },
       required: ['site', 'form', 'fields'],
     },
