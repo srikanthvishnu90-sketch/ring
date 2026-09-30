@@ -228,7 +228,15 @@ async function runPhase({ connectUrl, job, siteFn, site }, deps = {}) {
   } finally {
     // Disconnect OUR CDP connection only — the remote Browserbase session
     // stays alive for continuation phases. Never browser.close() the remote.
-    try { if (browser) await browser.close(); } catch { /* best effort */ }
+    // Bounded: a wedged CDP connection must never hold the function hostage.
+    try {
+      if (browser) {
+        await Promise.race([
+          browser.close(),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('cdp_disconnect_timeout')), 10000)),
+        ]);
+      }
+    } catch { /* best effort */ }
   }
 }
 

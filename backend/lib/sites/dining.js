@@ -104,13 +104,13 @@ async function phase1SelectSlot(ctx, job) {
     if (!searchInput) {
       return { ok: false, code: 'search_not_found', note: 'Could not find OpenTable search. Nothing was booked.' };
     }
-    await searchInput.fill(restaurant);
+    await searchInput.fill(restaurant, { timeout: 15000 }).catch(() => {});
     await page.waitForTimeout(1000);
     const firstResult = await page.$('a[href*="/r/"]').catch(() => null);
     if (!firstResult) {
       return { ok: false, code: 'not_found', note: `Restaurant "${restaurant}" not found on OpenTable. Nothing was booked.` };
     }
-    await firstResult.click().catch(() => {});
+    await firstResult.click({ timeout: 15000 }).catch(() => {});
     await page.waitForTimeout(1500);
   }
 
@@ -205,7 +205,7 @@ async function phase1SelectSlot(ctx, job) {
 
   const pickedText = (await targetButton.textContent().catch(() => '') || '').trim();
   ctx.log('dining_slot_click', { text: pickedText });
-  await targetButton.click().catch(() => {});
+  await targetButton.click({ timeout: 15000 }).catch(() => {});
 
   // Wait for the booking details page (bounded — phase 2 waits more if needed).
   let detailsReady = false;
@@ -277,18 +277,18 @@ async function phase2FillAndConfirm(ctx, job) {
 
   ctx.log('dining_details_filled', { email });
 
-  // Uncheck marketing opt-ins if present
+  // Uncheck marketing opt-ins if present (bounded — never hang here)
   for (const sel of ['input[type="checkbox"]']) {
     try {
       const boxes = await page.$$(sel).catch(() => []);
       for (const box of boxes) {
         const checked = await box.isChecked().catch(() => false);
-        if (checked) await box.uncheck().catch(() => {});
+        if (checked) await box.uncheck({ timeout: 10000 }).catch(() => {});
       }
     } catch { /* next */ }
   }
 
-  // Click the final confirmation button
+  // Click the final confirmation button (bounded)
   const confirmSelectors = [
     'button:has-text("Complete reservation")',
     'button:has-text("Book now")',
@@ -302,7 +302,7 @@ async function phase2FillAndConfirm(ctx, job) {
       if (btn) {
         const visible = await btn.isVisible().catch(() => false);
         if (visible) {
-          await btn.click().catch(() => {});
+          await btn.click({ timeout: 15000 }).catch(() => {});
           confirmed = true;
           ctx.log('dining_confirm_clicked', { selector: sel });
           break;
@@ -315,11 +315,22 @@ async function phase2FillAndConfirm(ctx, job) {
     return { ok: false, code: 'confirm_not_found', note: 'Could not find the reservation confirmation button. Nothing was booked.' };
   }
 
-  await page.waitForTimeout(1000);
+  // Wait for the confirmation to render (bounded — the click may trigger a
+  // slow navigation; never wait forever).
+  await page.waitForFunction(
+    () => /confirmed|reservation complete|you're booked|booking confirmed/i.test(document.body ? document.body.innerText : ''),
+    { timeout: 25000 }
+  ).catch(() => {});
+  ctx.log('dining_confirm_wait_done', { url: page.url() });
 
-  // Extract confirmation
-  const pageText = await page.content().catch(() => '');
-  const text = await page.$eval('body', el => el.innerText).catch(() => '');
+  // Extract confirmation (each read bounded so extraction can never hang
+  // the phase the way the last attempt did).
+  const withTimeout = (p, ms, label) => Promise.race([
+    Promise.resolve(p),
+    new Promise((_, reject) => setTimeout(() => reject(new Error(label || 'extract_timeout')), ms)),
+  ]);
+  const pageText = await withTimeout(page.content().catch(() => ''), 15000, 'content_timeout').catch(() => '');
+  const text = await withTimeout(page.$eval('body', el => el.innerText).catch(() => ''), 15000, 'innerText_timeout').catch(() => '');
 
   // Look for confirmation number
   const confMatch = text.match(/confirmation\s*(?:number|#|code)?\s*:?\s*([A-Z0-9-]{6,})/i) ||
