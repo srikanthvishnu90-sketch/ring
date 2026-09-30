@@ -153,7 +153,12 @@ function makeCtx(page, job) {
       if (steps.length > 200) steps.splice(0, steps.length - 200);
       // Mirror to stdout with elapsed ms — Vercel captures this, so the next
       // slow phase leaves a timing trail showing exactly where it hung.
-      try { console.log(`[ring-bb] +${entry.ms}ms ${entry.step}`); } catch { /* never break the phase for logging */ }
+      // Include the data payload: without it the trail shows step names only
+      // and hides the values (URLs, counts) needed to diagnose a failure.
+      try {
+        const d = entry.data !== undefined ? ' ' + JSON.stringify(entry.data).slice(0, 400) : '';
+        console.log(`[ring-bb] +${entry.ms}ms ${entry.step}${d}`);
+      } catch { /* never break the phase for logging */ }
     },
     async screenshot(name) {
       const p = `/tmp/ring-bb-${String(name || 'shot').replace(/[^a-z0-9_-]+/gi, '_')}-${Date.now()}.png`;

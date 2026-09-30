@@ -205,35 +205,46 @@ async function phase1SelectSlot(ctx, job) {
 
   const pickedText = (await targetButton.textContent().catch(() => '') || '').trim();
   ctx.log('dining_slot_click', { text: pickedText });
-  await targetButton.click({ timeout: 15000 }).catch(() => {});
+  // Re-query a fresh handle before clicking: the scanned handle may be stale
+  // if OpenTable re-rendered the slot list, and a stale/non-actionable click
+  // silently does nothing (the last attempt burned its whole click timeout
+  // with no navigation). Scroll into view, click, then VERIFY navigation.
+  const beforeUrl = page.url();
+  let clicked = false;
+  for (let attempt = 0; attempt < 2 && !clicked; attempt++) {
+    try {
+      const fresh = await page.$(`ul[data-test="time-slots"] a[role="button"]:has-text("${pickedText}")`).catch(() => null);
+      const el = fresh || targetButton;
+      await el.scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {});
+      await el.click({ timeout: 10000 });
+      clicked = true;
+    } catch { /* retry once with a fresh handle */ }
+    if (!clicked) await page.waitForTimeout(1000);
+  }
+  ctx.log('dining_slot_clicked', { clicked, url: page.url() });
 
-  // Wait for the booking details page. OpenTable can be slow here (a prior
-  // run needed ~30s for the form to render), so allow a generous bounded wait.
-  ctx.log('dining_details_wait_start', { url: page.url() });
-  let detailsReady = false;
+  // The click must navigate away from the restaurant page. If the URL never
+  // changes, the click didn't take — fail fast instead of waiting on a page
+  // that will never load the booking form.
   try {
-    await page.waitForSelector(DETAILS_FORM_SEL, { timeout: 35000 });
-    detailsReady = true;
-  } catch { /* fall through to URL check */ }
-  if (!detailsReady) {
-    const u = page.url();
-    detailsReady = /booking/i.test(u);
-    if (detailsReady) {
-      // On the booking page but the form isn't up yet — one more bounded wait.
-      try {
-        await page.waitForSelector(DETAILS_FORM_SEL, { timeout: 15000 });
-        detailsReady = true;
-      } catch { /* give up */ }
-    }
-    ctx.log('dining_details_page_check', { url: u, detailsReady });
-  } else {
-    ctx.log('dining_details_page_check', { url: page.url(), detailsReady });
-  }
-  if (!detailsReady) {
-    return { ok: false, code: 'details_page_timeout', note: 'Selected the time slot but the booking details page did not load in time. Nothing was booked — please try again.' };
+    await page.waitForFunction((u) => window.location.href !== u, beforeUrl, { timeout: 10000 }).catch(() => null);
+  } catch { /* fall through */ }
+  const afterClickUrl = page.url();
+  const navigated = afterClickUrl !== beforeUrl;
+  ctx.log('dining_after_click', { navigated, url: afterClickUrl });
+  if (!navigated) {
+    return { ok: false, code: 'slot_click_failed', note: 'Selected the time slot but the page did not move to booking. Nothing was booked — please try again.' };
   }
 
-  ctx.log('dining_phase1_done', { pickedText });
+  // Best-effort: note whether the details form is already up. Phase 2 waits
+  // for the form with its own budget, so don't burn phase 1's budget here.
+  let formUp = false;
+  try {
+    await page.waitForSelector(DETAILS_FORM_SEL, { timeout: 10000 });
+    formUp = true;
+  } catch { /* phase 2 will wait */ }
+
+  ctx.log('dining_phase1_done', { pickedText, formUp, url: page.url() });
   // need_approval + sessionId: the approval path auto-continues into phase 2
   // with booking_approved=true. The user already approved via the card.
   return {
@@ -257,10 +268,13 @@ async function phase2FillAndConfirm(ctx, job) {
   const firstName = nameParts[0] || 'Demo';
   const lastName = nameParts.slice(1).join(' ') || 'User';
 
-  // The details page should be open from phase 1 — wait for the form.
+  // The details page should be open from phase 1 — wait for the form with
+  // phase 2's own budget (bounded). Phase 1 only verified navigation started.
+  ctx.log('dining_phase2_form_wait', { url: page.url() });
   try {
-    await page.waitForSelector(DETAILS_FORM_SEL, { timeout: 30000 });
+    await page.waitForSelector(DETAILS_FORM_SEL, { timeout: 45000 });
   } catch {
+    ctx.log('dining_phase2_form_missing', { url: page.url() });
     return { ok: false, code: 'details_form_missing', note: 'The booking details page did not load after selecting the slot. Nothing was booked — please try again.' };
   }
   await dismissCookies(page);
