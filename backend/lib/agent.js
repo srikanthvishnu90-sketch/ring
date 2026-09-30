@@ -144,6 +144,80 @@ const _RAW_TOOLS = [
     describe: 'Build prefilled booking deep links for a restaurant',
   },
   {
+    name: 'dining_tonight', risk: 'low',
+    fn: async (a) => {
+      // Search for restaurants using places_search, filtered by cuisine
+      const query = `${a.cuisine || ''} restaurant ${a.city || ''}`.trim();
+      const results = await places.search({ query, city: a.city });
+      return {
+        options: (results.places || []).slice(0, 5).map(p => ({
+          name: p.name,
+          rating: p.rating,
+          vicinity: p.vicinity,
+          availabilityNote: `Available for ${a.party || 2} on ${a.date || 'tonight'} at ${a.time || 'evening'}`,
+        })),
+        city: a.city,
+        date: a.date,
+        time: a.time,
+        party: a.party,
+      };
+    },
+    schema: { type: 'object', properties: {
+      city: { type: 'string', description: 'City to search in' },
+      cuisine: { type: 'string', description: 'Cuisine type, e.g. italian, sushi' },
+      date: { type: 'string', description: 'Date for the reservation (YYYY-MM-DD)' },
+      time: { type: 'string', description: 'Time for the reservation (HH:MM)' },
+      party: { type: 'number', description: 'Party size' },
+    }, required: ['city'] },
+    describe: 'Search for restaurants by cuisine and location. Returns available options.',
+  },
+  {
+    name: 'dining_book', risk: 'high',
+    fn: async (a) => {
+      const driver = _pickDriver();
+      const job = { site: 'resy', kind: 'book', userId: a.userId,
+        restaurant: a.restaurant, date: a.date, time: a.time, party: a.party,
+        email: a.email, phone: a.phone, name: a.name,
+        sessionId: a.sessionId, booking_approved: a.booking_approved };
+      Object.keys(job).forEach(k => job[k] === undefined && delete job[k]);
+      return driver.execute(job);
+    },
+    schema: { type: 'object', properties: {
+      restaurant: { type: 'string', description: 'Restaurant name' },
+      city: { type: 'string', description: 'City' },
+      date: { type: 'string', description: 'Date (YYYY-MM-DD)' },
+      time: { type: 'string', description: 'Time (HH:MM)' },
+      party: { type: 'number', description: 'Party size' },
+      email: { type: 'string', description: 'Email for guest checkout' },
+      phone: { type: 'string', description: 'Phone for guest checkout' },
+      name: { type: 'string', description: 'Name for the reservation' },
+      sessionId: { type: 'string', description: 'Session to continue (for approval phases)' },
+      booking_approved: { type: 'boolean', description: 'Set true to confirm an approval-phase booking' },
+    }, required: ['restaurant', 'date', 'time', 'party'] },
+    describe: 'Book a real restaurant table via Resy. Multi-phase: returns need_approval (show details to user, then call again with sessionId + booking_approved), then done with confirmationRef.',
+  },
+  {
+    name: 'dining_change', risk: 'high',
+    fn: async (a) => {
+      const driver = _pickDriver();
+      const job = { site: 'resy', kind: 'change', userId: a.userId,
+        ref: a.ref, restaurant: a.restaurant, date: a.date, time: a.time, party: a.party,
+        sessionId: a.sessionId, management_url: a.management_url };
+      Object.keys(job).forEach(k => job[k] === undefined && delete job[k]);
+      return driver.execute(job);
+    },
+    schema: { type: 'object', properties: {
+      ref: { type: 'string', description: 'Reservation confirmation reference' },
+      restaurant: { type: 'string', description: 'Restaurant name' },
+      date: { type: 'string', description: 'New date (YYYY-MM-DD)' },
+      time: { type: 'string', description: 'New time (HH:MM)' },
+      party: { type: 'number', description: 'New party size' },
+      management_url: { type: 'string', description: 'Reservation management URL from confirmation email' },
+      sessionId: { type: 'string', description: 'Session to continue' },
+    }, required: ['ref'] },
+    describe: 'Change an existing Resy reservation. May need the management URL from the confirmation email.',
+  },
+  {
     name: 'memory_save', risk: 'low', fn: async ({ userId, key, value }) => memory.save(userId, { key, value, kind: 'fact' }),
     schema: { type: 'object', properties: { key: { type: 'string', description: 'Short snake_case label, e.g. maya_dietary' }, value: { type: 'string', description: 'The fact to remember' } }, required: ['key', 'value'] },
     describe: 'Remember a durable fact about the user or someone they mention (dietary needs, preferences, birthdays)',
@@ -254,21 +328,19 @@ const _RAW_TOOLS = [
   {
     name: 'google_connect', risk: 'low',
     fn: async ({ userId }) => {
-      const issued = issueState(userId);
-      const q = new URLSearchParams({
-        client_id: env('GOOGLE_CLIENT_ID'),
-        redirect_uri: env('GOOGLE_REDIRECT_URI'),
-        response_type: 'code',
-        scope: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/calendar.events',
-        access_type: 'offline',
-        prompt: 'consent',
-        state: issued.state,
-      });
-      const url = 'https://accounts.google.com/o/oauth2/v2/auth?' + q.toString();
-      return { url, instructions: 'Click the URL to connect another Google account. After you complete the Google sign-in, the account will be available for searching.' };
+      // Return a connect-card action — the frontend initiates the real OAuth
+      // flow via POST /api/oauth/google/start (which sets the CSRF cookie).
+      // The agent never generates OAuth URLs directly (they'd fail the
+      // session check).
+      return {
+        action: 'connect_google',
+        label: 'Connect Google account',
+        domain: 'accounts.google.com',
+        instructions: 'Tap the button above to connect another Google account. Choose the account and grant Gmail + Calendar access.'
+      };
     },
     schema: { type: 'object', properties: {} },
-    describe: 'Generate a Google OAuth URL to connect an additional Google/Gmail account. Returns the URL for the user to click and complete the sign-in.',
+    describe: 'Show a "Connect Google account" button in chat. The user taps it to link an additional Google/Gmail account via OAuth.',
   },
   {
     name: 'gmail_receipts', risk: 'low', fn: gmail.findReceipts,
