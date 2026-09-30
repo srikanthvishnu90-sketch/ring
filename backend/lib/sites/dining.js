@@ -191,6 +191,18 @@ async function phase1SelectSlot(ctx, job) {
   slotButtons = visibleButtons.length ? visibleButtons : slotButtons;
 
   if (!slotButtons.length) {
+    // Blocked by the site's bot protection? Report honestly — never disguise
+    // an access-denied page as "no availability".
+    const d = stripDiag || {};
+    const denied = /access denied/i.test(d.title || '') ||
+      /you don't have permission to access/i.test(d.bodyText || '');
+    if (denied) {
+      return {
+        ok: false,
+        code: 'site_blocked',
+        note: `OpenTable blocked the booking browser with an "Access Denied" page, so availability could not be checked at ${restaurant} for ${partySize} on ${date}. This is the site's bot protection, not a sold-out restaurant. Nothing was booked. Please try again later.`,
+      };
+    }
     return {
       ok: false,
       code: 'no_availability',
