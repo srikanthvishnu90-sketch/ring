@@ -117,13 +117,10 @@ async function phase1SelectSlot(ctx, job) {
   ctx.log('dining_restaurant_page', { url: page.url() });
 
   // Find available time slots. OpenTable shows them as <a role="button"> inside
-  // ul[data-test="time-slots"]. Wait for the slots container to load.
+  // ul[data-test="time-slots"]. IMPORTANT: the container renders BEFORE its
+  // slot links do, so waiting for the container alone is not enough — poll
+  // for actual slot links (bounded), otherwise we falsely report no_availability.
   // The URL already has ?covers=4&dateTime=... so slots should be filtered.
-  try {
-    await page.waitForSelector('ul[data-test="time-slots"], [data-testid="time-slots"]', { timeout: 5000 }).catch(() => {});
-  } catch { /* proceed to selector fallback */ }
-  await page.waitForTimeout(1000);
-
   // Look for time slot links - OpenTable uses <a role="button"> not <button>
   // Container: ul[data-test="time-slots"], slots: a[role="button"] with aria-label
   // Format: "Reserve table at {Restaurant} at {TIME} on {Month Day}, for a party of {N}"
@@ -135,12 +132,17 @@ async function phase1SelectSlot(ctx, job) {
   ];
 
   let slotButtons = [];
-  for (const sel of slotSelectors) {
-    try {
-      const els = await page.$$(sel).catch(() => []);
-      if (els.length) { slotButtons = els; break; }
-    } catch { /* next */ }
+  const scanDeadline = Date.now() + 15000;
+  while (!slotButtons.length && Date.now() < scanDeadline) {
+    for (const sel of slotSelectors) {
+      try {
+        const els = await page.$$(sel).catch(() => []);
+        if (els.length) { slotButtons = els; break; }
+      } catch { /* next */ }
+    }
+    if (!slotButtons.length) await page.waitForTimeout(1500);
   }
+  ctx.log('dining_slots_found', { count: slotButtons.length });
 
   if (!slotButtons.length) {
     return {
@@ -149,8 +151,6 @@ async function phase1SelectSlot(ctx, job) {
       note: `No available time slots found at ${restaurant} for ${partySize} on ${date}. The restaurant may be fully booked or not taking reservations for that date. Nothing was booked.`,
     };
   }
-
-  ctx.log('dining_slots_found', { count: slotButtons.length });
 
   // Collect all available slot times for honest reporting (deduplicated)
   const availableTimes = [];
