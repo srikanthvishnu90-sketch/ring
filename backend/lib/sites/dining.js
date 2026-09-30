@@ -211,17 +211,65 @@ async function phase1SelectSlot(ctx, job) {
   // with no navigation). Scroll into view, click, then VERIFY navigation.
   const beforeUrl = page.url();
   let clicked = false;
+  let clickMethod = 'none';
   for (let attempt = 0; attempt < 2 && !clicked; attempt++) {
+    const fresh = await page.$(`ul[data-test="time-slots"] a[role="button"]:has-text("${pickedText}")`).catch(() => null);
+    const el = fresh || targetButton;
+    // Diagnose actionability on the first attempt: log visibility, geometry,
+    // and which element actually sits at the click point (an overlay covering
+    // the slot is the prime suspect when clicks never dispatch).
+    if (attempt === 0) {
+      const box = await el.boundingBox().catch(() => null);
+      const visible = await el.isVisible().catch(() => false);
+      const enabled = await el.isEnabled().catch(() => false);
+      let topEl = 'n/a';
+      if (box) {
+        topEl = await page.evaluate(([x, y]) => {
+          const e = document.elementFromPoint(x, y);
+          if (!e) return 'none';
+          let cls = '';
+          try { cls = typeof e.className === 'string' ? e.className : ''; } catch { /* ignore */ }
+          return e.tagName + (cls ? '.' + cls.slice(0, 60) : '') + '|' + (e.textContent || '').trim().slice(0, 50);
+        }, [box.x + box.width / 2, box.y + box.height / 2]).catch(() => 'eval-failed');
+      }
+      ctx.log('dining_slot_state', { visible, enabled, box, topEl });
+    }
     try {
-      const fresh = await page.$(`ul[data-test="time-slots"] a[role="button"]:has-text("${pickedText}")`).catch(() => null);
-      const el = fresh || targetButton;
       await el.scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {});
       await el.click({ timeout: 10000 });
-      clicked = true;
-    } catch { /* retry once with a fresh handle */ }
+      clicked = true; clickMethod = 'click';
+    } catch {
+      // Fallback 1: keyboard activation (works when the slot is focusable but
+      // pointer-hit-testing fails).
+      try {
+        await el.focus({ timeout: 3000 }).catch(() => {});
+        await page.keyboard.press('Enter');
+        clicked = true; clickMethod = 'enter';
+      } catch { /* fallback 2 */ }
+      // Fallback 2: dispatch the click event directly on the element,
+      // bypassing hit-testing entirely. The slot is a JS-driven
+      // <a role="button"> (no href), so its handler runs on the event.
+      if (!clicked) {
+        try {
+          await el.dispatchEvent('click');
+          clicked = true; clickMethod = 'dispatch';
+        } catch { /* retry loop */ }
+      }
+    }
+    // A dispatched click that doesn't navigate didn't work — retry.
+    if (clicked) {
+      await page.waitForTimeout(2000);
+      if (page.url() === beforeUrl) {
+        ctx.log('dining_click_no_nav', { method: clickMethod });
+        clicked = false;
+      }
+    }
     if (!clicked) await page.waitForTimeout(1000);
   }
-  ctx.log('dining_slot_clicked', { clicked, url: page.url() });
+  ctx.log('dining_slot_clicked', { clicked, method: clickMethod, url: page.url() });
+  if (!clicked) {
+    return { ok: false, code: 'slot_click_failed', note: 'Selected the time slot but the page did not move to booking. Nothing was booked — please try again.' };
+  }
 
   // The click must navigate away from the restaurant page. If the URL never
   // changes, the click didn't take — fail fast instead of waiting on a page
