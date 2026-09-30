@@ -1105,12 +1105,28 @@ function describeApproval(m){
 }
 // What actually happened, from the tool that really executed — never a
 // canned line about a different action.
+// CRITICAL: Never claim "booked" without a real confirmationRef.
 function outcomeText(a){
   const g=a.args||{};
+  const r=a.result||{};
   if(a.tool==='calendar_create')return `Done — "${g.summary||'Event'}" is on your calendar for ${fmtD(g.start)}, ${fmtT(g.start)}${g.end?'–'+fmtT(g.end):''}.`;
   if(a.tool==='calendar_update')return g.start?`Done — moved "${g.summary||'the event'}" to ${fmtD(g.start)}, ${fmtT(g.start)}${g.end?'–'+fmtT(g.end):''}.`:`Done — updated "${g.summary||'the event'}" on your calendar.`;
   if(a.tool==='calendar_delete')return `Done — deleted "${g.summary||'the event'}" from your calendar.`;
   if(a.tool==='gmail_send')return `Done — sent the email to ${g.to||'them'}.`;
+  if(a.tool==='dining_book'){
+    if(r.ok && r.confirmationRef){
+      return `Booked ${r.restaurant||g.restaurant||'the restaurant'} for ${r.partySize||g.party_size||g.party} on ${r.date||g.date} at ${r.time||g.time}. Confirmation: ${r.confirmationRef}`;
+    }else{
+      return `I couldn't complete the booking. ${r.note||r.error||'No availability or booking failed.'} Nothing was booked.`;
+    }
+  }
+  if(a.tool==='ride_book'){
+    if(r.ok && (r.orderId||r.confirmationRef)){
+      return `Ride booked. Confirmation: ${r.orderId||r.confirmationRef}`;
+    }else{
+      return `I couldn't book the ride. ${r.note||r.error||'Please try again.'} Nothing was ordered.`;
+    }
+  }
   return `Done — ${a.describe||a.tool}.`;
 }
 function handledMeta(tool){
@@ -1548,15 +1564,17 @@ async function approve(i){
       const r=await fetch(`/api/approvals/${a.approvalId}/resolve`,{method:'POST',headers:authHeaders({'Content-Type':'application/json'}),body:JSON.stringify({decision:'approve'})});
       rec=await r.json();
     }catch(e){rec=null}
-    const ok=rec&&rec.status==='approved'&&!(rec.result&&rec.result.error);
+    const ok=rec&&rec.status==='approved'&&!(rec.result&&rec.result.error)&&!(rec.result&&rec.result.ok===false);
     const t=timeStr(new Date());
     a.status='done';
     if(ok){
+      a.result=rec.result; // Make tool result available to outcomeText
       a.outcomeText=outcomeText(a);
       S.handled.unshift({icon:approvalIconName(a.tool),tone:'sage',title:a.outcomeText,meta:handledMeta(a.tool)+' · '+t});
       curMsgs().push({role:'agent',text:a.outcomeText});
       toast('Done');
     }else{
+      a.result=rec?rec.result:null;
       a.outcomeText='Not completed';
       curMsgs().push({role:'agent',text:"That didn't go through — nothing was sent, booked, or changed. Want me to try again?"});
       toast('Failed');
