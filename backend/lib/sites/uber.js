@@ -152,6 +152,13 @@ async function setRouteAndFare(ctx, job) {
     }
   }
 
+  // If a scheduled time was requested, set it via Uber's schedule picker
+  // BEFORE reading the fare estimate.
+  if (job.scheduled_time) {
+    const schedResult = await setScheduledTime(ctx, job);
+    if (!schedResult.ok) return schedResult;
+  }
+
   // Fare estimate should now be visible. Extract it.
   await page.waitForTimeout(4000);
   await ctx.screenshot('uber-fare');
@@ -168,6 +175,7 @@ async function setRouteAndFare(ctx, job) {
   }).catch(() => null);
 
   ctx.log('fare_estimate', { fare: fareText, eta: etaText });
+  const schedNote = job.scheduled_time ? ` Scheduled pickup: ${new Date(job.scheduled_time).toLocaleString()}.` : '';
   return {
     ok: true, phase: 'need_approval',
     summary: {
@@ -175,10 +183,98 @@ async function setRouteAndFare(ctx, job) {
       dropoff: String(dropoff).slice(0, 60),
       fare: fareText || 'see screenshot',
       eta: etaText || 'unknown',
+      scheduled_for: job.scheduled_time || 'immediate',
     },
-    prompt: `Uber fare estimate: ${fareText || 'unknown'} (${etaText || 'no ETA shown'}). Approve to request the ride.`,
+    prompt: `Uber fare estimate: ${fareText || 'unknown'} (${etaText || 'no ETA shown'}).${schedNote} Approve to request the ride.`,
     note: 'Re-invoke with { sessionId, fare_approved: true } to book.',
   };
+}
+
+// ---- scheduled ride ----------------------------------------------------------
+// Uber's scheduled-ride flow on m.uber.com: after pickup/dropoff are set,
+// tap the clock/schedule icon, pick date + time in the picker, confirm.
+// job.scheduled_time: ISO string or "YYYY-MM-DDTHH:mm" in the user's tz.
+async function setScheduledTime(ctx, job) {
+  const page = ctx.page;
+  ctx.log('schedule_start', { scheduled_time: job.scheduled_time });
+
+  // Parse the requested time.
+  const dt = new Date(job.scheduled_time);
+  if (isNaN(dt.getTime())) {
+    return { ok: false, code: 'bad_schedule_time', note: `Could not parse scheduled_time: ${job.scheduled_time}` };
+  }
+  // Must be in the future (Uber requires 10+ min ahead; we enforce 15).
+  if (dt.getTime() < Date.now() + 15 * 60 * 1000) {
+    return { ok: false, code: 'schedule_in_past', note: 'Scheduled time must be at least 15 minutes in the future.' };
+  }
+
+  try {
+    // Find and tap the schedule/clock button.
+    const schedBtn = await page.$(
+      'button:has-text("Schedule"), button[aria-label*="schedule" i], [data-testid*="schedule" i]'
+    ).catch(() => null);
+    if (!schedBtn) {
+      await ctx.screenshot('uber-no-schedule-btn');
+      return { ok: false, code: 'schedule_unsupported', note: 'Could not find the schedule/pickup-time button. Screenshot captured.' };
+    }
+    await schedBtn.click().catch(() => {});
+    await page.waitForTimeout(3000);
+    await ctx.screenshot('uber-schedule-picker');
+
+    // The picker varies: try date input first, then time.
+    // Strategy: look for date and time inputs/selects, fill them directly.
+    const dateStr = dt.toISOString().slice(0, 10); // YYYY-MM-DD
+    const timeStr = `${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
+
+    // Try native date/time inputs.
+    const dateInput = await page.$('input[type="date"]').catch(() => null);
+    if (dateInput) {
+      await dateInput.fill(dateStr).catch(() => {});
+      ctx.log('schedule_date_set', { date: dateStr });
+    }
+    const timeInput = await page.$('input[type="time"]').catch(() => null);
+    if (timeInput) {
+      await timeInput.fill(timeStr).catch(() => {});
+      ctx.log('schedule_time_set', { time: timeStr });
+    }
+
+    // If no native inputs, try text-based picker: look for day/month selectors.
+    if (!dateInput && !timeInput) {
+      // Fallback: type into any visible text input in the picker dialog.
+      const pickerInput = await page.$('[role="dialog"] input[type="text"], [role="dialog"] input').catch(() => null);
+      if (pickerInput) {
+        const formatted = dt.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+        await pickerInput.fill(formatted).catch(() => {});
+        ctx.log('schedule_text_set', { value: formatted });
+      }
+    }
+
+    await page.waitForTimeout(2000);
+    await ctx.screenshot('uber-schedule-filled');
+
+    // Confirm the scheduled time.
+    const confirmBtn = await page.$(
+      'button:has-text("Confirm"), button:has-text("Set pickup time"), button:has-text("Schedule"), button[type="submit"]'
+    ).catch(() => null);
+    if (confirmBtn) {
+      await confirmBtn.click().catch(() => {});
+      await page.waitForTimeout(3000);
+    } else {
+      await page.keyboard.press('Enter').catch(() => {});
+      await page.waitForTimeout(3000);
+    }
+
+    await ctx.screenshot('uber-schedule-done');
+    // Verify: the schedule chip should show the picked time.
+    const bodyText = await page.textContent('body').catch(() => '') || '';
+    const timeShown = bodyText.match(/(?:10:30\s*(?:AM|am)|tomorrow)/i);
+    ctx.log('schedule_done', { timeDetected: !!timeShown });
+
+    return { ok: true, phase: 'scheduled', scheduledFor: dt.toISOString(), note: `Pickup time set for ${dt.toLocaleString()}.` };
+  } catch (e) {
+    await ctx.screenshot('uber-schedule-failed');
+    return { ok: false, code: 'schedule_failed', note: `Failed setting scheduled time: ${String(e.message).slice(0, 120)}` };
+  }
 }
 
 async function confirmBooking(ctx, job) {

@@ -68,6 +68,50 @@ const _RAW_TOOLS = [
     describe: 'Build a prefilled Uber deep link for the user to confirm',
   },
   {
+    name: 'ride_book', risk: 'high',
+    fn: async (a) => {
+      const driver = require('./local_driver');
+      const job = { site: 'uber', kind: 'book-ride', userId: a.userId,
+        phone: a.phone, pickup: a.pickup, dropoff: a.dropoff,
+        scheduled_time: a.scheduled_time,
+        sessionId: a.sessionId, otp_code: a.otp_code, fare_approved: a.fare_approved };
+      Object.keys(job).forEach(k => job[k] === undefined && delete job[k]);
+      return driver.execute(job);
+    },
+    schema: { type: 'object', properties: {
+      pickup: { type: 'string', description: 'Pickup address' },
+      dropoff: { type: 'string', description: 'Dropoff address' },
+      phone: { type: 'string', description: 'Phone in E.164 for Uber OTP login' },
+      scheduled_time: { type: 'string', description: 'ISO datetime for a scheduled ride (e.g. 2026-09-30T10:30:00-05:00). Omit for an immediate ride.' },
+      sessionId: { type: 'string', description: 'Session to continue (for OTP/approval phases)' },
+      otp_code: { type: 'string', description: 'OTP code to continue a login' },
+      fare_approved: { type: 'boolean', description: 'Set true to confirm a fare-approved booking' },
+    }, required: ['pickup', 'dropoff'] },
+    describe: 'Book a real Uber ride via the browser, immediate or scheduled. Multi-phase: returns need_otp (ask user for the code, then call again with sessionId + otp_code), then need_approval (show fare to user, then call again with sessionId + fare_approved), then done with orderId.',
+  },
+  {
+    name: 'browser_run', risk: 'high',
+    fn: async (a) => {
+      const driver = require('./local_driver');
+      const job = { site: a.site, kind: a.kind, userId: a.userId, sessionId: a.sessionId,
+        phone: a.phone, pickup: a.pickup, dropoff: a.dropoff,
+        otp_code: a.otp_code, fare_approved: a.fare_approved };
+      Object.keys(job).forEach(k => job[k] === undefined && delete job[k]);
+      return driver.execute(job);
+    },
+    schema: { type: 'object', properties: {
+      site: { type: 'string', description: 'Site module: uber, dining, etc.' },
+      kind: { type: 'string', description: 'Job kind, e.g. book-ride, trip-status, cancel-ride' },
+      phone: { type: 'string', description: 'Phone in E.164 for OTP login, if needed' },
+      pickup: { type: 'string', description: 'Pickup address' },
+      dropoff: { type: 'string', description: 'Dropoff address' },
+      sessionId: { type: 'string', description: 'Session to continue (for OTP/approval phases)' },
+      otp_code: { type: 'string', description: 'OTP code to continue a login' },
+      fare_approved: { type: 'boolean', description: 'Set true to confirm a fare-approved booking' },
+    }, required: ['site', 'kind'] },
+    describe: 'Run a real browser automation job on a website (Uber booking, etc.). Returns phases: need_otp, need_approval, or done. Multi-phase jobs continue by passing sessionId back.',
+  },
+  {
     name: 'dining_links', risk: 'low',
     fn: async ({ slug, city, date, dateTime, seats }) => ({
       opentable: dining.opentableLink({ slug, dateTime, covers: seats }),
@@ -239,7 +283,7 @@ const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. Yo
 - Email: search, read full messages and threads, triage the inbox (urgent/needs-reply/fyi), reply and forward (always with approval of the exact text), save drafts, delete, archive, mark read/unread, star, find receipts and attachments.
 - Calendar: list, create, reschedule, and cancel events (changes need confirmation), find free time, check conflicts, morning briefings, turn invite emails into staged events, pre-event reminders, week previews.
 - Inbox intel: meeting prep (attendees + related mail), trip confirmations pulled into itineraries with staged calendar events, RSVPs (approval), follow-up radar for unanswered mail, subscription detection from receipts, spending recaps, contact lookup from inbox history, deadline watching with staged reminders.
-- Real outcomes: book restaurant tables for real (confirmation reference required — never claim booked without one), change/cancel reservations, cancel subscriptions with proof, book rides (confirm before ordering), find tonight's restaurants, log into websites and complete tasks (per-action approval, vaulted credentials), fill web forms, check order/delivery status, live price checks, diagnose and fix messed-up reservations.
+- Real outcomes: book restaurant tables for real (confirmation reference required — never claim booked without one), change/cancel reservations, cancel subscriptions with proof, book rides via browser_run (site 'uber', kind 'book-ride', confirm before ordering), find tonight's restaurants, log into websites and complete tasks via browser_run (per-action approval, vaulted credentials), fill web forms, check order/delivery status, live price checks, diagnose and fix messed-up reservations.
 - Memory + groups: remember durable facts, recall them, reply as @ring in group chats, run polls to plan with friends and lock a time, daily briefs, draft messages (never send without approval), learn routines, smart nudges.
 - Health + notes: log health metrics (steps, sleep, water, weight, workouts, mood, energy), show today's metrics, per-metric trends and multi-day summaries; save, list, search, read, and delete notes.
 Deliverables: when the user asks for something they will keep or share — an itinerary, a comparison, a plan, a document, a write-up — put the deliverable itself in its own surface: wrap it in a fenced code block whose info string starts with doc: followed by the title (opening fence line "doc:Trip Itinerary", then the full markdown content, then a closing fence). Keep 1-2 sentences of chat text outside the block; the block is the document. Never dump a long document as plain chat text when this surface fits.
