@@ -144,6 +144,19 @@ async function phase1SelectSlot(ctx, job) {
   }
   ctx.log('dining_slots_found', { count: slotButtons.length });
 
+  // OpenTable renders hidden duplicate slot elements (carousel clones). A
+  // hidden element can never be clicked — filter to visible slots only before
+  // matching text or clicking. (A prior attempt grabbed a hidden "10:00 PM"
+  // clone: visible=false, box=null, and every click silently failed.)
+  const visibleButtons = [];
+  for (const b of slotButtons) {
+    try {
+      if (await b.isVisible().catch(() => false)) visibleButtons.push(b);
+    } catch { /* skip */ }
+  }
+  ctx.log('dining_slots_visible', { visible: visibleButtons.length, total: slotButtons.length });
+  slotButtons = visibleButtons.length ? visibleButtons : slotButtons;
+
   if (!slotButtons.length) {
     return {
       ok: false,
@@ -213,8 +226,17 @@ async function phase1SelectSlot(ctx, job) {
   let clicked = false;
   let clickMethod = 'none';
   for (let attempt = 0; attempt < 2 && !clicked; attempt++) {
-    const fresh = await page.$(`ul[data-test="time-slots"] a[role="button"]:has-text("${pickedText}")`).catch(() => null);
-    const el = fresh || targetButton;
+    // Pick the first VISIBLE match: hidden duplicates (carousel clones) can
+    // never receive a click. Fall back to the scanned handle only if no
+    // visible candidate exists.
+    const candidates = await page.$$(`ul[data-test="time-slots"] a[role="button"]:has-text("${pickedText}")`).catch(() => []);
+    let el = null;
+    for (const c of candidates) {
+      try {
+        if (await c.isVisible().catch(() => false)) { el = c; break; }
+      } catch { /* next candidate */ }
+    }
+    el = el || targetButton;
     // Diagnose actionability on the first attempt: log visibility, geometry,
     // and which element actually sits at the click point (an overlay covering
     // the slot is the prime suspect when clicks never dispatch).
