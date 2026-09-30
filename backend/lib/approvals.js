@@ -254,6 +254,9 @@ async function resolve(id, decision, opts) {
         userId: rec.userId, tool: rec.tool, args: rec.args, result: rec.result,
         approvalId: rec.id, status: rec.result && rec.result.error ? 'failed' : 'executed',
       }).catch(() => {});
+      // Post the honest result to the chat thread (fire-and-forget; never throws).
+      // CRITICAL: Never claim "booked" without a real confirmationRef.
+      postApprovalResult(rec).catch(() => {});
     } else {
       // Declined: nothing executed — audit the hold, not an execution.
       logToolRun({
@@ -277,6 +280,7 @@ async function resolve(id, decision, opts) {
       userId: rec.userId, tool: rec.tool, args: rec.args, result: rec.result,
       approvalId: rec.id, status: rec.result && rec.result.error ? 'failed' : 'executed',
     }).catch(() => {});
+    postApprovalResult(rec).catch(() => {});
   } else {
     logToolRun({
       userId: rec.userId, tool: rec.tool, args: rec.args,
@@ -284,6 +288,50 @@ async function resolve(id, decision, opts) {
     }).catch(() => {});
   }
   return rec;
+}
+
+// Post the tool execution result as an honest chat message.
+// CRITICAL RULE: Never claim "booked" without a real confirmationRef.
+// If the tool succeeded with proof, report the confirmation.
+// If it failed, report the failure honestly. Never fake success.
+async function postApprovalResult(rec) {
+  if (!rec.threadId) return;
+  const result = rec.result || {};
+  const tool = rec.tool;
+  
+  let message;
+  
+  if (tool === 'dining_book') {
+    if (result.ok && result.confirmationRef) {
+      // REAL booking with proof
+      message = `Booked ${result.restaurant || 'the restaurant'} for ${result.partySize || result.party} on ${result.date} at ${result.time}. Confirmation: ${result.confirmationRef}`;
+    } else {
+      // Honest failure - never claim booked
+      const reason = result.note || result.error || 'The booking could not be completed.';
+      message = `I couldn't complete the booking. ${reason} Nothing was booked.`;
+    }
+  } else if (tool === 'ride_book') {
+    if (result.ok && (result.orderId || result.confirmationRef)) {
+      message = `Ride booked. Confirmation: ${result.orderId || result.confirmationRef}`;
+    } else {
+      message = `I couldn't book the ride. ${result.note || 'Please try again.'} Nothing was ordered.`;
+    }
+  } else {
+    // Generic: report ok/fail honestly
+    if (result.ok) {
+      message = result.note || `${tool} completed.`;
+    } else {
+      message = result.note || `${tool} could not be completed. Nothing was done.`;
+    }
+  }
+  
+  // Post as the agent
+  const threads = require('./threads');
+  await threads.postMessage(rec.threadId, {
+    from: 'ring assistant',
+    text: message,
+    skipMention: true,
+  });
 }
 
 module.exports = { create, get, listPending, resolve };
