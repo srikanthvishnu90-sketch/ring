@@ -30,8 +30,12 @@ async function loginTask(ctx, job) {
   }
 
   // If we already have problems + answers, we're in phase 2.
+  // HARD-DISABLED (2026-09-30): autonomous graded-answer entry/submission is
+  // never permitted. Ring may extract problem statements for the user to
+  // solve, but must never fill in or submit answers to graded coursework.
   if (job.answers && job.problemIds) {
-    return enterAnswers(ctx, job);
+    return { ok: false, code: 'graded_work_disabled',
+      note: 'Answer entry for graded coursework is disabled. Ring extracted the problems; the user must solve and submit them.' };
   }
   return phase1_extract(ctx, job);
 }
@@ -73,10 +77,14 @@ async function phase1_extract(ctx, job) {
     return { ok: false, code: 'login_form_not_found', note: 'Could not find the SSO email form. Screenshot captured.' };
   }
 
-  // Step 2: password (Microsoft uses name="passwd").
+  // Step 2: password (Microsoft uses name="passwd"). The page sometimes
+  // renders faded/loading — wait for it to stabilize.
   try {
     const passSel = 'input[type="password"], input[name="passwd"]';
-    await page.waitForSelector(passSel, { timeout: 25000, state: 'visible' });
+    // Wait for the input to exist first, then for visibility.
+    await page.waitForSelector(passSel, { timeout: 25000, state: 'attached' });
+    await page.waitForTimeout(3000); // let the fade/transition finish
+    await page.waitForSelector(passSel, { timeout: 15000, state: 'visible' });
     await page.fill(passSel, password);
     ctx.log('sso_password_filled', {});
     // Microsoft: the submit is input[type=submit] with value "Sign in".
