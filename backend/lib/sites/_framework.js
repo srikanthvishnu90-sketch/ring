@@ -195,22 +195,86 @@ function defaultConnectCdp(connectUrl) {
 // Returns the site fn's envelope augmented with { steps }.
 // deps: { connectCdp } (test seam). Never throws expected failures — but an
 // unexpected throw propagates to the driver, which converts it honestly.
+
+// Live CDP connections kept across chained phases IN THIS PROCESS.
+// A fresh connectOverCDP cannot see a previous phase's pages (proven:
+// phase 2 resumed onto about:blank with resumed=false), so when phase 1
+// returns a continuation (need_approval + sessionId) the connection must stay
+// open for phase 2 to reuse THE SAME pages. Entries are keyed by connectUrl
+// and evicted after 5 minutes so a dropped chain can never leak a browser.
+const cdpCache = new Map();
+const CDP_CACHE_TTL_MS = 5 * 60 * 1000;
+const CONTINUATION_PHASES = new Set(['need_otp', 'need_input', 'need_approval']);
+
+function evictStaleCdp() {
+  const now = Date.now();
+  for (const [key, entry] of cdpCache) {
+    if (!entry || now - entry.savedAt > CDP_CACHE_TTL_MS) {
+      cdpCache.delete(key);
+      try { if (entry && entry.browser && entry.browser.close) entry.browser.close().catch(() => {}); } catch { /* ignore */ }
+    }
+  }
+  // Hard cap: never hold more than a handful of browsers.
+  while (cdpCache.size > 4) {
+    const oldest = cdpCache.keys().next().value;
+    const entry = cdpCache.get(oldest);
+    cdpCache.delete(oldest);
+    try { if (entry && entry.browser && entry.browser.close) entry.browser.close().catch(() => {}); } catch { /* ignore */ }
+  }
+}
+
+async function disconnectCdp(browser) {
+  // Bounded: a wedged CDP connection must never hold the function hostage.
+  // This only disconnects OUR connection — the remote Browserbase session
+  // stays alive unless the driver explicitly stops it.
+  try {
+    if (browser) {
+      await Promise.race([
+        browser.close(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('cdp_disconnect_timeout')), 10000)),
+      ]);
+    }
+  } catch { /* best effort */ }
+}
+
 async function runPhase({ connectUrl, job, siteFn, site }, deps = {}) {
   const connectCdp = deps.connectCdp || defaultConnectCdp;
   const started = Date.now();
   let browser = null;
   let ctx = null;
+  // True when this phase chains into another phase in this process: keep the
+  // CDP connection open so the next phase reuses the SAME live pages.
+  let keepAlive = false;
   try {
-    browser = await connectCdp(connectUrl);
+    evictStaleCdp();
+    // Reuse a live connection from a chained phase in this process. A fresh
+    // connectOverCDP cannot see the previous phase's pages, so without this
+    // the continuation phase lands on a blank tab.
+    if (job.sessionId) {
+      const cached = cdpCache.get(connectUrl);
+      if (cached && cached.browser) {
+        let alive = false;
+        try { alive = typeof cached.browser.isConnected === 'function' ? cached.browser.isConnected() : true; } catch { alive = false; }
+        if (alive) browser = cached.browser;
+        else cdpCache.delete(connectUrl);
+      }
+    }
+    if (!browser) browser = await connectCdp(connectUrl);
     const contexts = browser.contexts();
     const context = contexts[0] || (await browser.newContext());
-    // Continuation phase (job.sessionId set): resume the existing page where
-    // the previous phase left off — do NOT open a blank new tab. Fresh phase:
-    // create a new page as before.
+    // Resume the phase's real page: prefer the most recently opened non-blank
+    // page (Browserbase keeps a default about:blank tab alongside real ones).
+    // Fresh phase with no pages: create one as before.
     let page;
     const existingPages = context.pages();
-    if (job.sessionId && existingPages.length) {
-      page = existingPages[existingPages.length - 1];
+    if (existingPages.length) {
+      page = null;
+      for (let i = existingPages.length - 1; i >= 0; i--) {
+        let u = '';
+        try { u = existingPages[i].url() || ''; } catch { u = ''; }
+        if (u && u !== 'about:blank') { page = existingPages[i]; break; }
+      }
+      page = page || existingPages[existingPages.length - 1];
       await page.bringToFront().catch(() => {});
       try { await page.setViewportSize({ width: 390, height: 844 }); } catch { /* best effort */ }
     } else {
@@ -220,9 +284,14 @@ async function runPhase({ connectUrl, job, siteFn, site }, deps = {}) {
       });
     }
     ctx = makeCtx(page, job);
-    ctx.log('phase_start', { site, kind: job.kind, resumed: !!(job.sessionId && existingPages.length) });
+    ctx.log('phase_start', { site, kind: job.kind, resumed: !!(job.sessionId && existingPages.length), reusedConn: !!browser && cdpCache.has(connectUrl) });
     const out = await siteFn(ctx, job);
     ctx.log('phase_end', { phase: out && out.phase, ok: out && out.ok });
+    keepAlive = !!(out && out.ok && CONTINUATION_PHASES.has(out.phase));
+    if (keepAlive) {
+      cdpCache.set(connectUrl, { browser, savedAt: Date.now() });
+      ctx.log('phase_conn_kept', { pages: context.pages().length });
+    }
     return { ...(out || {}), steps: ctx.steps, phaseMs: Date.now() - started };
   } catch (e) {
     if (ctx) {
@@ -231,17 +300,12 @@ async function runPhase({ connectUrl, job, siteFn, site }, deps = {}) {
     }
     throw e;
   } finally {
-    // Disconnect OUR CDP connection only — the remote Browserbase session
-    // stays alive for continuation phases. Never browser.close() the remote.
-    // Bounded: a wedged CDP connection must never hold the function hostage.
-    try {
-      if (browser) {
-        await Promise.race([
-          browser.close(),
-          new Promise((_, reject) => setTimeout(() => reject(new Error('cdp_disconnect_timeout')), 10000)),
-        ]);
-      }
-    } catch { /* best effort */ }
+    if (keepAlive) {
+      // Leave the connection open for the chained phase (same process).
+    } else {
+      cdpCache.delete(connectUrl);
+      await disconnectCdp(browser);
+    }
   }
 }
 
