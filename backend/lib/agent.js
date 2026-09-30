@@ -174,9 +174,11 @@ const _RAW_TOOLS = [
   {
     name: 'dining_book', risk: 'high',
     fn: async (a) => {
+      // Use OpenTable via dining.js (single-phase browser flow).
+      // Alla Vita and most Chicago restaurants are on OpenTable, not Resy.
       const driver = _pickDriver();
-      const job = { site: 'resy', kind: 'book', userId: a.userId,
-        restaurant: a.restaurant, date: a.date, time: a.time, party: a.party,
+      const job = { site: 'dining', kind: 'book-table', userId: a.userId,
+        restaurant: a.restaurant, date: a.date, time: a.time, partySize: a.party,
         email: a.email, phone: a.phone, name: a.name,
         sessionId: a.sessionId, booking_approved: a.booking_approved };
       Object.keys(job).forEach(k => job[k] === undefined && delete job[k]);
