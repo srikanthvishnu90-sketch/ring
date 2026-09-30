@@ -132,7 +132,7 @@ async function createBrowserbaseSession() {
       created = { id, connectUrl };
       await waitForSessionReady(id);
       console.log(`[ring-bb] session created (hardening=${label})`);
-      return created;
+      return { ...created, hardening: label };
     } catch (e) {
       if (created) { try { await stopBrowserbaseSession(created.id); } catch { /* best effort */ } }
       lastErr = e;
@@ -236,7 +236,7 @@ async function resolveSession(job) {
     connect_url: bb.connectUrl,
     purpose: job.kind,
   });
-  return { session: { ...saved, connect_url: bb.connectUrl, bb_session_id: bb.id }, created: true };
+  return { session: { ...saved, connect_url: bb.connectUrl, bb_session_id: bb.id, hardening: bb.hardening }, created: true };
 }
 
 async function endSession(sessionId, bbSessionId, terminalStatus = 'closed') {
@@ -315,7 +315,7 @@ async function executeInner(job, deps = {}) {
     if (e && e.code === 'PHASE_TIMEOUT') {
       // Keep the session live — the agent can retry the phase.
       try { await sessions.touch(sessionId); } catch { /* best effort */ }
-      return { ok: false, code: 'phase_timeout', sessionId, note: `Phase exceeded the ${budget}ms serverless budget; the browser session is still live — retry the phase with sessionId.` };
+      return { ok: false, code: 'phase_timeout', sessionId, note: `Phase exceeded the ${budget}ms serverless budget; the browser session is still live — retry the phase with sessionId.`, ...(session.hardening ? { hardening: session.hardening } : {}) };
     }
     if (e && e.code === 'PLAYWRIGHT_CORE_MISSING') {
       await endSession(sessionId, session.bb_session_id);
@@ -342,10 +342,10 @@ async function executeInner(job, deps = {}) {
     }
     if (job.keepAlive) {
       try { await sessions.touch(sessionId); } catch { /* best effort */ }
-      return stripSensitive({ ...out, phase: 'done', sessionId, keptAlive: true });
+      return stripSensitive({ ...out, phase: 'done', sessionId, keptAlive: true, ...(session.hardening ? { hardening: session.hardening } : {}) });
     }
     await endSession(sessionId, session.bb_session_id);
-    return stripSensitive({ ...out, phase: 'done', sessionId });
+    return stripSensitive({ ...out, phase: 'done', sessionId, ...(session.hardening ? { hardening: session.hardening } : {}) });
   }
   if (out.ok && CONTINUATION_PHASES.has(phase)) {
     // Session stays LIVE for the next phase.
@@ -356,8 +356,8 @@ async function executeInner(job, deps = {}) {
   // terminal — close the session, report honestly.
   await endSession(sessionId, session.bb_session_id);
   const failure = out.ok === false
-    ? { ok: false, code: out.code || 'browser_failed', note: out.note || 'Site module reported failure.', sessionId }
-    : { ok: false, code: 'browser_failed', sessionId, note: `Site module returned an unrecognized envelope (phase "${phase}") — treated as failure.` };
+    ? { ok: false, code: out.code || 'browser_failed', note: out.note || 'Site module reported failure.', sessionId, ...(session.hardening ? { hardening: session.hardening } : {}) }
+    : { ok: false, code: 'browser_failed', sessionId, note: `Site module returned an unrecognized envelope (phase "${phase}") — treated as failure.`, ...(session.hardening ? { hardening: session.hardening } : {}) };
   if (out.steps) failure.steps = out.steps;
   return stripSensitive(failure);
 }
@@ -367,8 +367,8 @@ async function executeInner(job, deps = {}) {
 // Create a raw session (REST only — no CDP). Used by tooling/scripts.
 async function createSession() {
   if (!keysPresent()) throw new Error('BROWSERBASE_API_KEY / BROWSERBASE_PROJECT_ID are not set');
-  const { id, connectUrl } = await createBrowserbaseSession();
-  return { id, connectUrl };
+  const { id, connectUrl, hardening } = await createBrowserbaseSession();
+  return { id, connectUrl, hardening };
 }
 
 async function stopSession(id) {
