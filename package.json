@@ -1,1 +1,1 @@
-{"dependencies":{"dotenv":"^16.4.5","express":"^4.19.2"},"name":"ring","private":true,"version":"0.1.0"}
+{"dependencies":{"dotenv":"^16.4.5","express":"^4.19.2","playwright-core":"^1.63.0"},"name":"ring","private":true,"version":"0.1.0"}
