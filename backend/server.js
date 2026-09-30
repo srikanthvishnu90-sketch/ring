@@ -866,9 +866,17 @@ app.get('/auth/google/callback', async (req, res) => {
       console.error('[oauth] Failed to fetch Google email, saving as primary:', e.message);
     }
     saveTokens(userId, tok, googleEmail);
-    // Back to the app — it picks up ?google=connected, refreshes its
-    // connection state, and confirms with a toast.
-    res.redirect(appUrl() + '?google=connected');
+    // Popup flow: notify the opener via postMessage and close.
+    // The main app never navigates, so there's no reload or splash.
+    res.send(`<!doctype html><html><head><meta charset="utf-8"><title>Connected</title></head>
+<body style="font-family:sans-serif;display:flex;min-height:90vh;align-items:center;justify-content:center">
+<p>Google connected — you can close this window.</p>
+<script>
+try {
+  if (window.opener) window.opener.postMessage({ type: 'google-connected' }, location.origin);
+} catch (e) {}
+setTimeout(function(){ window.close(); }, 500);
+</script></body></html>`);
   } catch (e) {
     res.status(500).send('OAuth failed: ' + e.message);
   }

@@ -1269,11 +1269,25 @@ async function refreshGoogleConn(){
 async function connectGoogle(){
   if(!signedIn()){toast('Sign in first, then connect Google');return}
   try{
-    toast('Taking you to Google…');
     const r=await apiFetch('/api/oauth/google/start',{method:'POST'});
     const d=await r.json().catch(()=>({}));
     if(!r.ok)throw new Error(d.error||'could not start');
-    location.href=d.url;
+    // Popup flow: the main app never navigates away, so no reload/splash.
+    // The callback page postMessages back and closes the popup.
+    const w=window.open(d.url,'ring_google_oauth','width=500,height=650');
+    if(!w){toast('Popup blocked — allow popups to connect Google');return}
+    toast('Complete Google sign-in in the popup…');
+    const onMsg=async(ev)=>{
+      if(ev.origin!==location.origin)return;
+      if(!ev.data||ev.data.type!=='google-connected')return;
+      window.removeEventListener('message',onMsg);
+      await refreshGoogleConn();
+      // Re-render the current view in place — no navigation, no splash.
+      if(S.tab==='home')renderHome();
+      else if(S.tab==='chat')renderChat();
+      toast('Google account connected — Gmail + Calendar are live');
+    };
+    window.addEventListener('message',onMsg);
   }catch(e){toast('Could not start Google sign-in: '+e.message)}
 }
 function googleCardHTML(){
