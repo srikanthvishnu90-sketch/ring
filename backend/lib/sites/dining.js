@@ -51,8 +51,10 @@ async function bookTable(ctx, job) {
   const KNOWN_SLUGS = {
     'alla-vita': 'alla-vita-chicago',
   };
+  let slugWasCorrected = false;
   if (KNOWN_SLUGS[slug]) {
     slug = KNOWN_SLUGS[slug];
+    slugWasCorrected = true;
     ctx.log('dining_slug_corrected', { from: restaurant, to: slug });
   }
   // Try direct restaurant URL first (works for known slugs like alla-vita-chicago)
@@ -65,11 +67,12 @@ async function bookTable(ctx, job) {
 
   // If direct URL didn't land on a restaurant page, search.
   // Also verify the page shows the correct restaurant name (guessed slug may be wrong).
+  // Skip verification if we used a known-correct slug.
   const url = page.url();
   ctx.log('dining_landed', { url });
   let needSearch = !url.includes('/r/') || url.includes('search');
-  if (!needSearch) {
-    // Verify the page title contains the restaurant name
+  if (!needSearch && !slugWasCorrected) {
+    // Verify the page title contains the restaurant name (only for guessed slugs)
     try {
       const title = await page.title().catch(() => '');
       const pageText = await page.$eval('h1', el => el.textContent).catch(() => '');
