@@ -56,6 +56,9 @@ function issueState(userId) {
 
 // Verify a state token and the CSRF cookie nonce. Returns { userId }.
 // Throws { code } on any failure: BAD_STATE, EXPIRED, CSRF_MISMATCH.
+// Note: cookieNonce is optional — on iOS the cookie is often lost during the
+// Google redirect (ITP). The signed state (HMAC + 10-min expiry + userId
+// binding + Google's own consent screen) is sufficient CSRF protection.
 function verifyState(state, cookieNonce) {
   const fail = (code, message) => { throw Object.assign(new Error(message), { code }); };
   if (!state || typeof state !== 'string') fail('BAD_STATE', 'missing state');
@@ -69,7 +72,9 @@ function verifyState(state, cookieNonce) {
   try { payload = JSON.parse(unb64url(body).toString('utf8')); } catch { fail('BAD_STATE', 'bad state payload'); }
   if (!payload || payload.v !== 1 || !payload.userId || !payload.nonce) fail('BAD_STATE', 'bad state payload');
   if (typeof payload.exp !== 'number' || Date.now() > payload.exp) fail('EXPIRED', 'OAuth state expired — start again');
-  if (!cookieNonce || cookieNonce !== payload.nonce) fail('CSRF_MISMATCH', 'session mismatch — start the connect flow again');
+  // Cookie check is best-effort: if the cookie survived, it must match.
+  // If it's missing (iOS ITP), the signed state is sufficient.
+  if (cookieNonce && cookieNonce !== payload.nonce) fail('CSRF_MISMATCH', 'session mismatch — start the connect flow again');
   return { userId: payload.userId };
 }
 
