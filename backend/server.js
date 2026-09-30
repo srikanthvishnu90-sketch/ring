@@ -139,9 +139,12 @@ app.post('/api/chat', async (req, res) => {
   // create real approval cards. There is no unauthenticated 'local'
   // identity anymore — 'local' is a legacy card owner that can never
   // execute. (The request body's userId is deliberately ignored.)
-  const authed = req.userId && req.userId !== 'local';
-  const userId = authed ? req.userId : 'demo';
-  const demo = !authed;
+  const authed = req.userId && req.userId !== 'local' && req.userId !== 'demo';
+  if (!authed) {
+    return res.status(401).json({ error: 'Please sign in to use Ring', code: 'SIGN_IN_REQUIRED' });
+  }
+  const userId = req.userId;
+  const demo = false;
   if (!text || typeof text !== 'string') return res.status(400).json({ error: 'text is required' });
   const parts = sanitizeAttachments(attachments);
   if (parts === null) return res.status(400).json({ error: 'invalid attachments (images only, max 4, each under ~5MB)' });
@@ -176,9 +179,12 @@ app.post('/api/chat', async (req, res) => {
 // `data: {"done":true, ...full reply...}`. Same approval gating as /api/chat.
 app.post('/api/chat/stream', async (req, res) => {
   const { text, threadId, tz, attachments } = req.body || {};
-  const authed = req.userId && req.userId !== 'local';
-  const userId = authed ? req.userId : 'demo';
-  const demo = !authed;
+  const authed = req.userId && req.userId !== 'local' && req.userId !== 'demo';
+  if (!authed) {
+    return res.status(401).json({ error: 'Please sign in to use Ring', code: 'SIGN_IN_REQUIRED' });
+  }
+  const userId = req.userId;
+  const demo = false;
   if (!text || typeof text !== 'string') return res.status(400).json({ error: 'text is required' });
   const parts = sanitizeAttachments(attachments);
   if (parts === null) return res.status(400).json({ error: 'invalid attachments (images only, max 4, each under ~5MB)' });
