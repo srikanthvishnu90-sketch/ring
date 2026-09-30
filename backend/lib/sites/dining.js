@@ -325,59 +325,34 @@ async function phase1SelectSlot(ctx, job) {
   };
 }
 
-// Phase 2: resume the live session's details page, fill guest info, confirm,
-// and extract the confirmation reference.
-async function phase2FillAndConfirm(ctx, job) {
-  const page = ctx.page;
-  const { restaurant, date, time, partySize } = job;
-
-  ctx.log('dining_phase2_start', { url: page.url() });
-
-  const { email, phone, name } = await getCreds(ctx, job);
-  const nameParts = name.split(' ');
-  const firstName = nameParts[0] || 'Demo';
-  const lastName = nameParts.slice(1).join(' ') || 'User';
-
-  // The details page should be open from phase 1 — wait for the form with
-  // phase 2's own budget (bounded). Phase 1 only verified navigation started.
-  ctx.log('dining_phase2_form_wait', { url: page.url() });
+// Marketing-only opt-out (label-aware): uncheck marketing opt-in checkboxes.
+// Never touch anything else — no terms, policies, deposits, or transactional
+// prefs are ever changed automatically.
+async function marketingOptOut(page, ctx) {
+  const marketingRe = /opt.?in.?email|newsletter|offers|promotions|marketing|\bdeals\b|news from this restaurant/i;
   try {
-    await page.waitForSelector(DETAILS_FORM_SEL, { timeout: 45000 });
-  } catch {
-    ctx.log('dining_phase2_form_missing', { url: page.url() });
-    // Compact probe: what IS on the page? (kept small so Vercel keeps the whole line)
-    const probe = await page.evaluate(() => {
-      const body = document.body ? document.body.innerText : '';
-      const test = (re) => re.test(body);
-      const one = (sel) => {
-        try { const el = document.querySelector(sel); return el ? (el.getAttribute('name') || el.id || el.type || 'found') : 'absent'; } catch { return 'err'; }
-      };
-      return {
-        title: document.title,
-        textLen: body.length,
-        hasFirstName: test(/first name/i),
-        hasPhoneField: test(/phone( number)?/i),
-        hasEmailField: test(/email/i),
-        hasCompleteBtn: test(/complete (your )?reservation|complete booking/i),
-        hasSignIn: test(/sign in to (complete|book)/i),
-        hasError: test(/no longer available|no longer valid|expired|something went wrong|not available/i),
-        hasCaptcha: test(/captcha|verify you are human/i),
-        sel_firstName: one('input#firstName'),
-        sel_name_firstName: one('input[name="firstName"]'),
-        sel_email: one('input[type="email"]'),
-        inputs: Array.from(document.querySelectorAll('input'))
-          .map((i) => i.getAttribute('name') || i.id || i.type || i.getAttribute('aria-label') || '?')
-          .join(',').slice(0, 160),
-        iframes: document.querySelectorAll('iframe').length,
-      };
-    }).catch(() => ({ evalFailed: true }));
-    ctx.log('dining_phase2_page_probe', probe);
-    return { ok: false, code: 'details_form_missing', note: 'The booking details page did not load after selecting the slot. Nothing was booked — please try again.' };
-  }
-  await dismissCookies(page);
-  ctx.log('dining_details_page_ready', { url: page.url() });
+    const boxes = await page.$$('input[type="checkbox"]').catch(() => []);
+    for (const box of boxes) {
+      let id = '';
+      try {
+        id = [
+          await box.getAttribute('id').catch(() => ''),
+          await box.getAttribute('name').catch(() => ''),
+          await box.getAttribute('value').catch(() => ''),
+        ].filter(Boolean).join(' ');
+      } catch { /* ignore */ }
+      if (!marketingRe.test(id)) continue;
+      const checked = await box.isChecked().catch(() => false);
+      if (checked) {
+        await box.uncheck({ timeout: 10000 }).catch(() => {});
+        ctx.log('dining_optout', { id: id.slice(0, 60) });
+      }
+    }
+  } catch { /* best effort */ }
+}
 
-  // Fill first name, last name, email, phone
+// Fill guest details wherever the inputs exist (page or modal dialog).
+async function fillGuestForm(page, { firstName, lastName, email, phone }) {
   const fillField = async (selectors, value) => {
     for (const sel of selectors) {
       try {
@@ -391,77 +366,54 @@ async function phase2FillAndConfirm(ctx, job) {
     }
     return false;
   };
+  return {
+    first: await fillField(['input#firstName', 'input[name="firstName"]', 'input[placeholder*="First name" i]'], firstName),
+    last: await fillField(['input#lastName', 'input[name="lastName"]', 'input[placeholder*="Last name" i]'], lastName),
+    email: await fillField(['input#email', 'input[name="email"]', 'input[type="email"]'], email),
+    phone: await fillField(['input#phoneNumber', 'input[name="phone"]', 'input[type="tel"]', 'input[placeholder*="Phone" i]'], phone),
+  };
+}
 
-  await fillField(['input#firstName', 'input[name="firstName"]', 'input[placeholder*="First name" i]'], firstName);
-  await fillField(['input#lastName', 'input[name="lastName"]', 'input[placeholder*="Last name" i]'], lastName);
-  await fillField(['input#email', 'input[name="email"]', 'input[type="email"]'], email);
-  await fillField(['input#phoneNumber', 'input[name="phone"]', 'input[type="tel"]'], phone);
-
-  ctx.log('dining_details_filled', { email });
-
-  // Uncheck marketing opt-ins if present (bounded — never hang here)
-  for (const sel of ['input[type="checkbox"]']) {
+// Compact state probe after clicking Complete reservation.
+async function probeAfterComplete(page) {
+  return page.evaluate(() => {
+    const body = document.body ? document.body.innerText : '';
+    const test = (re) => re.test(body);
+    let dialogText = 'none';
     try {
-      const boxes = await page.$$(sel).catch(() => []);
-      for (const box of boxes) {
-        const checked = await box.isChecked().catch(() => false);
-        if (checked) await box.uncheck({ timeout: 10000 }).catch(() => {});
-      }
-    } catch { /* next */ }
-  }
+      const d = document.querySelector('[role="dialog"]');
+      if (d && d.innerText) dialogText = d.innerText.slice(0, 300);
+    } catch { /* ignore */ }
+    return {
+      url: location.href,
+      isConfirmed: test(/confirmed|reservation complete|you're booked|booking confirmed/i),
+      hasGuestForm: test(/first name/i),
+      hasSignIn: test(/sign in|log in|create an account/i),
+      hasOtp: test(/verification code|enter the (code|verification)|one-time pass/i),
+      hasError: test(/no longer available|no longer valid|expired|something went wrong|not available/i),
+      dialogText,
+      buttons: Array.from(document.querySelectorAll('button'))
+        .map((b) => (b.innerText || '').trim()).filter(Boolean).slice(0, 6).join('|').slice(0, 120),
+    };
+  }).catch(() => ({ evalFailed: true }));
+}
 
-  // Click the final confirmation button (bounded)
-  const confirmSelectors = [
-    'button:has-text("Complete reservation")',
-    'button:has-text("Book now")',
-    'button:has-text("Confirm")',
-    'button[type="submit"]',
-  ];
-  let confirmed = false;
-  for (const sel of confirmSelectors) {
-    try {
-      const btn = await page.$(sel).catch(() => null);
-      if (btn) {
-        const visible = await btn.isVisible().catch(() => false);
-        if (visible) {
-          await btn.click({ timeout: 15000 }).catch(() => {});
-          confirmed = true;
-          ctx.log('dining_confirm_clicked', { selector: sel });
-          break;
-        }
-      }
-    } catch { /* next */ }
-  }
-
-  if (!confirmed) {
-    return { ok: false, code: 'confirm_not_found', note: 'Could not find the reservation confirmation button. Nothing was booked.' };
-  }
-
-  // Wait for the confirmation to render (bounded — the click may trigger a
-  // slow navigation; never wait forever).
-  await page.waitForFunction(
-    () => /confirmed|reservation complete|you're booked|booking confirmed/i.test(document.body ? document.body.innerText : ''),
-    { timeout: 25000 }
-  ).catch(() => {});
-  ctx.log('dining_confirm_wait_done', { url: page.url() });
-
-  // Extract confirmation (each read bounded so extraction can never hang
-  // the phase the way the last attempt did).
+// Extract the provider's confirmation reference. Strict: a real confirmation
+// identifier is required — page text alone is not proof of booking.
+async function extractConfirmation(page, ctx, { restaurant, date, time, partySize }) {
   const withTimeout = (p, ms, label) => Promise.race([
     Promise.resolve(p),
     new Promise((_, reject) => setTimeout(() => reject(new Error(label || 'extract_timeout')), ms)),
   ]);
   const pageText = await withTimeout(page.content().catch(() => ''), 15000, 'content_timeout').catch(() => '');
-  const text = await withTimeout(page.$eval('body', el => el.innerText).catch(() => ''), 15000, 'innerText_timeout').catch(() => '');
+  const text = await withTimeout(page.$eval('body', (el) => el.innerText).catch(() => ''), 15000, 'innerText_timeout').catch(() => '');
 
-  // Look for confirmation number
   const confMatch = text.match(/confirmation\s*(?:number|#|code)?\s*:?\s*([A-Z0-9-]{6,})/i) ||
                     pageText.match(/confirmation[^<]{0,50}([A-Z0-9-]{8,})/i);
-
   const isConfirmed = /confirmed|reservation complete|you're booked|booking confirmed/i.test(text);
 
-  if (isConfirmed || confMatch) {
-    const ref = confMatch ? confMatch[1] : 'CONFIRMED';
+  if (confMatch) {
+    const ref = confMatch[1];
     ctx.log('dining_booked', { ref });
     return {
       ok: true,
@@ -469,18 +421,134 @@ async function phase2FillAndConfirm(ctx, job) {
       confirmationRef: ref,
       restaurant,
       date,
-      time: time,
+      time,
       partySize,
       note: `Booked ${restaurant} for ${partySize} on ${date} at ${time}. Confirmation: ${ref}`,
     };
   }
-
-  // Check if we're still on the form (failed) or on a confirmation page
+  if (isConfirmed) {
+    // The page claims confirmation but no reference could be extracted —
+    // honest: do not report booked without the identifier.
+    ctx.log('dining_confirm_no_ref', { url: page.url(), textSnippet: text.slice(0, 200) });
+    return {
+      ok: false,
+      code: 'confirmation_unverified',
+      note: 'The page indicates a reservation may have been created but no confirmation number could be read. Please check your email for the confirmation before treating this as booked.',
+    };
+  }
   ctx.log('dining_unclear', { url: page.url(), textSnippet: text.slice(0, 300) });
   return {
     ok: false,
     code: 'confirmation_unclear',
     note: `Clicked confirm but could not verify the booking completed. Page shows: ${text.slice(0, 200)}. Please check your email for a confirmation.`,
+  };
+}
+
+// Phase 2: resume the live session's details page and complete the booking.
+// OpenTable serves two layouts: (A) legacy guest-details form on the page,
+// (B) summary + "Complete reservation" with the guest form (or a sign-in
+// wall) appearing only after the click. Both are handled.
+async function phase2FillAndConfirm(ctx, job) {
+  const page = ctx.page;
+  const { restaurant, date, time, partySize } = job;
+
+  ctx.log('dining_phase2_start', { url: page.url() });
+
+  const { email, phone, name } = await getCreds(ctx, job);
+  const nameParts = String(name || '').split(' ');
+  const guest = {
+    firstName: nameParts[0] || 'Demo',
+    lastName: nameParts.slice(1).join(' ') || 'User',
+    email,
+    phone,
+  };
+
+  await dismissCookies(page);
+
+  // Detect which booking-page layout OpenTable served (bounded).
+  let layout = 'unknown';
+  try {
+    await page.waitForSelector(DETAILS_FORM_SEL, { timeout: 15000 });
+    layout = 'guest_form';
+  } catch { /* detect layout B */ }
+  if (layout === 'unknown') {
+    try {
+      const btn = await page.$('button#complete-reservation, button[data-test="complete-reservation-button"]');
+      if (btn && await btn.isVisible().catch(() => false)) layout = 'complete_first';
+    } catch { /* unknown */ }
+  }
+  ctx.log('dining_phase2_layout', { layout, url: page.url() });
+  if (layout === 'unknown') {
+    return { ok: false, code: 'details_form_missing', note: 'The booking details page did not load after selecting the slot. Nothing was booked — please try again.' };
+  }
+
+  // Marketing opt-out only (label-aware — never blanket uncheck).
+  await marketingOptOut(page, ctx);
+
+  if (layout === 'guest_form') {
+    const got = await fillGuestForm(page, guest);
+    ctx.log('dining_details_filled', { ...got, email });
+  }
+
+  // Click the final confirmation button (bounded).
+  const confirmSelectors = [
+    '#complete-reservation',
+    'button[data-test="complete-reservation-button"]',
+    'button:has-text("Complete reservation")',
+    'button:has-text("Book now")',
+    'button[type="submit"]',
+  ];
+  const clickComplete = async () => {
+    for (const sel of confirmSelectors) {
+      try {
+        const btn = await page.$(sel).catch(() => null);
+        if (btn && await btn.isVisible().catch(() => false)) {
+          await btn.click({ timeout: 15000 }).catch(() => {});
+          ctx.log('dining_confirm_clicked', { selector: sel, layout });
+          return true;
+        }
+      } catch { /* next */ }
+    }
+    return false;
+  };
+  if (!await clickComplete()) {
+    return { ok: false, code: 'confirm_not_found', note: 'Could not find the reservation confirmation button. Nothing was booked.' };
+  }
+
+  // Observe what OpenTable does after the click (bounded).
+  await page.waitForTimeout(8000);
+  let after = await probeAfterComplete(page);
+  ctx.log('dining_after_complete_probe', after);
+
+  // Layout B may reveal a guest-details form in a dialog — fill it and
+  // confirm once more.
+  if (!after.isConfirmed && after.hasGuestForm && !after.hasSignIn && !after.hasOtp) {
+    const got = await fillGuestForm(page, guest);
+    ctx.log('dining_modal_form_filled', { ...got });
+    await marketingOptOut(page, ctx);
+    await clickComplete();
+    await page.waitForTimeout(8000);
+    after = await probeAfterComplete(page);
+    ctx.log('dining_after_complete_probe2', after);
+  }
+
+  if (after.isConfirmed) {
+    return extractConfirmation(page, ctx, { restaurant, date, time, partySize });
+  }
+  if (after.hasSignIn || after.hasOtp) {
+    return {
+      ok: false,
+      code: 'signin_required',
+      note: `OpenTable is asking the booker to ${after.hasOtp ? 'enter a verification code' : 'sign in to OpenTable'} before completing this reservation — that step needs you, so Ring stopped. Nothing was booked.`,
+    };
+  }
+  if (after.hasError) {
+    return { ok: false, code: 'provider_error', note: `OpenTable reported a problem completing the reservation (${String(after.dialogText || '').slice(0, 120)}). Nothing was booked.` };
+  }
+  return {
+    ok: false,
+    code: 'confirmation_unclear',
+    note: `Clicked Complete reservation but OpenTable did not confirm the booking. Page state: ${String(after.dialogText || 'no dialog').slice(0, 160)}. Nothing was booked — please try again.`,
   };
 }
 
