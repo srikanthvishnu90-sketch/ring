@@ -32,58 +32,177 @@ async function getCreds(ctx, job) {
 }
 
 // ---- book ------------------------------------------------------------------
+// Single-phase booking: called ONCE after user approves the card.
+// Does the full flow in one browser session: search -> restaurant page ->
+// set date/party -> select time -> fill details -> confirm -> extract ref.
 async function book(ctx, job) {
   const page = ctx.page;
-
-  // Continuation: user approved the exact booking details.
-  if (job.booking_approved && job.sessionId) {
-    return confirmBooking(ctx, job);
-  }
-
-  const { restaurant, date, time, party } = job;
+  const { restaurant, date, time, party, email, phone, name } = job;
   const partySize = party || job.partySize || 2;
   if (!restaurant || !date) {
     return { ok: false, code: 'missing_details', note: 'Need restaurant name and date. Nothing was attempted.' };
   }
 
+  const creds = await getCreds(ctx, job);
   ctx.log('resy_start', { kind: 'book', restaurant, date, time, partySize });
 
-  // Go to Resy Chicago search
-  await page.goto(RESY_CITIES, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
-  await page.waitForTimeout(2000);
-  await dismissCookies(page);
-
-  // Search for restaurant
-  const searchInput = await page.$('input[placeholder*="Search" i], input[type="search"], input[name="query"]').catch(() => null);
-  if (searchInput) {
-    await searchInput.fill(restaurant);
+  try {
+    // Go to Resy Chicago search
+    await page.goto(RESY_CITIES, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
     await page.waitForTimeout(2000);
-    
-    // Click first result
-    const firstResult = await page.$('a[href*="/cities/"][href*="-"], [data-testid*="venue"], .SearchResult').catch(() => null);
-    if (firstResult) {
-      await firstResult.click().catch(() => {});
+    await dismissCookies(page);
+
+    // Search for restaurant
+    const searchInput = await page.$('input[placeholder*="Search" i], input[type="search"], input[name="query"]').catch(() => null);
+    if (searchInput) {
+      await searchInput.fill(restaurant);
+      await page.waitForTimeout(2500);
+      
+      // Click first result
+      const firstResult = await page.$('a[href*="/cities/"][href*="-"], [data-testid*="venue"], .SearchResult').catch(() => null);
+      if (firstResult) {
+        await firstResult.click().catch(() => {});
+        await page.waitForTimeout(3000);
+      }
+    }
+
+    ctx.log('resy_restaurant_page', { url: page.url() });
+
+    // Set date and party size via URL params
+    const currentUrl = page.url();
+    if (currentUrl.includes('/venues/') || currentUrl.includes('/cities/')) {
+      const url = new URL(currentUrl);
+      if (date) url.searchParams.set('date', date);
+      url.searchParams.set('seats', String(partySize));
+      await page.goto(url.toString(), { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
       await page.waitForTimeout(3000);
     }
+    
+    await dismissCookies(page);
+    
+    // Find and click the time slot
+    let slotBtn = null;
+    if (time) {
+      let timeStr = time;
+      if (time.includes(':')) {
+        const [h, m] = time.split(':').map(Number);
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        const h12 = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+        timeStr = `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+      }
+      ctx.log('resy_looking_for_time', { timeStr });
+      slotBtn = await page.$(`button:has-text("${timeStr}")`).catch(() => null);
+    }
+    
+    if (!slotBtn) {
+      const slots = await page.$$('button:has-text(":")').catch(() => []);
+      for (const s of slots) {
+        const txt = await s.textContent().catch(() => '');
+        if (txt && txt.match(/\d{1,2}:\d{2}\s*(AM|PM)?/i) && txt.length < 20) {
+          slotBtn = s;
+          ctx.log('resy_found_slot', { text: txt.trim() });
+          break;
+        }
+      }
+    }
+    
+    if (!slotBtn) {
+      await ctx.screenshot('resy-no-slots');
+      return { 
+        ok: false, 
+        code: 'no_slots', 
+        note: `No available time slots at ${restaurant} for ${date}. Nothing was booked.` 
+      };
+    }
+    
+    const slotText = await slotBtn.textContent().catch(() => 'unknown time');
+    ctx.log('resy_clicking_slot', { slot: slotText.trim() });
+    await slotBtn.click().catch(() => {});
+    await page.waitForTimeout(4000);
+    
+    // Fill guest details
+    const nameInput = await page.$('input[name*="name" i], input[placeholder*="name" i]').catch(() => null);
+    if (nameInput && (creds.name || name)) {
+      await nameInput.fill(creds.name || name).catch(() => {});
+    }
+    
+    const emailInput = await page.$('input[type="email"], input[name*="email" i]').catch(() => null);
+    if (emailInput && (creds.email || email)) {
+      await emailInput.fill(creds.email || email).catch(() => {});
+    }
+    
+    const phoneInput = await page.$('input[type="tel"], input[name*="phone" i]').catch(() => null);
+    if (phoneInput) {
+      await phoneInput.fill(creds.phone || phone || '2246029341').catch(() => {});
+    }
+    
+    await page.waitForTimeout(1000);
+    await ctx.screenshot('resy-before-confirm');
+    
+    // Confirm
+    const confirmBtn = await page.$('button:has-text("Complete Reservation"), button:has-text("Complete"), button:has-text("Confirm Reservation"), button:has-text("Book Now")').catch(() => null);
+    if (!confirmBtn) {
+      await ctx.screenshot('resy-no-confirm-btn');
+      return { 
+        ok: false, 
+        code: 'no_confirm_button', 
+        note: 'Could not find confirmation button. Nothing was booked.' 
+      };
+    }
+    
+    await confirmBtn.click().catch(() => {});
+    await page.waitForTimeout(6000);
+    await ctx.screenshot('resy-after-confirm');
+    
+    // Extract confirmation
+    const bodyText = await page.textContent('body').catch(() => '');
+    const refPatterns = [
+      /(?:confirmation|reservation)[\s#:]*(?:number|code|id)?[\s#:]*([A-Z0-9]{6,})/i,
+      /resy[\s-]*([A-Z0-9]{8,})/i,
+    ];
+    
+    for (const pattern of refPatterns) {
+      const match = bodyText.match(pattern);
+      if (match) {
+        return {
+          ok: true,
+          phase: 'done',
+          confirmationRef: match[1],
+          restaurant,
+          date,
+          time: slotText.trim(),
+          partySize,
+          note: `Booked ${restaurant} for ${partySize} on ${date} at ${slotText.trim()}. Confirmation: ${match[1]}`,
+        };
+      }
+    }
+    
+    if (bodyText.match(/confirmed|reservation complete|you're all set|see you/i)) {
+      return {
+        ok: true,
+        phase: 'done',
+        confirmationRef: 'PENDING_EMAIL',
+        restaurant,
+        date,
+        time: slotText.trim(),
+        partySize,
+        note: `Booked ${restaurant} for ${partySize} on ${date} at ${slotText.trim()}. Confirmation email sent.`,
+      };
+    }
+    
+    return { 
+      ok: false, 
+      code: 'confirm_incomplete', 
+      note: 'Booking submitted but confirmation not verified. Check email for confirmation.' 
+    };
+  } catch (e) {
+    await ctx.screenshot('resy-booking-error');
+    return { 
+      ok: false, 
+      code: 'booking_failed', 
+      note: `Booking failed: ${String(e.message).slice(0, 200)}. Nothing was booked.` 
+    };
   }
-
-  ctx.log('resy_restaurant_page', { url: page.url() });
-
-  // Return need_approval with details - actual slot selection after approval
-  // to avoid holding a table
-  return {
-    ok: true,
-    phase: 'need_approval',
-    summary: {
-      restaurant,
-      date,
-      time: time || 'any available',
-      partySize,
-      site: 'Resy',
-    },
-    note: `Ready to book: ${restaurant} for ${partySize} on ${date} at ${time || 'best available time'} via Resy. Approve to proceed with the actual reservation.`,
-    sessionId: job.sessionId || `resy_${Date.now()}`,
-  };
 }
 
 async function confirmBooking(ctx, job) {

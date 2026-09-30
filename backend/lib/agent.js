@@ -194,7 +194,7 @@ const _RAW_TOOLS = [
       sessionId: { type: 'string', description: 'Session to continue (for approval phases)' },
       booking_approved: { type: 'boolean', description: 'Set true to confirm an approval-phase booking' },
     }, required: ['restaurant', 'date', 'time', 'party'] },
-    describe: 'Book a real restaurant table via Resy. Multi-phase: returns need_approval (show details to user, then call again with sessionId + booking_approved), then done with confirmationRef.',
+    describe: 'Book a real restaurant table via Resy. Single-phase: does the full booking in one browser session after approval. Returns done with confirmationRef on success, or an error code if no availability or booking fails.',
   },
   {
     name: 'dining_change', risk: 'high',
