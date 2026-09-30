@@ -384,6 +384,11 @@ async function probeAfterComplete(page) {
       const d = document.querySelector('[role="dialog"]');
       if (d && d.innerText) dialogText = d.innerText.slice(0, 300);
     } catch { /* ignore */ }
+    let completeBtn = 'absent';
+    try {
+      const b = document.querySelector('#complete-reservation, button[data-test="complete-reservation-button"]');
+      if (b) completeBtn = b.disabled ? 'disabled' : 'enabled';
+    } catch { /* ignore */ }
     return {
       url: location.href,
       isConfirmed: test(/confirmed|reservation complete|you're booked|booking confirmed/i),
@@ -392,6 +397,7 @@ async function probeAfterComplete(page) {
       hasOtp: test(/verification code|enter the (code|verification)|one-time pass/i),
       hasError: test(/no longer available|no longer valid|expired|something went wrong|not available/i),
       dialogText,
+      completeBtn,
       buttons: Array.from(document.querySelectorAll('button'))
         .map((b) => (b.innerText || '').trim()).filter(Boolean).slice(0, 6).join('|').slice(0, 120),
     };
@@ -515,10 +521,22 @@ async function phase2FillAndConfirm(ctx, job) {
     return { ok: false, code: 'confirm_not_found', note: 'Could not find the reservation confirmation button. Nothing was booked.' };
   }
 
-  // Observe what OpenTable does after the click (bounded).
-  await page.waitForTimeout(8000);
-  let after = await probeAfterComplete(page);
-  ctx.log('dining_after_complete_probe', after);
+  // Observe what OpenTable does after the click: poll a few times (bounded)
+  // because the confirmation can render well after the click resolves.
+  // Also watch for a popup tab (sign-in or confirmation opening elsewhere).
+  let after = { evalFailed: true };
+  for (let i = 0; i < 3; i++) {
+    await page.waitForTimeout(i === 0 ? 8000 : 10000);
+    try {
+      const pages = page.context ? page.context().pages() : [];
+      if (pages.length > 1) {
+        ctx.log('dining_popup_pages', { count: pages.length, urls: pages.map((p) => { try { return p.url().slice(0, 80); } catch { return '?'; } }) });
+      }
+    } catch { /* ignore */ }
+    after = await probeAfterComplete(page);
+    ctx.log('dining_after_complete_probe', { attempt: i + 1, ...after });
+    if (after.isConfirmed || after.hasSignIn || after.hasOtp || after.hasError || after.hasGuestForm) break;
+  }
 
   // Layout B may reveal a guest-details form in a dialog — fill it and
   // confirm once more.
