@@ -7,6 +7,7 @@
 // straight from the model.
 const { env } = require('./config');
 const { logToolRun } = require('./audit');
+const { issueState } = require('./oauth_state');
 const memory = require('./memory');
 const health = require('./health');
 const notes = require('./notes');
@@ -249,6 +250,25 @@ const _RAW_TOOLS = [
     name: 'gmail_star', risk: 'medium', fn: gmail.starMessage,
     schema: { type: 'object', properties: { id: { type: 'string', description: 'Message id from gmail_search' }, starred: { type: 'boolean' } }, required: ['id', 'starred'] },
     describe: 'Star or unstar an email',
+  },
+  {
+    name: 'google_connect', risk: 'low',
+    fn: async ({ userId }) => {
+      const issued = issueState(userId);
+      const q = new URLSearchParams({
+        client_id: env('GOOGLE_CLIENT_ID'),
+        redirect_uri: env('GOOGLE_REDIRECT_URI'),
+        response_type: 'code',
+        scope: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/calendar.events',
+        access_type: 'offline',
+        prompt: 'consent',
+        state: issued.state,
+      });
+      const url = 'https://accounts.google.com/o/oauth2/v2/auth?' + q.toString();
+      return { url, instructions: 'Click the URL to connect another Google account. After you complete the Google sign-in, the account will be available for searching.' };
+    },
+    schema: { type: 'object', properties: {} },
+    describe: 'Generate a Google OAuth URL to connect an additional Google/Gmail account. Returns the URL for the user to click and complete the sign-in.',
   },
   {
     name: 'gmail_receipts', risk: 'low', fn: gmail.findReceipts,
