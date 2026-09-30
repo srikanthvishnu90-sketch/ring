@@ -58,6 +58,15 @@ const path = require('path');
 const fs = require('fs');
 const vault = require('../vault');
 
+// Static site module registry — ensures Vercel bundles these files.
+// Dynamic require() alone may not include them in the serverless bundle.
+const SITE_MODULES = {
+  'dining': () => require('./dining.js'),
+  'uber': () => { try { return require('./uber.js'); } catch (e) { return null; } },
+  'resy': () => { try { return require('./resy.js'); } catch (e) { return null; } },
+  'resy_api': () => { try { return require('./resy_api.js'); } catch (e) { return null; } },
+};
+
 const SITES_DIR = __dirname;
 
 const SITE_NAME_RE = /^[a-z0-9][a-z0-9_-]{0,40}$/;
@@ -82,18 +91,28 @@ function loadSite(job, dir) {
   if (!site) {
     return { error: { ok: false, code: 'site_not_implemented', note: `No site module for kind "${job && job.kind}" (no site given and no default mapping).` } };
   }
-  const base = dir || SITES_DIR;
-  const file = path.join(base, `${site}.js`);
-  let mod;
-  try {
-    // Bust require cache in tests only (NODE_ENV=test); production caches.
-    if (process.env.NODE_ENV === 'test') delete require.cache[require.resolve(file)];
-    mod = require(file);
-  } catch (e) {
-    if (e.code === 'MODULE_NOT_FOUND') {
-      return { error: { ok: false, code: 'site_not_implemented', site, kind: job.kind, note: `Site module sites/${site}.js is not implemented yet — nothing was attempted.` } };
+  // Try static registry first (ensures Vercel bundling), then dynamic require.
+  let mod = null;
+  if (SITE_MODULES[site]) {
+    try {
+      mod = SITE_MODULES[site]();
+    } catch (e) {
+      // Fall through to dynamic require
     }
-    return { error: { ok: false, code: 'site_load_failed', site, kind: job.kind, note: `Site module sites/${site}.js failed to load: ${String(e.message).slice(0, 200)}` } };
+  }
+  if (!mod) {
+    const base = dir || SITES_DIR;
+    const file = path.join(base, `${site}.js`);
+    try {
+      // Bust require cache in tests only (NODE_ENV=test); production caches.
+      if (process.env.NODE_ENV === 'test') delete require.cache[require.resolve(file)];
+      mod = require(file);
+    } catch (e) {
+      if (e.code === 'MODULE_NOT_FOUND') {
+        return { error: { ok: false, code: 'site_not_implemented', site, kind: job.kind, note: `Site module sites/${site}.js is not implemented yet — nothing was attempted.` } };
+      }
+      return { error: { ok: false, code: 'site_load_failed', site, kind: job.kind, note: `Site module sites/${site}.js failed to load: ${String(e.message).slice(0, 200)}` } };
+    }
   }
   const fn = mod && mod[job.kind];
   if (typeof fn !== 'function') {
