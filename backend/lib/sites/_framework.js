@@ -65,6 +65,8 @@ const SITE_MODULES = {
   'uber': () => { try { return require('./uber.js'); } catch (e) { return null; } },
   'resy': () => { try { return require('./resy.js'); } catch (e) { return null; } },
   'resy_api': () => { try { return require('./resy_api.js'); } catch (e) { return null; } },
+  'subscription': () => { try { return require('./subscription.js'); } catch (e) { return null; } },
+  'myclaw': () => { try { return require('./myclaw.js'); } catch (e) { return null; } },
 };
 
 const SITES_DIR = __dirname;

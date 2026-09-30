@@ -187,6 +187,7 @@ async function executeTool(rec, tools) {
       if (rec.tool === 'dining_book') continueArgs.booking_approved = true;
       else if (rec.tool === 'browser_run') continueArgs.booking_approved = true;
       else if (rec.tool === 'ride_book') continueArgs.fare_approved = true;
+      else if (rec.tool === 'subscription_cancel') continueArgs.cancel_approved = true;
       
       const out2 = await tool.fn({ userId: rec.userId, ...continueArgs });
       // Return the final result, preserving the session info

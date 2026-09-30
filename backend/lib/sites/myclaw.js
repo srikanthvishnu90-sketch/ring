@@ -1,8 +1,13 @@
 // backend/lib/sites/myclaw.js — MyClaw subscription cancellation.
 //
 // Implements kind 'cancel-subscription' for merchant 'myclaw'.
-// Flow: login (email+password) -> billing/subscription -> cancel -> confirm.
-// Returns { ok:true, phase:'done', cancelRef } with proof, or honest failure.
+// Two-phase flow (mirrors dining_book):
+//   Phase 1 (no cancel_approved): sign in, land on the billing page, and STOP —
+//     returns need_approval with the exact plan/price/policy. approvals.js
+//     auto-continues to phase 2 once the approval card is approved.
+//   Phase 2 (cancel_approved + sessionId): click cancel, confirm, verify, and
+//     return done with cancelRef. A done without cancelRef is rejected by the
+//     driver's no_proof gate — never claim cancelled without provider proof.
 //
 // Credentials: via ctx.vault.withCredentials(vaultId) when job.vaultId is set,
 // or via job.username/job.password for direct (transient) use. Values never
@@ -10,8 +15,15 @@
 
 async function cancelSubscription(ctx, job) {
   const page = ctx.page;
-  ctx.log('myclaw_start', { merchant: job.merchant });
+  ctx.log('myclaw_start', { merchant: job.merchant, phase: job.cancel_approved ? 'cancel' : 'terms' });
 
+  // ---- Phase 2: approved — the session is live and authenticated. ---------
+  // Cancel now, confirm, verify provider-side, return proof.
+  if (job.cancel_approved && job.sessionId) {
+    return cancelFromDashboard(ctx, job);
+  }
+
+  // ---- Phase 1: authenticate, then STOP at billing with exact terms. ------
   // Continuation: magic link provided — navigate to it.
   if (job.magic_link) {
     ctx.log('magic_link_nav', {});
@@ -22,7 +34,7 @@ async function cancelSubscription(ctx, job) {
       return { ok: false, code: 'login_failed', note: 'Magic link did not sign in (still on login page).' };
     }
     ctx.log('magic_link_ok', { url: page.url() });
-    return cancelFromDashboard(ctx, job);
+    return loginAndFindBilling(ctx, job.email, undefined);
   }
 
   // ---- 1. Go to MyClaw and find login ---------------------------------
@@ -189,8 +201,9 @@ async function cancelSubscription(ctx, job) {
     return { ok: false, code: 'login_blocked', note: 'After email, no password field appeared — the site may require OAuth or a magic link. Screenshot captured.' };
   }
 
-  // Login is now resolved by the wait loop above. Proceed to cancellation.
-  return cancelFromDashboard(ctx, job);
+  // Phase 1 ends at the billing page: report the exact terms for the record.
+  // approvals.js auto-continues to phase 2 (cancel_approved) after approval.
+  return loginAndFindBilling(ctx, username, password);
 }
 
 // Steps 3-5: from a logged-in state, find billing and cancel.
@@ -697,6 +710,6 @@ async function loginAndFindBilling(ctx, email, password) {
       price: priceMatch ? priceMatch[0].trim() : 'Unknown price',
       account: email,
     },
-    note: 'Logged in with new password. Subscription found. Approve to cancel, or decline to keep it.',
+    note: 'Signed in. Subscription terms captured below. Approving continues to the actual cancellation — declining keeps the subscription as-is.',
   };
 }

@@ -221,6 +221,34 @@ const _RAW_TOOLS = [
     describe: 'Change an existing Resy reservation. May need the management URL from the confirmation email.',
   },
   {
+    name: 'subscription_cancel', risk: 'high',
+    fn: async (a) => {
+      // Real subscription cancellation via the browser. Two-phase, chained
+      // automatically after the approval card is approved: phase 1 signs in
+      // and stops at the billing page, returning need_approval with the exact
+      // plan/price/policy; phase 2 clicks cancel, confirms, and verifies.
+      // Returns done with cancelRef on provider-confirmed cancellation.
+      const driver = _pickDriver();
+      const job = { site: 'subscription', kind: 'cancel-subscription', userId: a.userId,
+        merchant: a.merchant, email: a.email, vaultId: a.vaultId,
+        magic_link: a.magic_link, reset_link: a.reset_link, new_password: a.new_password,
+        sessionId: a.sessionId, cancel_approved: a.cancel_approved };
+      Object.keys(job).forEach(k => job[k] === undefined && delete job[k]);
+      return driver.execute(job);
+    },
+    schema: { type: 'object', properties: {
+      merchant: { type: 'string', description: 'Merchant key, e.g. myclaw. Only implemented merchants can run.' },
+      email: { type: 'string', description: 'Account email holding the subscription' },
+      vaultId: { type: 'string', description: 'Vault credential id holding the login (opaque reference; preferred — the value never leaves the server)' },
+      magic_link: { type: 'string', description: 'Magic-link sign-in URL pasted by the user (continuation)' },
+      reset_link: { type: 'string', description: 'Password-reset link (continuation)' },
+      new_password: { type: 'string', description: 'New password to set via a reset link (continuation)' },
+      sessionId: { type: 'string', description: 'Session to continue (for approval/magic-link phases)' },
+      cancel_approved: { type: 'boolean', description: 'Set true to confirm cancellation after the terms phase' },
+    }, required: ['merchant'] },
+    describe: 'Cancel a real subscription via the browser. Two-phase: phase 1 signs in and reports the exact plan, price, and cancellation policy (need_approval); phase 2 cancels and verifies. Returns done with cancelRef only on provider-confirmed cancellation — never claim cancelled without it.',
+  },
+  {
     name: 'memory_save', risk: 'low', fn: async ({ userId, key, value }) => memory.save(userId, { key, value, kind: 'fact' }),
     schema: { type: 'object', properties: { key: { type: 'string', description: 'Short snake_case label, e.g. maya_dietary' }, value: { type: 'string', description: 'The fact to remember' } }, required: ['key', 'value'] },
     describe: 'Remember a durable fact about the user or someone they mention (dietary needs, preferences, birthdays)',
