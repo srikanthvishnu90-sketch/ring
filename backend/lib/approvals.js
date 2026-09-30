@@ -325,13 +325,29 @@ async function postApprovalResult(rec) {
     }
   }
   
-  // Post as the agent
-  const threads = require('./threads');
-  await threads.postMessage(rec.threadId, {
-    from: 'ring assistant',
-    text: message,
-    skipMention: true,
-  });
+  // Post as the agent via Supabase directly (avoids circular require with threads.js)
+  try {
+    const msgId = `msg_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+    const now = new Date().toISOString();
+    if (ENABLED) {
+      await sbRequest(`/ring_messages`, {
+        method: 'POST',
+        body: JSON.stringify({
+          id: msgId,
+          thread_id: rec.threadId,
+          sender: 'ring assistant',
+          text: message,
+          created_at: now,
+        }),
+      });
+    }
+    // Note: SSE broadcast happens via Supabase Realtime; the message will appear
+    // in the chat on next poll/refresh. The approval card result is also returned
+    // to the frontend via the resolve() API response.
+  } catch (e) {
+    // Log but never throw - the approval result is already stored
+    console.error('[approvals] postApprovalResult failed:', e.message);
+  }
 }
 
 module.exports = { create, get, listPending, resolve };
