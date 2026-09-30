@@ -19,6 +19,28 @@ const dining = require('../connectors/dining');
 // Tools the model can call. `risk`: low runs immediately, medium needs a
 // tap/voice confirm, high needs an in-app approval card. Nothing irreversible
 // runs without the gate in server.js checking this field.
+//
+// Driver selection for browser automation: on Vercel (production) there is
+// no local Chromium, so we must use the Browserbase cloud driver. Locally,
+// we can use the local driver with a real Chromium. This helper picks the
+// right one based on environment.
+//
+// NOTE: Browserbase requires BROWSERBASE_API_KEY + BROWSERBASE_PROJECT_ID
+// in the environment (Vercel env vars, set by Vishnu). If not configured,
+// the driver returns an honest { ok:false, code:'browser_not_configured' }.
+function _pickDriver() {
+  // Prefer Browserbase cloud driver if configured (works on Vercel serverless)
+  if (process.env.BROWSERBASE_API_KEY && process.env.BROWSERBASE_PROJECT_ID) {
+    try {
+      return require('./browser_driver');
+    } catch (e) {
+      // Fall through to local driver
+    }
+  }
+  // Fall back to local driver (needs Chromium; works locally, not on Vercel)
+  return require('./local_driver');
+}
+
 const _RAW_TOOLS = [
   // Tools contributed by connectors that define their own `tools` array
   // (see backend/connectors/registry.js).
@@ -70,7 +92,7 @@ const _RAW_TOOLS = [
   {
     name: 'ride_book', risk: 'high',
     fn: async (a) => {
-      const driver = require('./local_driver');
+      const driver = _pickDriver();
       const job = { site: 'uber', kind: 'book-ride', userId: a.userId,
         phone: a.phone, pickup: a.pickup, dropoff: a.dropoff,
         scheduled_time: a.scheduled_time,
@@ -92,7 +114,7 @@ const _RAW_TOOLS = [
   {
     name: 'browser_run', risk: 'high',
     fn: async (a) => {
-      const driver = require('./local_driver');
+      const driver = _pickDriver();
       const job = { site: a.site, kind: a.kind, userId: a.userId, sessionId: a.sessionId,
         phone: a.phone, pickup: a.pickup, dropoff: a.dropoff,
         otp_code: a.otp_code, fare_approved: a.fare_approved };
