@@ -173,7 +173,13 @@ function defaultConnectCdp(connectUrl) {
     err.code = 'PLAYWRIGHT_CORE_MISSING';
     throw err;
   }
-  return pw.chromium.connectOverCDP(connectUrl);
+  // Add 30s timeout for CDP connection — don't hang forever
+  return Promise.race([
+    pw.chromium.connectOverCDP(connectUrl),
+    new Promise((_, reject) => 
+      setTimeout(() => reject(Object.assign(new Error('CDP connection timeout after 30s'), { code: 'CDP_TIMEOUT' })), 30000
+    )
+  ]);
 }
 
 // Run ONE phase: connect CDP -> new page -> site fn -> disconnect.
