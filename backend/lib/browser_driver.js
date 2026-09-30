@@ -106,18 +106,39 @@ async function bbFetch(path, { method = 'GET', body, timeoutMs = 25000 } = {}) {
 }
 
 async function createBrowserbaseSession() {
-  const j = await bbFetch('/sessions', {
-    method: 'POST',
-    // keepAlive: the session must survive our CDP disconnect — the whole
-    // chunked-phase contract (continuation phases, retry-with-sessionId)
-    // depends on it.
-    body: { projectId: env('BROWSERBASE_PROJECT_ID'), keepAlive: true },
-  });
-  const id = j && j.id;
-  const connectUrl = j && (j.connectUrl || j.connect_url);
-  if (!id || !connectUrl) throw Object.assign(new Error('Browserbase returned no session id/connectUrl'), { code: 'BB_BAD_RESPONSE' });
-  await waitForSessionReady(id);
-  return { id, connectUrl };
+  const projectId = env('BROWSERBASE_PROJECT_ID');
+  // Owner-approved 2026-09-30: route browser traffic through Browserbase
+  // proxies (clean IPs) and enable advanced stealth for bot-protected sites
+  // (OpenTable/Akamai was Access-Denying our datacenter IPs). Both are billed
+  // extras; advancedStealth needs the Scale plan. Fall back gracefully when
+  // this plan rejects a flag — a working session always beats a hard fail.
+  const attempts = [
+    { body: { projectId, keepAlive: true, proxies: true, browserSettings: { advancedStealth: true } }, label: 'proxy+stealth' },
+    { body: { projectId, keepAlive: true, proxies: true }, label: 'proxy' },
+    { body: { projectId, keepAlive: true }, label: 'plain' },
+  ];
+  let lastErr = null;
+  for (const { body, label } of attempts) {
+    let created = null;
+    try {
+      const j = await bbFetch('/sessions', { method: 'POST', body });
+      const id = j && j.id;
+      const connectUrl = j && (j.connectUrl || j.connect_url);
+      if (!id || !connectUrl) throw Object.assign(new Error('Browserbase returned no session id/connectUrl'), { code: 'BB_BAD_RESPONSE' });
+      created = { id, connectUrl };
+      await waitForSessionReady(id);
+      console.log(`[ring-bb] session created (hardening=${label})`);
+      return created;
+    } catch (e) {
+      if (created) { try { await stopBrowserbaseSession(created.id); } catch { /* best effort */ } }
+      lastErr = e;
+      const s = e && e.httpStatus;
+      // Plan rejects the flag (4xx, not a rate limit): try the next tier down.
+      if (s && s >= 400 && s < 500 && s !== 429) continue;
+      throw e;
+    }
+  }
+  throw lastErr;
 }
 
 // Poll the session until it reports RUNNING. Connecting CDP before the
