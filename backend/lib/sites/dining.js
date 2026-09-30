@@ -207,16 +207,27 @@ async function phase1SelectSlot(ctx, job) {
   ctx.log('dining_slot_click', { text: pickedText });
   await targetButton.click({ timeout: 15000 }).catch(() => {});
 
-  // Wait for the booking details page (bounded — phase 2 waits more if needed).
+  // Wait for the booking details page. OpenTable can be slow here (a prior
+  // run needed ~30s for the form to render), so allow a generous bounded wait.
+  ctx.log('dining_details_wait_start', { url: page.url() });
   let detailsReady = false;
   try {
-    await page.waitForSelector(DETAILS_FORM_SEL, { timeout: 20000 });
+    await page.waitForSelector(DETAILS_FORM_SEL, { timeout: 35000 });
     detailsReady = true;
   } catch { /* fall through to URL check */ }
   if (!detailsReady) {
     const u = page.url();
     detailsReady = /booking/i.test(u);
+    if (detailsReady) {
+      // On the booking page but the form isn't up yet — one more bounded wait.
+      try {
+        await page.waitForSelector(DETAILS_FORM_SEL, { timeout: 15000 });
+        detailsReady = true;
+      } catch { /* give up */ }
+    }
     ctx.log('dining_details_page_check', { url: u, detailsReady });
+  } else {
+    ctx.log('dining_details_page_check', { url: page.url(), detailsReady });
   }
   if (!detailsReady) {
     return { ok: false, code: 'details_page_timeout', note: 'Selected the time slot but the booking details page did not load in time. Nothing was booked — please try again.' };

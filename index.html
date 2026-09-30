@@ -1117,14 +1117,18 @@ function outcomeText(a){
     if(r.ok && r.confirmationRef){
       return `Booked ${r.restaurant||g.restaurant||'the restaurant'} for ${r.partySize||g.party_size||g.party} on ${r.date||g.date} at ${r.time||g.time}. Confirmation: ${r.confirmationRef}`;
     }else{
-      return `I couldn't complete the booking. ${r.note||r.error||'No availability or booking failed.'} Nothing was booked.`;
+      const reason=r.note||r.error||'No availability or booking failed.';
+      const terminal=/nothing was (booked|done|ordered)/i.test(reason);
+      return `I couldn't complete the booking. ${reason}${terminal?'':' Nothing was booked.'}`;
     }
   }
   if(a.tool==='ride_book'){
     if(r.ok && (r.orderId||r.confirmationRef)){
       return `Ride booked. Confirmation: ${r.orderId||r.confirmationRef}`;
     }else{
-      return `I couldn't book the ride. ${r.note||r.error||'Please try again.'} Nothing was ordered.`;
+      const reason=r.note||r.error||'Please try again.';
+      const terminal=/nothing was (booked|done|ordered)/i.test(reason);
+      return `I couldn't book the ride. ${reason}${terminal?'':' Nothing was ordered.'}`;
     }
   }
   return `Done — ${a.describe||a.tool}.`;
