@@ -77,18 +77,36 @@ async function bookTable(ctx, job) {
 
   ctx.log('dining_restaurant_page', { url: page.url() });
 
-  // Find available time slots. OpenTable shows them as buttons.
-  // Wait for slots to load.
+  // Find available time slots. OpenTable shows them as <a role="button"> inside
+  // ul[data-test="time-slots"]. First set the Time selector combobox to filter.
   await page.waitForTimeout(3000);
 
-  // Look for time slot buttons - OpenTable uses various selectors
+  // Set the Time selector combobox to the requested time (acts as a filter)
+  if (time) {
+    try {
+      // Format time as "7:30 PM" for the combobox label
+      const [rh, rm] = time.split(':').map(Number);
+      const ampm = rh >= 12 ? 'PM' : 'AM';
+      const h12 = rh % 12 || 12;
+      const timeLabel = `${h12}:${String(rm).padStart(2, '0')} ${ampm}`;
+      const timeCombo = await page.$('[aria-label="Time selector"]').catch(() => null);
+      if (timeCombo) {
+        await timeCombo.selectOption({ label: timeLabel }).catch(() => {});
+        await page.waitForTimeout(2000);
+        ctx.log('dining_time_filter_set', { timeLabel });
+      }
+    } catch (e) {
+      ctx.log('dining_time_filter_failed', { error: String(e.message).slice(0, 100) });
+    }
+  }
+
+  // Look for time slot links - OpenTable uses <a role="button"> not <button>
+  // Container: ul[data-test="time-slots"], slots: a[role="button"] with aria-label
+  // Format: "Reserve table at {Restaurant} at {TIME} on {Month Day}, for a party of {N}"
   const slotSelectors = [
-    'button[data-testid*="time-slot"]',
-    '[data-testid="time-slot-button"]',
-    'button:has-text("PM")',
-    'button:has-text("AM")',
-    '.time-slot button',
-    '[class*="timeslot"] button',
+    'ul[data-test="time-slots"] a[role="button"]',
+    '[data-testid="time-slots"] a[role="button"]',
+    'ul[data-test="time-slots"] a',
   ];
 
   let slotButtons = [];
