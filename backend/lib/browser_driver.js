@@ -71,33 +71,74 @@ function phaseTimeoutMs() {
 }
 
 // Browserbase REST. The API key travels in the header only — never logged.
-async function bbFetch(path, { method = 'GET', body } = {}) {
-  const res = await fetch(`${bbBase()}${path}`, {
-    method,
-    headers: { 'x-bb-api-key': env('BROWSERBASE_API_KEY'), 'Content-Type': 'application/json' },
-    ...(body ? { body: JSON.stringify(body) } : {}),
-  });
-  const text = await res.text();
-  let json = null;
-  try { json = text ? JSON.parse(text) : null; } catch { json = null; }
-  if (!res.ok) {
-    const err = new Error(`Browserbase ${method} ${path} failed (HTTP ${res.status})`);
-    err.code = 'BB_API_ERROR';
-    err.httpStatus = res.status;
-    throw err;
+// Every call carries its own timeout so a hung API can never silently eat
+// the whole phase budget.
+async function bbFetch(path, { method = 'GET', body, timeoutMs = 25000 } = {}) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const res = await fetch(`${bbBase()}${path}`, {
+      method,
+      headers: { 'x-bb-api-key': env('BROWSERBASE_API_KEY'), 'Content-Type': 'application/json' },
+      ...(body ? { body: JSON.stringify(body) } : {}),
+      signal: ctrl.signal,
+    });
+    const text = await res.text();
+    let json = null;
+    try { json = text ? JSON.parse(text) : null; } catch { json = null; }
+    if (!res.ok) {
+      const err = new Error(`Browserbase ${method} ${path} failed (HTTP ${res.status})`);
+      err.code = 'BB_API_ERROR';
+      err.httpStatus = res.status;
+      throw err;
+    }
+    return json;
+  } catch (e) {
+    if (e && e.name === 'AbortError') {
+      const err = new Error(`Browserbase ${method} ${path} timed out after ${timeoutMs}ms`);
+      err.code = 'BB_TIMEOUT';
+      throw err;
+    }
+    throw e;
+  } finally {
+    clearTimeout(t);
   }
-  return json;
 }
 
 async function createBrowserbaseSession() {
   const j = await bbFetch('/sessions', {
     method: 'POST',
-    body: { projectId: env('BROWSERBASE_PROJECT_ID') },
+    // keepAlive: the session must survive our CDP disconnect — the whole
+    // chunked-phase contract (continuation phases, retry-with-sessionId)
+    // depends on it.
+    body: { projectId: env('BROWSERBASE_PROJECT_ID'), keepAlive: true },
   });
   const id = j && j.id;
   const connectUrl = j && (j.connectUrl || j.connect_url);
   if (!id || !connectUrl) throw Object.assign(new Error('Browserbase returned no session id/connectUrl'), { code: 'BB_BAD_RESPONSE' });
+  await waitForSessionReady(id);
   return { id, connectUrl };
+}
+
+// Poll the session until it reports RUNNING. Connecting CDP before the
+// browser is ready is the classic hang — never attach blind.
+async function waitForSessionReady(bbSessionId, timeoutMs = 60000) {
+  const start = Date.now();
+  const transient = new Set(['CREATING', 'STARTING', 'PENDING']);
+  for (;;) {
+    let s = null;
+    try { s = await bbFetch(`/sessions/${encodeURIComponent(bbSessionId)}`, { timeoutMs: 15000 }); }
+    catch (e) { /* transient API blip — keep polling until the budget ends */ }
+    const status = s && s.status;
+    if (status === 'RUNNING') return s;
+    if (status && !transient.has(status)) {
+      throw Object.assign(new Error(`Browserbase session entered status "${status}" before becoming ready`), { code: 'BB_SESSION_NOT_RUNNING' });
+    }
+    if (Date.now() - start >= timeoutMs) {
+      throw Object.assign(new Error(`Browserbase session did not reach RUNNING within ${timeoutMs}ms (last status: ${status || 'unknown'})`), { code: 'BB_SESSION_NOT_READY' });
+    }
+    await new Promise(r => setTimeout(r, 2000));
+  }
 }
 
 async function browserbaseSessionAlive(bbSessionId) {
@@ -217,7 +258,9 @@ async function executeInner(job, deps = {}) {
   // 3. Resolve or create the session.
   let session;
   try {
+    console.log('[ring-bb] resolveSession start');
     const r = await resolveSession(jobWithSite);
+    console.log(`[ring-bb] resolveSession done created=${r.created === true}`);
     if (r.error) return stripSensitive(r.error);
     session = r.session;
   } catch (e) {

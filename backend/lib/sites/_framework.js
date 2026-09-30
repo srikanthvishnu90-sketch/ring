@@ -148,8 +148,12 @@ function makeCtx(page, job) {
     job: safeJob,
     steps,
     log(step, data) {
-      steps.push({ t: new Date().toISOString(), ms: Date.now() - started, step: String(step), ...(data !== undefined ? { data: sanitize(data) } : {}) });
+      const entry = { t: new Date().toISOString(), ms: Date.now() - started, step: String(step), ...(data !== undefined ? { data: sanitize(data) } : {}) };
+      steps.push(entry);
       if (steps.length > 200) steps.splice(0, steps.length - 200);
+      // Mirror to stdout with elapsed ms — Vercel captures this, so the next
+      // slow phase leaves a timing trail showing exactly where it hung.
+      try { console.log(`[ring-bb] +${entry.ms}ms ${entry.step}`); } catch { /* never break the phase for logging */ }
     },
     async screenshot(name) {
       const p = `/tmp/ring-bb-${String(name || 'shot').replace(/[^a-z0-9_-]+/gi, '_')}-${Date.now()}.png`;
@@ -176,8 +180,8 @@ function defaultConnectCdp(connectUrl) {
   // Add 30s timeout for CDP connection — don't hang forever
   return Promise.race([
     pw.chromium.connectOverCDP(connectUrl),
-    new Promise((_, reject) => 
-      setTimeout(() => reject(Object.assign(new Error('CDP connection timeout after 30s'), { code: 'CDP_TIMEOUT' })), 30000
+    new Promise((_, reject) =>
+      setTimeout(() => reject(Object.assign(new Error('CDP connection timeout after 30s'), { code: 'CDP_TIMEOUT' })), 30000)
     )
   ]);
 }
