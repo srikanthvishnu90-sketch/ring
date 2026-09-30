@@ -306,15 +306,19 @@ async function postApprovalResult(rec) {
       // REAL booking with proof
       message = `Booked ${result.restaurant || 'the restaurant'} for ${result.partySize || result.party} on ${result.date} at ${result.time}. Confirmation: ${result.confirmationRef}`;
     } else {
-      // Honest failure - never claim booked
+      // Honest failure - never claim booked. Don't duplicate the terminal
+      // "Nothing was booked" if the reason already says it.
       const reason = result.note || result.error || 'The booking could not be completed.';
-      message = `I couldn't complete the booking. ${reason} Nothing was booked.`;
+      const alreadyTerminal = /nothing was (booked|done|ordered)/i.test(reason);
+      message = `I couldn't complete the booking. ${reason}${alreadyTerminal ? '' : ' Nothing was booked.'}`;
     }
   } else if (tool === 'ride_book') {
     if (result.ok && (result.orderId || result.confirmationRef)) {
       message = `Ride booked. Confirmation: ${result.orderId || result.confirmationRef}`;
     } else {
-      message = `I couldn't book the ride. ${result.note || 'Please try again.'} Nothing was ordered.`;
+      const reason = result.note || 'Please try again.';
+      const alreadyTerminal = /nothing was (booked|done|ordered)/i.test(reason);
+      message = `I couldn't book the ride. ${reason}${alreadyTerminal ? '' : ' Nothing was ordered.'}`;
     }
   } else {
     // Generic: report ok/fail honestly
