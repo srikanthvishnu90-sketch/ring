@@ -107,10 +107,13 @@ async function bookTable(ctx, job) {
   ctx.log('dining_restaurant_page', { url: page.url() });
 
   // Find available time slots. OpenTable shows them as <a role="button"> inside
-  // ul[data-test="time-slots"]. First set the Time selector combobox to filter.
-  await page.waitForTimeout(1000);
+  // ul[data-test="time-slots"]. Wait for the slots container to load.
+  // The URL already has ?covers=4&dateTime=... so slots should be filtered.
+  try {
+    await page.waitForSelector('ul[data-test="time-slots"], [data-testid="time-slots"]', { timeout: 10000 }).catch(() => {});
+  } catch { /* proceed to selector fallback */ }
+  await page.waitForTimeout(2000);
 
-  // URL already has ?covers=4&dateTime=... so slots should be filtered.
   // Look for time slot links - OpenTable uses <a role="button"> not <button>
   // Container: ul[data-test="time-slots"], slots: a[role="button"] with aria-label
   // Format: "Reserve table at {Restaurant} at {TIME} on {Month Day}, for a party of {N}"
@@ -118,6 +121,7 @@ async function bookTable(ctx, job) {
     'ul[data-test="time-slots"] a[role="button"]',
     '[data-testid="time-slots"] a[role="button"]',
     'ul[data-test="time-slots"] a',
+    '[data-test="time-slots"] a',
   ];
 
   let slotButtons = [];
