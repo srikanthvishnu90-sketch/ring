@@ -45,7 +45,16 @@ async function bookTable(ctx, job) {
 
   // Build OpenTable URL with date/party params.
   // Format: https://www.opentable.com/r/{slug}?covers=4&dateTime=2026-10-03T19%3A30
-  const slug = restaurant.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  // Known slugs: Alla Vita Chicago -> alla-vita-chicago
+  let slug = restaurant.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  // Fix known restaurants where guessed slug is wrong
+  const KNOWN_SLUGS = {
+    'alla-vita': 'alla-vita-chicago',
+  };
+  if (KNOWN_SLUGS[slug]) {
+    slug = KNOWN_SLUGS[slug];
+    ctx.log('dining_slug_corrected', { from: restaurant, to: slug });
+  }
   // Try direct restaurant URL first (works for known slugs like alla-vita-chicago)
   const dateTime = time ? `${date}T${time}` : date;
   const directUrl = `https://www.opentable.com/r/${slug}?covers=${partySize}&dateTime=${encodeURIComponent(dateTime)}`;
