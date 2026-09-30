@@ -1564,7 +1564,7 @@ async function approve(i){
       const r=await fetch(`/api/approvals/${a.approvalId}/resolve`,{method:'POST',headers:authHeaders({'Content-Type':'application/json'}),body:JSON.stringify({decision:'approve'})});
       rec=await r.json();
     }catch(e){rec=null}
-    const ok=rec&&rec.status==='approved'&&!(rec.result&&rec.result.error)&&!(rec.result&&rec.result.ok===false);
+    const ok=rec&&rec.status==='approved'&&!(rec.result&&rec.result.error);
     const t=timeStr(new Date());
     a.status='done';
     if(ok){
@@ -1572,7 +1572,9 @@ async function approve(i){
       a.outcomeText=outcomeText(a);
       S.handled.unshift({icon:approvalIconName(a.tool),tone:'sage',title:a.outcomeText,meta:handledMeta(a.tool)+' · '+t});
       curMsgs().push({role:'agent',text:a.outcomeText});
-      toast('Done');
+      // Show "Done" toast only for actual success; for honest failures show "Not completed"
+      const isRealSuccess = !(a.tool==='dining_book'&&a.result&&a.result.ok===false) && !(a.tool==='ride_book'&&a.result&&a.result.ok===false);
+      toast(isRealSuccess?'Done':'Not completed');
     }else{
       a.result=rec?rec.result:null;
       a.outcomeText='Not completed';
