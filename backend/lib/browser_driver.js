@@ -66,8 +66,8 @@ function bbBase() {
 }
 
 function phaseTimeoutMs() {
-  const n = Number(env('BROWSER_PHASE_TIMEOUT_MS', '50000'));
-  return Number.isFinite(n) && n > 0 ? Math.min(n, 780000) : 50000;
+  const n = Number(env('BROWSER_PHASE_TIMEOUT_MS', '55000'));
+  return Number.isFinite(n) && n > 0 ? Math.min(n, 780000) : 55000;
 }
 
 // Browserbase REST. The API key travels in the header only — never logged.
