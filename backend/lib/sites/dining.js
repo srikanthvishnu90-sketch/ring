@@ -345,6 +345,18 @@ async function phase2FillAndConfirm(ctx, job) {
     await page.waitForSelector(DETAILS_FORM_SEL, { timeout: 45000 });
   } catch {
     ctx.log('dining_phase2_form_missing', { url: page.url() });
+    // Diagnose what the page actually shows: error state, CAPTCHA, login
+    // wall, spinner, or a form inside an iframe our selector can't see.
+    const diag = await page.evaluate(() => ({
+      title: document.title,
+      text: (document.body ? document.body.innerText : '').slice(0, 600),
+      inputCount: document.querySelectorAll('input').length,
+      inputs: Array.from(document.querySelectorAll('input'))
+        .map((i) => i.getAttribute('name') || i.getAttribute('type') || i.getAttribute('placeholder') || i.getAttribute('aria-label') || '?')
+        .slice(0, 20),
+      iframeCount: document.querySelectorAll('iframe').length,
+    })).catch(() => ({ evalFailed: true }));
+    ctx.log('dining_phase2_page_diag', diag);
     return { ok: false, code: 'details_form_missing', note: 'The booking details page did not load after selecting the slot. Nothing was booked — please try again.' };
   }
   await dismissCookies(page);
