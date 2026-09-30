@@ -1272,22 +1272,33 @@ async function connectGoogle(){
     const r=await apiFetch('/api/oauth/google/start',{method:'POST'});
     const d=await r.json().catch(()=>({}));
     if(!r.ok)throw new Error(d.error||'could not start');
-    // Popup flow: the main app never navigates away, so no reload/splash.
-    // The callback page postMessages back and closes the popup.
+    // Save where we are so the return trip restores it — no splash, no lost place.
+    try{
+      sessionStorage.setItem('ring_oauth_return', JSON.stringify({
+        tab: S.tab, thread: S.thread || null, ts: Date.now()
+      }));
+    }catch(e){}
+    // Try popup first (desktop); fall back to redirect on iOS where popups fail.
     const w=window.open(d.url,'ring_google_oauth','width=500,height=650');
-    if(!w){toast('Popup blocked — allow popups to connect Google');return}
-    toast('Complete Google sign-in in the popup…');
-    const onMsg=async(ev)=>{
-      if(ev.origin!==location.origin)return;
-      if(!ev.data||ev.data.type!=='google-connected')return;
-      window.removeEventListener('message',onMsg);
-      await refreshGoogleConn();
-      // Re-render the current view in place — no navigation, no splash.
-      if(S.tab==='home')renderHome();
-      else if(S.tab==='chat')renderChat();
-      toast('Google account connected — Gmail + Calendar are live');
-    };
-    window.addEventListener('message',onMsg);
+    if(w){
+      toast('Complete Google sign-in in the popup…');
+      const onMsg=async(ev)=>{
+        if(ev.origin!==location.origin)return;
+        if(!ev.data||ev.data.type!=='google-connected')return;
+        window.removeEventListener('message',onMsg);
+        try{sessionStorage.removeItem('ring_oauth_return')}catch(e){}
+        await refreshGoogleConn();
+        if(S.tab==='home')renderHome();
+        else if(S.tab==='chat')renderChat();
+        notifyGoogleConnected();
+      };
+      window.addEventListener('message',onMsg);
+      // If popup didn't actually open (iOS webview), fall back to redirect.
+      setTimeout(()=>{ try{ if(w.closed===false && !w.location.href) {/* still opening */} }catch(e){} }, 1000);
+    } else {
+      // Popup blocked — redirect, but we saved state so return is seamless.
+      location.href=d.url;
+    }
   }catch(e){toast('Could not start Google sign-in: '+e.message)}
 }
 function googleCardHTML(){
@@ -2156,13 +2167,33 @@ apiInit();
   await refreshGoogleConn();
   if(gq==='connected'){
     try{history.replaceState(null,'',location.pathname)}catch(e){}
-    toast('Google account connected — Gmail + Calendar are live');
+    // Restore where we were before the OAuth trip — no splash, back to chatbox.
+    let ret=null;
+    try{ret=JSON.parse(sessionStorage.getItem('ring_oauth_return')||'null')}catch(e){}
+    try{sessionStorage.removeItem('ring_oauth_return')}catch(e){}
+    if(ret){
+      if(ret.tab)S.tab=ret.tab;
+      if(ret.thread)S.thread=ret.thread;
+      saveState();
+    }
+    // Muse-style: confirm IN THE CHATBOX, not just a toast.
+    notifyGoogleConnected();
   }
   const onb=$('#onb');
   if(onb&&!onb.classList.contains('hidden'))renderOnb();
   else if(S.tab==='home')renderHome();
   else if(S.tab==='chat')renderChat();
 })();
+// Muse-style connection confirmation: an agent message in the chatbox.
+function notifyGoogleConnected(){
+  try{
+    if(!curChat())newConversation();
+    const msgs=curMsgs();
+    msgs.push({role:'agent',text:'Google account connected — Gmail and Calendar are live. What do you want to do first?'});
+    touchChat();saveState();
+    if(S.tab==='chat'){renderChat();scrollChat()}
+  }catch(e){ toast('Google account connected — Gmail + Calendar are live'); }
+}
 })();
 </script>
 </body>
