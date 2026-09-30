@@ -66,6 +66,8 @@ const SITE_NAME_RE = /^[a-z0-9][a-z0-9_-]{0,40}$/;
 // site for some kinds). Keep in sync with the kinds in connectors/outcomes.js.
 const KIND_DEFAULT_SITE = {
   'cancel-subscription': 'subscription',
+  'login-task': 'web_login',
+  'form-fill': 'web_form',
 };
 
 function resolveSiteName(job) {
