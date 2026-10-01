@@ -861,16 +861,59 @@ async function loginAndFindBilling(ctx, email, password, tempPw) {
     'a:has-text("Billing")', 'a:has-text("Subscription")', 'a:has-text("Plan")',
     'a[href*="billing"]', 'a[href*="subscription"]',
   ];
+  let billingFound = false;
   for (const sel of billingSels) {
     try {
       const el = await page.$(sel);
       if (el) {
         await el.click();
         await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
-        ctx.log('billing_nav', { selector: sel });
+        await page.waitForTimeout(2000);
+        ctx.log('billing_nav', { selector: sel, url: page.url() });
+        billingFound = true;
         break;
       }
     } catch { /* try next */ }
+  }
+  if (!billingFound) {
+    // We may be on a post-reset interstitial ("Password updated") — go to
+    // the dashboard first, then retry the billing links from there.
+    const dashLink = await page.$('a:has-text("Go to Dashboard"), a:has-text("Dashboard"), button:has-text("Dashboard")').catch(() => null);
+    if (dashLink) {
+      await dashLink.click().catch(() => {});
+      await page.waitForTimeout(3000);
+      ctx.log('dashboard_nav', { url: page.url() });
+      for (const sel of billingSels) {
+        try {
+          const el = await page.$(sel);
+          if (el) {
+            await el.click();
+            await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
+            await page.waitForTimeout(2000);
+            ctx.log('billing_nav', { selector: sel, url: page.url() });
+            billingFound = true;
+            break;
+          }
+        } catch { /* try next */ }
+      }
+    }
+  }
+  if (!billingFound) {
+    // Try known billing URLs directly; verify by checking for tier + price.
+    for (const u of ['https://myclaw.ai/settings/billing', 'https://myclaw.ai/billing', 'https://myclaw.ai/settings', 'https://myclaw.ai/account']) {
+      await page.goto(u, { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {});
+      await page.waitForTimeout(2000);
+      const probe = await page.evaluate(() => (document.body ? document.body.innerText : '')).catch(() => '') || '';
+      if (/\b(lite|pro|max)\b/i.test(probe) && /\$\s?\d/i.test(probe)) {
+        billingFound = true;
+        ctx.log('billing_url_found', { url: u });
+        break;
+      }
+    }
+  }
+  if (!billingFound) {
+    await ctx.screenshot('myclaw-no-billing');
+    return { ok: false, code: 'billing_not_found', note: 'Signed in but could not reach the billing/subscription page. Screenshot captured.' };
   }
 
   // Get subscription details for the approval card.
@@ -910,6 +953,15 @@ async function loginAndFindBilling(ctx, email, password, tempPw) {
   // it so the user knows. The account is being cancelled, but transparency
   // matters — never change a credential silently.
   const showPw = tempPw || null;
+
+  // Honesty: a pre-cancellation review card with "Unknown plan/price" is
+  // worse than no card — it invites approval of unidentified terms. If we
+  // reached billing but can't read the terms, fail loudly with the page
+  // text for debugging instead of presenting a useless card.
+  if (plan === 'Unknown plan' && price === 'Unknown price') {
+    await ctx.screenshot('myclaw-terms-unreadable');
+    return { ok: false, code: 'terms_not_found', note: 'Reached the billing page but could not read the plan name or price from it. Page text: ' + bodyText.replace(/\s+/g, ' ').slice(0, 400) };
+  }
 
   return {
     ok: true, phase: 'need_approval',
