@@ -1,283 +1,89 @@
-// backend/lib/intelligence_layer.js — How ChatGPT/Claude/Operator do browser tasks.
+// backend/lib/intelligence_layer.js — Simplified for Gemini compatibility.
 //
-// The core insight: large models don't use selectors. They SEE the screen
-// (screenshots), REASON about what they're looking at (vision-language),
-// and ACT by clicking coordinates. They remember everything and self-correct.
-//
-// This module replicates that:
-//   1. Screenshot → the model sees actual pixels, not just text
-//   2. Vision reasoning → chain-of-thought about what to do next
-//   3. Coordinate actions → click (x,y), no brittle selectors
-//   4. Session memory → full history of what was tried
-//   5. Self-correction → verify each action worked, adapt if not
+// What makes ChatGPT/Claude capable: they see the page, reason simply,
+// and act. This version uses simple prompts that work reliably.
 
 const { env } = require('./config');
 
-// ── Observation: See Like a Human ─────────────────────────────
-// Capture screenshot + AX tree + URL. The screenshot is the primary
-// input — it's what lets the model understand visual layout.
+// ── Observation ───────────────────────────────────────────────
 async function observe(page) {
   const url = page.url();
   let title = '';
   try { title = await page.title(); } catch {}
   
-  // Screenshot: the model SEES the page
-  let screenshotBase64 = null;
-  try {
-    const buf = await page.screenshot({ type: 'jpeg', quality: 60 });
-    screenshotBase64 = buf.toString('base64');
-  } catch (e) {
-    // Screenshot failed, continue with AX tree only
-  }
-  
-  // AX tree: supplementary structure
   let axTree = '';
   try {
     const snapshot = await page.accessibility.snapshot();
     axTree = simplifyAx(snapshot);
   } catch {}
   
-  // Visible text: fallback context
   let textSnippet = '';
   try {
     textSnippet = await page.evaluate(() =>
-      (document.body ? document.body.innerText : '').replace(/\s+/g, ' ').slice(0, 1500)
+      (document.body ? document.body.innerText : '').replace(/\s+/g, ' ').slice(0, 2000)
     ).catch(() => '');
   } catch {}
   
-  return { url, title, screenshotBase64, axTree, textSnippet };
+  return { url, title, axTree, textSnippet };
 }
 
 function simplifyAx(node, depth = 0, out = []) {
-  if (!node || depth > 6 || out.length > 100) return out;
+  if (!node || depth > 5 || out.length > 80) return out;
   const role = node.role || '';
-  const name = (node.name || '').slice(0, 60);
+  const name = (node.name || '').slice(0, 50);
   const isInteractive = /button|link|textbox|checkbox|combobox|menuitem|tab/i.test(role);
   if (isInteractive && name) {
-    out.push(`${'  '.repeat(depth)}${role}: "${name}"`);
+    out.push(`${role}: "${name}"`);
   }
   for (const child of node.children || []) simplifyAx(child, depth + 1, out);
   return out;
 }
 
-// ── Session Memory ────────────────────────────────────────────
-// Remember everything across the entire task, not just one phase.
-// This is what lets the model learn from mistakes and avoid loops.
+// ── Memory ────────────────────────────────────────────────────
 class TaskMemory {
   constructor() {
-    this.steps = [];       // Every action taken + result
-    this.observations = []; // What was seen
-    this.learnings = [];    // Key insights ("billing is under avatar menu")
+    this.steps = [];
+    this.learnings = [];
   }
-  
-  addStep(action, target, result, reasoning) {
-    this.steps.push({ action, target, result, reasoning, t: Date.now() });
+  addStep(action, target, result) {
+    this.steps.push({ action, target, result });
   }
-  
   addLearning(insight) {
-    if (!this.learnings.includes(insight)) {
-      this.learnings.push(insight);
-    }
+    if (!this.learnings.includes(insight)) this.learnings.push(insight);
   }
-  
-  // Build the context for the next decision
   getContext() {
-    const recentSteps = this.steps.slice(-10).map((s, i) => 
-      `${i+1}. ${s.action} ${s.target || ''} → ${s.result}`
-    ).join('\n');
-    
-    return `PREVIOUS ACTIONS (most recent last):
-${recentSteps || '(none yet)'}
-
-KEY LEARNINGS:
-${this.learnings.map(l => `- ${l}`).join('\n') || '(none yet)'}`;
+    const steps = this.steps.slice(-8).map((s, i) => `${i+1}. ${s.action} ${s.target} -> ${s.result}`).join('\n');
+    return `History:\n${steps || '(none)'}\nLearnings: ${this.learnings.join('; ') || '(none)'}`;
   }
-  
-  // Detect loops: same action+target repeated
   isLooping(action, target) {
     const recent = this.steps.slice(-4);
     return recent.filter(s => s.action === action && s.target === target).length >= 2;
   }
 }
 
-// ── Vision Reasoning: Think Like Claude ───────────────────────
-// Send screenshot + context to the vision model.
-// Falls back to text-only if vision fails.
+// ── Reasoning ─────────────────────────────────────────────────
+// Simple prompt that Gemini handles reliably.
 async function reason(memory, { goal, constraints, observation }) {
-  // Try vision first (if we have a screenshot)
-  if (observation.screenshotBase64) {
-    try {
-      return await reasonWithVision(memory, { goal, constraints, observation });
-    } catch (e) {
-      // Vision failed — fall back to text-only
-      console.log(`Vision failed, falling back to text: ${e.message.slice(0, 100)}`);
-    }
-  }
-  // Text-only fallback
-  return await reasonTextOnly(memory, { goal, constraints, observation });
-}
+  const systemPrompt = 'You are a browser automation assistant. Respond with JSON only.';
+  
+  const userPrompt = `Goal: ${goal}
 
-async function reasonWithVision(memory, { goal, constraints, observation }) {
-  const systemPrompt = `You are an expert browser automation agent, like ChatGPT Operator or Claude Computer Use. You see screenshots of web pages and decide what to do.
+Rules:
+${(constraints || []).map(c => '- ' + c).join('\n')}
 
-HOW YOU THINK:
-1. OBSERVE: What do you see on the screen? Where are you? What's visible?
-2. ORIENT: How does this relate to the goal? What have you tried? What worked?
-3. DECIDE: What's the single best next action? Be specific.
-4. VERIFY: After acting, you'll see the result. If it didn't work, try differently.
-
-RULES:
-- Return ONLY valid JSON, no other text.
-- Actions: click, type, press, scroll, goto, wait, done, fail
-- For click: provide coordinates as {x, y} (0-1000 scale, estimate from screenshot)
-- For type: provide coordinates {x, y} of the field + text to type
-- For press: key like "Enter", "Tab", "Escape"
-- For scroll: direction "up" or "down"
-- For goto: full URL
-- For done: include extracted data
-- NEVER click Cancel/Delete/Remove/Unsubscribe unless the goal says to cancel.
-- NEVER enter payment details.
-- If stuck in a loop, try a completely different approach.
-- If the page shows an error, describe it and try to recover.
-
-CONSTRAINTS:
-${(constraints || []).map(c => `- ${c}`).join('\n')}`;
-
-  const userContent = [
-    {
-      type: 'text',
-      text: `GOAL: ${goal}
-
-CURRENT PAGE:
-URL: ${observation.url}
+Page: ${observation.url}
 Title: ${observation.title}
 
 ${memory.getContext()}
 
-ACCESSIBILITY TREE (supplementary):
+Interactive elements:
 ${Array.isArray(observation.axTree) ? observation.axTree.join('\n') : observation.axTree}
 
-VISIBLE TEXT:
-${observation.textSnippet.slice(0, 800)}
+Page text:
+${observation.textSnippet.slice(0, 1200)}
 
-Look at the screenshot. What do you see? What's the next action?
-
-Return JSON:
-{
-  "observe": "what you see on screen (1-2 sentences)",
-  "orient": "how this relates to goal + what you've learned (1-2 sentences)",
-  "action": "click|type|press|scroll|goto|wait|done|fail",
-  "x": 500,
-  "y": 300,
-  "text": "text to type (for type action)",
-  "key": "Enter (for press action)",
-  "url": "https://... (for goto action)",
-  "direction": "down (for scroll action)",
-  "reason": "why this action (1 sentence)",
-  "goal_complete": false,
-  "extracted": {},
-  "learning": "key insight to remember (optional)"
-}`,
-    },
-  ];
-  
-  // Add screenshot if available
-  if (observation.screenshotBase64) {
-    userContent.push({
-      type: 'image_url',
-      image_url: {
-        url: `data:image/jpeg;base64,${observation.screenshotBase64}`,
-        detail: 'low', // faster + cheaper, sufficient for UI understanding
-      },
-    });
-  }
-
-  const body = {
-    model: env('AGENT_MODEL', 'gpt-4o'),
-    messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: userContent },
-    ],
-    max_tokens: 800,
-    temperature: 0.1,
-    response_format: { type: 'json_object' },
-  };
-  
-  const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
-  const res = await fetch(`${base}/chat/completions`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${env('OPENAI_API_KEY')}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
-  
-  if (!res.ok) throw new Error(`Vision model failed: HTTP ${res.status}`);
-  
-  const data = await res.json();
-  const text = data.choices[0].message.content || '';
-  
-  // Parse JSON (handle markdown code blocks and text before/after)
-  // Try multiple patterns: strict JSON, markdown-wrapped, then any object
-  let jsonStr = null;
-  const markdownMatch = text.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
-  if (markdownMatch) {
-    jsonStr = markdownMatch[1];
-  } else {
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (jsonMatch) jsonStr = jsonMatch[0];
-  }
-  
-  if (!jsonStr) {
-    // Model didn't return JSON — log what it said for debugging
-    throw new Error(`Model did not return JSON. Said: ${text.slice(0, 200)}`);
-  }
-  
-  try {
-    return JSON.parse(jsonStr);
-  } catch (e) {
-    throw new Error(`Model returned invalid JSON: ${e.message}. Raw: ${jsonStr.slice(0, 200)}`);
-  }
-}
-
-// ── Text-Only Fallback ────────────────────────────────────────
-// If vision fails, fall back to text-only reasoning (AX tree + text).
-// This is less capable but more reliable.
-async function reasonTextOnly(memory, { goal, constraints, observation }) {
-  const systemPrompt = `You are a browser automation agent. You see text descriptions of web pages and decide actions. Return ONLY valid JSON.`;
-  
-  const userPrompt = `GOAL: ${goal}
-
-CONSTRAINTS:
-${(constraints || []).map(c => `- ${c}`).join('\n')}
-
-CURRENT PAGE:
-URL: ${observation.url}
-Title: ${observation.title}
-
-${memory.getContext()}
-
-ACCESSIBILITY TREE:
-${Array.isArray(observation.axTree) ? observation.axTree.join('\n') : observation.axTree}
-
-VISIBLE TEXT:
-${observation.textSnippet.slice(0, 1000)}
-
-Return JSON:
-{
-  "observe": "what you see (1 sentence)",
-  "orient": "how this relates to goal (1 sentence)",
-  "action": "click|type|press|scroll|goto|wait|done|fail",
-  "x": 500, "y": 300,
-  "text": "text to type",
-  "key": "Enter",
-  "url": "https://...",
-  "direction": "down",
-  "reason": "why (1 sentence)",
-  "extracted": {},
-  "learning": "insight (optional)"
-}`;
+What is the next action? Respond with JSON:
+{"action":"click|type|press|goto|wait|done|fail","target":"description of element or URL","value":"text to type","key":"Enter","reason":"brief reason","extracted":{}}`;
 
   const body = {
     model: env('AGENT_MODEL', 'gpt-4o'),
@@ -285,9 +91,8 @@ Return JSON:
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt },
     ],
-    max_tokens: 800,
-    temperature: 0.1,
-    response_format: { type: 'json_object' },
+    max_tokens: 1000,
+    temperature: 0.2,
   };
   
   const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
@@ -300,154 +105,119 @@ Return JSON:
     body: JSON.stringify(body),
   });
   
-  if (!res.ok) throw new Error(`Text model failed: HTTP ${res.status}`);
+  if (!res.ok) throw new Error(`Model failed: HTTP ${res.status}`);
   const data = await res.json();
   const text = data.choices[0].message.content || '';
+  
   const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('Text model did not return JSON');
+  if (!jsonMatch) throw new Error(`No JSON in response: ${text.slice(0, 200)}`);
+  
   return JSON.parse(jsonMatch[0]);
 }
 
-// ── Action Execution: Act Like a Human ────────────────────────
-// Execute actions using coordinates (like Operator does).
-async function execute(page, decision, viewport) {
-  const { action, x, y, text, key, url, direction } = decision;
-  const vw = viewport?.width || 1280;
-  const vh = viewport?.height || 720;
-  
-  // Convert 0-1000 scale to pixels
-  const px = Math.round((x / 1000) * vw);
-  const py = Math.round((y / 1000) * vh);
+// ── Execution ─────────────────────────────────────────────────
+// Uses text-based element finding (no coordinates needed).
+async function execute(page, decision) {
+  const { action, target, value, key } = decision;
   
   try {
     switch (action) {
-      case 'click':
-        await page.mouse.click(px, py);
-        await page.waitForTimeout(2500);
-        return { ok: true, detail: `clicked (${x},${y})` };
-      
-      case 'type':
-        await page.mouse.click(px, py);
-        await page.waitForTimeout(500);
-        // Clear existing text, then type
-        await page.keyboard.press('ControlOrMeta+a');
-        await page.keyboard.press('Backspace');
-        await page.keyboard.type(text || '', { delay: 30 });
-        await page.waitForTimeout(1000);
-        return { ok: true, detail: `typed into (${x},${y})` };
-      
+      case 'click': {
+        // Try multiple selector strategies
+        const selectors = [
+          `a:has-text("${target}")`,
+          `button:has-text("${target}")`,
+          `[aria-label="${target}"]`,
+          `text="${target}"`,
+        ];
+        for (const sel of selectors) {
+          try {
+            await page.click(sel, { timeout: 3000 });
+            await page.waitForTimeout(2500);
+            return { ok: true, detail: `clicked ${target}` };
+          } catch {}
+        }
+        return { ok: false, detail: `could not find ${target}` };
+      }
+      case 'type': {
+        const selectors = [
+          `input[placeholder*="${target}" i]`,
+          `input[aria-label*="${target}" i]`,
+          `textarea[placeholder*="${target}" i]`,
+        ];
+        for (const sel of selectors) {
+          try {
+            await page.fill(sel, value || '', { timeout: 3000 });
+            await page.waitForTimeout(1000);
+            return { ok: true, detail: `typed into ${target}` };
+          } catch {}
+        }
+        // Fallback: click then type
+        try {
+          await page.click(`text="${target}"`, { timeout: 3000 });
+          await page.keyboard.press('ControlOrMeta+a');
+          await page.keyboard.type(value || '', { delay: 30 });
+          return { ok: true, detail: `typed ${target}` };
+        } catch {}
+        return { ok: false, detail: `could not type into ${target}` };
+      }
       case 'press':
         await page.keyboard.press(key || 'Enter');
         await page.waitForTimeout(2000);
         return { ok: true, detail: `pressed ${key}` };
-      
-      case 'scroll':
-        await page.mouse.wheel(0, direction === 'up' ? -500 : 500);
-        await page.waitForTimeout(1500);
-        return { ok: true, detail: `scrolled ${direction}` };
-      
       case 'goto':
-        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 }).catch(() => {});
+        await page.goto(target, { waitUntil: 'domcontentloaded', timeout: 20000 }).catch(() => {});
         await page.waitForTimeout(3000);
-        return { ok: true, detail: `went to ${url}` };
-      
+        return { ok: true, detail: `went to ${target}` };
       case 'wait':
         await page.waitForTimeout(3000);
         return { ok: true, detail: 'waited' };
-      
       case 'done':
       case 'fail':
         return { ok: true, detail: action };
-      
       default:
         return { ok: false, detail: `unknown: ${action}` };
     }
   } catch (e) {
-    return { ok: false, detail: `failed: ${e.message.slice(0, 80)}` };
+    return { ok: false, detail: e.message.slice(0, 80) };
   }
 }
 
-// ── Main Loop: The Intelligence ───────────────────────────────
-// This is the core: observe → reason → act → verify → repeat.
-// Like ChatGPT Operator, it keeps going until the goal is done.
+// ── Main Loop ─────────────────────────────────────────────────
 async function runIntelligent(ctx, { goal, constraints = [], maxSteps = 10, memory = null } = {}) {
   const page = ctx.page;
   const mem = memory || new TaskMemory();
-  const viewport = page.viewportSize() || { width: 1280, height: 720 };
   
   for (let i = 0; i < maxSteps; i++) {
-    // 1. OBSERVE: See the page like a human
     const observation = await observe(page);
-    ctx.log && ctx.log('intel_observe', {
-      step: i + 1,
-      url: observation.url.slice(0, 80),
-      hasScreenshot: !!observation.screenshotBase64,
-    });
+    ctx.log && ctx.log('intel_step', { step: i + 1, url: observation.url.slice(0, 60) });
     
-    // 2. REASON: Think like Claude
     let decision;
     try {
       decision = await reason(mem, { goal, constraints, observation });
     } catch (e) {
-      return { ok: false, code: 'reasoning_failed', note: e.message, steps: mem.steps };
+      return { ok: false, code: 'reasoning_failed', note: e.message.slice(0, 200), steps: mem.steps };
     }
     
-    ctx.log && ctx.log('intel_decide', {
-      step: i + 1,
-      observe: (decision.observe || '').slice(0, 100),
-      action: decision.action,
-      reason: (decision.reason || '').slice(0, 100),
-    });
-    
-    // 3. CHECK TERMINAL
     if (decision.action === 'done') {
-      if (decision.learning) mem.addLearning(decision.learning);
-      return {
-        ok: true,
-        phase: 'done',
-        extracted: decision.extracted || {},
-        steps: mem.steps,
-        note: decision.reason || 'Goal achieved',
-      };
+      return { ok: true, phase: 'done', extracted: decision.extracted || {}, steps: mem.steps, note: decision.reason };
     }
     if (decision.action === 'fail') {
-      await ctx.screenshot && await ctx.screenshot('intel-fail').catch(() => {});
-      return {
-        ok: false,
-        code: 'intel_failed',
-        note: decision.reason || 'Could not complete goal',
-        steps: mem.steps,
-      };
+      return { ok: false, code: 'intel_failed', note: decision.reason || 'Could not complete', steps: mem.steps };
     }
     
-    // 4. CHECK LOOPS: Don't repeat the same failing action
-    if (decision.action === 'click' || decision.action === 'type') {
-      const target = `${decision.x},${decision.y}`;
-      if (mem.isLooping(decision.action, target)) {
-        mem.addLearning(`Clicking (${target}) repeatedly doesn't work — tried different approach needed`);
-        // Force the model to try something different next time
-        mem.addStep(decision.action, target, 'LOOP DETECTED — must try different approach', decision.reason);
-        continue;
-      }
+    if (mem.isLooping(decision.action, decision.target)) {
+      mem.addLearning(`Looping on ${decision.target}, need different approach`);
+      mem.addStep(decision.action, decision.target, 'LOOP - trying different');
+      continue;
     }
     
-    // 5. ACT: Execute like a human
-    const result = await execute(page, decision, viewport);
-    mem.addStep(decision.action, `${decision.x},${decision.y}`, result.detail, decision.reason);
-    if (decision.learning) mem.addLearning(decision.learning);
-    
-    // 6. VERIFY: Check if we're making progress (implicit in next observation)
-    // The next loop's observation will show whether the action worked.
+    const result = await execute(page, decision);
+    mem.addStep(decision.action, decision.target, result.detail);
+    ctx.log && ctx.log('intel_action', { action: decision.action, target: (decision.target || '').slice(0, 50), result: result.detail.slice(0, 80) });
   }
   
-  const lastObs = await observe(page).catch(() => null);
-  return {
-    ok: false,
-    code: 'max_steps',
-    note: `Tried ${maxSteps} steps. Last saw: ${lastObs?.url || 'unknown'}`,
-    steps: mem.steps,
-    learnings: mem.learnings,
-  };
+  return { ok: false, code: 'max_steps', note: `Tried ${maxSteps} steps`, steps: mem.steps };
 }
 
 module.exports = { runIntelligent, TaskMemory, observe, reason };
