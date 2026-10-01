@@ -109,8 +109,10 @@ What is the next action? Respond with JSON:
   const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
   let res;
   let lastErr;
-  // Retry on 503/429 (model overloaded) with backoff
-  for (let attempt = 0; attempt < 3; attempt++) {
+  // Retry on transient overload errors (429/503/529) with exponential backoff + jitter
+  // 5 attempts: 2s, 4s, 8s, 16s + random jitter to avoid thundering herd
+  const RETRYABLE = [429, 503, 529];
+  for (let attempt = 0; attempt < 5; attempt++) {
     try {
       res = await fetch(`${base}/chat/completions`, {
         method: 'POST',
@@ -121,12 +123,16 @@ What is the next action? Respond with JSON:
         body: JSON.stringify(body),
       });
       if (res.ok) break;
-      if (res.status !== 503 && res.status !== 429) break;
+      if (!RETRYABLE.includes(res.status)) break;
       lastErr = `HTTP ${res.status}`;
-      await new Promise(r => setTimeout(r, 2000 * (attempt + 1)));
+      const backoff = Math.min(2000 * Math.pow(2, attempt), 30000);
+      const jitter = Math.random() * 1000;
+      await new Promise(r => setTimeout(r, backoff + jitter));
     } catch (e) {
       lastErr = e.message;
-      await new Promise(r => setTimeout(r, 2000 * (attempt + 1)));
+      const backoff = Math.min(2000 * Math.pow(2, attempt), 30000);
+      const jitter = Math.random() * 1000;
+      await new Promise(r => setTimeout(r, backoff + jitter));
     }
   }
   
