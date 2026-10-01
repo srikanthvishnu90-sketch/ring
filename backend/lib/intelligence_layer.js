@@ -200,6 +200,7 @@ Return JSON:
     ],
     max_tokens: 800,
     temperature: 0.1,
+    response_format: { type: 'json_object' },
   };
   
   const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
@@ -286,6 +287,7 @@ Return JSON:
     ],
     max_tokens: 800,
     temperature: 0.1,
+    response_format: { type: 'json_object' },
   };
   
   const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
