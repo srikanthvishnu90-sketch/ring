@@ -1269,13 +1269,21 @@ function onBrowserFrame(ev){
     box.insertAdjacentHTML('beforeend',`<div id="live-browser" class="card" style="margin:12px 0;padding:12px;border:2px solid #4a9eff">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <b style="font-size:14px">🔴 LIVE: Ring's browser</b>
-        <button id="live-close" style="background:none;border:none;color:#888;font-size:18px;cursor:pointer">×</button>
+        <div style="display:flex;gap:8px">
+          <button id="live-takeover" style="background:#4a9eff;color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer">Take Over</button>
+          <button id="live-close" style="background:none;border:none;color:#888;font-size:18px;cursor:pointer">×</button>
+        </div>
       </div>
       <div id="live-status" style="font-size:12px;color:#888;margin-bottom:8px">Starting…</div>
       <img id="live-img" style="width:100%;border-radius:8px;background:#111;min-height:200px" />
       <div id="live-label" style="font-size:12px;color:#aaa;margin-top:6px"></div>
     </div>`);
     $('#live-close').onclick=()=>{const p=$('#live-browser');if(p)p.remove()};
+    $('#live-takeover').onclick=()=>{
+      // Open Browserbase sessions - user can find the live session and interact
+      window.open('https://www.browserbase.com/sessions','_blank');
+      toast('Opening Browserbase — find the active session to take over');
+    };
     box.scrollTop=box.scrollHeight;
     panel=$('#live-browser');
   }
@@ -1283,6 +1291,11 @@ function onBrowserFrame(ev){
   if(img&&ev.image)img.src='data:image/jpeg;base64,'+ev.image;
   const label=$('#live-label');
   if(label)label.textContent=(ev.label||'')+' • '+new Date(ev.ts).toLocaleTimeString();
+  // Update takeover button with direct session URL if available
+  if(ev.liveUrl){
+    const btn=$('#live-takeover');
+    if(btn)btn.onclick=()=>window.open(ev.liveUrl,'_blank');
+  }
   panel.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function onBrowserStatus(ev){

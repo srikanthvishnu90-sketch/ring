@@ -8,7 +8,7 @@ const { broadcastRealtime } = require('./realtime');
 
 // Broadcast a screenshot for a thread.
 // Call this after each browser action to update the live view.
-async function pushFrame({ threadId, page, label, step }) {
+async function pushFrame({ threadId, page, label, step, bbSessionId }) {
   if (!threadId || !page) return;
   try {
     const buf = await page.screenshot({ type: 'jpeg', quality: 50 });
@@ -18,6 +18,8 @@ async function pushFrame({ threadId, page, label, step }) {
       label: label || '',
       step: step || 0,
       url: page.url().slice(0, 120),
+      // Browserbase live session URL for "take over"
+      liveUrl: bbSessionId ? `https://www.browserbase.com/sessions/${bbSessionId}` : null,
       ts: Date.now(),
     });
   } catch (e) {
