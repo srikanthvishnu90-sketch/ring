@@ -205,8 +205,30 @@ async function cancelSubscription(ctx, job) {
   // Step 1: email (NOT "Continue with Google" — the email-specific button).
   try {
     await page.waitForSelector('input[type="email"]', { timeout: 20000 });
-    await page.fill('input[type="email"]', username);
+    // Use type() not fill() — the Continue button is disabled by default and
+    // only enables on real keystroke events (React controlled input).
+    await page.click('input[type="email"]').catch(() => {});
+    await page.keyboard.press('ControlOrMeta+a').catch(() => {});
+    await page.keyboard.press('Backspace').catch(() => {});
+    await page.type('input[type="email"]', username, { delay: 30 }).catch(async () => {
+      await page.fill('input[type="email"]', username).catch(() => {});
+    });
+    await page.waitForTimeout(1000);
     ctx.log('email_filled', {});
+    // Verify the Continue button is enabled; if not, dispatch input events.
+    const continueEnabled = await page.evaluate(() => {
+      const emailInput = document.querySelector('input[type="email"]');
+      const form = emailInput?.closest('form');
+      const btn = form?.querySelector('button[type="submit"], button:not([type])');
+      if (btn && btn.disabled) {
+        // Force-enable by dispatching events React listens for.
+        emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+        emailInput.dispatchEvent(new Event('change', { bubbles: true }));
+        return { wasDisabled: true };
+      }
+      return { wasDisabled: false, btnFound: !!btn };
+    }).catch(() => ({}));
+    ctx.log('continue_button_state', continueEnabled || {});
     // Find the Continue button associated with the email form, not OAuth.
     // Strategy: the email input's form, or a button near it without "Google"/"Slack".
     const emailContinue = await page.evaluate(() => {
