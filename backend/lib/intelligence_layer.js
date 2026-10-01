@@ -102,8 +102,22 @@ ${this.learnings.map(l => `- ${l}`).join('\n') || '(none yet)'}`;
 
 // ── Vision Reasoning: Think Like Claude ───────────────────────
 // Send screenshot + context to the vision model.
-// The model reasons step-by-step, then outputs a structured action.
+// Falls back to text-only if vision fails.
 async function reason(memory, { goal, constraints, observation }) {
+  // Try vision first (if we have a screenshot)
+  if (observation.screenshotBase64) {
+    try {
+      return await reasonWithVision(memory, { goal, constraints, observation });
+    } catch (e) {
+      // Vision failed — fall back to text-only
+      console.log(`Vision failed, falling back to text: ${e.message.slice(0, 100)}`);
+    }
+  }
+  // Text-only fallback
+  return await reasonTextOnly(memory, { goal, constraints, observation });
+}
+
+async function reasonWithVision(memory, { goal, constraints, observation }) {
   const systemPrompt = `You are an expert browser automation agent, like ChatGPT Operator or Claude Computer Use. You see screenshots of web pages and decide what to do.
 
 HOW YOU THINK:
@@ -202,9 +216,93 @@ Return JSON:
   
   const data = await res.json();
   const text = data.choices[0].message.content || '';
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('Model did not return JSON');
   
+  // Parse JSON (handle markdown code blocks and text before/after)
+  // Try multiple patterns: strict JSON, markdown-wrapped, then any object
+  let jsonStr = null;
+  const markdownMatch = text.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+  if (markdownMatch) {
+    jsonStr = markdownMatch[1];
+  } else {
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) jsonStr = jsonMatch[0];
+  }
+  
+  if (!jsonStr) {
+    // Model didn't return JSON — log what it said for debugging
+    throw new Error(`Model did not return JSON. Said: ${text.slice(0, 200)}`);
+  }
+  
+  try {
+    return JSON.parse(jsonStr);
+  } catch (e) {
+    throw new Error(`Model returned invalid JSON: ${e.message}. Raw: ${jsonStr.slice(0, 200)}`);
+  }
+}
+
+// ── Text-Only Fallback ────────────────────────────────────────
+// If vision fails, fall back to text-only reasoning (AX tree + text).
+// This is less capable but more reliable.
+async function reasonTextOnly(memory, { goal, constraints, observation }) {
+  const systemPrompt = `You are a browser automation agent. You see text descriptions of web pages and decide actions. Return ONLY valid JSON.`;
+  
+  const userPrompt = `GOAL: ${goal}
+
+CONSTRAINTS:
+${(constraints || []).map(c => `- ${c}`).join('\n')}
+
+CURRENT PAGE:
+URL: ${observation.url}
+Title: ${observation.title}
+
+${memory.getContext()}
+
+ACCESSIBILITY TREE:
+${Array.isArray(observation.axTree) ? observation.axTree.join('\n') : observation.axTree}
+
+VISIBLE TEXT:
+${observation.textSnippet.slice(0, 1000)}
+
+Return JSON:
+{
+  "observe": "what you see (1 sentence)",
+  "orient": "how this relates to goal (1 sentence)",
+  "action": "click|type|press|scroll|goto|wait|done|fail",
+  "x": 500, "y": 300,
+  "text": "text to type",
+  "key": "Enter",
+  "url": "https://...",
+  "direction": "down",
+  "reason": "why (1 sentence)",
+  "extracted": {},
+  "learning": "insight (optional)"
+}`;
+
+  const body = {
+    model: env('AGENT_MODEL', 'gpt-4o'),
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt },
+    ],
+    max_tokens: 800,
+    temperature: 0.1,
+  };
+  
+  const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
+  const res = await fetch(`${base}/chat/completions`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${env('OPENAI_API_KEY')}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  
+  if (!res.ok) throw new Error(`Text model failed: HTTP ${res.status}`);
+  const data = await res.json();
+  const text = data.choices[0].message.content || '';
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error('Text model did not return JSON');
   return JSON.parse(jsonMatch[0]);
 }
 
