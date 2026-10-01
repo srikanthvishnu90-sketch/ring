@@ -71,7 +71,9 @@ async function ensureUser(userId) {
   const key = userId || 'local';
   if (!USE_SUPABASE) return;
   try {
-    const rows = await sbRequest(`/${SB_TABLE}?select=user_id,access_token,refresh_token,expires_at,scope,token_type&user_id=like.${encodeURIComponent(key)}%`);
+    // NOTE: the LIKE wildcard MUST be sent as %25. A raw % in the URL is
+    // rejected at the edge (Cloudflare 1101) and the miss is silent.
+    const rows = await sbRequest(`/${SB_TABLE}?select=user_id,access_token,refresh_token,expires_at,scope,token_type&user_id=like.${encodeURIComponent(key)}%25`);
     for (const row of rows || []) {
       if (row && row.access_token && !store.has(row.user_id)) {
         const parsed = parseAccountKey(row.user_id);
@@ -86,7 +88,7 @@ async function ensureUser(userId) {
         });
       }
     }
-  } catch (e) { /* miss stays a miss */ }
+  } catch (e) { console.warn('[ring-google] ensureUser miss:', String((e && e.message) || e).slice(0, 160)); }
 }
 
 async function persistToSupabase() {
