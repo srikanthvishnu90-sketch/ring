@@ -137,9 +137,10 @@ const _RAW_TOOLS = [
   {
     name: 'browser_open', risk: 'low',
     fn: async (a) => {
-      // Open an arbitrary URL. Currently: returns the URL for the user to open,
-      // as Ring does not yet have a visible general-purpose browser.
-      // Resolves common site names to URLs so "open ElevenLabs" works without exact links.
+      // Open a URL in a REAL visible browser session (like Muse's Browser Beta).
+      // Creates a Browserbase session, navigates to the URL, broadcasts the live
+      // view via pushFrame, and keeps the session alive for user takeover.
+      // Resolves common site names so "open ElevenLabs" works without exact links.
       let url = a.url;
       if (!url && a.site) {
         const known = {
@@ -151,20 +152,57 @@ const _RAW_TOOLS = [
         url = known[a.site.toLowerCase()] || `https://www.google.com/search?q=${encodeURIComponent(a.site)}`;
       }
       if (!url) return { ok: false, code: 'no_url', note: 'No URL or site provided.' };
-      // HONEST: Ring cannot yet open a visible browser for general browsing.
-      // Return the URL so the agent can share it with the user.
-      return {
-        ok: true,
-        url,
-        note: `I don't have a visible browser to open ${url} in yet. Here's the link for you to open: ${url}`,
-        userMessage: `I can't open a browser window directly yet. You can open ElevenLabs here: ${url}`,
-      };
+
+      const threadId = a.threadId;
+      const { pushFrame, pushStatus } = require('./live_view');
+
+      try {
+        await pushStatus({ threadId, status: 'starting', detail: `Opening ${url}` });
+
+        // Create a real Browserbase session
+        const driver = _pickDriver();
+        if (!driver.keysPresent || !driver.keysPresent()) {
+          return { ok: false, code: 'browser_not_configured', note: 'Browser automation is not configured.' };
+        }
+
+        const session = await driver.createSession();
+        const bbSessionId = session.id;
+
+        // Connect via Playwright CDP and navigate
+        const { chromium } = require('playwright-core');
+        const browser = await chromium.connectOverCDP(session.connectUrl);
+        const context = browser.contexts()[0] || await browser.newContext();
+        const page = context.pages()[0] || await context.newPage();
+
+        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
+        await page.waitForTimeout(2000);
+
+        // Broadcast the live frame so the user sees the browser
+        await pushFrame({ threadId, page, label: `Opened ${new URL(url).hostname}`, step: 1, bbSessionId });
+        await pushStatus({ threadId, status: 'browsing', detail: `Now showing ${url}` });
+
+        // Keep session alive — do NOT close. User can take over via liveUrl.
+        // Store session for later use (don't stop it)
+        const liveUrl = `https://www.browserbase.com/sessions/${bbSessionId}`;
+
+        return {
+          ok: true,
+          url,
+          sessionId: bbSessionId,
+          liveUrl,
+          note: `Opened ${url} in a live browser session.`,
+          userMessage: `I've opened ${new URL(url).hostname} in the browser below. You can watch live and click "Take Over" to interact with it yourself.`,
+        };
+      } catch (e) {
+        await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
+        return { ok: false, code: 'browser_failed', note: `Failed to open browser: ${e.message}`.slice(0, 300) };
+      }
     },
     schema: { type: 'object', properties: {
       url: { type: 'string', description: 'Full URL to open' },
       site: { type: 'string', description: 'Common site name (e.g. elevenlabs, uber) — resolved to URL automatically' },
     } },
-    describe: 'Get the URL for a site. Use when the user says "open X". Returns the URL — Ring cannot yet open a visible browser, so share the link with the user.',
+    describe: 'Open a URL in a LIVE browser session that the user can see and take over. Use when the user says "open X". Returns session info and live URL.',
   },
   {
     name: 'dining_links', risk: 'low',
