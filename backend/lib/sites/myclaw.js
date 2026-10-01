@@ -883,6 +883,19 @@ async function loginAndFindBilling(ctx, email, password, tempPw) {
       await dashLink.click().catch(() => {});
       await page.waitForTimeout(3000);
       ctx.log('dashboard_nav', { url: page.url() });
+      // Diagnostic: dump the dashboard's links and text so we can see the
+      // real navigation structure (no tokens; link text + hrefs only).
+      try {
+        const diag = await page.evaluate(() => {
+          const links = Array.from(document.querySelectorAll('a')).slice(0, 40).map(a => ({
+            text: (a.innerText || '').trim().slice(0, 60),
+            href: a.getAttribute('href') || '',
+          })).filter(l => l.text || l.href);
+          const btns = Array.from(document.querySelectorAll('button')).slice(0, 20).map(b => (b.innerText || '').trim().slice(0, 60)).filter(Boolean);
+          return { url: location.href, links, buttons: btns, text: (document.body ? document.body.innerText : '').replace(/\s+/g, ' ').slice(0, 1500) };
+        }).catch(() => null);
+        if (diag) ctx.log('dashboard_diag', diag);
+      } catch { /* diagnostic only */ }
       for (const sel of billingSels) {
         try {
           const el = await page.$(sel);
@@ -900,10 +913,12 @@ async function loginAndFindBilling(ctx, email, password, tempPw) {
   }
   if (!billingFound) {
     // Try known billing URLs directly; verify by checking for tier + price.
+    // Log each probe's URL + text snippet so failures are diagnosable.
     for (const u of ['https://myclaw.ai/settings/billing', 'https://myclaw.ai/billing', 'https://myclaw.ai/settings', 'https://myclaw.ai/account']) {
       await page.goto(u, { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {});
       await page.waitForTimeout(2000);
       const probe = await page.evaluate(() => (document.body ? document.body.innerText : '')).catch(() => '') || '';
+      ctx.log('billing_url_probe', { url: u, landed: page.url(), text: probe.replace(/\s+/g, ' ').slice(0, 400) });
       if (/\b(lite|pro|max)\b/i.test(probe) && /\$\s?\d/i.test(probe)) {
         billingFound = true;
         ctx.log('billing_url_found', { url: u });
