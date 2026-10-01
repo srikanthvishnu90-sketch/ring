@@ -16,9 +16,10 @@ const stripe = require('./stripe');
 const webhooks = require('./webhooks');
 const intel = require('./intel');
 const outcomes = require('./outcomes');
+const outcomes2 = require('./outcomes2');
 const social = require('./social');
 
-const CONNECTORS = { gmail, calendar, places, uber, dining, twilio, telegram, stripe, webhooks, intel, outcomes, social };
+const CONNECTORS = { gmail, calendar, places, uber, dining, twilio, telegram, stripe, webhooks, intel, outcomes, outcomes2, social };
 
 function allConnectors() {
   return Object.values(CONNECTORS);

@@ -74,7 +74,7 @@
 |---|------|----------------|----------------------|---------|
 | 43 | `memory_save` | `Remember this: my ring test passphrase is BLUE-DELMAR-TEST` | Saved; recalled verbatim in a separate run (`What passphrase did I tell you to remember?`) | real-verified |
 | 44 | `memory_list` | `What do you remember about me?` | Real stored facts listed | real-verified |
-| 45 | `group_reply` | `Draft an @ring reply for my group chat thread 'weekend plans' saying I'm free Saturday afternoon` | Live @ring reply drafted for a signed-in member's thread | real-verified |
+| 45 | `group_reply` | `Draft an @ring reply for my group chat thread 'weekend plans' saying I'm free Saturday afternoon` | **CORRECTION 2026-09-30:** no `group_reply` tool exists in the backend — this entry tested the @ring mention path, not a callable tool. Verdict revised to **not-implemented**. A real `group_send` tool (post to a group thread as the user) was implemented 2026-09-30 as feature #76 and awaits verification. | not-implemented |
 | 46 | `group_plan` | `Start a group poll for a dinner with friends: propose Friday 8pm or Saturday 7pm in Rome, and collect the votes` | Poll flow staged; event locking held for approval | safety-path-held |
 | 47 | `daily_brief` | daily brief digest | Real brief composed from memory + calendar (memory note verified genuine) | real-verified |
 | 48 | `draft_message` | `Draft a message to my friend Alex…` | Draft returned, DRAFT ONLY — nothing sent, nothing held, no errors | real-verified |
@@ -86,6 +86,55 @@
 - **MyClaw Pro subscription cancelled 2026-09-29 ~22:35 UTC — NOT by Ring.** Ring's own browser driver (`backend/lib/local_driver.js` + `backend/lib/sites/myclaw.js`) was blocked by Cloudflare bot detection and could not log in. Muse then bypassed Ring and completed the cancellation using Muse's managed browser (`browser.spawn_task`). This earns **zero Ring benchmark credit**. Feature #35 (`subscription_cancel`) remains `safety-path-held` — the real-world cancellation was Muse's action, not Ring's. A clean Ring-only cancellation test will require a new active subscription plus Vishnu's explicit instruction and a Ring approval card.
 - **Rule going forward:** Muse never executes a task directly (no Muse browser, no Muse tools acting on the user's behalf). Muse only prompts Ring and debugs/fixes Ring's code when Ring fails. Every credited feature must execute through Ring's agent + approval flow.
 - **Anti-bot stealth added to Ring's local driver** (commit `486ff22`, branch `gaps/small-wins`, not yet merged/deployed): `--disable-blink-features=AutomationControlled` plus other Chromium flags, and an init script patching `navigator.webdriver`, plugins, and languages. Unverified against Cloudflare — needs a real Ring-driven test before any claim.
+
+## Real-world outcomes II (51–75) — added 2026-09-30
+
+25 new real-world outcome features. All implemented at the plumbing level 2026-09-30
+(commit `outcomes2` batch): real tool schemas + risk tiers in `backend/connectors/outcomes2.js`,
+browser execution via the `generic_task` site module (two-phase: navigate/login/capture →
+need_approval → strict confirm click + proof extraction), approval auto-continue flags in
+`backend/lib/approvals.js`. None has completed a real end-to-end verification yet — all
+`not-started` until Ring produces a real-world outcome with proof through its own
+chat + approval trail.
+
+| # | Tool | Chatbox prompt | Verdict |
+|---|------|----------------|---------|
+| 51 | `flight_search` | `Find flights from ORD to LAX on Oct 20` | not-started |
+| 52 | `flight_book` | `Book the cheapest nonstop ORD to LAX on Oct 20` | not-started |
+| 53 | `hotel_search` | `Find hotels in Austin Oct 20-22` | not-started |
+| 54 | `hotel_book` | `Book a hotel in Austin Oct 20-22 under $200/night` | not-started |
+| 55 | `flight_status` | `What's the status of AA123 today?` | not-started |
+| 56 | `food_order` | `Order a pepperoni pizza from Lou Malnati's to my address` | not-started |
+| 57 | `grocery_order` | `Order milk, eggs, and bread from Whole Foods` | not-started |
+| 58 | `waitlist_join` | `Join the waitlist at Girl & the Goat for 2 tonight` | not-started |
+| 59 | `product_order` | `Buy a phone charger on Amazon` | not-started |
+| 60 | `price_alert` | `Alert me when the Sony WH-1000XM5 drops below $250` | not-started |
+| 61 | `return_start` | `Start a return for my Amazon order 112-1234567-1234567, wrong size` | not-started |
+| 62 | `coupon_find` | `Find coupon codes for Nike` | not-started |
+| 63 | `bill_pay` | `Pay my Comcast bill` | not-started |
+| 64 | `subscription_pause` | `Pause my HelloFresh subscription` | not-started |
+| 65 | `donate` | `Donate $25 to the Red Cross` | not-started |
+| 66 | `gift_order` | `Send roses to mom for her birthday` | not-started |
+| 67 | `appointment_book` | `Book a haircut this Saturday afternoon` | not-started |
+| 68 | `service_book` | `Book a house cleaner for next Friday` | not-started |
+| 69 | `parking_book` | `Reserve parking near Wrigley Field for Saturday` | not-started |
+| 70 | `ticket_book` | `Buy 2 tickets to the Blackhawks game Friday` | not-started |
+| 71 | `package_track` | `Where is my package 1Z9999999999999999?` | not-started |
+| 72 | `car_rental_book` | `Rent a car at ORD Oct 20-22` | not-started |
+| 73 | `unsubscribe_email` | `Unsubscribe me from Old Navy marketing emails` | not-started |
+| 74 | `data_export_request` | `Request my data export from Spotify` | not-started |
+| 75 | `warranty_register` | `Register the warranty on my Dyson V15` | not-started |
+
+## Corrections + additions (2026-09-30)
+
+| # | Tool | Chatbox prompt | Verdict |
+|---|------|----------------|---------|
+| 76 | `group_send` | `Text my "weekend plans" group chat: I'm free Saturday afternoon` | implemented, not verified — real tool added 2026-09-30 (`outcomes2.js`): membership-checked, persisted to ring_messages, broadcast live, message id as proof. Needs a real end-to-end run. |
+| 77 | `note_save` | `Remember that I prefer aisle seats` | implemented (pre-existing in agent.js), not verified in the 50-run |
+| 78 | `note_list` | `What do you remember about me?` (notes) | implemented (pre-existing in agent.js), not verified in the 50-run |
+| 79 | `note_search` | `Search my notes for "flight"` | implemented (pre-existing in agent.js), not verified in the 50-run |
+
+**Summary after this update: 50 → 79 features.** 32 real-verified (1–44, 46–50 minus #45's correction), 1 corrected to not-implemented (#45), 18 safety-path-held (unchanged), 25 not-started (51–75), 4 implemented-not-verified (76–79).
 
 ## Notes
 

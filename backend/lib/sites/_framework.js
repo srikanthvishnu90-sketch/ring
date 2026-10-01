@@ -67,6 +67,7 @@ const SITE_MODULES = {
   'resy_api': () => { try { return require('./resy_api.js'); } catch (e) { return null; } },
   'subscription': () => { try { return require('./subscription.js'); } catch (e) { return null; } },
   'myclaw': () => { try { return require('./myclaw.js'); } catch (e) { return null; } },
+  'generic_task': () => { try { return require('./generic_task.js'); } catch (e) { return null; } },
 };
 
 const SITES_DIR = __dirname;
@@ -79,6 +80,27 @@ const KIND_DEFAULT_SITE = {
   'cancel-subscription': 'subscription',
   'login-task': 'web_login',
   'form-fill': 'web_form',
+  // outcomes2 (features 51–75) — all routed to the generic task executor.
+  'book-flight': 'generic_task',
+  'book-hotel': 'generic_task',
+  'order-food': 'generic_task',
+  'order-groceries': 'generic_task',
+  'join-waitlist': 'generic_task',
+  'order-product': 'generic_task',
+  'create-price-alert': 'generic_task',
+  'start-return': 'generic_task',
+  'pay-bill': 'generic_task',
+  'pause-subscription': 'generic_task',
+  'make-donation': 'generic_task',
+  'order-gift': 'generic_task',
+  'book-appointment': 'generic_task',
+  'book-service': 'generic_task',
+  'reserve-parking': 'generic_task',
+  'book-tickets': 'generic_task',
+  'book-car-rental': 'generic_task',
+  'unsubscribe': 'generic_task',
+  'request-data-export': 'generic_task',
+  'register-warranty': 'generic_task',
 };
 
 function resolveSiteName(job) {

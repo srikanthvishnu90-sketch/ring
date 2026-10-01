@@ -807,4 +807,4 @@ const tools = [
   },
 ];
 
-module.exports = { id, name, description, envVars, status, tools, setBrowserDriver };
+module.exports = { id, name, description, envVars, status, tools, setBrowserDriver, browserRun, proofOf, browserContinuation };

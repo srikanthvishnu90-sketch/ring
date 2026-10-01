@@ -183,11 +183,20 @@ async function executeTool(rec, tools) {
     // the tool does phase 1 (search/setup) and needs approval to do phase 2 (confirm).
     if (out && out.phase === 'need_approval' && out.sessionId) {
       const continueArgs = { ...rec.args, sessionId: out.sessionId };
+      // Generic flag every multi-phase tool understands (generic_task checks it).
+      continueArgs.approved = true;
       // Set the appropriate approval flag based on tool name
       if (rec.tool === 'dining_book') continueArgs.booking_approved = true;
       else if (rec.tool === 'browser_run') continueArgs.booking_approved = true;
       else if (rec.tool === 'ride_book') continueArgs.fare_approved = true;
       else if (rec.tool === 'subscription_cancel') continueArgs.cancel_approved = true;
+      // outcomes2 batch (features 51–75)
+      else if (['flight_book', 'hotel_book', 'car_rental_book', 'ticket_book', 'appointment_book', 'service_book', 'parking_book'].includes(rec.tool)) continueArgs.booking_approved = true;
+      else if (['food_order', 'grocery_order', 'product_order', 'gift_order'].includes(rec.tool)) continueArgs.order_approved = true;
+      else if (['bill_pay', 'donate'].includes(rec.tool)) continueArgs.payment_approved = true;
+      else if (rec.tool === 'subscription_pause') continueArgs.cancel_approved = true;
+      else if (rec.tool === 'return_start') continueArgs.return_approved = true;
+      else if (['waitlist_join', 'price_alert', 'unsubscribe_email', 'data_export_request', 'warranty_register'].includes(rec.tool)) continueArgs.task_approved = true;
       
       const out2 = await tool.fn({ userId: rec.userId, ...continueArgs });
       // Return the final result, preserving the session info
