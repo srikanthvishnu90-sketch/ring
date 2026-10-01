@@ -658,12 +658,26 @@ async function callOpenAI(prompt, tools = TOOLS, opts = {}) {
     tools: tools.map((t) => ({ type: 'function', function: { name: t.name, description: t.describe, parameters: t.schema } })),
   };
   if (opts.maxTokens) body.max_tokens = opts.maxTokens;
-  const res = await fetch(`${base}/chat/completions`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${env('OPENAI_API_KEY')}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error(`LLM error ${res.status}`);
+  // Retry transient overloads with exponential backoff + jitter (5 attempts)
+  const RETRYABLE = [429, 503, 529];
+  let res, lastErr;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    try {
+      res = await fetch(`${base}/chat/completions`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${env('OPENAI_API_KEY')}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (res.ok) break;
+      if (!RETRYABLE.includes(res.status)) break;
+      lastErr = `LLM error ${res.status}`;
+    } catch (e) {
+      lastErr = e.message;
+    }
+    const backoff = Math.min(2000 * Math.pow(2, attempt), 30000);
+    await new Promise(r => setTimeout(r, backoff + Math.random() * 1000));
+  }
+  if (!res || !res.ok) throw new Error(lastErr || `LLM error ${res?.status}`);
   const data = await res.json();
   const msg = data.choices[0].message;
   return {
@@ -711,21 +725,34 @@ async function callAnthropic(prompt, tools = TOOLS, opts = {}) {
 // and returned whole at the end.
 async function callOpenAIStream(prompt, onToken, tools = TOOLS, opts = {}) {
   const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
-  const res = await fetch(`${base}/chat/completions`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${env('OPENAI_API_KEY')}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: env('AGENT_MODEL', 'gpt-4o'),
-      stream: true,
-      ...(opts.maxTokens ? { max_tokens: opts.maxTokens } : {}),
-      messages: [
-        { role: 'system', content: opts.system || SYSTEM_PROMPT },
-        { role: 'user', content: userContent(prompt, opts.parts, 'openai') },
-      ],
-      tools: tools.map((t) => ({ type: 'function', function: { name: t.name, description: t.describe, parameters: t.schema } })),
-    }),
-  });
-  if (!res.ok || !res.body) throw new Error(`LLM error ${res.status}`);
+  const RETRYABLE = [429, 503, 529];
+  let res, lastErr;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    try {
+      res = await fetch(`${base}/chat/completions`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${env('OPENAI_API_KEY')}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: env('AGENT_MODEL', 'gpt-4o'),
+          stream: true,
+          ...(opts.maxTokens ? { max_tokens: opts.maxTokens } : {}),
+          messages: [
+            { role: 'system', content: opts.system || SYSTEM_PROMPT },
+            { role: 'user', content: userContent(prompt, opts.parts, 'openai') },
+          ],
+          tools: tools.map((t) => ({ type: 'function', function: { name: t.name, description: t.describe, parameters: t.schema } })),
+        }),
+      });
+      if (res.ok && res.body) break;
+      if (!RETRYABLE.includes(res.status)) break;
+      lastErr = `LLM error ${res.status}`;
+    } catch (e) {
+      lastErr = e.message;
+    }
+    const backoff = Math.min(2000 * Math.pow(2, attempt), 30000);
+    await new Promise(r => setTimeout(r, backoff + Math.random() * 1000));
+  }
+  if (!res || !res.ok || !res.body) throw new Error(lastErr || `LLM error ${res?.status}`);
   let text = '';
   const calls = {};
   const reader = res.body.getReader();
