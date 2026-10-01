@@ -37,6 +37,39 @@ async function cancelSubscription(ctx, job) {
     return loginAndFindBilling(ctx, job.email, undefined);
   }
 
+  // Continuation: password-reset link provided — open it, set the new
+  // password (job.new_password), verify we're signed in, then find billing.
+  // Reset emails from MyClaw deliver reliably (unlike their magic links).
+  if (job.reset_link) {
+    ctx.log('reset_link_nav', {});
+    await page.goto(job.reset_link, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
+    await page.waitForTimeout(5000);
+
+    const passFields = await page.$$('input[type="password"]').catch(() => []);
+    if (passFields.length > 0) {
+      if (!job.new_password) {
+        return { ok: false, code: 'no_new_password', note: 'Reset link opened a set-password form but no new_password was provided. Re-invoke with new_password.' };
+      }
+      for (const field of passFields) {
+        await field.fill(job.new_password).catch(() => {});
+      }
+      ctx.log('new_password_filled', { fieldCount: passFields.length });
+      const submitBtn = await page.$('button[type="submit"], button:has-text("Reset"), button:has-text("Save"), button:has-text("Continue"), button:has-text("Update")');
+      if (submitBtn) await submitBtn.click();
+      else await page.keyboard.press('Enter');
+      await page.waitForTimeout(5000);
+      ctx.log('reset_submitted', { url: page.url() });
+    }
+
+    const stillLogin = await page.$('input[type="email"], input[type="password"]').catch(() => null);
+    if (stillLogin) {
+      await ctx.screenshot('myclaw-reset-not-auth');
+      return { ok: false, code: 'login_failed', note: 'Reset link did not yield a signed-in session (still on a login/set-password page). Screenshot captured.' };
+    }
+    ctx.log('reset_link_ok', { url: page.url() });
+    return loginAndFindBilling(ctx, job.email, job.new_password);
+  }
+
   // ---- 1. Go to MyClaw and find login ---------------------------------
   await page.goto('https://myclaw.ai', { waitUntil: 'domcontentloaded', timeout: 30000 });
   ctx.log('goto_myclaw', { url: page.url() });
@@ -188,17 +221,56 @@ async function cancelSubscription(ctx, job) {
       await ctx.screenshot('myclaw-login-timeout');
       return { ok: false, code: 'login_timeout', note: 'Login did not resolve after 30s. Screenshot captured.' };
     }
-  } else if (/check your email|magic link|sent.*link|verify.*email/i.test(bodyAfter || '')) {
-    await ctx.screenshot('myclaw-magic-link');
-    return {
-      ok: true, phase: 'need_input',
-      prompt: 'MyClaw sent a sign-in link to your email. Paste the link or the code here.',
-      fields: ['magic_link'],
-      note: 'Re-invoke with { sessionId, magic_link: "<url>" } to continue.',
-    };
-  } else if (!passField) {
-    await ctx.screenshot('myclaw-after-email');
-    return { ok: false, code: 'login_blocked', note: 'After email, no password field appeared — the site may require OAuth or a magic link. Screenshot captured.' };
+  }
+
+  // ---- 2b. Forgot-password fallback (reset emails DO arrive) ---------------
+  // Reached whenever the password path wasn't usable: no password field
+  // appeared, a password field appeared but we have no password to fill, or
+  // the page claimed a magic link (MyClaw's magic-link emails never arrive —
+  // verified 2026-10-01: zero in inbox incl. spam — so never park there).
+  if (/check your email|magic link|sent.*link|verify.*email/i.test(bodyAfter || '')) {
+    ctx.log('magic_link_claimed_but_unreliable', {});
+    await ctx.screenshot('myclaw-magic-link-unreliable');
+  }
+  {
+    const forgotSels = [
+      'a:has-text("Forgot password")', 'a:has-text("Forgot your password")',
+      'button:has-text("Forgot password")', 'a[href*="forgot"]', 'a[href*="reset"]',
+    ];
+    let forgotClicked = false;
+    for (const sel of forgotSels) {
+      try {
+        const el = await page.$(sel);
+        if (el) {
+          await el.click();
+          await page.waitForTimeout(3000);
+          forgotClicked = true;
+          ctx.log('forgot_clicked', { selector: sel });
+          break;
+        }
+      } catch { /* try next */ }
+    }
+    if (forgotClicked) {
+      const resetEmailField = await page.$('input[type="email"]').catch(() => null);
+      if (resetEmailField) {
+        await resetEmailField.fill(username).catch(() => {});
+        ctx.log('reset_email_filled', {});
+      }
+      const resetSubmit = await page.$('button[type="submit"], button:has-text("Send"), button:has-text("Reset"), button:has-text("Continue")');
+      if (resetSubmit) await resetSubmit.click();
+      else await page.keyboard.press('Enter');
+      await page.waitForTimeout(5000);
+      ctx.log('reset_requested', { url: page.url() });
+      await ctx.screenshot('myclaw-reset-sent');
+      return {
+        ok: true, phase: 'need_input',
+        prompt: 'MyClaw sent a password-reset link to your email. Paste the reset link here, plus a new temporary password to set.',
+        fields: ['reset_link', 'new_password'],
+        note: 'Re-invoke with { sessionId, reset_link: "<url>", new_password: "<temp password>" } to continue. The reset link authenticates the session.',
+      };
+    }
+    await ctx.screenshot('myclaw-no-forgot');
+    return { ok: false, code: 'forgot_not_found', note: 'No password field and no "Forgot password?" link found after email submit. Screenshot captured.' };
   }
 
   // Phase 1 ends at the billing page: report the exact terms for the record.
