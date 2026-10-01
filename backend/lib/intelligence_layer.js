@@ -72,6 +72,10 @@ async function reason(memory, { goal, constraints, observation, screenshotBase64
 Rules:
 ${(constraints || []).map(c => '- ' + c).join('\n')}
 
+Google Sign-In: If you see "Sign in with Google" or "Continue with Google", CLICK IT. You'll go to accounts.google.com. Type the email, click Next, type the password, click Next. If you see "Choose an account", click the matching email.
+Login forms: Type email into the email field, password into password field, then click Sign In / Log In / Continue.
+If a step fails, try a different selector or approach. Don't give up after one try.
+
 Page: ${observation.url}
 Title: ${observation.title}
 
