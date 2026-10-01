@@ -881,8 +881,18 @@ async function loginAndFindBilling(ctx, email, password, tempPw) {
     const dashLink = await page.$('a:has-text("Go to Dashboard"), a:has-text("Dashboard"), button:has-text("Dashboard")').catch(() => null);
     if (dashLink) {
       await dashLink.click().catch(() => {});
+      // Wait for actual navigation to dashboard (not just timeout).
+      try {
+        await page.waitForURL(/dashboard/, { timeout: 10000 }).catch(() => {});
+      } catch {}
       await page.waitForTimeout(3000);
-      ctx.log('dashboard_nav', { url: page.url() });
+      const afterDashUrl = page.url();
+      ctx.log('dashboard_nav', { url: afterDashUrl });
+      // If we got bounced back to login, the session didn't persist.
+      if (/\/login/.test(afterDashUrl)) {
+        await ctx.screenshot('myclaw-dashboard-bounced-to-login');
+        return { ok: false, code: 'session_lost', note: 'Dashboard redirected back to login — session did not persist after reset. Screenshot captured.' };
+      }
       // Diagnostic: dump the dashboard's links and text so we can see the
       // real navigation structure (no tokens; link text + hrefs only).
       try {
