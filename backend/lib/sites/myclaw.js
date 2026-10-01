@@ -1009,6 +1009,38 @@ async function loginAndFindBilling(ctx, email, password, tempPw) {
     }
   }
   if (!billingFound) {
+    // ── Agentic fallback: let the LLM see the page and navigate ──
+    // The hardcoded selectors above are brittle. If they failed, use the
+    // vision-driven loop: the LLM observes the accessibility tree and
+    // decides what to click, just like Muse does.
+    try {
+      const agentic = require('../agentic_browser');
+      ctx.log('agentic_billing_start', { url: page.url() });
+      const result = await agentic.navigate(ctx, {
+        goal: 'Navigate to the billing or subscription management page. Look for links labeled Billing, Subscription, Plan, Account, or Settings. If you find a page showing the current plan name (Lite/Pro/Max), price (e.g. $39), and billing date, you are done.',
+        constraints: [
+          'Do NOT click anything labeled Cancel, Delete, Remove, or Unsubscribe.',
+          'Do NOT submit any forms or enter payment details.',
+          'Only navigate and observe — do not change any settings.',
+        ],
+        maxSteps: 5,
+      });
+      ctx.log('agentic_billing_result', {
+        ok: result.ok,
+        note: (result.note || '').slice(0, 200),
+        steps: (result.steps || []).length,
+      });
+      if (result.ok) {
+        billingFound = true;
+        ctx.log('billing_found_via_agentic', { url: page.url() });
+      } else {
+        ctx.log('agentic_billing_failed', { note: (result.note || '').slice(0, 200) });
+      }
+    } catch (e) {
+      ctx.log('agentic_billing_error', { msg: String((e && e.message) || e).slice(0, 120) });
+    }
+  }
+  if (!billingFound) {
     await ctx.screenshot('myclaw-no-billing');
     return { ok: false, code: 'billing_not_found', note: 'Signed in but could not reach the billing/subscription page. Screenshot captured.' };
   }
