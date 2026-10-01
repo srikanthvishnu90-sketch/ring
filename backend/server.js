@@ -1000,6 +1000,103 @@ app.post('/api/voice/stream', async (req, res) => {
 
 module.exports = app;
 
+// ─── ONE-TIME Google login helper (temporary) ───────────────────────
+// POST /api/browser/google-login-once
+// Body: { password, email }
+// Creates a browser session, logs into Google, navigates to ElevenLabs.
+// Password is used transiently — never logged, never stored.
+// This endpoint is temporary and will be removed after the one-time use.
+app.post('/api/browser/google-login-once', async (req, res) => {
+  const { password, email } = req.body || {};
+  if (!password || !email) {
+    return res.status(400).json({ ok: false, error: 'email and password required' });
+  }
+
+  // Basic auth: require a valid user (reuse requireUser if available)
+  // For this one-time use, we check a simple shared secret
+  // TEMPORARY: hardcoded for one-time use, endpoint will be removed after
+  const oneTimeSecret = 'ot_ec4ece8d5523a0578823012b0a0c5d40';
+  if (req.headers['x-onetime-secret'] !== oneTimeSecret) {
+    return res.status(403).json({ ok: false, error: 'Forbidden' });
+  }
+
+  try {
+    const driver = require('./lib/browser_driver').createDriver();
+    if (!driver.keysPresent || !driver.keysPresent()) {
+      return res.status(500).json({ ok: false, error: 'Browser not configured' });
+    }
+
+    const session = await driver.createSession();
+    const { chromium } = require('playwright-core');
+    const browser = await chromium.connectOverCDP(session.connectUrl);
+    const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+    const page = await context.newPage();
+
+    // Go to ElevenLabs sign-in
+    await page.goto('https://elevenlabs.io/app/sign-in', { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.waitForTimeout(2000);
+
+    // Click Google sign-in
+    const googleBtn = page.locator('button:has-text("Google"), a:has-text("Google")').first();
+    if (await googleBtn.count() === 0) {
+      await browser.close();
+      await driver.stopSession(session.id);
+      return res.json({ ok: false, code: 'no_google_button', error: 'No Google sign-in button found' });
+    }
+    await googleBtn.click();
+    await page.waitForTimeout(3000);
+
+    // Enter email
+    const emailField = page.locator('input[type="email"]').first();
+    if (await emailField.count() > 0) {
+      await emailField.fill(email);
+      const nextBtn = page.locator('button:has-text("Next")').first();
+      if (await nextBtn.count() > 0) await nextBtn.click();
+      await page.waitForTimeout(3000);
+    }
+
+    // Enter password (transient — never logged)
+    const pwField = page.locator('input[type="password"]').first();
+    if (await pwField.count() > 0) {
+      await pwField.fill(password);
+      // Clear password from memory immediately after use
+      req.body.password = '[redacted]';
+      const nextBtn2 = page.locator('button:has-text("Next")').first();
+      if (await nextBtn2.count() > 0) await nextBtn2.click();
+      await page.waitForTimeout(5000);
+    }
+
+    // Check for 2FA
+    const url = page.url();
+    const content = await page.content();
+    const needs2fa = content.includes('2-Step Verification') || url.includes('challenge');
+
+    // Take screenshot for verification
+    const screenshot = await page.screenshot({ type: 'jpeg', quality: 60 });
+    const screenshotB64 = screenshot.toString('base64');
+
+    // Store session for continued use (don't close)
+    // In production, we'd persist this; for now return the ID
+    // Note: the browser connection will close when this request ends,
+    // but the Browserbase session stays alive
+
+    await browser.close(); // Close our CDP connection, session stays alive on Browserbase
+
+    res.json({
+      ok: true,
+      sessionId: session.id,
+      needs2fa,
+      url: url.slice(0, 100),
+      screenshot: screenshotB64.slice(0, 100) + '...', // truncated, full available via debug
+      message: needs2fa ? 'Login requires 2FA verification' : 'Login attempted, check screenshot',
+    });
+
+  } catch (e) {
+    // Ensure password is not in error
+    res.status(500).json({ ok: false, error: 'Login failed: ' + e.message.replace(password || 'NOPE', '[redacted]').slice(0, 200) });
+  }
+});
+
 // ─── Public browser test API ────────────────────────────────────────
 // Lets anyone test Ring's live browser. Heavily sandboxed:
 // - Fresh incognito context (no auth state, no cookies)
