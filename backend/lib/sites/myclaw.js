@@ -432,8 +432,8 @@ async function cancelFromDashboard(ctx, job) {
     } catch { /* try next */ }
   }
   if (!billingFound) {
-    // Try common billing URLs.
-    for (const u of ['https://myclaw.ai/settings/billing', 'https://myclaw.ai/billing', 'https://myclaw.ai/settings']) {
+    // Try common billing URLs (dashboard-prefixed first since login lands on /dashboard).
+    for (const u of ['https://myclaw.ai/dashboard/billing', 'https://myclaw.ai/dashboard/settings', 'https://myclaw.ai/settings/billing', 'https://myclaw.ai/billing', 'https://myclaw.ai/settings']) {
       await page.goto(u, { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {});
       const hasCancel = await page.$('button:has-text("Cancel"), a:has-text("Cancel")').catch(() => null);
       if (hasCancel) { billingFound = true; ctx.log('billing_url_found', { url: u }); break; }
@@ -914,7 +914,8 @@ async function loginAndFindBilling(ctx, email, password, tempPw) {
   if (!billingFound) {
     // Try known billing URLs directly; verify by checking for tier + price.
     // Log each probe's URL + text snippet so failures are diagnosable.
-    for (const u of ['https://myclaw.ai/settings/billing', 'https://myclaw.ai/billing', 'https://myclaw.ai/settings', 'https://myclaw.ai/account']) {
+    // Include /dashboard/* variants since login redirects to /dashboard.
+    for (const u of ['https://myclaw.ai/dashboard/billing', 'https://myclaw.ai/dashboard/settings', 'https://myclaw.ai/dashboard/account', 'https://myclaw.ai/settings/billing', 'https://myclaw.ai/billing', 'https://myclaw.ai/settings', 'https://myclaw.ai/account']) {
       await page.goto(u, { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {});
       await page.waitForTimeout(2000);
       const probe = await page.evaluate(() => (document.body ? document.body.innerText : '')).catch(() => '') || '';
