@@ -9,9 +9,109 @@
 //     return done with cancelRef. A done without cancelRef is rejected by the
 //     driver's no_proof gate — never claim cancelled without provider proof.
 //
+// Sign-in is self-driving: after requesting a password reset, the driver
+// reads the user's Gmail (via the connected Google OAuth grant) to fetch the
+// reset link itself, sets a secure temporary password, and continues — no
+// user round-trip needed. If Gmail isn't reachable, it falls back to
+// need_input asking the user to paste the link.
+//
 // Credentials: via ctx.vault.withCredentials(vaultId) when job.vaultId is set,
 // or via job.username/job.password for direct (transient) use. Values never
 // logged or returned.
+
+const crypto = require('crypto');
+const google = require('../google');
+
+// Recursively extract readable text from a Gmail payload (prefer text/plain).
+function extractTextBody(payload) {
+  if (!payload) return '';
+  const find = (p) => {
+    if (!p) return null;
+    if (p.mimeType === 'text/plain' && p.body && p.body.data) return p.body.data;
+    for (const part of p.parts || []) {
+      const hit = find(part);
+      if (hit) return hit;
+    }
+    return (p.body && p.body.data) || null;
+  };
+  const raw = find(payload);
+  if (!raw) return '';
+  let text = Buffer.from(raw, 'base64url').toString('utf8');
+  // If we only got HTML, strip tags.
+  if (/<[a-z][\s\S]*>/i.test(text) && !/https?:\/\/myclaw\.ai\/[^\s"'<>]*reset[^\s"'<>]*/i.test(text)) {
+    text = text.replace(/<style[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ');
+  }
+  return text;
+}
+
+// Find a MyClaw password-reset URL in email text.
+function extractResetUrl(text) {
+  if (!text) return null;
+  const m = text.match(/https?:\/\/[^\s"'<>]*myclaw\.ai[^\s"'<>]*reset[^\s"'<>]*/i)
+    || text.match(/https?:\/\/myclaw\.ai\/[^\s"'<>]+/i);
+  return m ? m[0].replace(/[.,;)\]]+$/, '') : null;
+}
+
+// Poll the user's Gmail for the newest MyClaw password-reset email and return
+// its reset URL. Ring looks at Gmail and decides — no user round-trip.
+async function fetchResetLinkFromGmail(ctx, job) {
+  const userId = job.userId;
+  const targetEmail = (job.email || '').toLowerCase();
+  if (!userId) {
+    ctx.log('gmail_skip_no_user', {});
+    return null;
+  }
+  try {
+    await google.ready();
+  } catch (e) { /* continue anyway */ }
+  let accounts = [];
+  try {
+    accounts = google.listGoogleAccounts(userId) || [];
+  } catch (e) {
+    ctx.log('gmail_accounts_err', { msg: String((e && e.message) || e).slice(0, 120) });
+    return null;
+  }
+  const acct = accounts.find((a) => (a.email || '').toLowerCase() === targetEmail) || accounts[0];
+  if (!acct) {
+    ctx.log('gmail_no_accounts', {});
+    return null;
+  }
+  ctx.log('gmail_poll_start', { account: acct.email });
+
+  const q = encodeURIComponent('from:noreply@myclaw.ai subject:"Reset Your Password" newer_than:20m');
+  const deadline = Date.now() + 90000;
+  while (Date.now() < deadline) {
+    try {
+      const list = await google.gfetch(acct.key,
+        `https://gmail.googleapis.com/gmail/v1/users/me/messages?q=${q}&maxResults=3`);
+      const msgs = (list && list.messages) || [];
+      // Newest first — Gmail returns in reverse chronological order.
+      for (const m of msgs) {
+        try {
+          const full = await google.gfetch(acct.key,
+            `https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(m.id)}?format=full`);
+          const url = extractResetUrl(extractTextBody(full.payload));
+          if (url) {
+            ctx.log('gmail_reset_link_found', {});
+            return url;
+          }
+        } catch (e) { /* try next message */ }
+      }
+    } catch (e) {
+      ctx.log('gmail_poll_err', { msg: String((e && e.message) || e).slice(0, 120) });
+    }
+    await new Promise((r) => setTimeout(r, 10000));
+  }
+  ctx.log('gmail_reset_link_timeout', {});
+  return null;
+}
+
+// Generate a secure temporary password for the reset flow.
+function tempPassword() {
+  const bytes = crypto.randomBytes(12);
+  const b64 = bytes.toString('base64').replace(/[+/=]/g, '');
+  return `R1ng-${b64.slice(0, 12)}!`;
+}
 
 async function cancelSubscription(ctx, job) {
   const page = ctx.page;
@@ -67,7 +167,7 @@ async function cancelSubscription(ctx, job) {
       return { ok: false, code: 'login_failed', note: 'Reset link did not yield a signed-in session (still on a login/set-password page). Screenshot captured.' };
     }
     ctx.log('reset_link_ok', { url: page.url() });
-    return loginAndFindBilling(ctx, job.email, job.new_password);
+    return loginAndFindBilling(ctx, job.email, job.new_password, job.new_password);
   }
 
   // ---- 1. Go to MyClaw and find login ---------------------------------
@@ -262,6 +362,36 @@ async function cancelSubscription(ctx, job) {
       await page.waitForTimeout(5000);
       ctx.log('reset_requested', { url: page.url() });
       await ctx.screenshot('myclaw-reset-sent');
+
+      // Self-driving: fetch the reset link from the user's Gmail and continue
+      // without a user round-trip. Ring looks at Gmail and decides.
+      const gmailLink = await fetchResetLinkFromGmail(ctx, job);
+      if (gmailLink) {
+        const pw = tempPassword();
+        ctx.log('gmail_reset_continue', {});
+        await page.goto(gmailLink, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
+        await page.waitForTimeout(5000);
+        const passFields = await page.$$('input[type="password"]').catch(() => []);
+        if (passFields.length > 0) {
+          for (const field of passFields) {
+            await field.fill(pw).catch(() => {});
+          }
+          ctx.log('temp_password_set', { fieldCount: passFields.length });
+          const submitBtn = await page.$('button[type="submit"], button:has-text("Reset"), button:has-text("Save"), button:has-text("Continue"), button:has-text("Update")');
+          if (submitBtn) await submitBtn.click();
+          else await page.keyboard.press('Enter');
+          await page.waitForTimeout(5000);
+        }
+        const stillLogin = await page.$('input[type="email"], input[type="password"]').catch(() => null);
+        if (!stillLogin) {
+          ctx.log('gmail_reset_login_ok', { url: page.url() });
+          return loginAndFindBilling(ctx, username, pw, pw);
+        }
+        await ctx.screenshot('myclaw-gmail-reset-not-auth');
+        ctx.log('gmail_reset_not_auth', {});
+        // Fall through to need_input below.
+      }
+
       return {
         ok: true, phase: 'need_input',
         prompt: 'MyClaw sent a password-reset link to your email. Paste the reset link here, plus a new temporary password to set.',
@@ -604,7 +734,7 @@ async function resetPassword(ctx, job) {
 
     ctx.log('reset_ok', {});
     // Now login with the new password and find billing (but don't cancel yet).
-    return loginAndFindBilling(ctx, job.email, job.new_password);
+    return loginAndFindBilling(ctx, job.email, job.new_password, job.new_password);
   }
 
   // ---- Phase 1: Request the reset link ---------------------------------
@@ -718,7 +848,7 @@ async function resetPassword(ctx, job) {
 
 // Helper: login with credentials and navigate to billing, returning need_approval.
 // Does NOT click cancel — waits for human approval.
-async function loginAndFindBilling(ctx, email, password) {
+async function loginAndFindBilling(ctx, email, password, tempPw) {
   const page = ctx.page;
 
   // If not already logged in, do the login flow.
@@ -773,6 +903,11 @@ async function loginAndFindBilling(ctx, email, password) {
   const planMatch = bodyText.match(/(?:plan|subscription)[:\s]*([^\n]{1,60})/i);
   const priceMatch = bodyText.match(/\$\s?(\d+(?:\.\d{2})?)\s*(?:\/|per)?\s*(?:month|mo|year|yr)?/i);
 
+  // If we set a temporary password via the self-driving reset flow, surface
+  // it so the user knows. The account is being cancelled, but transparency
+  // matters — never change a credential silently.
+  const showPw = tempPw || null;
+
   return {
     ok: true, phase: 'need_approval',
     summary: {
@@ -781,7 +916,9 @@ async function loginAndFindBilling(ctx, email, password) {
       plan: planMatch ? planMatch[1].trim() : 'Unknown plan',
       price: priceMatch ? priceMatch[0].trim() : 'Unknown price',
       account: email,
+      ...(showPw ? { tempPassword: showPw } : {}),
     },
-    note: 'Signed in. Subscription terms captured below. Approving continues to the actual cancellation — declining keeps the subscription as-is.',
+    note: 'Signed in. Subscription terms captured below. Approving continues to the actual cancellation — declining keeps the subscription as-is.'
+      + (showPw ? ` A temporary password was set during sign-in (shown on the card) — the account is being cancelled, but keep it in case you need to log back in.` : ''),
   };
 }
