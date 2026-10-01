@@ -247,6 +247,11 @@ async function cancelSubscription(ctx, job) {
 
   // Step 2: check what comes next — password field, magic link, or OAuth.
   const bodyAfter = await page.textContent('body').catch(() => '');
+  ctx.log('after_email_submit', {
+    url: page.url(),
+    bodySnippet: (bodyAfter || '').replace(/\s+/g, ' ').slice(0, 500),
+    hasPasswordField: !!(await page.$('input[type="password"]').catch(() => null)),
+  });
   const passField = await page.$('input[type="password"]').catch(() => null);
   if (passField && password) {
     // Click to focus, clear, then type character-by-character.
@@ -322,7 +327,9 @@ async function cancelSubscription(ctx, job) {
   {
     const forgotSels = [
       'a:has-text("Forgot password")', 'a:has-text("Forgot your password")',
-      'button:has-text("Forgot password")', 'a[href*="forgot"]', 'a[href*="reset"]',
+      'a:has-text("Forgot")', 'button:has-text("Forgot password")',
+      'button:has-text("Forgot")', 'a[href*="forgot"]', 'a[href*="reset"]',
+      'button[href*="forgot"]',
     ];
     let forgotClicked = false;
     for (const sel of forgotSels) {
@@ -336,6 +343,20 @@ async function cancelSubscription(ctx, job) {
           break;
         }
       } catch { /* try next */ }
+    }
+    // If no forgot link found on the page, try direct navigation to common
+    // forgot-password URLs (MyClaw may show magic-link UI without the link).
+    if (!forgotClicked) {
+      for (const furl of ['https://myclaw.ai/forgot-password', 'https://myclaw.ai/reset-password', 'https://myclaw.ai/login?forgot=true']) {
+        await page.goto(furl, { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {});
+        await page.waitForTimeout(2000);
+        const hasEmailField = await page.$('input[type="email"]').catch(() => null);
+        if (hasEmailField) {
+          forgotClicked = true;
+          ctx.log('forgot_direct_nav', { url: furl });
+          break;
+        }
+      }
     }
     if (forgotClicked) {
       const resetEmailField = await page.$('input[type="email"]').catch(() => null);
