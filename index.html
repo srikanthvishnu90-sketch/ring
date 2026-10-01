@@ -1109,7 +1109,7 @@ function describeApproval(m){
     if(a2.cancel_approved&&a2.terms){
       const t=a2.terms;
       const pw=t.tempPassword&&t.tempPassword!=='[redacted]'?t.tempPassword:null;
-      return `CANCEL ${t.merchant||a2.merchant||'the'} subscription (${t.account||a2.email||'your account'}) — ${t.plan||'plan unknown'} at ${t.price||'price unknown'}. Approving completes the cancellation now; declining keeps the subscription as-is.${pw?` Temporary sign-in password (keep it in case you need to log back in): ${pw}`:''}`;
+      return `CANCEL ${t.merchant||a2.merchant||'the'} subscription (${t.account||a2.email||'your account'}) — ${t.plan||'plan unknown'} at ${t.price||'price unknown'}${t.renews?` (next billing: ${t.renews})`:''}. Approving completes the cancellation now; declining keeps the subscription as-is.${pw?` Temporary sign-in password (keep it in case you need to log back in): ${pw}`:''}`;
     }
     return `Sign in to ${a2.merchant||'the merchant'} (${a2.email||'your account'}) and inspect the subscription — this only authorizes starting the sign-in flow. The actual cancellation needs a separate approval after the exact plan, price, and terms are shown.`;
   }

@@ -874,12 +874,37 @@ async function loginAndFindBilling(ctx, email, password, tempPw) {
   }
 
   // Get subscription details for the approval card.
-  const bodyText = await page.textContent('body').catch(() => '') || '';
+  // Use innerText (visible text only): textContent includes <script> JSON
+  // blobs, which poison naive plan/price regexes (e.g. matching "plans"
+  // inside {"plans":{"lite":"Lite",...}}).
+  const bodyText = await page.evaluate(() => (document.body ? document.body.innerText : '')).catch(() => '') || '';
   await ctx.screenshot('myclaw-billing-found');
+  ctx.log('myclaw_billing_text', { text: bodyText.replace(/\s+/g, ' ').slice(0, 600) });
 
-  // Extract plan/price info for the approval summary.
-  const planMatch = bodyText.match(/(?:plan|subscription)[:\s]*([^\n]{1,60})/i);
-  const priceMatch = bodyText.match(/\$\s?(\d+(?:\.\d{2})?)\s*(?:\/|per)?\s*(?:month|mo|year|yr)?/i);
+  // Plan: MyClaw tiers are Lite/Pro/Max. Prefer the tier named in a
+  // plan/subscription context; word boundaries avoid "plans" in JSON.
+  let plan = 'Unknown plan';
+  const planCtx = bodyText.match(/\b(?:current\s+)?plan\b[^.\n]{0,80}/i);
+  const tierInCtx = planCtx && planCtx[0].match(/\b(lite|pro|max)\b/i);
+  const tierAnywhere = bodyText.match(/\b(lite|pro|max)\s+plan\b/i) || bodyText.match(/\bplan\s*:\s*(lite|pro|max)\b/i);
+  const tier = (tierInCtx && tierInCtx[1]) || (tierAnywhere && tierAnywhere[1]);
+  if (tier) plan = tier[0].toUpperCase() + tier.slice(1).toLowerCase();
+
+  // Price: prefer $X qualified as monthly (/mo, per month); else the $X
+  // nearest a billing keyword. Never the first stray $ on the page.
+  let price = 'Unknown price';
+  const monthlyPrice = bodyText.match(/\$\s?(\d+(?:\.\d{1,2})?)\s*(?:\/\s*mo|per\s*month|\/month)/i);
+  if (monthlyPrice) {
+    price = '$' + monthlyPrice[1] + '/mo';
+  } else {
+    const billedCtx = bodyText.match(/(?:billed|bills|price|cost|total|amount|subscription)[^$\n]{0,40}\$\s?(\d+(?:\.\d{1,2})?)/i);
+    if (billedCtx) price = '$' + billedCtx[1];
+  }
+
+  // Next billing / access-end date, when shown.
+  let renews = null;
+  const renewHit = bodyText.match(/(?:next\s*(?:billing|payment|charge)|renews?|renewal|billing\s*date)[\s:]*([A-Z][a-z]+\s+\d{1,2},?\s*\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4})/i);
+  if (renewHit) renews = renewHit[1];
 
   // If we set a temporary password via the self-driving reset flow, surface
   // it so the user knows. The account is being cancelled, but transparency
@@ -891,8 +916,9 @@ async function loginAndFindBilling(ctx, email, password, tempPw) {
     summary: {
       merchant: 'MyClaw',
       action: 'Cancel subscription',
-      plan: planMatch ? planMatch[1].trim() : 'Unknown plan',
-      price: priceMatch ? priceMatch[0].trim() : 'Unknown price',
+      plan,
+      price,
+      ...(renews ? { renews } : {}),
       account: email,
       ...(showPw ? { tempPassword: showPw } : {}),
     },
