@@ -82,7 +82,9 @@ async function fetchResetLinkFromGmail(ctx, job, sinceEpoch) {
 
   const afterClause = sinceEpoch ? ` after:${Math.floor(sinceEpoch / 1000)}` : '';
   const q = encodeURIComponent(`from:noreply@myclaw.ai subject:"Reset Your Password"${afterClause}`);
-  const deadline = Date.now() + 90000;
+  // Bounded at 60s with 5s polls: reset emails arrive in seconds, and the
+  // phase has a 120s serverless budget shared with the browser work.
+  const deadline = Date.now() + 60000;
   while (Date.now() < deadline) {
     try {
       const list = await google.gfetch(acct.key,
@@ -104,7 +106,7 @@ async function fetchResetLinkFromGmail(ctx, job, sinceEpoch) {
     } catch (e) {
       ctx.log('gmail_poll_err', { msg: String((e && e.message) || e).slice(0, 120) });
     }
-    await new Promise((r) => setTimeout(r, 10000));
+    await new Promise((r) => setTimeout(r, 5000));
   }
   ctx.log('gmail_reset_link_timeout', {});
   return null;
@@ -174,36 +176,11 @@ async function cancelSubscription(ctx, job) {
     return loginAndFindBilling(ctx, job.email, job.new_password, job.new_password);
   }
 
-  // ---- 1. Go to MyClaw and find login ---------------------------------
-  await page.goto('https://myclaw.ai', { waitUntil: 'domcontentloaded', timeout: 30000 });
-  ctx.log('goto_myclaw', { url: page.url() });
-
-  // Look for a login/sign-in link or button.
-  const loginSelectors = [
-    'a:has-text("Log in")', 'a:has-text("Login")', 'a:has-text("Sign in")',
-    'button:has-text("Log in")', 'button:has-text("Sign in")',
-    'a[href*="login"]', 'a[href*="signin"]',
-  ];
-  let loginFound = false;
-  for (const sel of loginSelectors) {
-    try {
-      const el = await page.$(sel);
-      if (el) {
-        await el.click();
-        await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
-        loginFound = true;
-        ctx.log('login_link_clicked', { selector: sel });
-        break;
-      }
-    } catch { /* try next */ }
-  }
-  if (!loginFound) {
-    // Maybe we're already on a login page, or try /login directly.
-    if (!/login|signin/i.test(page.url())) {
-      await page.goto('https://myclaw.ai/login', { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
-      ctx.log('goto_login_direct', { url: page.url() });
-    }
-  }
+  // ---- 1. Go straight to the MyClaw login page --------------------------
+  // The old homepage login-link hunt cost ~60s in production (heavy SPA
+  // scans + load-state waits). /login is the known entry point — go direct.
+  await page.goto('https://myclaw.ai/login', { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
+  ctx.log('goto_login_direct', { url: page.url() });
 
   // ---- 2. Fill credentials (email-first flow) -------------------------------
   let username, password;
@@ -756,45 +733,17 @@ async function resetPassword(ctx, job) {
   }
 
   // ---- Phase 1: Request the reset link ---------------------------------
-  await page.goto('https://myclaw.ai', { waitUntil: 'domcontentloaded', timeout: 30000 });
-  ctx.log('goto_myclaw', { url: page.url() });
-
-  // Find login — try hamburger menu first (homepage has no visible login link).
-  const menuBtn = await page.$('button:has-text("☰"), button[aria-label*="menu" i], button[aria-label*="Menu" i]').catch(() => null);
-  if (menuBtn) {
-    await menuBtn.click().catch(() => {});
+  // Go direct to the known login URLs — the old homepage menu/login-link
+  // hunt cost ~60s in production. Try each candidate until the email form
+  // appears.
+  let emailForm = null;
+  for (const loginUrl of ['https://myclaw.ai/login', 'https://app.myclaw.ai/login', 'https://app.myclaw.ai']) {
+    await page.goto(loginUrl, { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {});
     await page.waitForTimeout(2000);
-    ctx.log('menu_opened', {});
-  }
-
-  const loginSelectors = [
-    'a:has-text("Log in")', 'a:has-text("Login")', 'a:has-text("Sign in")',
-    'button:has-text("Log in")', 'button:has-text("Sign in")',
-    'a[href*="login"]', 'a[href*="signin"]',
-  ];
-  for (const sel of loginSelectors) {
-    try {
-      const el = await page.$(sel);
-      if (el) {
-        await el.click();
-        await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
-        ctx.log('login_link_clicked', { selector: sel });
-        break;
-      }
-    } catch { /* try next */ }
-  }
-
-  // If still on marketing page (no email form), try direct login URLs.
-  let emailForm = await page.$('input[type="email"]').catch(() => null);
-  if (!emailForm) {
-    for (const loginUrl of ['https://myclaw.ai/login', 'https://app.myclaw.ai/login', 'https://app.myclaw.ai']) {
-      await page.goto(loginUrl, { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {});
-      await page.waitForTimeout(3000);
-      emailForm = await page.$('input[type="email"]').catch(() => null);
-      if (emailForm) {
-        ctx.log('login_url_found', { url: loginUrl });
-        break;
-      }
+    emailForm = await page.$('input[type="email"]').catch(() => null);
+    if (emailForm) {
+      ctx.log('login_url_found', { url: loginUrl });
+      break;
     }
   }
 

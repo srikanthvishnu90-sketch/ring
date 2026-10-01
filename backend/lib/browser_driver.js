@@ -279,7 +279,7 @@ async function executeInner(job, deps = {}) {
   if (loaded.error) {
     return stripSensitive({ ...loaded.error, kind: job.kind });
   }
-  const jobWithSite = { ...job, _site: loaded.site };
+  let jobWithSite = { ...job, _site: loaded.site };
   // 3. Resolve or create the session.
   let session;
   try {
@@ -292,44 +292,61 @@ async function executeInner(job, deps = {}) {
     return { ok: false, code: 'browser_failed', note: `Session setup failed: ${String((e && e.message) || e).slice(0, 200)}` };
   }
   const sessionId = session.id;
-  // 4. Run ONE phase with a wall-clock budget (serverless-safe).
+  // 4. Run ONE phase with a wall-clock budget (serverless-safe). On
+  //    PHASE_TIMEOUT the session is still live, so retry the phase
+  //    transparently (up to 3 attempts total): a retry resumes the live
+  //    browser where the timed-out phase left off. Retries are a machine
+  //    continuation — transient slowness never surfaces to the user as a
+  //    failure.
+  const MAX_PHASE_ATTEMPTS = 3;
   let phaseResult;
-  const budget = phaseTimeoutMs();
-  let onTimeout;
-  const timeoutP = new Promise((_, reject) => {
-    onTimeout = setTimeout(() => {
-      const t = new Error(`Phase exceeded the ${budget}ms budget`);
-      t.code = 'PHASE_TIMEOUT';
-      reject(t);
-    }, budget);
-  });
-  try {
-    phaseResult = await Promise.race([
-      framework.runPhase(
-        { connectUrl: session.connect_url, job: jobWithSite, siteFn: loaded.fn, site: loaded.site },
-        deps,
-      ),
-      timeoutP,
-    ]);
-  } catch (e) {
-    if (e && e.code === 'PHASE_TIMEOUT') {
-      // Keep the session live — the agent can retry the phase.
-      try { await sessions.touch(sessionId); } catch { /* best effort */ }
-      return { ok: false, code: 'phase_timeout', sessionId, note: `Phase exceeded the ${budget}ms serverless budget; the browser session is still live — retry the phase with sessionId.`, ...(session.hardening ? { hardening: session.hardening } : {}) };
-    }
-    if (e && e.code === 'PLAYWRIGHT_CORE_MISSING') {
+  let attempt = 0;
+  for (;;) {
+    attempt++;
+    const budget = phaseTimeoutMs();
+    let onTimeout;
+    const timeoutP = new Promise((_, reject) => {
+      onTimeout = setTimeout(() => {
+        const t = new Error(`Phase exceeded the ${budget}ms budget`);
+        t.code = 'PHASE_TIMEOUT';
+        reject(t);
+      }, budget);
+    });
+    // Exposed on the params object so the timeout path below can read the
+    // partial step trail for diagnostics (runPhase sets params._ctx).
+    const phaseParams = { connectUrl: session.connect_url, job: jobWithSite, siteFn: loaded.fn, site: loaded.site };
+    try {
+      phaseResult = await Promise.race([
+        framework.runPhase(phaseParams, deps),
+        timeoutP,
+      ]);
+      break;
+    } catch (e) {
+      if (e && e.code === 'PHASE_TIMEOUT') {
+        // Keep the session live and retry the phase against it.
+        try { await sessions.touch(sessionId); } catch { /* best effort */ }
+        const partialSteps = (phaseParams._ctx && phaseParams._ctx.steps) || [];
+        console.log(`[ring-bb] phase_timeout attempt ${attempt}/${MAX_PHASE_ATTEMPTS} (${partialSteps.length} partial steps)`);
+        if (attempt < MAX_PHASE_ATTEMPTS) {
+          jobWithSite = { ...jobWithSite, sessionId };
+          continue;
+        }
+        return { ok: false, code: 'phase_timeout', sessionId, steps: partialSteps.slice(-30), note: `Phase exceeded the ${budget}ms serverless budget after ${MAX_PHASE_ATTEMPTS} attempts; the browser session is still live — retry the phase with sessionId.`, ...(session.hardening ? { hardening: session.hardening } : {}) };
+      }
+      if (e && e.code === 'PLAYWRIGHT_CORE_MISSING') {
+        await endSession(sessionId, session.bb_session_id);
+        return { ok: false, code: 'browser_failed', sessionId, note: 'playwright-core is not installed in backend/ — run `npm install` there. Session closed.' };
+      }
+      // Unexpected throw mid-phase: screenshot already captured by the
+      // framework; close the session to avoid leaking billed time.
       await endSession(sessionId, session.bb_session_id);
-      return { ok: false, code: 'browser_failed', sessionId, note: 'playwright-core is not installed in backend/ — run `npm install` there. Session closed.' };
+      return {
+        ok: false, code: (e && e.code) || 'browser_failed', sessionId,
+        note: `Browser phase threw: ${String((e && e.message) || e).slice(0, 240)} — session closed, nothing was completed.`,
+      };
+    } finally {
+      clearTimeout(onTimeout);
     }
-    // Unexpected throw mid-phase: screenshot already captured by the
-    // framework; close the session to avoid leaking billed time.
-    await endSession(sessionId, session.bb_session_id);
-    return {
-      ok: false, code: (e && e.code) || 'browser_failed', sessionId,
-      note: `Browser phase threw: ${String((e && e.message) || e).slice(0, 240)} — session closed, nothing was completed.`,
-    };
-  } finally {
-    clearTimeout(onTimeout);
   }
   // 5. Classify the phase outcome.
   const out = phaseResult && typeof phaseResult === 'object' ? phaseResult : {};

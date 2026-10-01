@@ -261,7 +261,8 @@ async function disconnectCdp(browser) {
   } catch { /* best effort */ }
 }
 
-async function runPhase({ connectUrl, job, siteFn, site }, deps = {}) {
+async function runPhase(params, deps = {}) {
+  const { connectUrl, job, siteFn, site } = params;
   const connectCdp = deps.connectCdp || defaultConnectCdp;
   const started = Date.now();
   let browser = null;
@@ -308,6 +309,9 @@ async function runPhase({ connectUrl, job, siteFn, site }, deps = {}) {
       });
     }
     ctx = makeCtx(page, job);
+    // Expose the ctx on the params object so a serverless timeout can still
+    // report the partial step trail (browser_driver reads params._ctx.steps).
+    params._ctx = ctx;
     ctx.log('phase_start', { site, kind: job.kind, resumed: !!(job.sessionId && existingPages.length), reusedConn: !!browser && cdpCache.has(connectUrl) });
     const out = await siteFn(ctx, job);
     ctx.log('phase_end', { phase: out && out.phase, ok: out && out.ok });
