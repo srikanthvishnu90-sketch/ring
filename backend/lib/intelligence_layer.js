@@ -222,7 +222,7 @@ async function execute(page, decision) {
 async function runIntelligent(ctx, { goal, constraints = [], maxSteps = 10, memory = null } = {}) {
   const page = ctx.page;
   const mem = memory || new TaskMemory();
-  const threadId = ctx.threadId || ctx.sessionId;
+  const threadId = ctx.threadId || (ctx.job && ctx.job.threadId) || ctx.sessionId;
   
   // Initial frame: show where we're starting
   await pushStatus({ threadId, status: 'starting', detail: goal.slice(0, 100) });

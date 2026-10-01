@@ -231,6 +231,7 @@ const _RAW_TOOLS = [
       // Returns done with cancelRef on provider-confirmed cancellation.
       const driver = _pickDriver();
       const job = { site: 'subscription', kind: 'cancel-subscription', userId: a.userId,
+        threadId: a.threadId,
         merchant: a.merchant, email: a.email, vaultId: a.vaultId,
         magic_link: a.magic_link, reset_link: a.reset_link, new_password: a.new_password,
         sessionId: a.sessionId, cancel_approved: a.cancel_approved };
@@ -846,7 +847,7 @@ async function processToolCalls({ toolCalls, tools, userId, toolsUsed, allResult
     toolsUsed.push({ name: tool.name, risk: tool.risk, args: tc.args });
     if (tool.risk === 'low') {
       try {
-        const out = await tool.fn({ userId, ...tc.args });
+        const out = await tool.fn({ userId, threadId, ...tc.args });
         let resultLine = `${tc.name} → ${JSON.stringify(out).slice(0, 10000)}`;
         // Phase honesty: an intermediate phase is NOT completion. Bind the
         // model's reply to the required user message so it cannot be
