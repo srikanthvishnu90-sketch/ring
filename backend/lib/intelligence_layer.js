@@ -262,11 +262,14 @@ async function runIntelligent(ctx, { goal, constraints = [], maxSteps = 10, memo
     
     await pushStatus({ threadId, status: 'thinking', detail: `Step ${i+1}: analyzing ${observation.url.slice(0, 60)}` });
     
-    // Capture screenshot for vision
+    // Capture screenshot for vision (small to avoid token limits)
     let screenshotBase64 = null;
     try {
-      const buf = await page.screenshot({ type: 'jpeg', quality: 60 });
-      screenshotBase64 = buf.toString('base64');
+      const buf = await page.screenshot({ type: 'jpeg', quality: 30 });
+      // Resize check: if too large, skip vision for this step
+      if (buf.length < 100000) {
+        screenshotBase64 = buf.toString('base64');
+      }
     } catch {}
     
     let decision;
