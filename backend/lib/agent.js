@@ -903,7 +903,7 @@ const HONEST_FALLBACK = `I wasn't able to stage that just now — nothing was su
 
 // One round of tool-call processing, shared by both turn functions so the
 // honesty guard reuses the exact same execution semantics as the main loop.
-async function processToolCalls({ toolCalls, tools, userId, toolsUsed, allResults }) {
+async function processToolCalls({ toolCalls, tools, userId, threadId, toolsUsed, allResults }) {
   const results = [];
   for (const tc of toolCalls) {
     const tool = tools.find((t) => t.name === tc.name);
@@ -993,7 +993,7 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
       break;
     }
     const usedBefore = toolsUsed.length;
-    await processToolCalls({ toolCalls: pending, tools, userId, toolsUsed, allResults });
+    await processToolCalls({ toolCalls: pending, tools, userId, threadId, toolsUsed, allResults });
     const justUsed = toolsUsed.slice(usedBefore);
     lastHeldName = (justUsed.length > 0
       && justUsed.every((t) => t.risk !== 'low' && t.name === justUsed[0].name))
@@ -1037,7 +1037,7 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
       // action in one fresh reply that supersedes the false draft.
       if (rounds < MAX_ROUNDS) {
         rounds++;
-        await processToolCalls({ toolCalls: fixCalls, tools, userId, toolsUsed, allResults });
+        await processToolCalls({ toolCalls: fixCalls, tools, userId, threadId, toolsUsed, allResults });
       }
       const follow = await call(
         `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
@@ -1153,7 +1153,7 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
       break;
     }
     const usedBefore = toolsUsed.length;
-    await processToolCalls({ toolCalls: pending, tools, userId, toolsUsed, allResults });
+    await processToolCalls({ toolCalls: pending, tools, userId, threadId, toolsUsed, allResults });
     const justUsed = toolsUsed.slice(usedBefore);
     lastHeldName = (justUsed.length > 0
       && justUsed.every((t) => t.risk !== 'low' && t.name === justUsed[0].name))
@@ -1186,7 +1186,7 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
       // action in one fresh reply that supersedes the false draft.
       if (rounds < MAX_ROUNDS) {
         rounds++;
-        await processToolCalls({ toolCalls: fixCalls, tools, userId, toolsUsed, allResults });
+        await processToolCalls({ toolCalls: fixCalls, tools, userId, threadId, toolsUsed, allResults });
       }
       const follow = await call(
         `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
