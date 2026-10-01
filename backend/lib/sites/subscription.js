@@ -46,8 +46,24 @@ async function cancelSubscription(ctx, job) {
     };
     const startUrl = merchantUrls[merchant] || `https://${merchant}.com`;
     
-    await page.goto(startUrl, { waitUntil: 'domcontentloaded', timeout: 20000 }).catch(() => {});
+    let navError = null;
+    try {
+      await page.goto(startUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
+    } catch (e) {
+      navError = e.message;
+    }
     await page.waitForTimeout(3000);
+    
+    // Check if page actually loaded
+    const currentUrl = page.url();
+    const pageTitle = await page.title().catch(() => '');
+    if (navError || !currentUrl.includes(merchant.replace(/[^a-z]/g, ''))) {
+      return {
+        ok: false,
+        code: 'nav_failed',
+        note: `Failed to load ${startUrl}. Error: ${navError || 'unknown'}. Current URL: ${currentUrl}. Title: ${pageTitle}. Nothing was cancelled.`.slice(0, 300),
+      };
+    }
     
     // Intelligence layer: see → reason → act → verify
     // Phase 1: Sign in and locate subscription (stops before cancelling)
