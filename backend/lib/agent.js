@@ -135,6 +135,36 @@ const _RAW_TOOLS = [
     describe: 'Run a real browser automation job on a website (Uber booking, etc.). Returns phases: need_otp, need_approval, or done. Multi-phase jobs continue by passing sessionId back.',
   },
   {
+    name: 'browser_open', risk: 'low',
+    fn: async (a) => {
+      // Open an arbitrary URL in the agent browser. Resolves common site names to URLs.
+      const intel = require('./intelligence_layer');
+      let url = a.url;
+      if (!url && a.site) {
+        const known = {
+          'elevenlabs': 'https://elevenlabs.io/app/sign-in',
+          'uber': 'https://m.uber.com',
+          'doordash': 'https://www.doordash.com',
+          'opentable': 'https://www.opentable.com',
+        };
+        url = known[a.site.toLowerCase()] || `https://www.google.com/search?q=${encodeURIComponent(a.site)}`;
+      }
+      if (!url) return { ok: false, code: 'no_url', note: 'No URL or site provided.' };
+      // Use a minimal context to just navigate and confirm the page loaded
+      const result = await intel.runIntelligent({ log: () => {}, screenshot: null }, {
+        startUrl: url,
+        task: `Navigate to ${url} and confirm the page loaded.`,
+        maxSteps: 3,
+      }).catch(e => ({ ok: false, code: 'nav_failed', note: e.message }));
+      return { ok: true, url, note: `Opened ${url} in the agent browser.` };
+    },
+    schema: { type: 'object', properties: {
+      url: { type: 'string', description: 'Full URL to open' },
+      site: { type: 'string', description: 'Common site name (e.g. elevenlabs, uber) — resolved to URL automatically' },
+    } },
+    describe: 'Open a URL or well-known site in the agent browser. Use when the user says "open X". Returns the URL opened.',
+  },
+  {
     name: 'dining_links', risk: 'low',
     fn: async ({ slug, city, date, dateTime, seats }) => ({
       opentable: dining.opentableLink({ slug, dateTime, covers: seats }),
@@ -438,6 +468,7 @@ const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. Yo
 - Multi-phase honesty (rides, logins, any staged browser task): these complete in phases, and your words must match the exact phase. NEVER say "booked", "done", "confirmed", or "ordered" until the tool returns a confirmation reference / order ID. The honest phase labels are: "staged" (approval card created, nothing attempted yet) → "approved, starting" (user tapped approve, browser flow launching) → "verification code sent" (Uber texted a code; you are waiting for the user to relay it — say this explicitly and ask for the code) → "logged in, getting fare" → "fare is $X — approve to confirm" (never invent a fare; only quote what the tool returned) → "booked" (only with a real confirmation reference). If a phase fails, say exactly which phase failed and why — never paper over a failure with vague success words. After the user approves a card, ALWAYS send a follow-up message describing what happened: what phase you're in, what's next, and what you need from them. Silence after approval is a failure — the user must never be left guessing.
 - Error transparency: when a tool returns ok:false, ALWAYS include the exact code and note from the tool output in your reply. Never hide the technical error behind a generic "didn't go through" message. The user needs to see what actually failed.
 - If a tool result contains a userMessage field, quote it VERBATIM in your reply. Do not rephrase, summarize, or omit it.
+- NEVER say "Done" unless you actually called a tool and it returned success. If the user says "open X", you MUST call the browser_open tool — do not just say "Done" without opening anything. A "Done" without a tool call is a lie.
 - Memory + groups: remember durable facts, recall them, reply as @ring in group chats, run polls to plan with friends and lock a time, daily briefs, draft messages (never send without approval), learn routines, smart nudges.
 - Health + notes: log health metrics (steps, sleep, water, weight, workouts, mood, energy), show today's metrics, per-metric trends and multi-day summaries; save, list, search, read, and delete notes.
 Deliverables: when the user asks for something they will keep or share — an itinerary, a comparison, a plan, a document, a write-up — put the deliverable itself in its own surface: wrap it in a fenced code block whose info string starts with doc: followed by the title (opening fence line "doc:Trip Itinerary", then the full markdown content, then a closing fence). Keep 1-2 sentences of chat text outside the block; the block is the document. Never dump a long document as plain chat text when this surface fits.
