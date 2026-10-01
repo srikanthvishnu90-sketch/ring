@@ -110,10 +110,24 @@ What is the next action? Respond with JSON:
   const data = await res.json();
   const text = data.choices[0].message.content || '';
   
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error(`No JSON in response: ${text.slice(0, 200)}`);
+  // Extract JSON: handle markdown code blocks, then bare JSON
+  let jsonStr = null;
+  const mdMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+  if (mdMatch) {
+    jsonStr = mdMatch[1].trim();
+  } else {
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) jsonStr = jsonMatch[0];
+  }
   
-  return JSON.parse(jsonMatch[0]);
+  if (!jsonStr) throw new Error(`No JSON in response: ${text.slice(0, 200)}`);
+  
+  try {
+    return JSON.parse(jsonStr);
+  } catch (e) {
+    // Try to fix truncated JSON by finding the last complete object
+    throw new Error(`Invalid JSON: ${e.message}. Got: ${jsonStr.slice(0, 200)}`);
+  }
 }
 
 // ── Execution ─────────────────────────────────────────────────
