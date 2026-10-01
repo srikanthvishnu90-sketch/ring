@@ -888,6 +888,13 @@ async function processToolCalls({ toolCalls, tools, userId, toolsUsed, allResult
           const need = out.prompt || out.note || `waiting (phase ${out.phase})`;
           resultLine += `\n[SYSTEM DIRECTIVE: The task is NOT done — the tool returned phase '${out.phase}' and is PAUSED. You MUST NOT say "done", "completed", "cancelled", "booked", "confirmed", or any synonym. Your reply MUST tell the user exactly this: ${need}]`;
         }
+        // Failure transparency: when a tool fails, the user MUST see the exact error.
+        // The model cannot summarize or hide it behind vague language.
+        if (out && out.ok === false) {
+          const code = out.code || 'unknown';
+          const note = out.note || 'No details provided.';
+          resultLine += `\n[SYSTEM DIRECTIVE: The tool FAILED with code '${code}'. You MUST include the exact error in your reply. Quote this VERBATIM: "Error [${code}]: ${note}" Do NOT say "didn't go through" or any vague summary — show the actual error.]`;
+        }
         results.push(resultLine);
         logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
       } catch (e) {
