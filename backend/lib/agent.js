@@ -137,8 +137,9 @@ const _RAW_TOOLS = [
   {
     name: 'browser_open', risk: 'low',
     fn: async (a) => {
-      // Open an arbitrary URL in the agent browser. Resolves common site names to URLs.
-      const intel = require('./intelligence_layer');
+      // Open an arbitrary URL. Currently: returns the URL for the user to open,
+      // as Ring does not yet have a visible general-purpose browser.
+      // Resolves common site names to URLs so "open ElevenLabs" works without exact links.
       let url = a.url;
       if (!url && a.site) {
         const known = {
@@ -150,19 +151,20 @@ const _RAW_TOOLS = [
         url = known[a.site.toLowerCase()] || `https://www.google.com/search?q=${encodeURIComponent(a.site)}`;
       }
       if (!url) return { ok: false, code: 'no_url', note: 'No URL or site provided.' };
-      // Use a minimal context to just navigate and confirm the page loaded
-      const result = await intel.runIntelligent({ log: () => {}, screenshot: null, threadId: a.threadId, userId: a.userId }, {
-        startUrl: url,
-        task: `Navigate to ${url} and confirm the page loaded.`,
-        maxSteps: 3,
-      }).catch(e => ({ ok: false, code: 'nav_failed', note: e.message }));
-      return { ok: true, url, note: `Opened ${url} in the agent browser.` };
+      // HONEST: Ring cannot yet open a visible browser for general browsing.
+      // Return the URL so the agent can share it with the user.
+      return {
+        ok: true,
+        url,
+        note: `I don't have a visible browser to open ${url} in yet. Here's the link for you to open: ${url}`,
+        userMessage: `I can't open a browser window directly yet. You can open ElevenLabs here: ${url}`,
+      };
     },
     schema: { type: 'object', properties: {
       url: { type: 'string', description: 'Full URL to open' },
       site: { type: 'string', description: 'Common site name (e.g. elevenlabs, uber) — resolved to URL automatically' },
     } },
-    describe: 'Open a URL or well-known site in the agent browser. Use when the user says "open X". Returns the URL opened.',
+    describe: 'Get the URL for a site. Use when the user says "open X". Returns the URL — Ring cannot yet open a visible browser, so share the link with the user.',
   },
   {
     name: 'dining_links', risk: 'low',
