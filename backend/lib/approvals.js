@@ -108,7 +108,7 @@ function buildRec({ tool, args, userId, threadId, idempotencyKey }) {
   };
 }
 
-async function create({ toolName, args, userId, threadId, idempotencyKey }) {
+async function create({ toolName, args, userId, threadId, idempotencyKey }, opts = {}) {
   const tool = agentTools().find((t) => t.name === toolName);
   if (!tool) throw new Error('unknown tool: ' + toolName);
   const uid = userId || 'local';
@@ -118,6 +118,16 @@ async function create({ toolName, args, userId, threadId, idempotencyKey }) {
   if (uid === 'local') {
     throw Object.assign(new Error('approval creation requires authentication'), { code: 'AUTH_REQUIRED' });
   }
+  // SAFETY: for subscription_cancel, cancel_approved + sessionId may ONLY be
+  // set by the server when chaining the second (terms) approval card after
+  // phase 1. The agent/LLM must never smuggle them into the first card —
+  // approving "sign in and inspect" must never silently arm cancellation.
+  const safeArgs = { ...(args || {}) };
+  if (toolName === 'subscription_cancel' && !opts.serverChained) {
+    delete safeArgs.cancel_approved;
+    delete safeArgs.sessionId;
+  }
+  const argsForRec = safeArgs;
 
   if (ENABLED) {
     if (idempotencyKey) {
@@ -126,9 +136,9 @@ async function create({ toolName, args, userId, threadId, idempotencyKey }) {
       );
       if (rows && rows.length) return toRec(rows[0]);
     }
-    const dup = await findDuplicate(tool.name, args, uid, threadId || null);
+    const dup = await findDuplicate(tool.name, argsForRec, uid, threadId || null);
     if (dup) return toRec(dup);
-    const rec = buildRec({ tool, args, userId: uid, threadId, idempotencyKey });
+    const rec = buildRec({ tool, args: argsForRec, userId: uid, threadId, idempotencyKey });
     await sbRequest(`/${TBL}`, { method: 'POST', body: JSON.stringify(toRow(rec)) });
     return rec;
   }
@@ -143,11 +153,11 @@ async function create({ toolName, args, userId, threadId, idempotencyKey }) {
   const cutoff = Date.now() - DEDUP_WINDOW_MS;
   const dup = [...mem.values()].find(
     (r) => r.status === 'pending' && r.tool === tool.name && r.userId === uid
-      && (r.threadId || null) === (threadId || null) && sameArgs(r.args, args)
+      && (r.threadId || null) === (threadId || null) && sameArgs(r.args, argsForRec)
       && new Date(r.createdAt).getTime() > cutoff
   );
   if (dup) return dup;
-  const rec = { ...buildRec({ tool, args, userId: uid, threadId, idempotencyKey }), id: memId() };
+  const rec = { ...buildRec({ tool, args: argsForRec, userId: uid, threadId, idempotencyKey }), id: memId() };
   mem.set(rec.id, rec);
   return rec;
 }
@@ -181,7 +191,14 @@ async function executeTool(rec, tools) {
     // Multi-phase continuation: if the tool returns need_approval with a sessionId,
     // automatically continue with the approval flag. This handles the case where
     // the tool does phase 1 (search/setup) and needs approval to do phase 2 (confirm).
-    if (out && out.phase === 'need_approval' && out.sessionId) {
+    //
+    // EXCEPTION — subscription_cancel NEVER auto-continues. Its first card only
+    // authorizes sign-in/inspection; the exact plan/price/terms are unknown until
+    // phase 1 runs. Auto-continuing would silently turn "inspect" approval into
+    // cancellation. Instead the need_approval result is returned as-is and
+    // resolve() chains a SECOND, separate approval card carrying the exact
+    // terms — only approving THAT card may set cancel_approved=true.
+    if (out && out.phase === 'need_approval' && out.sessionId && rec.tool !== 'subscription_cancel') {
       const continueArgs = { ...rec.args, sessionId: out.sessionId };
       // Generic flag every multi-phase tool understands (generic_task checks it).
       continueArgs.approved = true;
@@ -189,7 +206,9 @@ async function executeTool(rec, tools) {
       if (rec.tool === 'dining_book') continueArgs.booking_approved = true;
       else if (rec.tool === 'browser_run') continueArgs.booking_approved = true;
       else if (rec.tool === 'ride_book') continueArgs.fare_approved = true;
-      else if (rec.tool === 'subscription_cancel') continueArgs.cancel_approved = true;
+      // NOTE: subscription_cancel intentionally has no auto-continue branch —
+      // its second phase requires a separate terms approval card (see the
+      // need_approval exception above and maybeChainSubscriptionCancel).
       // outcomes2 batch (features 51–75)
       else if (['flight_book', 'hotel_book', 'car_rental_book', 'ticket_book', 'appointment_book', 'service_book', 'parking_book'].includes(rec.tool)) continueArgs.booking_approved = true;
       else if (['food_order', 'grocery_order', 'product_order', 'gift_order'].includes(rec.tool)) continueArgs.order_approved = true;
@@ -207,6 +226,33 @@ async function executeTool(rec, tools) {
   } catch (e) {
     return { error: e.message, code: e.code };
   }
+}
+
+// Two-phase honesty for subscription_cancel: after the first ("sign in and
+// inspect") card is approved and phase 1 returns need_approval with the exact
+// subscription terms, chain a SECOND, separate approval card carrying those
+// terms plus the live sessionId. Only approving THAT card may run phase 2
+// (cancel_approved=true). Returns a client-renderable card stub, or null.
+async function maybeChainSubscriptionCancel(rec) {
+  const res = rec && rec.result;
+  if (!rec || rec.tool !== 'subscription_cancel') return null;
+  if (!res || res.phase !== 'need_approval' || !res.sessionId) return null;
+  if (rec.args && rec.args.cancel_approved) return null; // already the 2nd card
+  const terms = (res.summary && typeof res.summary === 'object') ? res.summary : {};
+  const second = await create({
+    toolName: 'subscription_cancel',
+    args: {
+      merchant: rec.args.merchant,
+      email: rec.args.email,
+      sessionId: res.sessionId,
+      cancel_approved: true,
+      terms,
+      termsNote: res.note || null,
+    },
+    userId: rec.userId,
+    threadId: rec.threadId,
+  }, { serverChained: true });
+  return { id: second.id, name: second.tool, args: second.args, describe: second.describe };
 }
 
 // Decide which toolset may run for this record, enforcing the ownership
@@ -255,6 +301,11 @@ async function resolve(id, decision, opts) {
     const rec = toRec(claimed[0]);
     if (rec.status === 'approved') {
       rec.result = await executeTool(rec, tools);
+      // Chain the second (terms) approval card for subscription_cancel.
+      try {
+        const followup = await maybeChainSubscriptionCancel(rec);
+        if (followup) rec.followupApproval = followup;
+      } catch (e) { /* chaining must never break the resolve */ }
       await sbRequest(`/${TBL}?id=eq.${eq(id)}`, {
         method: 'PATCH',
         body: JSON.stringify({ result: rec.result }),
@@ -286,6 +337,10 @@ async function resolve(id, decision, opts) {
   rec.resolvedAt = now;
   if (rec.status === 'approved') {
     rec.result = await executeTool(rec, tools);
+    try {
+      const followup = await maybeChainSubscriptionCancel(rec);
+      if (followup) rec.followupApproval = followup;
+    } catch (e) { /* chaining must never break the resolve */ }
     logToolRun({
       userId: rec.userId, tool: rec.tool, args: rec.args, result: rec.result,
       approvalId: rec.id, status: rec.result && rec.result.error ? 'failed' : 'executed',

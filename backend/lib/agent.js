@@ -223,10 +223,11 @@ const _RAW_TOOLS = [
   {
     name: 'subscription_cancel', risk: 'high',
     fn: async (a) => {
-      // Real subscription cancellation via the browser. Two-phase, chained
-      // automatically after the approval card is approved: phase 1 signs in
-      // and stops at the billing page, returning need_approval with the exact
-      // plan/price/policy; phase 2 clicks cancel, confirms, and verifies.
+      // Real subscription cancellation via the browser. Two separate approvals:
+      // card 1 authorizes sign-in/inspection; phase 1 then stops at the
+      // billing page and returns need_approval with the exact plan/price/
+      // policy, and the server chains card 2 with those terms. Only approving
+      // card 2 runs phase 2, which clicks cancel, confirms, and verifies.
       // Returns done with cancelRef on provider-confirmed cancellation.
       const driver = _pickDriver();
       const job = { site: 'subscription', kind: 'cancel-subscription', userId: a.userId,

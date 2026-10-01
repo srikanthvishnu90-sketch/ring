@@ -4,7 +4,8 @@
 // Two-phase flow (mirrors dining_book):
 //   Phase 1 (no cancel_approved): sign in, land on the billing page, and STOP —
 //     returns need_approval with the exact plan/price/policy. approvals.js
-//     auto-continues to phase 2 once the approval card is approved.
+//     then chains a SECOND approval card carrying those exact terms; only
+//     approving that card runs phase 2. There is no auto-continuation.
 //   Phase 2 (cancel_approved + sessionId): click cancel, confirm, verify, and
 //     return done with cancelRef. A done without cancelRef is rejected by the
 //     driver's no_proof gate — never claim cancelled without provider proof.
@@ -398,7 +399,8 @@ async function cancelSubscription(ctx, job) {
   }
 
   // Phase 1 ends at the billing page: report the exact terms for the record.
-  // approvals.js auto-continues to phase 2 (cancel_approved) after approval.
+  // approvals.js chains a SECOND approval card with these terms after the
+  // first card is approved — only approving that card runs phase 2.
   return loginAndFindBilling(ctx, username, password);
 }
 

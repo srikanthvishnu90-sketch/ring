@@ -1101,7 +1101,18 @@ function describeApproval(m){
   if(m.tool==='calendar_create')return `Add to calendar: ${a.summary||'Event'} — ${fmtD(a.start)}, ${fmtT(a.start)}${a.end?'–'+fmtT(a.end):''}`;
   if(m.tool==='calendar_update')return `Change calendar event${a.summary?`: ${a.summary}`:''}${a.start?` → ${fmtD(a.start)}, ${fmtT(a.start)}`:''}`;
   if(m.tool==='calendar_delete')return `Delete calendar event${a.summary?`: ${a.summary}`:''}`;
-  if(m.tool==='subscription_cancel')return `Sign in to ${a.merchant||'the merchant'} (${a.email||'your account'}) and inspect the subscription — this only authorizes starting the sign-in flow. The actual cancellation needs a separate approval after the exact plan, price, and terms are shown.`;
+  if(m.tool==='subscription_cancel'){
+    const a2=m.args||{};
+    // Second card (server-chained after phase 1): show the EXACT terms
+    // captured from the billing page. Approving this card — and only this
+    // card — runs the actual cancellation.
+    if(a2.cancel_approved&&a2.terms){
+      const t=a2.terms;
+      const pw=t.tempPassword&&t.tempPassword!=='[redacted]'?t.tempPassword:null;
+      return `CANCEL ${t.merchant||a2.merchant||'the'} subscription (${t.account||a2.email||'your account'}) — ${t.plan||'plan unknown'} at ${t.price||'price unknown'}. Approving completes the cancellation now; declining keeps the subscription as-is.${pw?` Temporary sign-in password (keep it in case you need to log back in): ${pw}`:''}`;
+    }
+    return `Sign in to ${a2.merchant||'the merchant'} (${a2.email||'your account'}) and inspect the subscription — this only authorizes starting the sign-in flow. The actual cancellation needs a separate approval after the exact plan, price, and terms are shown.`;
+  }
   return m.describe||m.tool;
 }
 // What actually happened, from the tool that really executed — never a
@@ -1625,6 +1636,11 @@ async function approve(i){
       a.outcomeText='Not completed';
       curMsgs().push({role:'agent',text:"That didn't go through — nothing was sent, booked, or changed. Want me to try again?"});
       toast('Failed');
+    }
+    // Server-chained second approval (e.g. subscription_cancel terms card):
+    // render it as a new pending card so the user can approve/decline it.
+    if(rec&&rec.followupApproval){
+      try{curMsgs().push(approvalFromTool(rec.followupApproval));}catch(e){}
     }
     saveState();touchChat();renderChat();scrollChat();
     return;
