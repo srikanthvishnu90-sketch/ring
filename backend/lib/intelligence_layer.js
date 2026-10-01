@@ -146,7 +146,13 @@ What is the next action? Respond with JSON:
       jsonStr = mdOpen[1].trim();
     } else {
       const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (jsonMatch) jsonStr = jsonMatch[0];
+      if (jsonMatch) {
+        jsonStr = jsonMatch[0];
+      } else {
+        // Bare truncated JSON (no closing brace). Extract from first { to end.
+        const bareOpen = text.match(/\{[\s\S]*$/);
+        if (bareOpen) jsonStr = bareOpen[0].trim();
+      }
     }
   }
   
