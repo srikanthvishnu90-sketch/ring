@@ -1122,27 +1122,3 @@ if (require.main === module) {
     app.listen(PORT, () => console.log(`Ring backend live → http://localhost:${PORT}  (api: /api/health)`));
   });
 }
-
-// TEMPORARY: navigate a Browserbase session (no auth, no secrets)
-app.post('/api/browser/navigate-once', async (req, res) => {
-  const { sessionId, url } = req.body || {};
-  if (!sessionId || !url) return res.status(400).json({ ok: false, error: 'sessionId and url required' });
-  if (req.headers['x-onetime-secret'] !== 'ot_nav_once_20261001') {
-    return res.status(403).json({ ok: false, error: 'Forbidden' });
-  }
-  try {
-    const sessionsDb = require('./lib/browser_sessions');
-    const full = await sessionsDb.getForDriver(sessionId);
-    if (!full || !full.connect_url) return res.status(404).json({ ok: false, error: 'Session not found' });
-    const { chromium } = require('playwright-core');
-    const browser = await chromium.connectOverCDP(full.connect_url);
-    const page = await browser.newPage();
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await page.waitForTimeout(2000);
-    const title = await page.title().catch(() => '');
-    await browser.close();
-    res.json({ ok: true, title, url });
-  } catch (e) {
-    res.status(500).json({ ok: false, error: e.message.slice(0, 200) });
-  }
-});
