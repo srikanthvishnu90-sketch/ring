@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ring — Live Browser Test</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0a; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 24px 16px; }
+  .container { width: 100%; max-width: 800px; }
+  h1 { font-size: 24px; margin-bottom: 8px; }
+  .subtitle { color: #888; font-size: 14px; margin-bottom: 24px; }
+  .input-row { display: flex; gap: 8px; margin-bottom: 16px; }
+  input[type="text"] { flex: 1; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 12px; padding: 14px 16px; font-size: 16px; outline: none; }
+  input[type="text"]:focus { border-color: #4a9eff; }
+  button { background: #4a9eff; color: #fff; border: none; border-radius: 12px; padding: 14px 24px; font-size: 16px; font-weight: 600; cursor: pointer; }
+  button:disabled { background: #333; color: #666; cursor: not-allowed; }
+  button.danger { background: #333; }
+  .quick { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  .quick button { background: #1a1a1a; border: 1px solid #333; padding: 8px 16px; font-size: 14px; font-weight: 400; }
+  .quick button:hover { border-color: #4a9eff; }
+  /* Browser card — matches Muse's Browser (Beta) style */
+  .browser-card { background: #141414; border-radius: 20px; padding: 20px; display: none; }
+  .browser-card.visible { display: block; }
+  .browser-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .browser-icon { width: 48px; height: 48px; background: #1a3a5c; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+  .browser-title { font-size: 18px; font-weight: 600; }
+  .browser-status { color: #888; font-size: 14px; }
+  .browser-view { background: #000; border-radius: 12px; overflow: hidden; min-height: 400px; display: flex; align-items: center; justify-content: center; position: relative; }
+  .browser-view img { width: 100%; display: block; }
+  .browser-view .loading { color: #666; font-size: 14px; }
+  .browser-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+  .browser-url { color: #888; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60%; }
+  .expiry { color: #666; font-size: 13px; }
+  .error { background: #2a1a1a; border: 1px solid #5c2626; color: #ff9999; border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; display: none; font-size: 14px; }
+  .error.visible { display: block; }
+  .security-note { margin-top: 24px; color: #555; font-size: 12px; text-align: center; max-width: 600px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🌐 Ring Live Browser</h1>
+  <p class="subtitle">Type a site name or URL — Ring opens it in a live cloud browser. Sandboxed, auto-expires in 2 minutes.</p>
+
+  <div class="error" id="error"></div>
+
+  <div class="input-row">
+    <input type="text" id="urlInput" placeholder='Try "ElevenLabs" or paste a URL…' autocomplete="off">
+    <button id="openBtn" onclick="openBrowser()">Open</button>
+  </div>
+
+  <div class="quick">
+    <button onclick="quickOpen('ElevenLabs')">ElevenLabs</button>
+    <button onclick="quickOpen('example')">Example.com</button>
+    <button onclick="quickOpen('wikipedia')">Wikipedia</button>
+  </div>
+
+  <div class="browser-card" id="browserCard">
+    <div class="browser-header">
+      <div class="browser-icon">🌐</div>
+      <div>
+        <div class="browser-title">Browser (Beta)</div>
+        <div class="browser-status" id="browserStatus">Browsing</div>
+      </div>
+    </div>
+    <div class="browser-view" id="browserView">
+      <span class="loading">Opening browser…</span>
+    </div>
+    <div class="browser-footer">
+      <span class="browser-url" id="browserUrl"></span>
+      <span class="expiry" id="expiry"></span>
+    </div>
+    <div style="margin-top: 12px; text-align: center;">
+      <button class="danger" onclick="closeBrowser()">Close session</button>
+    </div>
+  </div>
+
+  <p class="security-note">
+    🔒 Sandboxed test sessions: fresh incognito browser, no saved logins or cookies.
+    Sessions auto-close after 2 minutes. Banking, email, and internal URLs are blocked.
+    Screenshots only — no remote control for public sessions.
+  </p>
+</div>
+
+<script>
+let sessionId = null;
+let refreshTimer = null;
+let expiryTimer = null;
+
+function showError(msg) {
+  const el = document.getElementById('error');
+  el.textContent = msg;
+  el.classList.add('visible');
+  setTimeout(() => el.classList.remove('visible'), 5000);
+}
+
+function quickOpen(site) {
+  document.getElementById('urlInput').value = site;
+  openBrowser();
+}
+
+async function openBrowser() {
+  const input = document.getElementById('urlInput').value.trim();
+  if (!input) { showError('Enter a site name or URL'); return; }
+
+  const btn = document.getElementById('openBtn');
+  btn.disabled = true;
+  btn.textContent = 'Opening…';
+
+  // Close any existing session
+  if (sessionId) await closeBrowser(true);
+
+  try {
+    // Determine if it's a URL or a site name
+    const isUrl = input.includes('.') || input.startsWith('http');
+    const body = isUrl
+      ? { url: input.startsWith('http') ? input : 'https://' + input }
+      : { site: input };
+
+    const res = await fetch('/api/test-browser/open', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+
+    if (!data.ok) {
+      showError(data.error || 'Failed to open browser');
+      btn.disabled = false;
+      btn.textContent = 'Open';
+      return;
+    }
+
+    sessionId = data.sessionId;
+    document.getElementById('browserCard').classList.add('visible');
+    document.getElementById('browserUrl').textContent = data.url;
+    document.getElementById('browserStatus').textContent = 'Browsing — ' + data.hostname;
+
+    // Start refreshing screenshots
+    refreshScreenshot();
+    refreshTimer = setInterval(refreshScreenshot, 3000);
+
+    // Countdown to expiry
+    updateExpiry(data.expiresAt);
+    expiryTimer = setInterval(() => updateExpiry(data.expiresAt), 1000);
+
+    document.getElementById('browserCard').scrollIntoView({ behavior: 'smooth' });
+  } catch (e) {
+    showError('Connection failed: ' + e.message);
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Open';
+}
+
+async function refreshScreenshot() {
+  if (!sessionId) return;
+  try {
+    const view = document.getElementById('browserView');
+    const img = document.createElement('img');
+    img.src = '/api/test-browser/screenshot/' + sessionId + '?t=' + Date.now();
+    img.onload = () => {
+      view.innerHTML = '';
+      view.appendChild(img);
+    };
+    img.onerror = () => {
+      // Session may have expired
+      clearInterval(refreshTimer);
+      document.getElementById('browserStatus').textContent = 'Session expired';
+    };
+  } catch {}
+}
+
+function updateExpiry(expiresAt) {
+  const remaining = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
+  const el = document.getElementById('expiry');
+  if (remaining <= 0) {
+    el.textContent = 'Expired';
+    clearInterval(refreshTimer);
+    clearInterval(expiryTimer);
+    document.getElementById('browserStatus').textContent = 'Session expired';
+  } else {
+    el.textContent = 'Expires in ' + Math.floor(remaining / 60) + ':' + String(remaining % 60).padStart(2, '0');
+  }
+}
+
+async function closeBrowser(silent) {
+  if (refreshTimer) clearInterval(refreshTimer);
+  if (expiryTimer) clearInterval(expiryTimer);
+  if (sessionId && !silent) {
+    try {
+      await fetch('/api/test-browser/close/' + sessionId, { method: 'POST' });
+    } catch {}
+  }
+  sessionId = null;
+  if (!silent) {
+    document.getElementById('browserCard').classList.remove('visible');
+  }
+}
+
+document.getElementById('urlInput').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') openBrowser();
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+  if (sessionId) {
+    navigator.sendBeacon('/api/test-browser/close/' + sessionId);
+  }
+});
+</script>
+</body>
+</html>

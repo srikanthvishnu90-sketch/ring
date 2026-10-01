@@ -999,6 +999,123 @@ app.post('/api/voice/stream', async (req, res) => {
 });
 
 module.exports = app;
+
+// ─── Public browser test API ────────────────────────────────────────
+// Lets anyone test Ring's live browser. Heavily sandboxed:
+// - Fresh incognito context (no auth state, no cookies)
+// - 2-minute auto-expiry
+// - 5 sessions/hour per IP
+// - Blocked: private IPs, localhost, banking/email domains
+// - Screenshots only — NO takeover URL, NO session internals exposed
+
+app.post('/api/test-browser/open', async (req, res) => {
+  try {
+    const { url, site } = req.body || {};
+    let targetUrl = url;
+    if (!targetUrl && site) {
+      const known = {
+        'elevenlabs': 'https://elevenlabs.io/app/sign-in',
+        'uber': 'https://m.uber.com',
+        'doordash': 'https://www.doordash.com',
+        'opentable': 'https://www.opentable.com',
+        'example': 'https://example.com',
+      };
+      targetUrl = known[site.toLowerCase()] || `https://www.google.com/search?q=${encodeURIComponent(site)}`;
+    }
+    if (!targetUrl) return res.status(400).json({ ok: false, error: 'URL or site required' });
+
+    const clientIp = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || 'unknown';
+    const secure = require('./lib/browser_open_secure');
+    const result = await secure.createSecureSession({
+      url: targetUrl,
+      userId: null,
+      clientIp,
+      isPublic: true, // sandboxed: no liveUrl, 2-min expiry, IP rate limit
+    });
+
+    if (!result.ok) {
+      return res.status(400).json({ ok: false, code: result.code, error: result.note });
+    }
+
+    // Return ONLY safe fields — never bbSessionId, never liveUrl
+    res.json({
+      ok: true,
+      sessionId: result.sessionId,
+      url: result.url,
+      hostname: result.hostname,
+      expiresAt: result.expiresAt,
+    });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: 'Internal error' });
+  }
+});
+
+app.get('/api/test-browser/screenshot/:sessionId', async (req, res) => {
+  try {
+    const secure = require('./lib/browser_open_secure');
+    const session = await secure.getSession(req.params.sessionId);
+    // Only allow public sessions on this endpoint
+    if (!session || !session.isPublic) {
+      return res.status(404).json({ ok: false, error: 'Session not found or expired' });
+    }
+    const buf = await session.page.screenshot({ type: 'jpeg', quality: 60 });
+    res.set('Content-Type', 'image/jpeg');
+    res.set('Cache-Control', 'no-store');
+    res.send(buf);
+  } catch (e) {
+    res.status(500).json({ ok: false, error: 'Screenshot failed' });
+  }
+});
+
+app.post('/api/test-browser/close/:sessionId', async (req, res) => {
+  try {
+    const secure = require('./lib/browser_open_secure');
+    const session = await secure.getSession(req.params.sessionId);
+    if (session && session.isPublic) {
+      await secure.closeSession(req.params.sessionId);
+    }
+    res.json({ ok: true });
+  } catch (e) {
+    res.json({ ok: true }); // idempotent
+  }
+});
+
+// ─── Debug endpoints (Muse verification) ────────────────────────────
+// Protected by DEBUG_TOKEN env var. Lets Muse (and Vishnu) inspect active
+// browser sessions and screenshots without exposing them publicly.
+// NEVER expose session URLs or Browserbase IDs here.
+
+function checkDebugToken(req, res, next) {
+  const token = process.env.DEBUG_TOKEN;
+  if (!token) return res.status(503).json({ error: 'Debug endpoints not configured' });
+  const provided = req.headers['x-debug-token'];
+  if (provided !== token) return res.status(403).json({ error: 'Forbidden' });
+  next();
+}
+
+app.get('/api/debug/browser-sessions', checkDebugToken, (req, res) => {
+  try {
+    const secure = require('./lib/browser_open_secure');
+    res.json({ ok: true, sessions: secure.listSessions() });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+app.get('/api/debug/browser-screenshot/:sessionId', checkDebugToken, async (req, res) => {
+  try {
+    const secure = require('./lib/browser_open_secure');
+    const session = await secure.getSession(req.params.sessionId);
+    if (!session) return res.status(404).json({ ok: false, error: 'Session not found or expired' });
+    const buf = await session.page.screenshot({ type: 'jpeg', quality: 60 });
+    res.set('Content-Type', 'image/jpeg');
+    res.set('Cache-Control', 'no-store');
+    res.send(buf);
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
 if (require.main === module) {
   const PORT = env('PORT', '3000');
   googleReady().then(() => {

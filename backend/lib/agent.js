@@ -138,8 +138,8 @@ const _RAW_TOOLS = [
     name: 'browser_open', risk: 'low',
     fn: async (a) => {
       // Open a URL in a REAL visible browser session (like Muse's Browser Beta).
-      // Creates a Browserbase session, navigates to the URL, broadcasts the live
-      // view via pushFrame, and keeps the session alive for user takeover.
+      // Uses the secure session manager: URL validation, fresh incognito context,
+      // auto-expiry, rate limiting. Broadcasts the live view via pushFrame.
       // Resolves common site names so "open ElevenLabs" works without exact links.
       let url = a.url;
       if (!url && a.site) {
@@ -154,44 +154,43 @@ const _RAW_TOOLS = [
       if (!url) return { ok: false, code: 'no_url', note: 'No URL or site provided.' };
 
       const threadId = a.threadId;
+      const userId = a.userId;
       const { pushFrame, pushStatus } = require('./live_view');
+      const secure = require('./browser_open_secure');
 
       try {
         await pushStatus({ threadId, status: 'starting', detail: `Opening ${url}` });
 
-        // Create a real Browserbase session
-        const driver = _pickDriver();
-        if (!driver.keysPresent || !driver.keysPresent()) {
-          return { ok: false, code: 'browser_not_configured', note: 'Browser automation is not configured.' };
+        // Create a secure, sandboxed session (validates URL, fresh context, auto-expiry)
+        const result = await secure.createSecureSession({
+          url,
+          userId,
+          clientIp: 'agent', // agent-initiated, not public
+          isPublic: false,   // agent sessions get takeover URL
+        });
+
+        if (!result.ok) {
+          await pushStatus({ threadId, status: 'failed', detail: result.note }).catch(() => {});
+          return result;
         }
 
-        const session = await driver.createSession();
-        const bbSessionId = session.id;
-
-        // Connect via Playwright CDP and navigate
-        const { chromium } = require('playwright-core');
-        const browser = await chromium.connectOverCDP(session.connectUrl);
-        const context = browser.contexts()[0] || await browser.newContext();
-        const page = context.pages()[0] || await context.newPage();
-
-        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
-        await page.waitForTimeout(2000);
+        // Get the page for screenshot
+        const session = await secure.getSession(result.sessionId);
+        if (!session) {
+          return { ok: false, code: 'session_lost', note: 'Session expired immediately.' };
+        }
 
         // Broadcast the live frame so the user sees the browser
-        await pushFrame({ threadId, page, label: `Opened ${new URL(url).hostname}`, step: 1, bbSessionId });
-        await pushStatus({ threadId, status: 'browsing', detail: `Now showing ${url}` });
-
-        // Keep session alive — do NOT close. User can take over via liveUrl.
-        // Store session for later use (don't stop it)
-        const liveUrl = `https://www.browserbase.com/sessions/${bbSessionId}`;
+        await pushFrame({ threadId, page: session.page, label: `Opened ${result.hostname}`, step: 1, bbSessionId: result.bbSessionId });
+        await pushStatus({ threadId, status: 'browsing', detail: `Now showing ${result.url}` });
 
         return {
           ok: true,
-          url,
-          sessionId: bbSessionId,
-          liveUrl,
-          note: `Opened ${url} in a live browser session.`,
-          userMessage: `I've opened ${new URL(url).hostname} in the browser below. You can watch live and click "Take Over" to interact with it yourself.`,
+          url: result.url,
+          sessionId: result.sessionId,
+          liveUrl: result.liveUrl,
+          note: `Opened ${result.url} in a live browser session.`,
+          userMessage: `I've opened ${result.hostname} in the browser below. You can watch live and click "Take Over" to interact with it yourself.`,
         };
       } catch (e) {
         await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
