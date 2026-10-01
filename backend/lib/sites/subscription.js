@@ -89,10 +89,14 @@ async function cancelSubscription(ctx, job) {
     
     if (!inspectResult.ok) {
       await ctx.screenshot && await ctx.screenshot(`${merchant}-agentic-fail`).catch(() => {});
+      const code = inspectResult.code || 'agentic_failed';
+      const detail = inspectResult.note || 'No details.';
       return {
         ok: false,
-        code: inspectResult.code || 'agentic_failed',
-        note: `Couldn't reach ${merchant} subscription details. ${inspectResult.note || ''} Nothing was cancelled.`.slice(0, 300),
+        code,
+        note: `FAILED [${code}]: ${detail} Nothing was cancelled.`.slice(0, 300),
+        // Direct user-facing message — the agent MUST show this verbatim
+        userMessage: `Cancellation failed. Error [${code}]: ${detail}`,
       };
     }
     
