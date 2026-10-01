@@ -151,7 +151,7 @@ async function createSecureSession({ url, userId, clientIp, isPublic }) {
     return { ok: false, code: 'browser_failed', note: `Browser connection failed: ${e.message}`.slice(0, 200) };
   }
 
-  // 5. Register with auto-expiry
+  // 5. Register with auto-expiry (in-memory for quick access)
   const ttl = isPublic ? PUBLIC_TTL_MS : AUTH_TTL_MS;
   const sessionId = `sess_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
   sessions.set(sessionId, {
@@ -166,6 +166,23 @@ async function createSecureSession({ url, userId, clientIp, isPublic }) {
     url: v.url,
     hostname: v.hostname,
   });
+
+  // 6. Persist to Supabase for cross-invocation resume (serverless-safe)
+  // This lets Ring reconnect to the session after user takeover.
+  if (!isPublic && userId) {
+    try {
+      const sessionsDb = require('./browser_sessions');
+      await sessionsDb.save({
+        user_id: userId,
+        site: v.hostname,
+        bb_session_id: bbSession.id,
+        connect_url: bbSession.connectUrl,
+        purpose: `browser_open:${v.url}`,
+      });
+    } catch (e) {
+      console.log('[browser_open_secure] Supabase persist failed (non-fatal):', e.message);
+    }
+  }
 
   return {
     ok: true,

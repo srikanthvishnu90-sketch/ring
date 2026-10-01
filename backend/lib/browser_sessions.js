@@ -107,4 +107,10 @@ async function listLive(userId) {
   return (await sbRequest(q)) || [];
 }
 
-module.exports = { save, get, getForDriver, touch, close, markExpired, listLive };
+module.exports = { save, get, getForDriver, touch, close, markExpired, listLive, getLatestForUser };
+
+// Most recent live session for a user (for resume after takeover).
+async function getLatestForUser(userId) {
+  const live = await listLive(userId);
+  return (live && live[0]) || null;
+}

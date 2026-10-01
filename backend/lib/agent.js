@@ -204,6 +204,78 @@ const _RAW_TOOLS = [
     describe: 'Open a URL in a LIVE browser session that the user can see and take over. Use when the user says "open X". Returns session info and live URL.',
   },
   {
+    name: 'browser_continue', risk: 'low',
+    fn: async (a) => {
+      // Resume a browser session after user takeover.
+      // Use when the user says "I'm logged in" or "continue" after taking over.
+      // Reconnects to the Browserbase session, captures current page state.
+      const threadId = a.threadId;
+      const userId = a.userId;
+      const { pushFrame, pushStatus } = require('./live_view');
+
+      try {
+        await pushStatus({ threadId, status: 'resuming', detail: 'Reconnecting to your browser session…' });
+
+        // Find the user's most recent live session
+        const sessionsDb = require('./browser_sessions');
+        const session = a.sessionId
+          ? await sessionsDb.get(a.sessionId)
+          : await sessionsDb.getLatestForUser(userId);
+
+        if (!session) {
+          return { ok: false, code: 'no_session', note: 'No active browser session found. Say "open ElevenLabs" to start a new one.' };
+        }
+
+        // Get the connect URL (sensitive — never returned)
+        const full = await sessionsDb.getForDriver(session.id || session.bb_session_id);
+        if (!full || !full.connect_url) {
+          return { ok: false, code: 'session_expired', note: 'Browser session expired. Say "open ElevenLabs" to start a new one.' };
+        }
+
+        // Reconnect via CDP
+        const { chromium } = require('playwright-core');
+        const browser = await chromium.connectOverCDP(full.connect_url);
+        const contexts = browser.contexts();
+        const context = contexts[0];
+        if (!context) {
+          await browser.close();
+          return { ok: false, code: 'no_context', note: 'Browser session has no pages. It may have been closed.' };
+        }
+        const pages = context.pages();
+        const page = pages[0];
+        if (!page) {
+          await browser.close();
+          return { ok: false, code: 'no_page', note: 'No open pages in the session.' };
+        }
+
+        const url = page.url();
+        const title = await page.title().catch(() => '');
+
+        // Broadcast current state
+        await pushFrame({ threadId, page, label: `Resumed: ${title || url}`, step: 2, bbSessionId: session.bb_session_id });
+        await pushStatus({ threadId, status: 'browsing', detail: `Resumed at ${url.slice(0, 80)}` });
+
+        await browser.close(); // Close CDP, session stays alive
+
+        return {
+          ok: true,
+          url,
+          title,
+          sessionId: session.bb_session_id,
+          note: `Resumed browser at ${url}`,
+          userMessage: `I'm back in the browser at ${new URL(url).hostname}. Let me check the current page.`,
+        };
+      } catch (e) {
+        await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
+        return { ok: false, code: 'resume_failed', note: `Could not resume browser: ${e.message}`.slice(0, 200) };
+      }
+    },
+    schema: { type: 'object', properties: {
+      sessionId: { type: 'string', description: 'Optional: specific session to resume. Omit to use the latest.' },
+    } },
+    describe: 'Resume a browser session after the user takes over and logs in. Use when user says "I\'m logged in" or "continue". Reconnects to the live session and returns current page state.',
+  },
+  {
     name: 'dining_links', risk: 'low',
     fn: async ({ slug, city, date, dateTime, seats }) => ({
       opentable: dining.opentableLink({ slug, dateTime, covers: seats }),
