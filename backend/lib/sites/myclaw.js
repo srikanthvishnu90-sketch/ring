@@ -87,9 +87,10 @@ async function fetchResetLinkFromGmail(ctx, job, sinceEpoch) {
 
   const afterClause = sinceEpoch ? ` after:${Math.floor(sinceEpoch / 1000)}` : '';
   const q = encodeURIComponent(`from:noreply@myclaw.ai subject:"Reset Your Password"${afterClause}`);
-  // Bounded at 60s with 5s polls: reset emails arrive in seconds, and the
-  // phase has a 120s serverless budget shared with the browser work.
-  const deadline = Date.now() + 60000;
+  // Bounded at 90s with 5s polls: reset emails usually arrive in seconds but
+  // MyClaw delivery has taken 60s+ under load; the pre-poll browser work is
+  // ~20s, so this still fits the 120s serverless phase budget.
+  const deadline = Date.now() + 90000;
   while (Date.now() < deadline) {
     try {
       const list = await google.gfetch(acct.key,
@@ -342,6 +343,11 @@ async function cancelSubscription(ctx, job) {
         await resetEmailField.fill(username).catch(() => {});
         ctx.log('reset_email_filled', {});
       }
+      // Stamp the request time BEFORE the click, with a buffer: MyClaw can
+      // deliver the reset email within seconds, and stamping "now" after the
+      // post-submit wait makes the Gmail after: filter exclude the very email
+      // we just triggered. The buffer still excludes earlier runs' emails.
+      const resetRequestedAt = Date.now() - 120000;
       const resetSubmit = await page.$('button[type="submit"], button:has-text("Send"), button:has-text("Reset"), button:has-text("Continue")');
       if (resetSubmit) await resetSubmit.click();
       else await page.keyboard.press('Enter');
@@ -351,7 +357,6 @@ async function cancelSubscription(ctx, job) {
 
       // Self-driving: fetch the reset link from the user's Gmail and continue
       // without a user round-trip. Ring looks at Gmail and decides.
-      const resetRequestedAt = Date.now();
       const gmailLink = await fetchResetLinkFromGmail(ctx, job, resetRequestedAt);
       if (gmailLink) {
         const pw = tempPassword();
