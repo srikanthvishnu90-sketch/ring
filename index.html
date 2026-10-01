@@ -1101,6 +1101,7 @@ function describeApproval(m){
   if(m.tool==='calendar_create')return `Add to calendar: ${a.summary||'Event'} — ${fmtD(a.start)}, ${fmtT(a.start)}${a.end?'–'+fmtT(a.end):''}`;
   if(m.tool==='calendar_update')return `Change calendar event${a.summary?`: ${a.summary}`:''}${a.start?` → ${fmtD(a.start)}, ${fmtT(a.start)}`:''}`;
   if(m.tool==='calendar_delete')return `Delete calendar event${a.summary?`: ${a.summary}`:''}`;
+  if(m.tool==='subscription_cancel')return `Sign in to ${a.merchant||'the merchant'} (${a.email||'your account'}) and inspect the subscription — this only authorizes starting the sign-in flow. The actual cancellation needs a separate approval after the exact plan, price, and terms are shown.`;
   return m.describe||m.tool;
 }
 // What actually happened, from the tool that really executed — never a
