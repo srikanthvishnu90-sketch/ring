@@ -54,7 +54,9 @@ function extractResetUrl(text) {
 
 // Poll the user's Gmail for the newest MyClaw password-reset email and return
 // its reset URL. Ring looks at Gmail and decides — no user round-trip.
-async function fetchResetLinkFromGmail(ctx, job) {
+// sinceEpoch: only consider emails received after this (avoids grabbing a
+// stale link from an earlier run).
+async function fetchResetLinkFromGmail(ctx, job, sinceEpoch) {
   const userId = job.userId;
   const targetEmail = (job.email || '').toLowerCase();
   if (!userId) {
@@ -78,7 +80,8 @@ async function fetchResetLinkFromGmail(ctx, job) {
   }
   ctx.log('gmail_poll_start', { account: acct.email });
 
-  const q = encodeURIComponent('from:noreply@myclaw.ai subject:"Reset Your Password" newer_than:20m');
+  const afterClause = sinceEpoch ? ` after:${Math.floor(sinceEpoch / 1000)}` : '';
+  const q = encodeURIComponent(`from:noreply@myclaw.ai subject:"Reset Your Password"${afterClause}`);
   const deadline = Date.now() + 90000;
   while (Date.now() < deadline) {
     try {
@@ -92,7 +95,8 @@ async function fetchResetLinkFromGmail(ctx, job) {
             `https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(m.id)}?format=full`);
           const url = extractResetUrl(extractTextBody(full.payload));
           if (url) {
-            ctx.log('gmail_reset_link_found', {});
+            // Log the URL shape with the token redacted — never log credentials.
+            ctx.log('gmail_reset_link_found', { shape: url.replace(/([?&](token|code)=)[^&]+/i, '$1REDACTED').slice(0, 120) });
             return url;
           }
         } catch (e) { /* try next message */ }
@@ -365,12 +369,15 @@ async function cancelSubscription(ctx, job) {
 
       // Self-driving: fetch the reset link from the user's Gmail and continue
       // without a user round-trip. Ring looks at Gmail and decides.
-      const gmailLink = await fetchResetLinkFromGmail(ctx, job);
+      const resetRequestedAt = Date.now();
+      const gmailLink = await fetchResetLinkFromGmail(ctx, job, resetRequestedAt);
       if (gmailLink) {
         const pw = tempPassword();
         ctx.log('gmail_reset_continue', {});
         await page.goto(gmailLink, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
-        await page.waitForTimeout(5000);
+        // Wait for the password form to render (SPA may take a moment).
+        await page.waitForSelector('input[type="password"]', { timeout: 15000 }).catch(() => {});
+        await page.waitForTimeout(2000);
         const passFields = await page.$$('input[type="password"]').catch(() => []);
         if (passFields.length > 0) {
           for (const field of passFields) {
@@ -381,10 +388,16 @@ async function cancelSubscription(ctx, job) {
           if (submitBtn) await submitBtn.click();
           else await page.keyboard.press('Enter');
           await page.waitForTimeout(5000);
+        } else {
+          // No password form — log where the link landed (token redacted).
+          ctx.log('gmail_reset_no_pw_form', {
+            url: page.url().replace(/([?&](token|code)=)[^&]+/i, '$1REDACTED').slice(0, 160),
+            title: (await page.title().catch(() => '')).slice(0, 120),
+          });
         }
         const stillLogin = await page.$('input[type="email"], input[type="password"]').catch(() => null);
         if (!stillLogin) {
-          ctx.log('gmail_reset_login_ok', { url: page.url() });
+          ctx.log('gmail_reset_login_ok', { url: page.url().split('?')[0].slice(0, 120) });
           return loginAndFindBilling(ctx, username, pw, pw);
         }
         await ctx.screenshot('myclaw-gmail-reset-not-auth');
@@ -490,12 +503,17 @@ async function cancelFromDashboard(ctx, job) {
   await ctx.screenshot('myclaw-cancel-result');
 
   if (cancelled) {
-    // Extract a confirmation reference if visible.
+    // Extract a real confirmation reference from the page. No fabricated
+    // fallback: a "cancelled" page without a reference is still a verified
+    // cancellation, but the proof is the screenshot + page text, not a
+    // made-up ref. If no reference is visible, cancelRef stays null and the
+    // no_proof gate treats this as unverified.
     const refMatch = (bodyText || '').match(/(?:confirmation|reference|id)[:\s]*([A-Z0-9-]{6,})/i);
-    ctx.log('cancel_verified', { cancelled: true });
+    ctx.log('cancel_verified', { cancelled: true, hasRef: !!refMatch });
     return {
       ok: true, phase: 'done',
-      cancelRef: refMatch ? refMatch[1] : 'myclaw-cancelled',
+      cancelRef: refMatch ? refMatch[1] : null,
+      cancelProofText: (bodyText || '').slice(0, 500),
       merchant: 'myclaw',
       note: 'MyClaw subscription cancelled. Confirmation text captured in screenshot.',
     };

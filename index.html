@@ -1109,6 +1109,33 @@ function describeApproval(m){
 function outcomeText(a){
   const g=a.args||{};
   const r=a.result||{};
+  // PHASE HONESTY (systemic fix): an intermediate phase is NEVER "Done".
+  // need_input must surface the required user action; need_approval must
+  // point at the waiting approval card; only phase 'done' (or phaseless ok)
+  // may claim completion.
+  if(r.phase==='need_input'){
+    return r.prompt||'I need something from you to continue — see the details above.';
+  }
+  if(r.phase==='need_approval'){
+    return 'Review the details on the approval card above and approve to continue.';
+  }
+  if(r.phase==='need_otp'){
+    return 'A verification code was sent — share it here to continue.';
+  }
+  if(a.tool==='subscription_cancel'){
+    // Only claim cancelled with provider proof. A "cancelled" page without a
+    // reference is reported as unverified — never a bare "Done", never a
+    // fabricated reference.
+    if(r.ok&&r.phase==='done'&&r.cancelRef){
+      return `Cancelled ${r.merchant||'the subscription'}. Confirmation: ${r.cancelRef}`;
+    }
+    if(r.ok&&r.phase==='done'){
+      return `The MyClaw page indicated the subscription was cancelled, but no confirmation reference appeared — a screenshot was saved for review. Please verify in your MyClaw account before counting this as done.`;
+    }
+    const reason=r.note||r.error||'The cancellation could not be completed.';
+    const terminal=/nothing was (cancelled|done)/i.test(reason);
+    return `I couldn't complete the cancellation. ${reason}${terminal?'':' Nothing was cancelled.'}`;
+  }
   if(a.tool==='calendar_create')return `Done — "${g.summary||'Event'}" is on your calendar for ${fmtD(g.start)}, ${fmtT(g.start)}${g.end?'–'+fmtT(g.end):''}.`;
   if(a.tool==='calendar_update')return g.start?`Done — moved "${g.summary||'the event'}" to ${fmtD(g.start)}, ${fmtT(g.start)}${g.end?'–'+fmtT(g.end):''}.`:`Done — updated "${g.summary||'the event'}" on your calendar.`;
   if(a.tool==='calendar_delete')return `Done — deleted "${g.summary||'the event'}" from your calendar.`;
@@ -1130,6 +1157,10 @@ function outcomeText(a){
       const terminal=/nothing was (booked|done|ordered)/i.test(reason);
       return `I couldn't book the ride. ${reason}${terminal?'':' Nothing was ordered.'}`;
     }
+  }
+  // Generic fallback: never claim "Done" for an unfinished phase.
+  if(r.phase&&r.phase!=='done'){
+    return r.prompt||r.note||`${a.describe||a.tool} is still in progress — not done yet.`;
   }
   return `Done — ${a.describe||a.tool}.`;
 }

@@ -330,9 +330,34 @@ async function postApprovalResult(rec) {
       const alreadyTerminal = /nothing was (booked|done|ordered)/i.test(reason);
       message = `I couldn't book the ride. ${reason}${alreadyTerminal ? '' : ' Nothing was ordered.'}`;
     }
+  } else if (tool === 'subscription_cancel') {
+    // Phase-honest: only claim cancelled with provider proof (cancelRef).
+    // need_input relays the required user action; a "cancelled" page without
+    // a reference is reported as unverified, never a bare "Done" and never
+    // a fabricated reference.
+    if (result.ok && result.phase === 'done' && result.cancelRef) {
+      message = `Cancelled ${result.merchant || 'the subscription'}. Confirmation: ${result.cancelRef}`;
+    } else if (result.ok && result.phase === 'done') {
+      message = `The MyClaw page indicated the subscription was cancelled, but no confirmation reference appeared — a screenshot was saved for review. Please verify in your MyClaw account before counting this as done.`;
+    } else if (result.phase === 'need_input') {
+      message = result.prompt || 'I need something from you to continue the cancellation.';
+    } else if (result.phase === 'need_approval') {
+      message = 'The subscription details are on the approval card above — approve it to continue with the cancellation.';
+    } else {
+      const reason = result.note || result.error || 'The cancellation could not be completed.';
+      const alreadyTerminal = /nothing was (cancelled|done)/i.test(reason);
+      message = `I couldn't complete the cancellation. ${reason}${alreadyTerminal ? '' : ' Nothing was cancelled.'}`;
+    }
   } else {
-    // Generic: report ok/fail honestly
-    if (result.ok) {
+    // Generic: phase-aware honesty — an unfinished phase is never "completed".
+    const phase = result.phase;
+    if (phase === 'need_input') {
+      message = result.prompt || result.note || `${tool} needs your input to continue.`;
+    } else if (phase === 'need_approval') {
+      message = 'Review the approval card above and approve to continue.';
+    } else if (phase && phase !== 'done') {
+      message = result.note || `${tool} is still in progress — not done yet.`;
+    } else if (result.ok) {
       message = result.note || `${tool} completed.`;
     } else {
       message = result.note || `${tool} could not be completed. Nothing was done.`;

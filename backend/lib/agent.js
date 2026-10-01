@@ -846,7 +846,15 @@ async function processToolCalls({ toolCalls, tools, userId, toolsUsed, allResult
     if (tool.risk === 'low') {
       try {
         const out = await tool.fn({ userId, ...tc.args });
-        results.push(`${tc.name} → ${JSON.stringify(out).slice(0, 10000)}`);
+        let resultLine = `${tc.name} → ${JSON.stringify(out).slice(0, 10000)}`;
+        // Phase honesty: an intermediate phase is NOT completion. Bind the
+        // model's reply to the required user message so it cannot be
+        // rephrased into "done/completed/cancelled".
+        if (out && out.phase && out.phase !== 'done') {
+          const need = out.prompt || out.note || `waiting (phase ${out.phase})`;
+          resultLine += `\n[SYSTEM DIRECTIVE: The task is NOT done — the tool returned phase '${out.phase}' and is PAUSED. You MUST NOT say "done", "completed", "cancelled", "booked", "confirmed", or any synonym. Your reply MUST tell the user exactly this: ${need}]`;
+        }
+        results.push(resultLine);
         logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
       } catch (e) {
         results.push(`${tc.name} → ERROR ${e.code || ''}: ${e.message}`.slice(0, 400));
