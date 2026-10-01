@@ -64,8 +64,8 @@ class TaskMemory {
 
 // ── Reasoning ─────────────────────────────────────────────────
 // Simple prompt that Gemini handles reliably.
-async function reason(memory, { goal, constraints, observation }) {
-  const systemPrompt = 'You are a browser automation assistant. Respond with JSON only.';
+async function reason(memory, { goal, constraints, observation, screenshotBase64 }) {
+  const systemPrompt = 'You are a browser automation assistant. You can see the page screenshot. Respond with JSON only.';
   
   const userPrompt = `Goal: ${goal}
 
@@ -88,7 +88,13 @@ What is the next action? Respond with JSON:
 
   const body = {
     model: env('AGENT_MODEL', 'gpt-4o'),
-    messages: [
+    messages: screenshotBase64 ? [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: [
+        { type: 'text', text: userPrompt },
+        { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${screenshotBase64}` } },
+      ]},
+    ] : [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt },
     ],
@@ -228,9 +234,16 @@ async function runIntelligent(ctx, { goal, constraints = [], maxSteps = 10, memo
     
     await pushStatus({ threadId, status: 'thinking', detail: `Step ${i+1}: analyzing ${observation.url.slice(0, 60)}` });
     
+    // Capture screenshot for vision
+    let screenshotBase64 = null;
+    try {
+      const buf = await page.screenshot({ type: 'jpeg', quality: 60 });
+      screenshotBase64 = buf.toString('base64');
+    } catch {}
+    
     let decision;
     try {
-      decision = await reason(mem, { goal, constraints, observation });
+      decision = await reason(mem, { goal, constraints, observation, screenshotBase64 });
     } catch (e) {
       await pushStatus({ threadId, status: 'error', detail: e.message.slice(0, 150) });
       return { ok: false, code: 'reasoning_failed', note: e.message.slice(0, 200), steps: mem.steps };
