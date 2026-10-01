@@ -1491,16 +1491,20 @@ function msgHTML(m,i){
   if(m.role==='places')return `<div class="msg-in" style="display:flex;flex-direction:column;gap:8px">${m.items.map(p=>`<button class="card-brown" data-toast="Opening walking directions" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;text-align:left;width:100%;border-radius:16px"><div class="rt"><b class="serif" style="font-size:18px;font-weight:400">${esc(p.name)}</b><span>${esc(p.kind)}</span></div><div class="metric"><b>${p.mins}</b><span>min walk</span></div></button>`).join('')}</div>`;
   if(m.role==='approval'){
     const done=m.status==='done';
+    const waiting=m.status==='waiting';
     if(m.backend){
       // Real backend card: exactly one action, its own Approve/Decline.
       // Never the legacy book+text "Do both" pairing.
+      // An intermediate tool phase (need_input/need_approval/need_otp) is
+      // "Waiting", never "Done" — the approval was approved but the task
+      // still needs something.
       const busy=m.status==='working';
-      const label=done&&m.outcomeText?m.outcomeText:describeApproval(m);
+      const label=(done||waiting)&&m.outcomeText?m.outcomeText:describeApproval(m);
       const icon=done?I.check:(I[approvalIconName(m.tool)]||I.check);
-      return `<section class="${done?'card':'card-silver'} approval${done?' done':''} msg-in" aria-label="${done?'Done':busy?'Working':'Needs your OK'}">
-      <div class="k">${done?'Done':busy?'Working…':'Needs your OK'}</div>
+      return `<section class="${done?'card':'card-silver'} approval${done?' done':''} msg-in" aria-label="${done?'Done':waiting?'Waiting':busy?'Working':'Needs your OK'}">
+      <div class="k">${done?'Done':waiting?'Waiting':busy?'Working…':'Needs your OK'}</div>
       <div class="li"><span style="color:${done?'var(--sage)':'#26303C'};display:inline-flex">${icon}</span><span>${esc(label)}</span></div>
-      ${done||busy?'':`<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"><button class="btn btn-brown btn-sm" data-approve="${i}">Approve</button><button class="btn btn-sm" style="border:1px solid rgba(20,28,38,.35);color:#10151B" data-decline="${i}">Decline</button></div>`}
+      ${done||busy||waiting?'':`<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"><button class="btn btn-brown btn-sm" data-approve="${i}">Approve</button><button class="btn btn-sm" style="border:1px solid rgba(20,28,38,.35);color:#10151B" data-decline="${i}">Decline</button></div>`}
     </section>`;
     }
     return `<section class="${done?'card':'card-silver'} approval${done?' done':''} msg-in" aria-label="${done?'Done':'Needs your OK'}">
@@ -1602,15 +1606,20 @@ async function approve(i){
     }catch(e){rec=null}
     const ok=rec&&rec.status==='approved'&&!(rec.result&&rec.result.error);
     const t=timeStr(new Date());
-    a.status='done';
+    // PHASE HONESTY: an intermediate tool phase (need_input / need_approval /
+    // need_otp) is NOT done — the approval was approved, but the task is
+    // still waiting on something. Never label that "Done".
+    const resPhase=rec&&rec.result&&rec.result.phase;
+    const intermediate=resPhase==='need_input'||resPhase==='need_approval'||resPhase==='need_otp';
+    a.status=intermediate?'waiting':'done';
     if(ok){
       a.result=rec.result; // Make tool result available to outcomeText
       a.outcomeText=outcomeText(a);
-      S.handled.unshift({icon:approvalIconName(a.tool),tone:'sage',title:a.outcomeText,meta:handledMeta(a.tool)+' · '+t});
+      S.handled.unshift({icon:approvalIconName(a.tool),tone:intermediate?'brown':'sage',title:a.outcomeText,meta:handledMeta(a.tool)+' · '+t});
       curMsgs().push({role:'agent',text:a.outcomeText});
-      // Show "Done" toast only for actual success; for honest failures show "Not completed"
-      const isRealSuccess = !(a.tool==='dining_book'&&a.result&&a.result.ok===false) && !(a.tool==='ride_book'&&a.result&&a.result.ok===false);
-      toast(isRealSuccess?'Done':'Not completed');
+      // Toast "Done" only for actual completion; intermediate phases wait.
+      const isRealSuccess = !intermediate && !(a.tool==='dining_book'&&a.result&&a.result.ok===false) && !(a.tool==='ride_book'&&a.result&&a.result.ok===false);
+      toast(intermediate?'Waiting':isRealSuccess?'Done':'Not completed');
     }else{
       a.result=rec?rec.result:null;
       a.outcomeText='Not completed';

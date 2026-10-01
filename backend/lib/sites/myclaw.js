@@ -68,7 +68,11 @@ async function fetchResetLinkFromGmail(ctx, job, sinceEpoch) {
   } catch (e) { /* continue anyway */ }
   let accounts = [];
   try {
-    accounts = google.listGoogleAccounts(userId) || [];
+    // Async: refreshes the user's token rows from Supabase first so a warm
+    // serverless instance never reports "no accounts" for tokens saved by
+    // another instance.
+    accounts = await google.listGoogleAccounts(userId) || [];
+    ctx.log('gmail_accounts_found', { count: accounts.length });
   } catch (e) {
     ctx.log('gmail_accounts_err', { msg: String((e && e.message) || e).slice(0, 120) });
     return null;

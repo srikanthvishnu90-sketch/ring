@@ -61,21 +61,30 @@ function loadFromFile() {
 }
 
 // Lazy per-user load: picks up rows written by another process (or linked
-// manually) without waiting for a restart. Called on cache miss.
+// manually) without waiting for a restart. Called on cache miss and before
+// listing accounts — a warm serverless instance that booted before the
+// tokens were saved would otherwise see an empty store.
+// Loads the primary row plus any :google: suffixed rows for the user; only
+// fills keys missing from the in-memory store so a fresher in-instance
+// token (e.g. from an OAuth callback in this process) is never clobbered.
 async function ensureUser(userId) {
   const key = userId || 'local';
-  if (store.has(key) || !USE_SUPABASE) return;
+  if (!USE_SUPABASE) return;
   try {
-    const rows = await sbRequest(`/${SB_TABLE}?select=user_id,access_token,refresh_token,expires_at,scope,token_type&user_id=eq.${encodeURIComponent(key)}`);
-    const row = (rows || [])[0];
-    if (row && row.access_token) {
-      store.set(key, {
-        access_token: row.access_token,
-        refresh_token: row.refresh_token,
-        expires_at: Number(row.expires_at) || 0,
-        scope: row.scope,
-        token_type: row.token_type,
-      });
+    const rows = await sbRequest(`/${SB_TABLE}?select=user_id,access_token,refresh_token,expires_at,scope,token_type&user_id=like.${encodeURIComponent(key)}%`);
+    for (const row of rows || []) {
+      if (row && row.access_token && !store.has(row.user_id)) {
+        const parsed = parseAccountKey(row.user_id);
+        store.set(row.user_id, {
+          access_token: row.access_token,
+          refresh_token: row.refresh_token,
+          expires_at: Number(row.expires_at) || 0,
+          scope: row.scope,
+          token_type: row.token_type,
+          googleEmail: parsed.googleEmail,
+          ringUserId: parsed.ringUserId,
+        });
+      }
     }
   } catch (e) { /* miss stays a miss */ }
 }
@@ -155,8 +164,12 @@ function isConnected(userId) {
 
 // List all Google account emails connected for a Ring user.
 // Returns [{ email, key }] — key is the token lookup key for gfetch.
-function listGoogleAccounts(userId) {
+// Async: refreshes the user's rows from Supabase first, so a warm
+// serverless instance whose in-memory store predates the token save
+// still sees the accounts.
+async function listGoogleAccounts(userId) {
   const base = userId || 'local';
+  try { await ensureUser(base); } catch (e) { /* fall back to memory */ }
   const accounts = [];
   // Ensure Supabase rows are loaded (lazy)
   for (const [key, t] of store) {
