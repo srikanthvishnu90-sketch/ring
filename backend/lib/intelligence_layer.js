@@ -4,6 +4,7 @@
 // and act. This version uses simple prompts that work reliably.
 
 const { env } = require('./config');
+const { pushFrame, pushStatus } = require('./live_view');
 
 // ── Observation ───────────────────────────────────────────────
 async function observe(page) {
@@ -187,22 +188,36 @@ async function execute(page, decision) {
 async function runIntelligent(ctx, { goal, constraints = [], maxSteps = 10, memory = null } = {}) {
   const page = ctx.page;
   const mem = memory || new TaskMemory();
+  const threadId = ctx.threadId || ctx.sessionId;
+  
+  // Initial frame: show where we're starting
+  await pushStatus({ threadId, status: 'starting', detail: goal.slice(0, 100) });
+  await pushFrame({ threadId, page, label: 'Starting', step: 0 });
   
   for (let i = 0; i < maxSteps; i++) {
     const observation = await observe(page);
     ctx.log && ctx.log('intel_step', { step: i + 1, url: observation.url.slice(0, 60) });
     
+    await pushStatus({ threadId, status: 'thinking', detail: `Step ${i+1}: analyzing ${observation.url.slice(0, 60)}` });
+    
     let decision;
     try {
       decision = await reason(mem, { goal, constraints, observation });
     } catch (e) {
+      await pushStatus({ threadId, status: 'error', detail: e.message.slice(0, 150) });
       return { ok: false, code: 'reasoning_failed', note: e.message.slice(0, 200), steps: mem.steps };
     }
     
+    await pushStatus({ threadId, status: 'acting', detail: `${decision.action}: ${decision.target || ''} — ${decision.reason || ''}`.slice(0, 150) });
+    
     if (decision.action === 'done') {
+      await pushFrame({ threadId, page, label: 'Done', step: i + 1 });
+      await pushStatus({ threadId, status: 'done', detail: decision.reason || 'Complete' });
       return { ok: true, phase: 'done', extracted: decision.extracted || {}, steps: mem.steps, note: decision.reason };
     }
     if (decision.action === 'fail') {
+      await pushFrame({ threadId, page, label: 'Failed', step: i + 1 });
+      await pushStatus({ threadId, status: 'failed', detail: decision.reason || 'Could not complete' });
       return { ok: false, code: 'intel_failed', note: decision.reason || 'Could not complete', steps: mem.steps };
     }
     
@@ -215,8 +230,12 @@ async function runIntelligent(ctx, { goal, constraints = [], maxSteps = 10, memo
     const result = await execute(page, decision);
     mem.addStep(decision.action, decision.target, result.detail);
     ctx.log && ctx.log('intel_action', { action: decision.action, target: (decision.target || '').slice(0, 50), result: result.detail.slice(0, 80) });
+    
+    // Push frame after each action so the user sees what happened
+    await pushFrame({ threadId, page, label: `${decision.action}: ${decision.target || ''}`.slice(0, 60), step: i + 1 });
   }
   
+  await pushStatus({ threadId, status: 'max_steps', detail: `Tried ${maxSteps} steps` });
   return { ok: false, code: 'max_steps', note: `Tried ${maxSteps} steps`, steps: mem.steps };
 }
 
