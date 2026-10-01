@@ -247,10 +247,14 @@ async function execute(page, decision) {
 }
 
 // ── Main Loop ─────────────────────────────────────────────────
-async function runIntelligent(ctx, { goal, constraints = [], maxSteps = 10, memory = null } = {}) {
+async function runIntelligent(ctx, { goal, constraints = [], maxSteps = 10, memory = null, passwords = [] } = {}) {
   const page = ctx.page;
   const mem = memory || new TaskMemory();
   const threadId = ctx.threadId || (ctx.job && ctx.job.threadId) || ctx.sessionId;
+  // Store passwords in memory for the model to reference
+  if (passwords.length > 0) {
+    mem.addLearning(`Passwords available: ${passwords.length} provided. Try in order.`);
+  }
   
   // Initial frame: show where we're starting
   await pushStatus({ threadId, status: 'starting', detail: goal.slice(0, 100) });

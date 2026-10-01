@@ -233,6 +233,7 @@ const _RAW_TOOLS = [
       const job = { site: 'subscription', kind: 'cancel-subscription', userId: a.userId,
         threadId: a.threadId,
         merchant: a.merchant, email: a.email, vaultId: a.vaultId,
+        password: a.password, password2: a.password2,
         magic_link: a.magic_link, reset_link: a.reset_link, new_password: a.new_password,
         sessionId: a.sessionId, cancel_approved: a.cancel_approved };
       Object.keys(job).forEach(k => job[k] === undefined && delete job[k]);
@@ -242,6 +243,8 @@ const _RAW_TOOLS = [
       merchant: { type: 'string', description: 'Merchant key, e.g. myclaw. Only implemented merchants can run.' },
       email: { type: 'string', description: 'Account email holding the subscription' },
       vaultId: { type: 'string', description: 'Vault credential id holding the login (opaque reference; preferred — the value never leaves the server)' },
+      password: { type: 'string', description: 'Password for sign-in (use only when user explicitly provided it for this task)' },
+      password2: { type: 'string', description: 'Fallback password to try if the first fails' },
       magic_link: { type: 'string', description: 'Magic-link sign-in URL pasted by the user (continuation)' },
       reset_link: { type: 'string', description: 'Password-reset link (continuation)' },
       new_password: { type: 'string', description: 'New password to set via a reset link (continuation)' },

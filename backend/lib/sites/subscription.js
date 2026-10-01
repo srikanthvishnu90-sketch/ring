@@ -51,16 +51,24 @@ async function cancelSubscription(ctx, job) {
     
     // Intelligence layer: see → reason → act → verify
     // Phase 1: Sign in and locate subscription (stops before cancelling)
+    const passwords = [];
+    if (job.password) passwords.push(job.password);
+    if (job.password2) passwords.push(job.password2);
+    const pwdConstraint = passwords.length > 0 
+      ? `Passwords provided (try in order): ${passwords.map((p, i) => `[${i+1}]`).join(', ')}. Use them for Google sign-in if needed.`
+      : 'If sign-in requires a password you don\'t have, look for "Forgot password" and check Gmail for reset emails.';
+    
     const inspectResult = await intel.runIntelligent(ctx, {
       goal: `Sign in to ${merchant} (account email: ${email}) and navigate to the billing/subscription management page. Find the current plan name, price, billing period, and cancellation policy. DO NOT cancel yet — just gather the details and report them.`,
       constraints: [
         'Do NOT click Cancel, Delete, Remove, Unsubscribe, or any cancellation confirmation button.',
         'Do NOT submit payment forms or enter credit card details.',
-        'If sign-in requires a password you don\'t have, look for "Forgot password" and check Gmail for reset emails.',
+        pwdConstraint,
         `The account email is ${email}. Use it wherever an email is needed.`,
         'Take screenshots seriously — look at the visual layout to find navigation.',
       ],
       maxSteps: 12,
+      passwords, // Pass through for the intelligence layer to use
     });
     
     if (!inspectResult.ok) {
