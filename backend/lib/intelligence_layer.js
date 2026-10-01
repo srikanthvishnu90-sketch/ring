@@ -97,16 +97,30 @@ What is the next action? Respond with JSON:
   };
   
   const base = env('OPENAI_BASE_URL', 'https://api.openai.com/v1');
-  const res = await fetch(`${base}/chat/completions`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${env('OPENAI_API_KEY')}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
+  let res;
+  let lastErr;
+  // Retry on 503/429 (model overloaded) with backoff
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      res = await fetch(`${base}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${env('OPENAI_API_KEY')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      if (res.ok) break;
+      if (res.status !== 503 && res.status !== 429) break;
+      lastErr = `HTTP ${res.status}`;
+      await new Promise(r => setTimeout(r, 2000 * (attempt + 1)));
+    } catch (e) {
+      lastErr = e.message;
+      await new Promise(r => setTimeout(r, 2000 * (attempt + 1)));
+    }
+  }
   
-  if (!res.ok) throw new Error(`Model failed: HTTP ${res.status}`);
+  if (!res || !res.ok) throw new Error(`Model failed: ${lastErr || `HTTP ${res?.status}`}`);
   const data = await res.json();
   const text = data.choices[0].message.content || '';
   
