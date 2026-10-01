@@ -151,7 +151,7 @@ const _RAW_TOOLS = [
       }
       if (!url) return { ok: false, code: 'no_url', note: 'No URL or site provided.' };
       // Use a minimal context to just navigate and confirm the page loaded
-      const result = await intel.runIntelligent({ log: () => {}, screenshot: null }, {
+      const result = await intel.runIntelligent({ log: () => {}, screenshot: null, threadId: a.threadId, userId: a.userId }, {
         startUrl: url,
         task: `Navigate to ${url} and confirm the page loaded.`,
         maxSteps: 3,
