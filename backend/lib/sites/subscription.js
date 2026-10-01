@@ -31,15 +31,15 @@ async function cancelSubscription(ctx, job) {
     }
   }
   
-  // GENERIC FLOW: Use the agentic browser for any merchant.
-  // This is how ChatGPT/Claude do it — see the page, figure it out.
-  ctx.log('merchant_dispatch', { merchant, via: 'generic_agentic' });
+  // GENERIC FLOW: Use the intelligence layer for any merchant.
+  // This is how ChatGPT/Claude/Operator do it — see screenshots,
+  // reason with vision, click coordinates, remember, self-correct.
+  ctx.log('merchant_dispatch', { merchant, via: 'intelligence_layer' });
   try {
-    const agentic = require('../agentic_browser');
+    const intel = require('../intelligence_layer');
     const page = ctx.page;
     
-    // Step 1: Navigate to the merchant's site and find billing
-    // The LLM will figure out the URL, sign-in, and navigation.
+    // Navigate to the merchant's site
     const merchantUrls = {
       elevenlabs: 'https://elevenlabs.io',
       myclaw: 'https://myclaw.ai',
@@ -49,17 +49,18 @@ async function cancelSubscription(ctx, job) {
     await page.goto(startUrl, { waitUntil: 'domcontentloaded', timeout: 20000 }).catch(() => {});
     await page.waitForTimeout(3000);
     
-    // Step 2: Agentic loop to find subscription and prepare cancellation
-    // Phase 1: Sign in and locate the subscription (stops before cancelling)
-    const inspectResult = await agentic.navigate(ctx, {
-      goal: `Sign in to ${merchant} (account email: ${email}) and navigate to the billing/subscription management page. Find the current plan name, price, billing period, and cancellation policy. DO NOT cancel yet — just gather the details.`,
+    // Intelligence layer: see → reason → act → verify
+    // Phase 1: Sign in and locate subscription (stops before cancelling)
+    const inspectResult = await intel.runIntelligent(ctx, {
+      goal: `Sign in to ${merchant} (account email: ${email}) and navigate to the billing/subscription management page. Find the current plan name, price, billing period, and cancellation policy. DO NOT cancel yet — just gather the details and report them.`,
       constraints: [
-        'Do NOT click Cancel, Delete, Remove, Unsubscribe, or any cancellation confirmation.',
-        'Do NOT submit payment forms.',
-        'If sign-in requires a password you don\'t have, try "Forgot password" and check Gmail for reset emails.',
-        `The account email is ${email}.`,
+        'Do NOT click Cancel, Delete, Remove, Unsubscribe, or any cancellation confirmation button.',
+        'Do NOT submit payment forms or enter credit card details.',
+        'If sign-in requires a password you don\'t have, look for "Forgot password" and check Gmail for reset emails.',
+        `The account email is ${email}. Use it wherever an email is needed.`,
+        'Take screenshots seriously — look at the visual layout to find navigation.',
       ],
-      maxSteps: 8,
+      maxSteps: 12,
     });
     
     if (!inspectResult.ok) {
