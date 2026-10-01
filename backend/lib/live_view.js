@@ -9,11 +9,14 @@ const { broadcastRealtime } = require('./realtime');
 // Broadcast a screenshot for a thread.
 // Call this after each browser action to update the live view.
 async function pushFrame({ threadId, page, label, step, bbSessionId }) {
-  if (!threadId || !page) return;
+  if (!threadId || !page) {
+    if (!threadId) console.log('[live_view] No threadId, skipping frame broadcast');
+    return;
+  }
   try {
     const buf = await page.screenshot({ type: 'jpeg', quality: 50 });
     const base64 = buf.toString('base64');
-    await broadcastRealtime(`thread:${threadId}`, 'browser_frame', {
+    const ok = await broadcastRealtime(`thread:${threadId}`, 'browser_frame', {
       image: base64,
       label: label || '',
       step: step || 0,
@@ -22,8 +25,10 @@ async function pushFrame({ threadId, page, label, step, bbSessionId }) {
       liveUrl: bbSessionId ? `https://www.browserbase.com/sessions/${bbSessionId}` : null,
       ts: Date.now(),
     });
+    console.log(`[live_view] Frame broadcast to thread:${threadId}: ${ok ? 'ok' : 'failed'}`);
   } catch (e) {
     // Best-effort; never break the automation for the live view
+    console.log('[live_view] Frame error:', e.message);
   }
 }
 

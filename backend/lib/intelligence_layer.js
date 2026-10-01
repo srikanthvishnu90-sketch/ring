@@ -140,11 +140,29 @@ What is the next action? Respond with JSON:
   if (mdMatch) {
     jsonStr = mdMatch[1].trim();
   } else {
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (jsonMatch) jsonStr = jsonMatch[0];
+    // No closing ``` — model returned truncated markdown block. Extract from ```json to end.
+    const mdOpen = text.match(/```(?:json)?\s*([\s\S]*)$/);
+    if (mdOpen) {
+      jsonStr = mdOpen[1].trim();
+    } else {
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) jsonStr = jsonMatch[0];
+    }
   }
   
   if (!jsonStr) throw new Error(`No JSON in response: ${text.slice(0, 200)}`);
+  
+  // Repair truncated JSON: if it doesn't end with }, try to close it
+  if (!jsonStr.endsWith('}')) {
+    // Count open braces vs close braces
+    const open = (jsonStr.match(/\{/g) || []).length;
+    const close = (jsonStr.match(/\}/g) || []).length;
+    if (open > close) {
+      // Try to close the string value if it's unterminated
+      if (jsonStr.match(/"[^"]*$/)) jsonStr += '"';
+      jsonStr += '}'.repeat(open - close);
+    }
+  }
   
   try {
     return JSON.parse(jsonStr);
