@@ -896,18 +896,46 @@ async function loginAndFindBilling(ctx, email, password, tempPw) {
         }).catch(() => null);
         if (diag) ctx.log('dashboard_diag', diag);
       } catch { /* diagnostic only */ }
-      for (const sel of billingSels) {
+      // Try opening user/profile menus — billing is often in a dropdown.
+      for (const menuSel of ['button[aria-label*="user" i]', 'button[aria-label*="profile" i]', 'button[aria-label*="account" i]', '[data-testid*="user" i]', '[data-testid*="avatar" i]', 'img[alt*="avatar" i]', 'button:has(img)']) {
         try {
-          const el = await page.$(sel);
-          if (el) {
-            await el.click();
-            await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
-            await page.waitForTimeout(2000);
-            ctx.log('billing_nav', { selector: sel, url: page.url() });
-            billingFound = true;
-            break;
+          const menuBtn = await page.$(menuSel);
+          if (menuBtn) {
+            await menuBtn.click().catch(() => {});
+            await page.waitForTimeout(1500);
+            ctx.log('menu_open_attempt', { selector: menuSel, url: page.url() });
+            // After opening menu, retry billing selectors (dropdown items may now be visible).
+            for (const sel of billingSels) {
+              try {
+                const el = await page.$(sel);
+                if (el) {
+                  await el.click();
+                  await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
+                  await page.waitForTimeout(2000);
+                  ctx.log('billing_nav', { selector: sel + ' (via menu)', url: page.url() });
+                  billingFound = true;
+                  break;
+                }
+              } catch { /* try next */ }
+            }
+            if (billingFound) break;
           }
-        } catch { /* try next */ }
+        } catch { /* try next menu selector */ }
+      }
+      if (!billingFound) {
+        for (const sel of billingSels) {
+          try {
+            const el = await page.$(sel);
+            if (el) {
+              await el.click();
+              await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
+              await page.waitForTimeout(2000);
+              ctx.log('billing_nav', { selector: sel, url: page.url() });
+              billingFound = true;
+              break;
+            }
+          } catch { /* try next */ }
+        }
       }
     }
   }
