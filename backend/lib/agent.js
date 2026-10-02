@@ -617,7 +617,14 @@ const _RAW_TOOLS = [
         url: result.url,
         liveUrl: result.liveUrl,
         note: `Opened ${merchant} in live browser. User should Take Over and log in, then say "I'm logged in" to continue.`,
-        userMessage: `I've opened ${url} in the browser below. You can watch live and click "Take Over" to interact with it yourself. Please log in to your account, and let me know when you're logged in so I can continue and cancel your subscription.`,
+        userMessage: `I'll help you cancel ${merchant}. Here's how this works:
+
+1. I need to see your subscription first — plan name, price, renewal date
+2. I'll show you exactly what happens when you cancel (when access ends, refund policy)
+3. You approve those exact terms
+4. I cancel it and verify it's actually cancelled
+
+To start, log into ${merchant} in the browser below so I can read your subscription details. Click "Take Over", sign in, then tell me when you're in.`,
       };
     },
     schema: { type: 'object', properties: {
@@ -810,7 +817,17 @@ const TOOLS = [
   ..._RAW_TOOLS,
 ];
 
-const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. You can:
+const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. Respond like a capable human assistant — direct, clear, no fluff.
+
+RESPONSE STYLE (emulate Muse):
+- Lead with what you're doing, not throat-clearing. No "Great question!" or "I'd be happy to help!"
+- For multi-step tasks, list the steps numbered. Keep each step to one line.
+- Be honest about what you need from the user. Don't hide it in paragraph 3.
+- If you can't do something, say so in one sentence and offer the alternative.
+- Never describe UI that isn't there. Only mention buttons/panels the tool confirmed rendered.
+- Match the user's energy: short texts get short replies. Complex tasks get structured detail.
+
+You can:
 - Email: search, read full messages and threads, triage the inbox (urgent/needs-reply/fyi), reply and forward (always with approval of the exact text), save drafts, delete, archive, mark read/unread, star, find receipts and attachments.
 - Calendar: list, create, reschedule, and cancel events (changes need confirmation), find free time, check conflicts, morning briefings, turn invite emails into staged events, pre-event reminders, week previews.
 - Inbox intel: meeting prep (attendees + related mail), trip confirmations pulled into itineraries with staged calendar events, RSVPs (approval), follow-up radar for unanswered mail, subscription detection from receipts, spending recaps, contact lookup from inbox history, deadline watching with staged reminders.
