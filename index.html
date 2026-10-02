@@ -801,6 +801,7 @@ function bindCommon(root){
   });
   root.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>{openConversation();go('chat');send(b.dataset.ask)});
   root.querySelectorAll('[data-gconnect]').forEach(b=>b.onclick=()=>connectGoogle());
+  root.querySelectorAll('[data-gbrowser]').forEach(b=>b.onclick=()=>{go('chat');setTimeout(()=>send('connect google in browser'),300)});
 }
 
 /* ================= SHEETS ================= */
@@ -1520,8 +1521,9 @@ function homeConnectorsHTML(){
   const g=GCONN
     ?`<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Google account</b><span>Gmail + Calendar</span></div><span class="gstate"><span class="dot"></span>Connected</span></div>`
     :`<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Connect your Google account</b><span>One tap unlocks Gmail + Calendar for your agent.</span></div><button class="btn btn-silver btn-sm" style="width:auto;padding:0 18px" data-gconnect>Connect</button></div>`;
+  const gb=`<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Google browser login</b><span>Log into Google once in Ring's browser — then "Continue with Google" works on any site.</span></div><button class="btn btn-silver btn-sm" style="width:auto;padding:0 18px" data-gbrowser>Log in</button></div>`;
   const rows=CONN_soon().map(connRowHTML).join('');
-  return `<section aria-label="Connectors" style="display:flex;flex-direction:column;gap:10px"><div class="row-between"><h2 class="h2">Connectors</h2></div>${g}<div class="card" style="overflow:hidden">${rows}</div></section>`;
+  return `<section aria-label="Connectors" style="display:flex;flex-direction:column;gap:10px"><div class="row-between"><h2 class="h2">Connectors</h2></div>${g}${gb}<div class="card" style="overflow:hidden">${rows}</div></section>`;
 }
 
 function googleSetupBannerHTML(){
