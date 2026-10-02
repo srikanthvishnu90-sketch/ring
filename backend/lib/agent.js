@@ -372,7 +372,7 @@ const _RAW_TOOLS = [
     name: 'browser_inspect', risk: 'low',
     fn: async (a) => {
       // Extract structured data from the current browser page.
-      // Use after browser_continue to read subscription details, prices, etc.
+      // Use after browser_open/browser_continue to read subscription details, prices, etc.
       // Returns page text content for the agent to analyze.
       const threadId = a.threadId;
       const userId = a.userId;
@@ -381,31 +381,48 @@ const _RAW_TOOLS = [
       try {
         await pushStatus({ threadId, status: 'inspecting', detail: 'Reading page content…' });
 
-        const sessionsDb = require('./browser_sessions');
-        const session = a.sessionId
-          ? await sessionsDb.get(a.sessionId)
-          : await sessionsDb.getLatestForUser(userId);
+        // Session lookup: browser_open stores sessions in the secure in-memory
+        // store (sess_... IDs). Check there FIRST, then fall back to the
+        // Supabase-persisted multi-phase sessions.
+        const secure = require('./browser_open_secure');
+        let page = null;
+        let sessionUrl = '';
 
-        if (!session) {
-          return { ok: false, code: 'no_session', note: 'No active browser session found.' };
+        if (a.sessionId) {
+          const s = await secure.getSession(a.sessionId);
+          if (s && s.page) { page = s.page; sessionUrl = s.url || ''; }
         }
-
-        const full = await sessionsDb.getForDriver(session.id || session.bb_session_id);
-        if (!full || !full.connect_url) {
-          return { ok: false, code: 'session_expired', note: 'Browser session expired.' };
-        }
-
-        const { chromium } = require('playwright-core');
-        const browser = await chromium.connectOverCDP(full.connect_url);
-        const context = browser.contexts()[0];
-        if (!context) {
-          await browser.close();
-          return { ok: false, code: 'no_context', note: 'No browser context.' };
-        }
-        const page = context.pages()[0];
         if (!page) {
-          await browser.close();
-          return { ok: false, code: 'no_page', note: 'No open pages.' };
+          // Fall back: latest secure session for this user
+          const latest = (secure.listSessions ? secure.listSessions() : [])
+            .filter(s => s.userId === userId).sort((x, y) => y.createdAt - x.createdAt)[0];
+          if (latest) {
+            const s = await secure.getSession(latest.sessionId || latest.id);
+            if (s && s.page) { page = s.page; sessionUrl = s.url || ''; }
+          }
+        }
+
+        // Legacy fallback: Supabase multi-phase sessions (UUID keys)
+        let browser = null;
+        if (!page) {
+          const sessionsDb = require('./browser_sessions');
+          const session = a.sessionId && !String(a.sessionId).startsWith('sess_')
+            ? await sessionsDb.get(a.sessionId)
+            : await sessionsDb.getLatestForUser(userId);
+          if (session) {
+            const full = await sessionsDb.getForDriver(session.id || session.bb_session_id);
+            if (full && full.connect_url) {
+              const { chromium } = require('playwright-core');
+              browser = await chromium.connectOverCDP(full.connect_url);
+              const context = browser.contexts()[0];
+              if (context) page = context.pages()[0] || null;
+            }
+          }
+        }
+
+        if (!page) {
+          if (browser) await browser.close().catch(() => {});
+          return { ok: false, code: 'no_session', note: 'No active browser session found. Open a site first.' };
         }
 
         const url = page.url();
@@ -433,8 +450,8 @@ const _RAW_TOOLS = [
           return { prices: [...new Set(prices)], dates: [...new Set(dates)] };
         }).catch(() => ({ prices: [], dates: [] }));
 
-        await pushStatus({ threadId, status: 'browsing', detail: `Inspected ${url.slice(0, 60)}` });
-        await browser.close();
+        await pushStatus({ threadId, status: 'browsing', detail: `Inspected ${(page.url() || sessionUrl).slice(0, 60)}` });
+        if (browser) await browser.close().catch(() => {});
 
         return {
           ok: true,
@@ -476,26 +493,41 @@ const _RAW_TOOLS = [
 
         await pushStatus({ threadId, status: 'acting', detail: `${action} on page…` });
 
-        const sessionsDb = require('./browser_sessions');
-        const session = a.sessionId
-          ? await sessionsDb.get(a.sessionId)
-          : await sessionsDb.getLatestForUser(userId);
-
-        if (!session) {
-          return { ok: false, code: 'no_session', note: 'No active browser session.' };
+        // Session lookup: secure in-memory store first (sess_... IDs from
+        // browser_open), then Supabase multi-phase fallback.
+        const secure = require('./browser_open_secure');
+        let page = null;
+        let browser = null;
+        if (a.sessionId) {
+          const s = await secure.getSession(a.sessionId);
+          if (s && s.page) page = s.page;
         }
-
-        const full = await sessionsDb.getForDriver(session.id || session.bb_session_id);
-        if (!full || !full.connect_url) {
-          return { ok: false, code: 'session_expired', note: 'Session expired.' };
-        }
-
-        const { chromium } = require('playwright-core');
-        const browser = await chromium.connectOverCDP(full.connect_url);
-        const page = browser.contexts()[0]?.pages()[0];
         if (!page) {
-          await browser.close();
-          return { ok: false, code: 'no_page', note: 'No open pages.' };
+          const latest = (secure.listSessions ? secure.listSessions() : [])
+            .filter(s => s.userId === userId).sort((x, y) => y.createdAt - x.createdAt)[0];
+          if (latest) {
+            const s = await secure.getSession(latest.sessionId || latest.id);
+            if (s && s.page) page = s.page;
+          }
+        }
+        if (!page) {
+          const sessionsDb = require('./browser_sessions');
+          const session = a.sessionId && !String(a.sessionId).startsWith('sess_')
+            ? await sessionsDb.get(a.sessionId)
+            : await sessionsDb.getLatestForUser(userId);
+          if (session) {
+            const full = await sessionsDb.getForDriver(session.id || session.bb_session_id);
+            if (full && full.connect_url) {
+              const { chromium } = require('playwright-core');
+              browser = await chromium.connectOverCDP(full.connect_url);
+              page = browser.contexts()[0]?.pages()[0] || null;
+            }
+          }
+        }
+
+        if (!page) {
+          if (browser) await browser.close().catch(() => {});
+          return { ok: false, code: 'no_session', note: 'No active browser session. Open a site first.' };
         }
 
         let result;
@@ -513,7 +545,7 @@ const _RAW_TOOLS = [
           await page.locator(selector).first().fill(value, { timeout: 10000 });
           result = `Filled "${selector}"`;
         } else {
-          await browser.close();
+          if (browser) await browser.close().catch(() => {});
           return { ok: false, code: 'unknown_action', note: `Unknown action: ${action}` };
         }
 
@@ -522,9 +554,9 @@ const _RAW_TOOLS = [
 
         // Take screenshot after action
         const { pushFrame } = require('./live_view');
-        await pushFrame({ threadId, page, label: `After: ${action}`, step: 3, bbSessionId: session.bb_session_id });
+        await pushFrame({ threadId, page, label: `After: ${action}`, step: 3 });
 
-        await browser.close();
+        if (browser) await browser.close().catch(() => {});
 
         return {
           ok: true,
