@@ -1250,10 +1250,16 @@ function closeThreadStream(){
 }
 function closeThread(){closeThreadStream();G.open=null;G.seen=new Set()}
 function onThreadEvent(ev){
+  // Live browser view events — work in BOTH main chat and groups
+  if(ev&&(ev.type==='browser_frame'||ev.type==='browser_status')){
+    // Route to whichever view is active
+    if(S.tab==='groups'&&G.open){/* group handles below */}
+    else if(S.tab==='chat'){/* main chat handles below */}
+    else return;
+    if(ev.type==='browser_frame'){onBrowserFrame(ev);return}
+    if(ev.type==='browser_status'){onBrowserStatus(ev);return}
+  }
   if(!ev||S.tab!=='groups'||!G.open)return;
-  // Live browser view events
-  if(ev.type==='browser_frame'){onBrowserFrame(ev);return}
-  if(ev.type==='browser_status'){onBrowserStatus(ev);return}
   if(ev.type!=='message')return;
   const id=ev.message&&ev.message.id;
   if(id){if(G.seen.has(id))return;G.seen.add(id)}
@@ -1264,7 +1270,8 @@ function onThreadEvent(ev){
 function onBrowserFrame(ev){
   let panel=$('#live-browser');
   if(!panel){
-    const box=$('#g-msgs');
+    // Use the correct message container: main chat (#msgs) or groups (#g-msgs)
+    const box=S.tab==='chat'?$('#msgs'):$('#g-msgs');
     if(!box)return;
     box.insertAdjacentHTML('beforeend',`<div id="live-browser" class="card" style="margin:12px 0;padding:12px;border:2px solid #4a9eff">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
@@ -1304,6 +1311,32 @@ function onBrowserStatus(ev){
   // Auto-create panel on first status if it doesn't exist
   if(!$('#live-browser')&&ev.status!=='done'&&ev.status!=='failed')onBrowserFrame({image:'',label:'',ts:Date.now()});
 }
+/* Main chat live browser subscription: listens for browser_frame events on the
+   current 1:1 thread so the live panel renders in the main Ring chat. */
+let MC_WS=null;
+function openMainChatStream(){
+  closeMainChatStream();
+  const tid=S.thread;
+  if(!tid||!API.on)return;
+  try{
+    const ws=new WebSocket(`wss://${SB_REF}.supabase.co/realtime/v1/websocket?apikey=${SB_ANON}&vsn=1.0.0`);
+    MC_WS=ws;
+    const topic=`realtime:thread:${tid}`;
+    ws.onopen=()=>{ws.send(JSON.stringify({topic,event:'phx_join',payload:{config:{broadcast:{ack:false,self:false},presence:{key:''},postgres_changes:[]}},ref:'1'}))};
+    ws.onmessage=raw=>{
+      let m;try{m=JSON.parse(raw.data)}catch(e){return}
+      if(m.event==='broadcast'&&m.payload){
+        const pe=m.payload.event;
+        if(pe==='browser_frame'||pe==='browser_status'){
+          // Only handle if we're still on this thread
+          if(S.tab==='chat'&&S.thread===tid)onThreadEvent({type:pe,...m.payload.payload});
+        }
+      }
+    };
+    ws.onerror=()=>{try{ws.close()}catch(e){}};
+  }catch(e){}
+}
+function closeMainChatStream(){if(MC_WS){try{MC_WS.close()}catch(e){}MC_WS=null}}
 /* Cross-instance realtime via Supabase Broadcast (raw WebSocket, no library),
    with the per-instance SSE stream as fallback when the socket can't join. */
 function openThreadStream(){
@@ -1752,7 +1785,9 @@ function clientTZ(){try{return Intl.DateTimeFormat().resolvedOptions().timeZone|
    the caller should fall back to /api/chat or the on-device sample. */
 let stopStream=false; // set by the stop button; the read loop below honors it
 async function sendStream(text,msg,idx,attachments){
-  const r=await apiFetch('/api/chat/stream',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,tz:clientTZ(),attachments:attachments||[]})});
+  if(!S.thread)S.thread='t_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+  openMainChatStream();
+  const r=await apiFetch('/api/chat/stream',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,threadId:S.thread,tz:clientTZ(),attachments:attachments||[]})});
   if(!r.ok||!r.body)throw new Error('stream unavailable');
   msg.streaming=true;msg.thinking=true;
   const paint=()=>{const el=document.querySelector(`.msg-agent[data-mi="${idx}"]`);if(el){el.classList.remove('thinking');el.classList.add('streaming');el.innerHTML=mdHTML(msg.text)}};
@@ -1814,7 +1849,10 @@ async function send(text){
       }
     }catch(e){/* fall through to non-streaming, then on-device sample */}
     try{
-      const r=await apiFetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,tz:clientTZ(),attachments:atts})});
+      // Ensure we have a thread ID for live browser subscriptions
+      if(!S.thread)S.thread='t_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+      openMainChatStream();
+      const r=await apiFetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,threadId:S.thread,tz:clientTZ(),attachments:atts})});
       if(r.ok){
         const data=await r.json();
         msg.thinking=false;msg.streaming=false;msg.text=data.text||'Done.';
