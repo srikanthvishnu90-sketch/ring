@@ -2367,7 +2367,7 @@ function tickClock(){const t=new Date().toLocaleTimeString([], {hour:'numeric',m
 /* ================= boot ================= */
 // Splash dismisses independently — never blocked by boot errors
 const splash=$('#splash');
-let cameFromRecovery=false, recoveryToken=null;
+let cameFromRecovery=false;
 try{cameFromRecovery=handleRecoveryCallback()}catch(e){console.error('recovery:',e)}
 const endSplash=()=>{try{
   if(splash.classList.contains('out'))return;splash.classList.add('out');setTimeout(()=>splash.remove(),460);
