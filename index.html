@@ -156,7 +156,7 @@ a{color:inherit}
 .charge{display:flex;align-items:baseline;gap:10px}
 .charge b{font-family:var(--serif);font-weight:400;font-size:46px;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .charge b i{font-style:normal;font-size:.42em;letter-spacing:0}
-.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .tile{border-radius:16px;padding:12px 10px;display:flex;flex-direction:column;gap:6px;min-width:0}
 .tile .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:500}
 .tile .v{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -585,44 +585,33 @@ function renderHome(){
   const v=$('#v-home');
   const tone=t=>t==='sage'?'bi-sage':t==='brown'?'bi-brown':'bi-silver';
   v.innerHTML=`
-  <header class="head">
-    <div style="display:flex;flex-direction:column;gap:2px">
-      <div class="sub">${esc(dateStr)}</div>
-      <h1 class="h1">${greet}</h1>
+  <header class="head" style="padding-bottom:8px">
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <div class="sub" style="font-size:12px;letter-spacing:.08em;text-transform:uppercase">${esc(dateStr)}</div>
+      <h1 class="h1" style="font-size:36px">${greet}</h1>
     </div>
     <button class="iconbtn" data-go="profile" aria-label="Profile">${I.user}</button>
   </header>
 
-  <section class="ring-hero" aria-label="Your ring">
-    <div class="ring-hit" id="ring-hit" role="button" tabindex="0" aria-label="Double-tap to talk">${ringArt(232,S.charge)}<i class="tap-pulse" id="tp"></i></div>
-    <div class="charge"><b>${S.charge}<i>%</i></b><span class="muted" style="font-size:14px">About 3 days left</span></div>
-    <div class="ring-hint">Try it: double-tap the ring</div>
+  <section class="ring-hero" aria-label="Your ring" style="padding:28px 0 20px;gap:10px">
+    <div class="ring-hit" id="ring-hit" role="button" tabindex="0" aria-label="Double-tap to talk" style="filter:drop-shadow(0 0 48px rgba(169,194,166,.22))">${ringArt(280,S.charge)}<i class="tap-pulse" id="tp"></i></div>
+    <div class="charge" style="margin-top:6px"><b style="font-size:56px">${S.charge}<i>%</i></b></div>
+    <div style="font-size:13px;color:var(--muted)">About 3 days left</div>
   </section>
 
-  <section class="tiles" aria-label="Ring status">
-    <div class="tile card-brown"><div class="k">Connection</div><div class="v"><span class="dot"></span>Connected</div></div>
-    <div class="tile card-brown"><div class="k">Handled today</div><div class="v">${S.handled.length+9} tasks</div></div>
-    <button class="tile card" data-sheet="listen" style="text-align:left"><div class="k">Listening</div><div class="v" style="color:var(--silver)">On tap</div></button>
+  <section class="tiles" aria-label="Ring status" style="gap:10px;margin-top:4px">
+    <div class="tile card" style="background:rgba(255,255,255,.03);border:1px solid var(--line-soft)"><div class="k">Connection</div><div class="v"><span class="dot"></span>Connected</div></div>
+    <div class="tile card" style="background:rgba(255,255,255,.03);border:1px solid var(--line-soft)"><div class="k">Handled today</div><div class="v">${S.handled.length+9} tasks</div></div>
   </section>
 
-  <button class="btn btn-silver" id="talk">${I.mic}<span>Double-tap your ring or talk here</span></button>
+  <button class="btn btn-silver" id="talk" style="margin-top:6px">${I.mic}<span>Double-tap your ring or talk here</span></button>
 
   ${signedIn()?homeConnectorsHTML():''}
 
-
-  <section class="card-brown" aria-label="Next up" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px">
-    <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
-      <div class="sub" style="font-size:12px">Next up · 7:30 PM</div>
-      <div class="serif" style="font-size:20px">Dinner with Alex</div>
-      <div style="font-size:13px;color:var(--sage)">Leave by 7:10. It's a 14 min walk.</div>
-    </div>
-    <button class="btn btn-ghost btn-sm" style="width:auto;padding:0 18px;color:var(--silver)" data-toast="Opening walking directions">Go</button>
-  </section>
-
-  <section aria-label="Handled for you" style="display:flex;flex-direction:column;gap:10px">
-    <div class="row-between"><h2 class="h2">Handled for you</h2><button class="link" data-sheet="handled">See all</button></div>
-    <div class="card">
-      ${S.handled.slice(0,3).map(h=>`<div class="list-row"><div class="bubble-icon ${tone(h.tone)}">${I[h.icon]}</div><div class="rt"><b>${esc(h.title)}</b><span>${esc(h.meta)}</span></div></div>`).join('')}
+  <section aria-label="Handled for you" style="display:flex;flex-direction:column;gap:12px;margin-top:4px">
+    <div class="row-between"><h2 class="h2" style="font-size:19px">Handled for you</h2><button class="link" data-sheet="handled">See all</button></div>
+    <div class="card" style="border-radius:18px">
+      ${S.handled.slice(0,3).map(h=>`<div class="list-row" style="padding:14px 16px;min-height:64px"><div class="bubble-icon ${tone(h.tone)}">${I[h.icon]}</div><div class="rt"><b style="font-size:15px">${esc(h.title)}</b><span style="font-size:13px">${esc(h.meta)}</span></div></div>`).join('')}
     </div>
   </section>`;
   bindCommon(v);
