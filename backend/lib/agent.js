@@ -582,17 +582,36 @@ const _RAW_TOOLS = [
       // card 1 authorizes sign-in/inspection; phase 1 then stops at the
       // billing page and returns need_approval with the exact plan/price/
       // policy, and the server chains card 2 with those terms. Only approving
-      // card 2 runs phase 2, which clicks cancel, confirms, and verifies.
-      // Returns done with cancelRef on provider-confirmed cancellation.
-      const driver = _pickDriver();
-      const job = { site: 'subscription', kind: 'cancel-subscription', userId: a.userId,
+      // Uses the live browser tools (browser_open) so the user can see and take over.
+      // Flow: browser_open → user Take Over + login → browser_continue → browser_inspect → approval card → browser_act to cancel.
+      const merchant = (a.merchant || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const merchantUrls = {
+        elevenlabs: 'https://elevenlabs.io/app/sign-in',
+        myclaw: 'https://myclaw.ai',
+      };
+      const url = merchantUrls[merchant] || `https://${merchant}.com`;
+
+      // Use the secure browser_open flow
+      const secure = require('./browser_open_secure');
+      const result = await secure.openBrowser({
+        url,
+        userId: a.userId,
         threadId: a.threadId,
-        merchant: a.merchant, email: a.email, vaultId: a.vaultId,
-        password: a.password, password2: a.password2,
-        magic_link: a.magic_link, reset_link: a.reset_link, new_password: a.new_password,
-        sessionId: a.sessionId, cancel_approved: a.cancel_approved };
-      Object.keys(job).forEach(k => job[k] === undefined && delete job[k]);
-      return driver.execute(job);
+        isPublic: false,
+      });
+
+      if (!result.ok) {
+        return { ok: false, code: result.code || 'browser_failed', note: result.note || 'Failed to open browser' };
+      }
+
+      return {
+        ok: true,
+        sessionId: result.sessionId,
+        url: result.url,
+        liveUrl: result.liveUrl,
+        note: `Opened ${merchant} in live browser. User should Take Over and log in, then say "I'm logged in" to continue.`,
+        userMessage: `I've opened ${url} in the browser below. You can watch live and click "Take Over" to interact with it yourself. Please log in to your account, and let me know when you're logged in so I can continue and cancel your subscription.`,
+      };
     },
     schema: { type: 'object', properties: {
       merchant: { type: 'string', description: 'Merchant key, e.g. myclaw. Only implemented merchants can run.' },
