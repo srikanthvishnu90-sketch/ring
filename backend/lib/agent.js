@@ -135,6 +135,33 @@ const _RAW_TOOLS = [
     describe: 'Run a real browser automation job on a website (Uber booking, etc.). Returns phases: need_otp, need_approval, or done. Multi-phase jobs continue by passing sessionId back.',
   },
   {
+    name: 'web_search', risk: 'low',
+    fn: async (a) => {
+      // Web search via DuckDuckGo (no API key needed). Returns titles, URLs, snippets.
+      const q = encodeURIComponent(a.query || '');
+      if (!q) return { ok: false, code: 'no_query', note: 'No search query provided.' };
+      try {
+        const r = await fetch(`https://html.duckduckgo.com/html/?q=${q}`, {
+          headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' },
+        });
+        const html = await r.text();
+        const results = [];
+        const re = /<a[^>]+class="result__a"[^>]+href="([^"]+)"[^>]*>([^<]+)<\/a>[\s\S]{0,500}?<a[^>]+class="result__snippet"[^>]*>([^<]*)/g;
+        let m;
+        while ((m = re.exec(html)) && results.length < 8) {
+          results.push({ title: m[2].trim(), url: m[1], snippet: (m[3] || '').trim().slice(0, 200) });
+        }
+        return { ok: true, results, note: `${results.length} results for "${a.query}"` };
+      } catch (e) {
+        return { ok: false, code: 'search_failed', note: `Search failed: ${e.message}`.slice(0, 200) };
+      }
+    },
+    schema: { type: 'object', properties: {
+      query: { type: 'string', description: 'Search query' },
+    }, required: ['query'] },
+    describe: 'Search the web for information. Use to find cancellation pages, help docs, direct URLs, company contact info.',
+  },
+  {
     name: 'browser_open', risk: 'low',
     fn: async (a) => {
       // Open a URL in a REAL visible browser session (like Muse's Browser Beta).
