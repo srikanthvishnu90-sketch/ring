@@ -276,6 +276,183 @@ const _RAW_TOOLS = [
     describe: 'Resume a browser session after the user takes over and logs in. Use when user says "I\'m logged in" or "continue". Reconnects to the live session and returns current page state.',
   },
   {
+    name: 'browser_inspect', risk: 'low',
+    fn: async (a) => {
+      // Extract structured data from the current browser page.
+      // Use after browser_continue to read subscription details, prices, etc.
+      // Returns page text content for the agent to analyze.
+      const threadId = a.threadId;
+      const userId = a.userId;
+      const { pushStatus } = require('./live_view');
+
+      try {
+        await pushStatus({ threadId, status: 'inspecting', detail: 'Reading page content…' });
+
+        const sessionsDb = require('./browser_sessions');
+        const session = a.sessionId
+          ? await sessionsDb.get(a.sessionId)
+          : await sessionsDb.getLatestForUser(userId);
+
+        if (!session) {
+          return { ok: false, code: 'no_session', note: 'No active browser session found.' };
+        }
+
+        const full = await sessionsDb.getForDriver(session.id || session.bb_session_id);
+        if (!full || !full.connect_url) {
+          return { ok: false, code: 'session_expired', note: 'Browser session expired.' };
+        }
+
+        const { chromium } = require('playwright-core');
+        const browser = await chromium.connectOverCDP(full.connect_url);
+        const context = browser.contexts()[0];
+        if (!context) {
+          await browser.close();
+          return { ok: false, code: 'no_context', note: 'No browser context.' };
+        }
+        const page = context.pages()[0];
+        if (!page) {
+          await browser.close();
+          return { ok: false, code: 'no_page', note: 'No open pages.' };
+        }
+
+        const url = page.url();
+
+        // Navigate to a specific URL if requested (e.g., subscription/billing page)
+        if (a.navigateTo) {
+          await page.goto(a.navigateTo, { waitUntil: 'domcontentloaded', timeout: 30000 });
+          await page.waitForTimeout(2000);
+        }
+
+        // Extract text content
+        const textContent = await page.evaluate(() => {
+          // Remove scripts, styles, hidden elements
+          const clone = document.body.cloneNode(true);
+          const toRemove = clone.querySelectorAll('script, style, [hidden], [aria-hidden="true"]');
+          toRemove.forEach(el => el.remove());
+          return clone.innerText.slice(0, 15000); // Limit to 15k chars
+        }).catch(() => '');
+
+        // Extract key structured data (prices, dates, plan names)
+        const structured = await page.evaluate(() => {
+          const text = document.body.innerText;
+          const prices = [...text.matchAll(/\$\d+(?:\.\d{2})?(?:\/mo(?:nth)?)?/gi)].map(m => m[0]).slice(0, 20);
+          const dates = [...text.matchAll(/(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{1,2},? \d{4}/gi)].map(m => m[0]).slice(0, 20);
+          return { prices: [...new Set(prices)], dates: [...new Set(dates)] };
+        }).catch(() => ({ prices: [], dates: [] }));
+
+        await pushStatus({ threadId, status: 'browsing', detail: `Inspected ${url.slice(0, 60)}` });
+        await browser.close();
+
+        return {
+          ok: true,
+          url: page.url(),
+          textContent: textContent.slice(0, 8000),
+          prices: structured.prices,
+          dates: structured.dates,
+          note: 'Page content extracted. Analyze for subscription details.',
+        };
+      } catch (e) {
+        await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
+        return { ok: false, code: 'inspect_failed', note: `Could not inspect page: ${e.message}`.slice(0, 200) };
+      }
+    },
+    schema: { type: 'object', properties: {
+      sessionId: { type: 'string', description: 'Optional: specific session. Omit for latest.' },
+      navigateTo: { type: 'string', description: 'Optional: URL to navigate to before inspecting (e.g., billing page).' },
+    } },
+    describe: 'Extract text and structured data (prices, dates) from the current browser page. Use after login to read subscription details. Can navigate to a specific URL first.',
+  },
+  {
+    name: 'browser_act', risk: 'high',
+    fn: async (a) => {
+      // Perform an action in the browser: click, fill, select.
+      // HIGH RISK: Requires approval for irreversible actions.
+      // Use for cancellation clicks, form submissions, etc.
+      const threadId = a.threadId;
+      const userId = a.userId;
+      const { pushStatus } = require('./live_view');
+
+      try {
+        const action = a.action; // 'click', 'fill', 'select'
+        const selector = a.selector; // CSS selector or text to match
+        const value = a.value; // For fill/select
+
+        if (!action || !selector) {
+          return { ok: false, code: 'missing_params', note: 'action and selector required.' };
+        }
+
+        await pushStatus({ threadId, status: 'acting', detail: `${action} on page…` });
+
+        const sessionsDb = require('./browser_sessions');
+        const session = a.sessionId
+          ? await sessionsDb.get(a.sessionId)
+          : await sessionsDb.getLatestForUser(userId);
+
+        if (!session) {
+          return { ok: false, code: 'no_session', note: 'No active browser session.' };
+        }
+
+        const full = await sessionsDb.getForDriver(session.id || session.bb_session_id);
+        if (!full || !full.connect_url) {
+          return { ok: false, code: 'session_expired', note: 'Session expired.' };
+        }
+
+        const { chromium } = require('playwright-core');
+        const browser = await chromium.connectOverCDP(full.connect_url);
+        const page = browser.contexts()[0]?.pages()[0];
+        if (!page) {
+          await browser.close();
+          return { ok: false, code: 'no_page', note: 'No open pages.' };
+        }
+
+        let result;
+        if (action === 'click') {
+          // Try text-based click first, then CSS selector
+          const byText = page.locator(`text="${selector}"`).first();
+          if (await byText.count() > 0) {
+            await byText.click({ timeout: 10000 });
+            result = `Clicked element with text "${selector}"`;
+          } else {
+            await page.locator(selector).first().click({ timeout: 10000 });
+            result = `Clicked selector "${selector}"`;
+          }
+        } else if (action === 'fill') {
+          await page.locator(selector).first().fill(value, { timeout: 10000 });
+          result = `Filled "${selector}"`;
+        } else {
+          await browser.close();
+          return { ok: false, code: 'unknown_action', note: `Unknown action: ${action}` };
+        }
+
+        await page.waitForTimeout(2000);
+        const newUrl = page.url();
+
+        // Take screenshot after action
+        const { pushFrame } = require('./live_view');
+        await pushFrame({ threadId, page, label: `After: ${action}`, step: 3, bbSessionId: session.bb_session_id });
+
+        await browser.close();
+
+        return {
+          ok: true,
+          result,
+          url: newUrl,
+          note: `${result}. Page is now at ${newUrl}`,
+        };
+      } catch (e) {
+        await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
+        return { ok: false, code: 'act_failed', note: `Action failed: ${e.message}`.slice(0, 200) };
+      }
+    },
+    schema: { type: 'object', properties: {
+      action: { type: 'string', description: 'Action to perform: click, fill' },
+      selector: { type: 'string', description: 'Text content or CSS selector of the element' },
+      value: { type: 'string', description: 'Value for fill actions' },
+      sessionId: { type: 'string', description: 'Optional: specific session. Omit for latest.' },
+    }, required: ['action', 'selector'] },
+    describe: 'Perform an action in the browser (click, fill). HIGH RISK — requires approval for irreversible actions. Use for cancellation buttons, form submissions.',
+  },
+  {
     name: 'dining_links', risk: 'low',
     fn: async ({ slug, city, date, dateTime, seats }) => ({
       opentable: dining.opentableLink({ slug, dateTime, covers: seats }),
