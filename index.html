@@ -1313,30 +1313,50 @@ function onBrowserStatus(ev){
 }
 /* Main chat live browser subscription: listens for browser_frame events on the
    current 1:1 thread so the live panel renders in the main Ring chat. */
-let MC_WS=null;
+let MC_WS=null, MC_ES=null;
 function openMainChatStream(){
   closeMainChatStream();
   const tid=S.thread;
   if(!tid||!API.on)return;
+  // Try WebSocket first, fall back to SSE
   try{
     const ws=new WebSocket(`wss://${SB_REF}.supabase.co/realtime/v1/websocket?apikey=${SB_ANON}&vsn=1.0.0`);
     MC_WS=ws;
     const topic=`realtime:thread:${tid}`;
+    let opened=false;
+    const giveUp=setTimeout(()=>{if(!opened){try{ws.close()}catch(e){}openMainChatSSE(tid)}},5000);
     ws.onopen=()=>{ws.send(JSON.stringify({topic,event:'phx_join',payload:{config:{broadcast:{ack:false,self:false},presence:{key:''},postgres_changes:[]}},ref:'1'}))};
     ws.onmessage=raw=>{
       let m;try{m=JSON.parse(raw.data)}catch(e){return}
+      if(m.event==='phx_reply'&&m.payload&&m.payload.status==='ok'){opened=true;clearTimeout(giveUp);return}
       if(m.event==='broadcast'&&m.payload){
         const pe=m.payload.event;
         if(pe==='browser_frame'||pe==='browser_status'){
-          // Only handle if we're still on this thread
           if(S.tab==='chat'&&S.thread===tid)onThreadEvent({type:pe,...m.payload.payload});
         }
       }
     };
-    ws.onerror=()=>{try{ws.close()}catch(e){}};
+    ws.onerror=()=>{clearTimeout(giveUp);openMainChatSSE(tid)};
+    ws.onclose=()=>{clearTimeout(giveUp)};
+  }catch(e){openMainChatSSE(tid)}
+}
+function openMainChatSSE(tid){
+  if(!tid||!API.on||MC_ES)return;
+  try{
+    MC_ES=new EventSource(`/api/threads/${tid}/stream`);
+    MC_ES.onmessage=e=>{
+      try{
+        const d=JSON.parse(e.data);
+        if((d.type==='browser_frame'||d.type==='browser_status')&&S.tab==='chat'&&S.thread===tid)onThreadEvent(d);
+      }catch(err){}
+    };
+    MC_ES.onerror=()=>{try{MC_ES.close()}catch(x){}MC_ES=null};
   }catch(e){}
 }
-function closeMainChatStream(){if(MC_WS){try{MC_WS.close()}catch(e){}MC_WS=null}}
+function closeMainChatStream(){
+  if(MC_WS){try{MC_WS.close()}catch(e){}MC_WS=null}
+  if(MC_ES){try{MC_ES.close()}catch(e){}MC_ES=null}
+}
 /* Cross-instance realtime via Supabase Broadcast (raw WebSocket, no library),
    with the per-instance SSE stream as fallback when the socket can't join. */
 function openThreadStream(){

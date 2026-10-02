@@ -235,7 +235,7 @@ const _RAW_TOOLS = [
       url: { type: 'string', description: 'Full URL to open' },
       site: { type: 'string', description: 'Common site name (e.g. elevenlabs, uber) — resolved to URL automatically' },
     } },
-    describe: 'Open a URL in a LIVE browser session that the user can see and take over. Use when the user says "open X". Returns session info and live URL.',
+    describe: 'Open a URL in a LIVE browser session that the user can see and take over. Use ONLY when the user says "open X" (not for cancellations, bookings, or other tasks — those have dedicated tools). Returns session info and live URL.',
   },
   {
     name: 'browser_continue', risk: 'low',
