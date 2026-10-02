@@ -359,6 +359,10 @@ a{color:inherit}
 
 <!-- ============ SPLASH ============ -->
 <div id="splash" class="full splash" role="img" aria-label="Loading">
+<script>
+// Fail-safe: remove splash after 3s even if main script fails
+setTimeout(function(){var s=document.getElementById('splash');if(s){s.style.opacity='0';s.style.pointerEvents='none';setTimeout(function(){s.remove()},500)}},3000);
+</script>
   <svg width="120" height="120" viewBox="0 0 120 120" style="overflow:visible">
     <circle class="mk-p mk-p1" cx="88.28" cy="31.72" r="7.5" fill="none" stroke="#FBF9F6" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
     <circle class="mk-p mk-p2" cx="88.28" cy="31.72" r="7.5" fill="none" stroke="#FBF9F6" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
