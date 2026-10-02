@@ -207,7 +207,7 @@ const _RAW_TOOLS = [
         };
         url = known[a.site.toLowerCase()] || `https://www.google.com/search?q=${encodeURIComponent(a.site)}`;
       }
-      if (!url) return { ok: false, code: 'no_url', note: 'No URL or site provided.' };
+      if (!url) return { ok: false, code: 'no_url', note: 'I need a website to open — tell me the site name (e.g. "elevenlabs") and I\'ll find it.' };
 
       const threadId = a.threadId;
       const userId = a.userId;
@@ -1214,7 +1214,7 @@ TASK PLAYBOOKS — subscription cancellation ("cancel my X subscription"):
 9. VERIFY: confirmation text on the page or a receipt email. Report "Cancelled. Access ends Oct 14." — with proof, never without.
 
 TOOL MAP (which tool for which job):
-- browser_open: open a site (invisible). First browser step for any site task.
+- browser_open: open a site (invisible). First browser step for any site task. Pass site:"elevenlabs" (lowercase name) — NEVER pass empty params. The tool resolves known sites to URLs.
 - browser_inspect: READ the page — text, links, buttons. Use before EVERY click decision.
 - browser_act: CLICK / FILL / SELECT. High risk — approvals gate anything irreversible.
 - browser_continue: resume after the user did something in Take Over.
@@ -1225,6 +1225,8 @@ TOOL MAP (which tool for which job):
 - browser_request_help: LAST RESORT — reveal browser + Take Over when truly stuck.
 - browser_close: end the session when the task is done.
 - subscription_cancel: DEPRECATED — never use. Always the browser flow above.
+
+NEVER EXPOSE INTERNAL ERRORS: If a tool returns ok:false, translate to plain user language. NEVER show error codes like [no_url], [session_not_found], etc. Say what happened and what you're doing about it: "Let me try that a different way..."
 
 CONCISENESS (the Instinct bar):
 - One line per status. No paragraphs about what you're "about to do".
