@@ -801,7 +801,7 @@ function bindCommon(root){
   });
   root.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>{openConversation();go('chat');send(b.dataset.ask)});
   root.querySelectorAll('[data-gconnect]').forEach(b=>b.onclick=()=>connectGoogle());
-  root.querySelectorAll('[data-gbrowser]').forEach(b=>b.onclick=()=>{go('chat');setTimeout(()=>send('connect google in browser'),300)});
+  root.querySelectorAll('[data-gbrowser]').forEach(b=>b.onclick=()=>connectGoogleBrowser());
 }
 
 /* ================= SHEETS ================= */
@@ -1475,6 +1475,16 @@ async function refreshGoogleConn(){
   try{const r=await apiFetch('/api/oauth/google/status');GCONN=r.ok?!!(await r.json()).connected:false}
   catch(e){GCONN=false}
   return GCONN;
+}
+async function connectGoogleBrowser(){
+  if(!signedIn()){toast('Sign in first, then connect Google');return}
+  go('chat');
+  // Small delay to let chat render, then send the trigger message
+  setTimeout(()=>{
+    const inp=$('#ask');
+    if(inp){inp.value='connect google in browser';}
+    send('connect google in browser');
+  },400);
 }
 async function connectGoogle(){
   if(!signedIn()){toast('Sign in first, then connect Google');return}
