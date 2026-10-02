@@ -2298,6 +2298,8 @@ apiInit();
   await refreshGoogleConn();
   if(gq==='connected'){
     try{history.replaceState(null,'',location.pathname)}catch(e){}
+    // Permanently hide the setup banner — user just connected
+    try{store.set('gsetup_hide',true)}catch(e){}
     // Restore where we were before the OAuth trip — no splash, back to chatbox.
     let ret=null;
     try{ret=JSON.parse(sessionStorage.getItem('ring_oauth_return')||'null')}catch(e){}

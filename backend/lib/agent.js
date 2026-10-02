@@ -1337,12 +1337,24 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
   const prompt = (memBlock ? `${memBlock}\n\nUser message: ${text}` : text)
     + (demo ? DEMO_PROMPT_SUFFIX : '');
 
+  // Check Google connection status so the agent knows what tools are available
+  let googleStatus = '';
+  if (!demo) {
+    try {
+      const google = require('./google');
+      const connected = google.isConnected(userId);
+      googleStatus = connected
+        ? `\n\nGOOGLE CONNECTED: The user's Google account is connected. Gmail and Calendar tools are available and working.`
+        : `\n\nGOOGLE NOT CONNECTED: The user's Google account is not connected. Gmail and Calendar tools will fail. If the user asks about email or calendar, tell them to connect Google in the app.`;
+    } catch (e) { /* ignore, leave blank */ }
+  }
+
   const provider = env('LLM_PROVIDER', 'openai');
   const call = provider === 'anthropic' ? callAnthropicStream : callOpenAIStream;
   // Image attachments ride on the FIRST call only (the model keeps them in
   // context for follow-up rounds); later rounds re-send text only.
   const firstParts = Array.isArray(attachments) && attachments.length ? attachments : null;
-  const streamOpts = { system: withTimeContext(SYSTEM_PROMPT + (voice ? VOICE_STYLE : ''), tz), ...(maxTokens || voice ? { maxTokens: maxTokens || 150 } : {}), ...(firstParts ? { parts: firstParts } : {}) };
+  const streamOpts = { system: withTimeContext(SYSTEM_PROMPT + (voice ? VOICE_STYLE : '') + googleStatus, tz), ...(maxTokens || voice ? { maxTokens: maxTokens || 150 } : {}), ...(firstParts ? { parts: firstParts } : {}) };
   const first = await call(prompt, onToken, tools, streamOpts);
   delete streamOpts.parts; // images ride the first call only; follow-ups are text-only
 
@@ -1492,7 +1504,19 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
   const tools = demo ? DEMO_TOOLS : TOOLS;
   if (!llmConfigured()) return { ...cannedReply(text), mode: demo ? 'canned-demo' : 'canned' };
 
-  const system = withTimeContext(SYSTEM_PROMPT + (tg ? TG_STYLE(tg.name) : '') + (voice ? VOICE_STYLE : ''), tz);
+  // Check Google connection status so the agent knows what tools are available
+  let googleStatus = '';
+  if (!demo) {
+    try {
+      const google = require('./google');
+      const connected = google.isConnected(userId);
+      googleStatus = connected
+        ? `\n\nGOOGLE CONNECTED: The user's Google account is connected. Gmail and Calendar tools are available and working.`
+        : `\n\nGOOGLE NOT CONNECTED: The user's Google account is not connected. Gmail and Calendar tools will fail. If the user asks about email or calendar, tell them to connect Google in the app.`;
+    } catch (e) { /* ignore, leave blank */ }
+  }
+
+  const system = withTimeContext(SYSTEM_PROMPT + (tg ? TG_STYLE(tg.name) : '') + (voice ? VOICE_STYLE : '') + googleStatus, tz);
   const memBlock = demo ? '' : await memory.contextBlock(userId, text).catch(() => '');
   const histBlock = tg ? tgHistoryBlock(tg.history) : '';
   const prompt = (memBlock ? `${memBlock}\n\n` : '')
