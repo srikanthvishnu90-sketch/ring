@@ -209,7 +209,7 @@ const _RAW_TOOLS = [
 
         // Broadcast the live frame so the user sees the browser.
         // CRITICAL: If the frame doesn't reach the frontend, we MUST NOT claim the browser is open.
-        const frameOk = await pushFrame({ threadId, page: session.page, label: `Opened ${result.hostname}`, step: 1, bbSessionId: result.bbSessionId });
+        const frameOk = await pushFrame({ threadId, page: session.page, label: `Opened ${result.hostname}`, step: 1, bbSessionId: result.bbSessionId, sessionId: result.sessionId });
         if (!frameOk) {
           await pushStatus({ threadId, status: 'failed', detail: 'Browser opened but live view failed to render.' }).catch(() => {});
           // Close the session since the user can't see it
@@ -637,6 +637,22 @@ const _RAW_TOOLS = [
       if (!result.ok) {
         return { ok: false, code: result.code || 'browser_failed', note: result.note || 'Failed to open browser' };
       }
+
+      // Broadcast the live frame so the user sees the browser and can Take Over
+      try {
+        const { pushFrame } = require('./live_view');
+        const session = await secure.getSession(result.sessionId);
+        if (session && session.page) {
+          await pushFrame({
+            threadId: a.threadId,
+            page: session.page,
+            label: `Opened ${merchant}`,
+            step: 1,
+            bbSessionId: result.bbSessionId,
+            sessionId: result.sessionId,
+          });
+        }
+      } catch (e) { /* best-effort */ }
 
       return {
         ok: true,

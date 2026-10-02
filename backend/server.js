@@ -1085,6 +1085,22 @@ app.post('/api/test-browser/close/:sessionId', async (req, res) => {
 // browser sessions and screenshots without exposing them publicly.
 // NEVER expose session URLs or Browserbase IDs here.
 
+// Take Over: user interacts with their cloud browser session via Ring's UI.
+// No Browserbase account needed — Ring proxies the inputs.
+app.post('/api/browser/takeover/:sessionId', requireUser, async (req, res) => {
+  try {
+    const takeover = require('./lib/takeover');
+    const result = await takeover.handleTakeoverInput(
+      req.params.sessionId,
+      req.body || {},
+      req.userId
+    );
+    res.json(result);
+  } catch (e) {
+    res.status(500).json({ ok: false, code: 'takeover_failed', note: e.message.slice(0, 200) });
+  }
+});
+
 function checkDebugToken(req, res, next) {
   const token = process.env.DEBUG_TOKEN;
   if (!token) return res.status(503).json({ error: 'Debug endpoints not configured' });

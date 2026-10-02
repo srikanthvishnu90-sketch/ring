@@ -1269,6 +1269,8 @@ function onThreadEvent(ev){
 /* Live browser view: shows Ring's browser in real-time as it works. */
 function onBrowserFrame(ev){
   let panel=$('#live-browser');
+  // Store session ID for Take Over
+  if(ev.sessionId)window._liveSessionId=ev.sessionId;
   if(!panel){
     // Use the correct message container: main chat (#msgs) or groups (#g-msgs)
     const box=S.tab==='chat'?$('#msgs'):$('#g-msgs');
@@ -1282,12 +1284,44 @@ function onBrowserFrame(ev){
         </div>
       </div>
       <div id="live-status" style="font-size:12px;color:#888;margin-bottom:8px">Starting…</div>
-      <img id="live-img" style="width:100%;border-radius:8px;background:#111;min-height:200px" />
+      <img id="live-img" style="width:100%;border-radius:8px;background:#111;min-height:200px;cursor:default" />
       <div id="live-label" style="font-size:12px;color:#aaa;margin-top:6px"></div>
+      <div id="live-takeover-hint" style="display:none;font-size:12px;color:#4a9eff;margin-top:8px">👆 Tap the browser to click. Use your keyboard to type.</div>
     </div>`);
-    $('#live-close').onclick=()=>{const p=$('#live-browser');if(p)p.remove()};
+    $('#live-close').onclick=()=>{const p=$('#live-browser');if(p)p.remove();window._takeoverMode=false};
     $('#live-takeover').onclick=()=>{
-      // Direct link to the Browserbase session. Requires Browserbase access.
+      // Enable interactive Take Over mode — no Browserbase login needed.
+      // Taps on the browser image are forwarded to the cloud browser.
+      window._takeoverMode=!window._takeoverMode;
+      const btn=$('#live-takeover');
+      const hint=$('#live-takeover-hint');
+      const img=$('#live-img');
+      if(window._takeoverMode){
+        btn.textContent='Done';
+        btn.style.background='#28a745';
+        if(hint)hint.style.display='block';
+        if(img)img.style.cursor='pointer';
+        toast('Take Over active — tap the browser to interact');
+      }else{
+        btn.textContent='Take Over';
+        btn.style.background='#4a9eff';
+        if(hint)hint.style.display='none';
+        if(img)img.style.cursor='default';
+      }
+    };
+    // Click on browser image forwards to cloud browser when in Take Over mode
+    $('#live-img').onclick=(e)=>{
+      if(!window._takeoverMode||!window._liveSessionId)return;
+      const img=e.target;
+      const rect=img.getBoundingClientRect();
+      const x=Math.round(((e.clientX-rect.left)/rect.width)*1000);
+      const y=Math.round(((e.clientY-rect.top)/rect.height)*1000);
+      apiFetch(`/api/browser/takeover/${window._liveSessionId}`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({type:'click',x,y})
+      }).catch(()=>{});
+    };
       // If you don't have it, the session view above shows the current state.
       const url=ev.liveUrl;
       if(url)window.open(url,'_blank');

@@ -8,7 +8,7 @@ const { broadcastRealtime } = require('./realtime');
 
 // Broadcast a screenshot for a thread.
 // Call this after each browser action to update the live view.
-async function pushFrame({ threadId, page, label, step, bbSessionId }) {
+async function pushFrame({ threadId, page, label, step, bbSessionId, sessionId }) {
   if (!threadId || !page) {
     if (!threadId) console.log('[live_view] No threadId, skipping frame broadcast');
     return false;
@@ -23,6 +23,7 @@ async function pushFrame({ threadId, page, label, step, bbSessionId }) {
       url: page.url().slice(0, 120),
       // Browserbase live session URL for "take over"
       liveUrl: bbSessionId ? `https://www.browserbase.com/sessions/${bbSessionId}` : null,
+      sessionId: sessionId || null, // Ring session ID for Take Over proxy (no Browserbase login needed)
       ts: Date.now(),
     });
     console.log(`[live_view] Frame broadcast to thread:${threadId}: ${ok ? 'ok' : 'failed'}`);
