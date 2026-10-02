@@ -2365,20 +2365,25 @@ addEventListener('resize',fitDevice);
 function tickClock(){const t=new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}).replace(/\s?[AP]M/i,'');const e=$('#sbar-time');if(e)e.textContent=t}
 
 /* ================= boot ================= */
+// Splash dismisses independently — never blocked by boot errors
+const splash=$('#splash');
+let cameFromRecovery=false, recoveryToken=null;
+try{cameFromRecovery=handleRecoveryCallback()}catch(e){console.error('recovery:',e)}
+const endSplash=()=>{try{
+  if(splash.classList.contains('out'))return;splash.classList.add('out');setTimeout(()=>splash.remove(),460);
+  if(cameFromRecovery&&recoveryToken)showAuth('reset');
+  else if(!S.account)showAuth('welcome');else if(!store.get('onboarded',false))startOnboarding()
+}catch(e){console.error('endSplash:',e);try{splash.remove()}catch(_){}}};
+setTimeout(endSplash,1900);
+splash.addEventListener('click',endSplash);
+
 paintIcons();
 fitDevice();tickClock();setInterval(tickClock,30000);
 document.documentElement.dataset.theme=S.theme;
-setupMic();
-setupComposer();
-const cameFromRecovery=handleRecoveryCallback();
-handleAuthCallback();
-go('home');
-const splash=$('#splash');
-const endSplash=()=>{if(splash.classList.contains('out'))return;splash.classList.add('out');setTimeout(()=>splash.remove(),460);
-  if(cameFromRecovery&&recoveryToken)showAuth('reset');
-  else if(!S.account)showAuth('welcome');else if(!store.get('onboarded',false))startOnboarding()};
-setTimeout(endSplash,1900);
-splash.addEventListener('click',endSplash);
+try{setupMic()}catch(e){console.error('setupMic:',e)}
+try{setupComposer()}catch(e){console.error('setupComposer:',e)}
+try{handleAuthCallback()}catch(e){console.error('auth callback:',e)}
+try{go('home')}catch(e){console.error('go home:',e)}
 getSample();
 apiInit();
 /* After Google OAuth the server redirects back with ?google=connected. */
