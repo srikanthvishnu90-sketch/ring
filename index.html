@@ -606,8 +606,6 @@ function renderHome(){
 
   <button class="btn btn-silver" id="talk" style="margin-top:6px">${I.mic}<span>Double-tap your ring or talk here</span></button>
 
-  ${signedIn()?homeConnectorsHTML():''}
-
   <section aria-label="Handled for you" style="display:flex;flex-direction:column;gap:12px;margin-top:4px">
     <div class="row-between"><h2 class="h2" style="font-size:19px">Handled for you</h2><button class="link" data-sheet="handled">See all</button></div>
     <div class="card" style="border-radius:18px">
@@ -763,6 +761,7 @@ function renderProfile(){
     ${nav('plan','Plan and billing',planName)}
     ${nav('replay','Replay ring setup','')}
     ${nav('pair','Pair your ring',BLE_DEV&&BLE_DEV.rowId?'Connected':'')}
+    ${nav('conns','Connectors',GCONN?'Google connected':'')}
   </section>
 
   ${signedIn()?`<section class="card" style="overflow:hidden" aria-label="Privacy">
@@ -865,7 +864,9 @@ function openSheet(kind,arg){
     conns:()=>`<h3 id="sheet-title">Connectors</h3><p>Apps your agent can use. It only touches what you connect.</p>      ${backendStatusLine()}
       ${googleCardHTML()}
       <div style="height:12px"></div>
-      <div class="card" style="overflow:hidden">${CONN_soon().map(connRowHTML).join('')}</div>`,
+      ${googleBrowserCardHTML()}
+      <div style="height:12px"></div>
+      <details style="border:1px solid var(--line-soft);border-radius:14px;overflow:hidden"><summary style="padding:14px 16px;cursor:pointer;font-weight:600;font-size:15px;list-style:none;display:flex;justify-content:space-between;align-items:center">More<span class="sub">coming soon</span></summary><div style="border-top:1px solid var(--line-soft)">${CONN_soon().map(connRowHTML).join('')}</div></details>`,
     theme:()=>`<h3 id="sheet-title">Appearance</h3><p>Dark is the classic ring look; light is easier in bright sun.</p>
       <div role="radiogroup" aria-label="Appearance">
       <button class="opt" role="radio" aria-checked="${S.theme==='dark'}" data-theme="dark"><span class="radio"></span><span class="rt"><b>Dark</b><span>Classic</span></span></button>
@@ -934,6 +935,7 @@ function openSheet(kind,arg){
   b.querySelectorAll('[data-ex]').forEach(x=>x.onclick=()=>{$('#cw-t').value=x.dataset.ex;$('#cw-t').focus()});
   const cw=$('#cw-form');if(cw)cw.onsubmit=async e=>{e.preventDefault();const t=$('#cw-t').value.trim();if(!t){$('#cw-t').focus();return}const g=$('#cw-go');g.disabled=true;g.textContent='Setting it up…';closeSheet();toast('Setting up your workflow');await createWorkflow(t)};
   b.querySelectorAll('[data-gconnect]').forEach(x=>x.onclick=()=>connectGoogle());
+  b.querySelectorAll('[data-gbrowser]').forEach(x=>x.onclick=()=>connectGoogleBrowser());
   const so=$('#do-signout');if(so)so.onclick=()=>{closeSheet();tokenStore.set(null);S.account=null;store.set('account',null);setTimeout(()=>showAuth('welcome'),250)};
   b.querySelectorAll('[data-theme]').forEach(x=>x.onclick=()=>{setTheme(x.dataset.theme);b.querySelectorAll('[data-theme]').forEach(y=>y.setAttribute('aria-checked',String(y===x)));if(S.tab==='profile')renderProfile()});
   const pe=$('#pv-export');
@@ -1467,11 +1469,10 @@ async function refreshGoogleConn(){
 }
 async function connectGoogleBrowser(){
   if(!signedIn()){toast('Sign in first, then connect Google');return}
+  closeSheet();
   go('chat');
   // Small delay to let chat render, then send the trigger message
   setTimeout(()=>{
-    const inp=$('#ask');
-    if(inp){inp.value='connect google in browser';}
     send('connect google in browser');
   },400);
 }
@@ -1516,13 +1517,8 @@ function googleCardHTML(){
     :`<button class="btn btn-silver btn-sm" style="width:auto;padding:0 18px" data-gconnect>Connect</button>`;
   return `<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Google account</b><span>Gmail + Calendar, connected in one tap</span></div>${act}</div>`;
 }
-function homeConnectorsHTML(){
-  const g=GCONN
-    ?`<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Google account</b><span>Gmail + Calendar</span></div><span class="gstate"><span class="dot"></span>Connected</span></div>`
-    :`<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Connect your Google account</b><span>One tap unlocks Gmail + Calendar for your agent.</span></div><button class="btn btn-silver btn-sm" style="width:auto;padding:0 18px" data-gconnect>Connect</button></div>`;
-  const gb=`<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Google browser login</b><span>Log into Google once in Ring's browser — then "Continue with Google" works on any site.</span></div><button class="btn btn-silver btn-sm" style="width:auto;padding:0 18px" data-gbrowser>Log in</button></div>`;
-  const rows=CONN_soon().map(connRowHTML).join('');
-  return `<section aria-label="Connectors" style="display:flex;flex-direction:column;gap:10px"><div class="row-between"><h2 class="h2">Connectors</h2></div>${g}${gb}<div class="card" style="overflow:hidden">${rows}</div></section>`;
+function googleBrowserCardHTML(){
+  return `<div class="card gcard"><span class="gicon">${I.google}</span><div class="rt"><b>Google browser login</b><span>Log in once in Ring's browser — "Continue with Google" then works on any site, forever</span></div><button class="btn btn-silver btn-sm" style="width:auto;padding:0 18px" data-gbrowser>Log in</button></div>`;
 }
 
 function googleSetupBannerHTML(){
