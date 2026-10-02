@@ -520,7 +520,7 @@ const S={
     {icon:'bell',tone:'silver',title:'Reminded you to call the landlord',meta:'Reminder · 11:30 AM'},
   ]),
   memory:store.get('memory',[
-    'Prefers quiet spots before 8 PM','Loved [Similar spot] (ramen) last month','Sam is a close friend, texts often','Walks rather than drives under 20 minutes','Vegetarian on weekdays','Dentist: [Clinic name]'
+    'Prefers quiet spots before 8 PM','Loved ramen last month','Sam is a close friend, texts often','Walks rather than drives under 20 minutes','Vegetarian on weekdays','Dentist: downtown clinic'
   ]),
   account:store.get('account',null),
   conns:store.get('conns',{reminders:true,contacts:true,mail:false,music:false,rides:false,dining:false,notes:false}),
@@ -612,7 +612,7 @@ function renderHome(){
   <section class="card-brown" aria-label="Next up" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px">
     <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
       <div class="sub" style="font-size:12px">Next up · 7:30 PM</div>
-      <div class="serif" style="font-size:20px">Dinner with [Friend]</div>
+      <div class="serif" style="font-size:20px">Dinner with Alex</div>
       <div style="font-size:13px;color:var(--sage)">Leave by 7:10. It's a 14 min walk.</div>
     </div>
     <button class="btn btn-ghost btn-sm" style="width:auto;padding:0 18px;color:var(--silver)" data-toast="Opening walking directions">Go</button>
@@ -2077,7 +2077,7 @@ function renderAuth(){
   const el=$('#auth');
   const V={
     welcome:()=>`<div class="onb-inner" style="justify-content:space-between">
-      <div style="display:flex;align-items:center;gap:10px;padding-top:8px">${mark(28,'#FFFFFF')}<span class="serif" style="font-size:22px">[Name]</span></div>
+      <div style="display:flex;align-items:center;gap:10px;padding-top:8px">${mark(28,'#FFFFFF')}<span class="serif" style="font-size:22px">Ring</span></div>
       <div class="onb-art">${ringArt(270)}</div>
       <h2>Your assistant, on your finger.</h2>
       <p class="lead">Double-tap your ring and just talk. It texts, plans and finds places for you, while your phone stays in your pocket.</p>
