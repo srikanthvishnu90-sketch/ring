@@ -5,8 +5,11 @@
 //
 // 1. URL VALIDATION: Only http/https. Blocks private/internal IPs (SSRF),
 //    localhost, and sensitive domains (banking, email, etc.).
-// 2. FRESH CONTEXTS: Every session gets a new incognito context — no shared
-//    cookies, storage, or auth state between sessions.
+// 2. PERSISTENT AUTH STATE (per-user): Authenticated users get their saved
+//    login state (cookies/storage) loaded into each new session, so logins
+//    like Google persist across sessions. Public test sessions still get a
+//    fresh context with no shared state. Auth state is AES-256-GCM encrypted
+//    (BROWSER_AUTH_KEY) in Supabase table browser_auth_states.
 // 3. AUTO-EXPIRY: Sessions die after SESSION_TTL_MS (default 2 min for public,
 //    10 min for authenticated). A sweeper closes them server-side.
 // 4. RATE LIMITING: Per-IP and per-user caps on session creation.
@@ -133,15 +136,31 @@ async function createSecureSession({ url, userId, clientIp, isPublic }) {
     return { ok: false, code: 'session_failed', note: `Could not create browser session: ${e.message}`.slice(0, 200) };
   }
 
-  // 4. Connect and create FRESH incognito context (no shared state)
-  let browser, page;
+  // 4. Connect and create the browser context.
+  // Authenticated users: load their persisted auth state (logins persist).
+  // Public sessions: always a fresh context (no shared state).
+  let browser, page, context;
   try {
     const { chromium } = require('playwright-core');
     browser = await chromium.connectOverCDP(bbSession.connectUrl);
-    // Always create a new context — never reuse the default
-    const context = await browser.newContext({
+    const contextOpts = {
       viewport: { width: 1280, height: 800 },
-    });
+    };
+    if (!isPublic && userId) {
+      try {
+        const authState = require('./browser_auth_state');
+        const saved = await authState.loadAuthState(userId);
+        if (saved && saved.cookies) {
+          contextOpts.storageState = saved;
+          console.log('[browser_open_secure] loaded persisted auth state for user');
+        }
+      } catch (e) {
+        // Non-fatal: fall back to a fresh context.
+        console.log('[browser_open_secure] auth state load failed (non-fatal):', e.message);
+      }
+    }
+    // Always create a new context — never reuse the default
+    context = await browser.newContext(contextOpts);
     page = await context.newPage();
     await page.goto(v.url, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
     await page.waitForTimeout(1500);
@@ -157,6 +176,7 @@ async function createSecureSession({ url, userId, clientIp, isPublic }) {
   sessions.set(sessionId, {
     bbSessionId: bbSession.id,
     browser,
+    context,
     page,
     createdAt: Date.now(),
     expiresAt: Date.now() + ttl,
@@ -209,12 +229,34 @@ async function getSession(sessionId) {
 async function closeSession(sessionId) {
   const s = sessions.get(sessionId);
   if (!s) return;
+  // Persist auth state for authenticated users before closing, so logins survive.
+  if (!s.isPublic && s.userId) {
+    await persistSessionAuthState(sessionId).catch(() => {});
+  }
   sessions.delete(sessionId);
   try { await s.browser.close(); } catch {}
   try {
     const driver = require('./browser_driver').createDriver();
     await driver.stopSession(s.bbSessionId);
   } catch {}
+}
+
+// Save the current session's auth state (cookies/storage) for the user.
+// Call after the user logs in via Take Over, or before closing.
+// Never logs or exposes cookie values.
+async function persistSessionAuthState(sessionId) {
+  const s = sessions.get(sessionId);
+  if (!s || s.isPublic || !s.userId || !s.context) return { ok: false, code: 'not_persistable' };
+  try {
+    const storageState = await s.context.storageState();
+    const authState = require('./browser_auth_state');
+    await authState.saveAuthState(s.userId, storageState);
+    console.log('[browser_open_secure] persisted auth state for user');
+    return { ok: true };
+  } catch (e) {
+    console.log('[browser_open_secure] persist auth state failed (non-fatal):', e.message);
+    return { ok: false, code: 'persist_failed' };
+  }
 }
 
 // Sweeper: close expired sessions
@@ -260,6 +302,7 @@ module.exports = {
   createSecureSession,
   getSession,
   closeSession,
+  persistSessionAuthState,
   listSessions,
   validateUrl,
   PUBLIC_TTL_MS,

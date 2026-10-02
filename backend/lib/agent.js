@@ -56,6 +56,34 @@ const _RAW_TOOLS = [
     describe: 'Read the full body of a single email by message id',
   },
   {
+    name: 'gmail_read_otp', risk: 'low',
+    fn: async (a) => {
+      // Find a recent one-time verification code in Gmail (for browser logins).
+      // The code is returned for form-filling only — the agent must fill it
+      // into the site, never display it in chat.
+      const { findOtp } = require('./otp_reader');
+      const result = await findOtp({
+        userId: a.userId,
+        sender: a.sender,
+        maxAgeMinutes: a.maxAgeMinutes || 10,
+      });
+      if (!result.ok) return result;
+      // Return the code for the agent to fill. The describe block instructs
+      // the model never to show it to the user.
+      return {
+        ok: true,
+        code: result.code,
+        from: result.from,
+        note: 'Code found. Fill it into the verification form on the site. NEVER display the code in chat.',
+      };
+    },
+    schema: { type: 'object', properties: {
+      sender: { type: 'string', description: 'Sender to filter by, e.g. "elevenlabs" or "uber"' },
+      maxAgeMinutes: { type: 'number', description: 'How far back to search (default 10)' },
+    } },
+    describe: 'Find a recent one-time verification/OTP code in the user\'s Gmail. Use when a merchant site asks for a verification code during login. Returns the code for form-filling — NEVER show the code in chat, just fill it.',
+  },
+  {
     name: 'gmail_send', risk: 'high', fn: gmail.sendMessage,
     schema: { type: 'object', properties: { to: { type: 'string' }, subject: { type: 'string' }, body: { type: 'string' } }, required: ['to', 'subject', 'body'] },
     describe: 'Send an email as the user (always needs approval)',
@@ -285,6 +313,20 @@ const _RAW_TOOLS = [
         const url = page.url();
         const title = await page.title().catch(() => '');
 
+        // Persist auth state: if the user just logged in (e.g. Google), save
+        // the cookies so the login survives future sessions. This is what
+        // makes "Continue with Google" work on merchant sites afterwards.
+        if (userId) {
+          try {
+            const storageState = await context.storageState();
+            const authState = require('./browser_auth_state');
+            await authState.saveAuthState(userId, storageState);
+            console.log('[browser_continue] persisted auth state for user');
+          } catch (e) {
+            console.log('[browser_continue] auth persist failed (non-fatal):', e.message);
+          }
+        }
+
         // Broadcast current state
         await pushFrame({ threadId, page, label: `Resumed: ${title || url}`, step: 2, bbSessionId: session.bb_session_id });
         await pushStatus({ threadId, status: 'browsing', detail: `Resumed at ${url.slice(0, 80)}` });
@@ -487,6 +529,142 @@ const _RAW_TOOLS = [
     describe: 'Perform an action in the browser (click, fill). HIGH RISK — requires approval for irreversible actions. Use for cancellation buttons, form submissions.',
   },
   {
+    name: 'browser_fill_login', risk: 'high',
+    fn: async (a) => {
+      // Fill a login form from the vault. HIGH RISK — requires per-action approval.
+      // The vault credential is referenced by ID only; the value never leaves
+      // the server and never appears in logs, chat, or tool results.
+      //
+      // Vault ID convention: '<domain>_login', e.g. 'elevenlabs_login' for
+      // elevenlabs.io. If vaultId is omitted, it's derived from the page's domain.
+      const threadId = a.threadId;
+      const userId = a.userId;
+      const { pushFrame, pushStatus } = require('./live_view');
+      const vault = require('./vault');
+
+      try {
+        const sessionsDb = require('./browser_sessions');
+        const session = a.sessionId
+          ? await sessionsDb.get(a.sessionId)
+          : await sessionsDb.getLatestForUser(userId);
+        if (!session) {
+          return { ok: false, code: 'no_session', note: 'No active browser session.' };
+        }
+        const full = await sessionsDb.getForDriver(session.id || session.bb_session_id);
+        if (!full || !full.connect_url) {
+          return { ok: false, code: 'session_expired', note: 'Session expired.' };
+        }
+
+        const { chromium } = require('playwright-core');
+        const browser = await chromium.connectOverCDP(full.connect_url);
+        const page = browser.contexts()[0]?.pages()[0];
+        if (!page) {
+          await browser.close();
+          return { ok: false, code: 'no_page', note: 'No open pages.' };
+        }
+
+        // Derive vault ID from domain if not given.
+        let vaultId = a.vaultId;
+        const hostname = new URL(page.url()).hostname.toLowerCase();
+        if (!vaultId) {
+          const domain = hostname.replace(/^www\./, '').split('.')[0];
+          vaultId = `${domain}_login`;
+        }
+
+        if (!vault.has(vaultId)) {
+          await browser.close();
+          return {
+            ok: false,
+            code: 'no_vault_credential',
+            note: `No vault credential "${vaultId}" found. Ask the user to store it via the secure vault link, or take over and log in manually.`,
+            setupHint: vault.describeSetup(vaultId),
+          };
+        }
+
+        await pushStatus({ threadId, status: 'acting', detail: `Filling login for ${hostname}…` });
+
+        // Fill inside vault.withCredentials so the value never escapes.
+        const fillResult = await vault.withCredentials(vaultId, async (creds) => {
+          const username = creds.email || creds.username;
+          const password = creds.password || creds.pass;
+          if (!username || !password) {
+            return { ok: false, code: 'bad_credential_shape', note: 'Vault credential needs email/username and password.' };
+          }
+
+          const userSels = [
+            'input[type="email"]', 'input[name="email"]', 'input[name="username"]',
+            'input[id*="email" i]', 'input[id*="username" i]',
+            'input[placeholder*="email" i]', 'input[placeholder*="username" i]',
+          ];
+          const passSels = [
+            'input[type="password"]', 'input[name="password"]', 'input[id*="password" i]',
+          ];
+
+          let userInput = null;
+          for (const sel of userSels) {
+            userInput = await page.$(sel).catch(() => null);
+            if (userInput) break;
+          }
+          let passInput = null;
+          for (const sel of passSels) {
+            passInput = await page.$(sel).catch(() => null);
+            if (passInput) break;
+          }
+          if (!userInput || !passInput) {
+            return { ok: false, code: 'login_form_not_found', note: 'No email/password fields found on this page.' };
+          }
+
+          await userInput.fill(username).catch(() => {});
+          await passInput.fill(password).catch(() => {});
+
+          // Submit: click a submit button or press Enter.
+          const submitSels = [
+            'button[type="submit"]', 'input[type="submit"]',
+            'button:has-text("Log in")', 'button:has-text("Sign in")', 'button:has-text("Login")',
+          ];
+          let submitted = false;
+          for (const sel of submitSels) {
+            const btn = await page.$(sel).catch(() => null);
+            if (btn) { await btn.click().catch(() => {}); submitted = true; break; }
+          }
+          if (!submitted) await passInput.press('Enter').catch(() => {});
+          await page.waitForTimeout(4000);
+
+          const newUrl = page.url();
+          const stillHasPassword = await page.$('input[type="password"]').catch(() => null);
+          return {
+            ok: !stillHasPassword,
+            code: stillHasPassword ? 'login_uncertain' : 'filled',
+            url: newUrl,
+            note: stillHasPassword
+              ? 'Form submitted but a password field is still visible — the site may need a verification code or the credentials were rejected.'
+              : 'Login form filled and submitted.',
+          };
+        });
+
+        await pushFrame({ threadId, page, label: 'Login filled', step: 3, bbSessionId: session.bb_session_id }).catch(() => {});
+        await browser.close();
+
+        return {
+          ...fillResult,
+          // Never include credential values. Only the vault ID (opaque).
+          vaultId,
+          userMessage: fillResult.ok
+            ? `Filled the login for ${hostname} from your vault.`
+            : `Couldn't complete the login for ${hostname}: ${fillResult.note}`,
+        };
+      } catch (e) {
+        await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
+        return { ok: false, code: 'fill_failed', note: `Login fill failed: ${e.message}`.slice(0, 200) };
+      }
+    },
+    schema: { type: 'object', properties: {
+      sessionId: { type: 'string', description: 'Optional: specific session. Omit for latest.' },
+      vaultId: { type: 'string', description: 'Optional: vault credential ID (e.g. elevenlabs_login). Derived from page domain if omitted.' },
+    } },
+    describe: 'Fill an email/password login form from the user\'s secure vault. HIGH RISK — requires approval. The credential value never leaves the server. Use when a merchant site shows a login form and the user has stored credentials.',
+  },
+  {
     name: 'browser_close', risk: 'low',
     fn: async (a) => {
       // Close a browser session and clean up.
@@ -522,6 +700,64 @@ const _RAW_TOOLS = [
       sessionId: { type: 'string', description: 'Optional: specific session. Omit for latest.' },
     } },
     describe: 'Close the browser session and clean up. Use when done with browser tasks.',
+  },
+  {
+    name: 'browser_connect_google', risk: 'low',
+    fn: async (a) => {
+      // Open Google's login page in a PERSISTENT browser session so the user
+      // can log in once via Take Over. The login persists (Feature 1), so
+      // "Continue with Google" on merchant sites (ElevenLabs, Uber, etc.)
+      // works afterwards without re-authentication.
+      //
+      // Flow: agent calls this -> user takes over and logs into Google ->
+      // user says "done" / "I'm logged in" -> agent calls browser_continue
+      // (which persists the auth state) -> Google is connected in the browser.
+      const threadId = a.threadId;
+      const userId = a.userId;
+      const { pushFrame, pushStatus } = require('./live_view');
+      const secure = require('./browser_open_secure');
+
+      try {
+        await pushStatus({ threadId, status: 'starting', detail: 'Opening Google login' });
+
+        const result = await secure.createSecureSession({
+          url: 'https://accounts.google.com/',
+          userId,
+          clientIp: 'agent',
+          isPublic: false,
+        });
+
+        if (!result.ok) {
+          await pushStatus({ threadId, status: 'failed', detail: result.note }).catch(() => {});
+          return result;
+        }
+
+        const session = await secure.getSession(result.sessionId);
+        if (!session) {
+          return { ok: false, code: 'session_lost', note: 'Session expired immediately.' };
+        }
+
+        const frameOk = await pushFrame({ threadId, page: session.page, label: 'Google login', step: 1, bbSessionId: result.bbSessionId, sessionId: result.sessionId });
+        if (!frameOk) {
+          await secure.closeSession(result.sessionId).catch(() => {});
+          return { ok: false, code: 'live_view_failed', note: 'Browser session created but the live panel did not render.' };
+        }
+        await pushStatus({ threadId, status: 'browsing', detail: 'Google login page open' });
+
+        return {
+          ok: true,
+          url: result.url,
+          sessionId: result.sessionId,
+          note: 'Opened Google login in a persistent browser session.',
+          userMessage: 'I\'ve opened Google login in the browser below. Click "Take Over", sign in with your Google account, then say "I\'m logged in". I\'ll save the login so "Continue with Google" works on sites like ElevenLabs from now on.',
+        };
+      } catch (e) {
+        await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
+        return { ok: false, code: 'browser_failed', note: `Failed to open Google login: ${e.message}`.slice(0, 300) };
+      }
+    },
+    schema: { type: 'object', properties: {} },
+    describe: 'Open Google login in a persistent browser session. The user takes over and signs in once; the login persists so "Continue with Google" works on merchant sites afterwards. Use when the user wants to connect their Google account to Ring\'s browser.',
   },
   {
     name: 'dining_links', risk: 'low',
@@ -905,7 +1141,14 @@ You can:
 - If a tool result contains a userMessage field, quote it VERBATIM in your reply. Do not rephrase, summarize, or omit it.
 - NEVER say "Done" unless you actually called a tool and it returned success. If the user says "open X", you MUST call the browser_open tool — do not just say "Done" without opening anything. A "Done" without a tool call is a lie.
 - NEVER describe UI elements (browser panels, Take Over buttons, approval cards) unless the tool result confirms they rendered. If browser_open returns ok:false, say "I couldn't open the browser" — do NOT say "I've opened it in the browser below" when the panel failed to render. Describing UI that doesn't exist is hallucination.
-- For subscription cancellations: use browser_open to open the merchant site (e.g., site "elevenlabs"), let the user Take Over and log in, then use browser_continue to resume, browser_inspect to read the subscription details, and browser_act to click cancel (requires approval). Do NOT use the old subscription_cancel tool — it cannot open a visible browser.
+- For subscription cancellations: use browser_open to open the merchant site (e.g., site "elevenlabs"), then handle login ONE of these ways (in order of preference):
+  1. PERSISTED LOGIN: the user's logins persist across sessions. If they've logged in before (e.g. Google), the session loads with cookies and "Continue with Google" may already work — try it first via browser_act click.
+  2. CONTINUE WITH GOOGLE: if the site offers it and the user hasn't connected Google in Ring's browser yet, ask them to Take Over and tap it once (or use browser_connect_google to open accounts.google.com for a one-time login). After that one login, it persists.
+  3. VAULT FILL: if the site shows an email/password form and the user has stored credentials, use browser_fill_login (HIGH RISK — approval required). The vault ID is "<domain>_login".
+  4. TAKE OVER: let the user Take Over and log in manually, then browser_continue to resume.
+  If the site sends a verification/OTP code during login, FIRST try gmail_read_otp (sender = site name) to auto-fill it. Only ask the user for the code if the Gmail search finds nothing.
+  Then use browser_inspect to read subscription details, and browser_act to click cancel (requires approval). Do NOT use the old subscription_cancel tool — it cannot open a visible browser.
+- Browser minimization: ONLY open the browser when the task genuinely needs it (logins, cancellations, bookings, live site data). Prefer APIs (Gmail, Calendar) when they can answer the question. Never open a browser "just to check" if an API or existing data suffices.
 - Memory + groups: remember durable facts, recall them, reply as @ring in group chats, run polls to plan with friends and lock a time, daily briefs, draft messages (never send without approval), learn routines, smart nudges.
 - Health + notes: log health metrics (steps, sleep, water, weight, workouts, mood, energy), show today's metrics, per-metric trends and multi-day summaries; save, list, search, read, and delete notes.
 - Privacy refusals: if asked for someone's personal data (home address, phone number, family details, etc.), refuse clearly. Name the real reason: privacy. Do not moralize or lecture. Offer legitimate alternatives (public office contact, press inquiries). Never confirm or deny specific personal facts. Never include personal data "by accident" while refusing.
