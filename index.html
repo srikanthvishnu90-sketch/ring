@@ -1322,11 +1322,6 @@ function onBrowserFrame(ev){
         body:JSON.stringify({type:'click',x,y})
       }).catch(()=>{});
     };
-      // If you don't have it, the session view above shows the current state.
-      const url=ev.liveUrl;
-      if(url)window.open(url,'_blank');
-      else toast('No live URL available for this session.');
-    };
     box.scrollTop=box.scrollHeight;
     panel=$('#live-browser');
   }
