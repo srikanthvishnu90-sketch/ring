@@ -196,7 +196,7 @@ const _RAW_TOOLS = [
       // Uses the secure session manager: URL validation, persistent per-user auth,
       // auto-expiry, rate limiting. Broadcasts frames/status silently; the user
       // only sees the browser if they ask or the agent requests help.
-      // Resolves common site names so "open ElevenLabs" works without exact links.
+      // Resolves ANY site name to its URL via known map + web search fallback.
       let url = a.url;
       if (!url && a.site) {
         const known = {
@@ -205,9 +205,28 @@ const _RAW_TOOLS = [
           'doordash': 'https://www.doordash.com',
           'opentable': 'https://www.opentable.com',
         };
-        url = known[a.site.toLowerCase()] || `https://www.google.com/search?q=${encodeURIComponent(a.site)}`;
+        url = known[a.site.toLowerCase()];
+        if (!url) {
+          // General fallback: web search for the site's official URL
+          try {
+            const q = encodeURIComponent(a.site + ' official site');
+            const r = await fetch(`https://html.duckduckgo.com/html/?q=${q}`, {
+              headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' },
+            });
+            const html = await r.text();
+            const m = html.match(/<a[^>]+class="result__a"[^>]+href="([^"]+)"/);
+            if (m && m[1]) {
+              let found = m[1];
+              // DuckDuckGo wraps URLs; extract actual URL
+              const ud = found.match(/[?&]uddg=([^&]+)/);
+              if (ud) found = decodeURIComponent(ud[1]);
+              if (found.startsWith('http')) url = found;
+            }
+          } catch (e) { /* fall through */ }
+        }
+        if (!url) url = `https://www.google.com/search?q=${encodeURIComponent(a.site)}`;
       }
-      if (!url) return { ok: false, code: 'no_url', note: 'I need a website to open — tell me the site name (e.g. "elevenlabs") and I\'ll find it.' };
+      if (!url) return { ok: false, code: 'no_url', note: 'I need a website to open — tell me the site name and I\'ll find it.' };
 
       const threadId = a.threadId;
       const userId = a.userId;
