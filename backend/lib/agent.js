@@ -192,9 +192,10 @@ const _RAW_TOOLS = [
   {
     name: 'browser_open', risk: 'low',
     fn: async (a) => {
-      // Open a URL in a REAL visible browser session (like Muse's Browser Beta).
-      // Uses the secure session manager: URL validation, fresh incognito context,
-      // auto-expiry, rate limiting. Broadcasts the live view via pushFrame.
+      // Open a URL in a REAL browser session (invisible by default — Instinct-style).
+      // Uses the secure session manager: URL validation, persistent per-user auth,
+      // auto-expiry, rate limiting. Broadcasts frames/status silently; the user
+      // only sees the browser if they ask or the agent requests help.
       // Resolves common site names so "open ElevenLabs" works without exact links.
       let url = a.url;
       if (!url && a.site) {
@@ -251,8 +252,8 @@ const _RAW_TOOLS = [
           url: result.url,
           sessionId: result.sessionId,
           liveUrl: result.liveUrl,
-          note: `Opened ${result.url} in a live browser session.`,
-          userMessage: `I've opened ${result.hostname} in the browser below. You can watch live and click "Take Over" to interact with it yourself.`,
+          note: `Opened ${result.url} in a background browser session.`,
+          userMessage: `Opening ${result.hostname}…`,
         };
       } catch (e) {
         await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
@@ -263,7 +264,7 @@ const _RAW_TOOLS = [
       url: { type: 'string', description: 'Full URL to open' },
       site: { type: 'string', description: 'Common site name (e.g. elevenlabs, uber) — resolved to URL automatically' },
     } },
-    describe: 'Open a URL in a LIVE browser session that the user can see and take over. Use ONLY when the user says "open X" (not for cancellations, bookings, or other tasks — those have dedicated tools). Returns session info and live URL.',
+    describe: 'Open a URL in a background browser session (invisible to the user — Instinct-style). Use for site tasks like cancellations and bookings. Returns session info.',
   },
   {
     name: 'browser_continue', risk: 'low',
@@ -737,19 +738,19 @@ const _RAW_TOOLS = [
           return { ok: false, code: 'session_lost', note: 'Session expired immediately.' };
         }
 
-        const frameOk = await pushFrame({ threadId, page: session.page, label: 'Google login', step: 1, bbSessionId: result.bbSessionId, sessionId: result.sessionId });
+        const frameOk = await pushFrame({ threadId, page: session.page, label: 'Google login', step: 1, bbSessionId: result.bbSessionId, sessionId: result.sessionId, needHelp: true });
         if (!frameOk) {
           await secure.closeSession(result.sessionId).catch(() => {});
           return { ok: false, code: 'live_view_failed', note: 'Browser session created but the live panel did not render.' };
         }
-        await pushStatus({ threadId, status: 'browsing', detail: 'Google login page open' });
+        await pushStatus({ threadId, status: 'browsing', detail: 'Google login page open — sign in, then say "I\'m logged in".' });
 
         return {
           ok: true,
           url: result.url,
           sessionId: result.sessionId,
-          note: 'Opened Google login in a persistent browser session.',
-          userMessage: 'I\'ve opened Google login in the browser below. Click "Take Over", sign in with your Google account, then say "I\'m logged in". I\'ll save the login so "Continue with Google" works on sites like ElevenLabs from now on.',
+          note: 'Opened Google login in a persistent browser session (panel revealed for login).',
+          userMessage: 'Google login is ready — tap "Take Over", sign in with your Google account, then say "I\'m logged in". I\'ll save it so "Continue with Google" works on sites like ElevenLabs from now on.',
         };
       } catch (e) {
         await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
@@ -768,6 +769,38 @@ const _RAW_TOOLS = [
     },
     schema: { type: 'object', properties: {}, required: [] },
     describe: 'Check if the user has Google logged in persistently in Ring\'s browser. Returns {connected: true/false}. Call this before prompting for Google login — if connected, never ask.',
+  },
+  {
+    name: 'browser_request_help', risk: 'low',
+    fn: async (a) => {
+      // The agent is genuinely stuck and needs the user's hands (login wall it
+      // cannot pass, CAPTCHA, unreadable 2FA). Reveals the browser panel and the
+      // Take Over button so the user can intervene, then the agent resumes via
+      // browser_continue. Use ONLY as a last resort after trying alternatives.
+      const threadId = a.threadId;
+      const userId = a.userId;
+      const reason = String(a.reason || 'I need your help in the browser.').slice(0, 200);
+      const { pushStatus } = require('./live_view');
+      const sessionsDb = require('./browser_sessions');
+      let sessionId = a.sessionId || null;
+      try {
+        if (!sessionId) {
+          const latest = await sessionsDb.getLatestForUser(userId);
+          sessionId = (latest && (latest.id || latest.bb_session_id)) || null;
+        }
+        await pushStatus({ threadId, status: 'needs_you', detail: reason, needHelp: true, sessionId });
+      } catch (e) { /* best-effort */ }
+      return {
+        ok: true,
+        note: 'Help requested — the browser is now visible with Take Over enabled.',
+        userMessage: reason + ' Tap "Take Over" in the browser panel, do what\'s needed, then say "done" and I\'ll continue.',
+      };
+    },
+    schema: { type: 'object', properties: {
+      reason: { type: 'string', description: 'What you need the user to do, in one plain sentence (e.g. "ElevenLabs wants a CAPTCHA solved — tap Take Over and solve it, then say done.").' },
+      sessionId: { type: 'string', description: 'Optional: specific browser session id.' },
+    }, required: ['reason'] },
+    describe: 'LAST RESORT: reveal the browser + Take Over button because you are stuck (login wall, CAPTCHA, 2FA you cannot read). The user intervenes, then you resume with browser_continue. Never use for things you can do yourself.',
   },
   {
     name: 'dining_links', risk: 'low',
@@ -862,8 +895,8 @@ const _RAW_TOOLS = [
       // card 1 authorizes sign-in/inspection; phase 1 then stops at the
       // billing page and returns need_approval with the exact plan/price/
       // policy, and the server chains card 2 with those terms. Only approving
-      // Uses the live browser tools (browser_open) so the user can see and take over.
-      // Flow: browser_open → user Take Over + login → browser_continue → browser_inspect → approval card → browser_act to cancel.
+      // DEPRECATED: use the browser_* tools directly (browser_open → login → browser_inspect → approval → browser_act).
+      // Flow: browser_open → login (persisted/Google/vault) → browser_continue → browser_inspect → approval card → browser_act to cancel.
       const merchant = (a.merchant || '').toLowerCase().replace(/[^a-z0-9]/g, '');
       const merchantUrls = {
         elevenlabs: 'https://elevenlabs.io/app/sign-in',
@@ -884,7 +917,7 @@ const _RAW_TOOLS = [
         return { ok: false, code: result.code || 'browser_failed', note: result.note || 'Failed to open browser' };
       }
 
-      // Broadcast the live frame so the user sees the browser and can Take Over
+      // Broadcast a frame silently (invisible by default; user can ask to see it)
       try {
         const { pushFrame } = require('./live_view');
         const session = await secure.getSession(result.sessionId);
@@ -905,15 +938,15 @@ const _RAW_TOOLS = [
         sessionId: result.sessionId,
         url: result.url,
         liveUrl: result.liveUrl,
-        note: `Opened ${merchant} in live browser. User should Take Over and log in, then say "I'm logged in" to continue.`,
+        note: `Opened ${merchant} in background browser. Use browser_inspect to read the page; handle login via persisted session, Google SSO, or vault.`,
         userMessage: `I'll help you cancel ${merchant}. Here's how this works:
 
-1. I need to see your subscription first — plan name, price, renewal date
-2. I'll show you exactly what happens when you cancel (when access ends, refund policy)
+1. I read your subscription first — plan name, price, renewal date
+2. I show you exactly what happens when you cancel (when access ends, refund policy)
 3. You approve those exact terms
 4. I cancel it and verify it's actually cancelled
 
-To start, log into ${merchant} in the browser below so I can read your subscription details. Click "Take Over", sign in, then tell me when you're in.`,
+Opening ${merchant}…`,
       };
     },
     schema: { type: 'object', properties: {
@@ -1161,6 +1194,50 @@ PREREQUISITE INTELLIGENCE:
 - Never proceed without prerequisites. Never hallucinate that a login or connection worked.
 - Trigger mapping: user says "connect google in browser" → call browser_connect_google immediately, no questions.
 
+INVISIBLE BROWSER (Instinct-style — this is the product):
+- The browser is INVISIBLE. The user never sees it. Frames still broadcast silently in the background (for the rare "show me the browser"), but you NEVER narrate it.
+- FORBIDDEN PHRASES in autonomous work: "the browser below", "browser panel", "you can watch live". Never narrate the invisible browser. The ONLY exception: when you have called browser_request_help or browser_connect_google (the panel is actually revealed for the user), quote the tool's userMessage verbatim — it contains the Take Over instruction for that moment.
+- Status updates are one line, present tense, no preamble:
+  "Opening ElevenLabs…" / "Reading your plan…" / "Found Starter — $22/mo, renews Oct 14."
+- NEED HELP: the ONLY time the user sees the browser is when you are genuinely stuck — a login wall you cannot pass (no vault creds, no Google session, OTP not in Gmail), a CAPTCHA, or a 2FA you cannot read. Then call browser_request_help with the exact reason and what you need them to do. The Take Over button appears only then.
+- Never say "I can't" without trying every tool first. A missed click is not being stuck — re-inspect and try again.
+
+TASK PLAYBOOKS — subscription cancellation ("cancel my X subscription"):
+1. browser_check_google_auth → know the login path before opening anything.
+2. browser_open site "elevenlabs".
+3. Login, in order: (a) persisted session → browser_act click "Continue with Google"; (b) no session → browser_fill_login from vault (approval); (c) neither → browser_request_help (user logs in once via Take Over), then browser_continue.
+4. OTP challenge? → gmail_read_otp first; ask the user only if Gmail has nothing.
+5. Navigate to billing/subscription: browser_inspect to read, browser_act to click.
+6. browser_inspect → extract EXACT plan name, price, renewal date, cancel policy, refund terms.
+7. Approval card with the EXACT terms. Wait for "yes".
+8. browser_act → click cancel, click through confirmation screens. Never skip a confirm.
+9. VERIFY: confirmation text on the page or a receipt email. Report "Cancelled. Access ends Oct 14." — with proof, never without.
+
+TOOL MAP (which tool for which job):
+- browser_open: open a site (invisible). First browser step for any site task.
+- browser_inspect: READ the page — text, links, buttons. Use before EVERY click decision.
+- browser_act: CLICK / FILL / SELECT. High risk — approvals gate anything irreversible.
+- browser_continue: resume after the user did something in Take Over.
+- browser_check_google_auth: is Google persistently logged in? Call before any Google-SSO flow; if true, proceed silently.
+- browser_connect_google: one-time Google login (user takes over once, persists forever).
+- browser_fill_login: fill saved vault credentials (approval required; values never touch chat).
+- gmail_read_otp: pull verification codes from Gmail automatically — try before asking the user.
+- browser_request_help: LAST RESORT — reveal browser + Take Over when truly stuck.
+- browser_close: end the session when the task is done.
+- subscription_cancel: DEPRECATED — never use. Always the browser flow above.
+
+CONCISENESS (the Instinct bar):
+- One line per status. No paragraphs about what you're "about to do".
+- Good: "Opening ElevenLabs…" → "Found your Starter plan — $22/mo, renews Oct 14." → [approval card] → "Cancelled. Access ends Oct 14."
+- Bad: "I'll now proceed to open the ElevenLabs website in order to begin the cancellation process for you…"
+- Numbers, dates, plan names come ONLY from tool output. Never invented, never rounded, never "about".
+
+FIGURE IT OUT:
+- Unexpected page layout? browser_inspect → read it → reason about where the control is → browser_act → verify the result.
+- Click missed or nothing happened? Re-inspect, adjust the selector, try once more. Two attempts minimum before even thinking about help.
+- "Stuck" means the page genuinely cannot proceed without the user — not that the first attempt failed.
+- Never describe a page you haven't inspected. Never claim a button exists because it "should" be there.
+
 You can:
 - Email: search, read full messages and threads, triage the inbox (urgent/needs-reply/fyi), reply and forward (always with approval of the exact text), save drafts, delete, archive, mark read/unread, star, find receipts and attachments.
 - Calendar: list, create, reschedule, and cancel events (changes need confirmation), find free time, check conflicts, morning briefings, turn invite emails into staged events, pre-event reminders, week previews.
@@ -1171,14 +1248,14 @@ You can:
 - Error transparency: when a tool returns ok:false, ALWAYS include the exact code and note from the tool output in your reply. Never hide the technical error behind a generic "didn't go through" message. The user needs to see what actually failed.
 - If a tool result contains a userMessage field, quote it VERBATIM in your reply. Do not rephrase, summarize, or omit it.
 - NEVER say "Done" unless you actually called a tool and it returned success. If the user says "open X", you MUST call the browser_open tool — do not just say "Done" without opening anything. A "Done" without a tool call is a lie.
-- NEVER describe UI elements (browser panels, Take Over buttons, approval cards) unless the tool result confirms they rendered. If browser_open returns ok:false, say "I couldn't open the browser" — do NOT say "I've opened it in the browser below" when the panel failed to render. Describing UI that doesn't exist is hallucination.
+- NEVER describe UI elements the user can't see. Browser panels and Take Over buttons are invisible by design — never mention them. Approval cards are real UI: only mention one if you actually called the tool that creates it this turn. If browser_open returns ok:false, say "I couldn't open the browser" — do NOT say "I've opened it in the browser below" when the panel failed to render. Describing UI that doesn't exist is hallucination.
 - For subscription cancellations: use browser_open to open the merchant site (e.g., site "elevenlabs"), then handle login ONE of these ways (in order of preference):
   1. PERSISTED LOGIN: the user's logins persist across sessions. If they've logged in before (e.g. Google), the session loads with cookies and "Continue with Google" may already work — try it first via browser_act click.
   2. CONTINUE WITH GOOGLE: Before prompting for Google login, ALWAYS call browser_check_google_auth first. If connected:true, proceed silently — never mention Google login. Only if connected:false, use browser_connect_google for a one-time login. After that one login, it persists forever.
   3. VAULT FILL: if the site shows an email/password form and the user has stored credentials, use browser_fill_login (HIGH RISK — approval required). The vault ID is "<domain>_login".
-  4. TAKE OVER: let the user Take Over and log in manually, then browser_continue to resume.
+  4. REQUEST HELP: if none of the above work, call browser_request_help (user logs in once via the revealed Take Over), then browser_continue to resume.
   If the site sends a verification/OTP code during login, FIRST try gmail_read_otp (sender = site name) to auto-fill it. Only ask the user for the code if the Gmail search finds nothing.
-  Then use browser_inspect to read subscription details, and browser_act to click cancel (requires approval). Do NOT use the old subscription_cancel tool — it cannot open a visible browser.
+  Then use browser_inspect to read subscription details, and browser_act to click cancel (requires approval). Do NOT use the old subscription_cancel tool — it cannot drive the site.
 - Browser minimization: ONLY open the browser when the task genuinely needs it (logins, cancellations, bookings, live site data). Prefer APIs (Gmail, Calendar) when they can answer the question. Never open a browser "just to check" if an API or existing data suffices.
 - Memory + groups: remember durable facts, recall them, reply as @ring in group chats, run polls to plan with friends and lock a time, daily briefs, draft messages (never send without approval), learn routines, smart nudges.
 - Health + notes: log health metrics (steps, sleep, water, weight, workouts, mood, energy), show today's metrics, per-metric trends and multi-day summaries; save, list, search, read, and delete notes.

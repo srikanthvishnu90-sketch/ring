@@ -8,7 +8,7 @@ const { broadcastRealtime } = require('./realtime');
 
 // Broadcast a screenshot for a thread.
 // Call this after each browser action to update the live view.
-async function pushFrame({ threadId, page, label, step, bbSessionId, sessionId }) {
+async function pushFrame({ threadId, page, label, step, bbSessionId, sessionId, needHelp, showBrowser }) {
   if (!threadId || !page) {
     if (!threadId) console.log('[live_view] No threadId, skipping frame broadcast');
     return false;
@@ -24,6 +24,8 @@ async function pushFrame({ threadId, page, label, step, bbSessionId, sessionId }
       // Browserbase live session URL for "take over"
       liveUrl: bbSessionId ? `https://www.browserbase.com/sessions/${bbSessionId}` : null,
       sessionId: sessionId || null, // Ring session ID for Take Over proxy (no Browserbase login needed)
+      needHelp: !!needHelp, // agent explicitly needs the user's hands → frontend reveals panel + Take Over
+      showBrowser: !!showBrowser, // force panel visible (rare)
       ts: Date.now(),
     });
     console.log(`[live_view] Frame broadcast to thread:${threadId}: ${ok ? 'ok' : 'failed'}`);
@@ -36,12 +38,14 @@ async function pushFrame({ threadId, page, label, step, bbSessionId, sessionId }
 }
 
 // Broadcast a status update (what Ring is thinking/doing).
-async function pushStatus({ threadId, status, detail }) {
+async function pushStatus({ threadId, status, detail, needHelp, sessionId }) {
   if (!threadId) return;
   try {
     await broadcastRealtime(`thread:${threadId}`, 'browser_status', {
       status,
       detail: (detail || '').slice(0, 200),
+      needHelp: !!needHelp, // agent needs user intervention → frontend reveals Take Over
+      sessionId: sessionId || null,
       ts: Date.now(),
     });
   } catch {}

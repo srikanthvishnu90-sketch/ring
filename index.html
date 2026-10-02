@@ -1263,11 +1263,35 @@ function onThreadEvent(ev){
   const box=$('#g-msgs');
   if(box){box.insertAdjacentHTML('beforeend',gMsgHTML(ev.message));box.scrollTop=box.scrollHeight;paintIcons(box);bindGApprovals(box)}
 }
-/* Live browser view: shows Ring's browser in real-time as it works. */
+/* Live browser view: INVISIBLE by default (Instinct-style).
+   Frames stream silently; a subtle "working" pill shows progress in chat.
+   The panel only appears when: (a) the user asks "show me the browser",
+   or (b) the agent sets needHelp because it needs the user's hands. */
+window._userWantsBrowser=false;
+window._lastFrame=null;
+function liveBox(){return S.tab==='chat'?$('#msgs'):$('#g-msgs')}
+function workingPill(label){
+  const box=liveBox();if(!box)return null;
+  let pill=$('#live-working');
+  if(!pill){
+    box.insertAdjacentHTML('beforeend',`<div id="live-working" class="msg-agent" style="font-size:13px;color:var(--muted);padding:4px 0">\u2699\uFE0F <span id="live-working-text"></span></div>`);
+    pill=$('#live-working');
+    box.scrollTop=box.scrollHeight;
+  }
+  const t=$('#live-working-text');
+  if(t&&label!=null)t.textContent=label;
+  return pill;
+}
+function clearWorkingPill(){const p=$('#live-working');if(p)p.remove()}
 function onBrowserFrame(ev){
-  let panel=$('#live-browser');
   // Store session ID for Take Over
   if(ev.sessionId)window._liveSessionId=ev.sessionId;
+  // Always store the latest frame silently (for "show me the browser")
+  window._lastFrame=ev;
+  // Invisible unless the user asked to see it or the agent needs help
+  const want=window._userWantsBrowser||ev.needHelp||ev.showBrowser;
+  if(!want)return;
+  let panel=$('#live-browser');
   if(!panel){
     // Use the correct message container: main chat (#msgs) or groups (#g-msgs)
     const box=S.tab==='chat'?$('#msgs'):$('#g-msgs');
@@ -1276,7 +1300,7 @@ function onBrowserFrame(ev){
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <b style="font-size:14px">🔴 LIVE: Ring's browser</b>
         <div style="display:flex;gap:8px">
-          <button id="live-takeover" style="background:#4a9eff;color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer">Take Over</button>
+          <button id="live-takeover" style="display:none;background:#4a9eff;color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer">Take Over</button>
           <button id="live-close" style="background:none;border:none;color:#888;font-size:18px;cursor:pointer">×</button>
         </div>
       </div>
@@ -1340,13 +1364,27 @@ function onBrowserFrame(ev){
   if(img&&ev.image)img.src='data:image/jpeg;base64,'+ev.image;
   const label=$('#live-label');
   if(label)label.textContent=(ev.label||'')+' • '+new Date(ev.ts).toLocaleTimeString();
+  // Take Over appears ONLY when the agent explicitly needs the user's hands
+  const toBtn=$('#live-takeover');
+  if(toBtn)toBtn.style.display=ev.needHelp?'':'none';
   panel.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function onBrowserStatus(ev){
+  if(ev.sessionId)window._liveSessionId=ev.sessionId;
   const st=$('#live-status');
   if(st)st.textContent='⚡ '+ev.status+': '+(ev.detail||'');
-  // Auto-create panel on first status if it doesn't exist
-  if(!$('#live-browser')&&ev.status!=='done'&&ev.status!=='failed')onBrowserFrame({image:'',label:'',ts:Date.now()});
+  // Task finished or failed: clear the working pill, hide the panel's urgency
+  if(ev.status==='done'||ev.status==='failed'){clearWorkingPill();return}
+  if(ev.needHelp){
+    // Agent needs the user's hands: reveal the panel with Take Over visible
+    const last=window._lastFrame||{};
+    onBrowserFrame(Object.assign({},last,{needHelp:true,ts:Date.now()}));
+    const toBtn=$('#live-takeover');if(toBtn)toBtn.style.display='';
+    workingPill(ev.detail||'Needs your help — tap Take Over');
+    return;
+  }
+  // Otherwise: subtle progress pill only, no panel
+  if(ev.detail)workingPill(ev.detail);
 }
 /* Main chat live browser subscription: listens for browser_frame events on the
    current 1:1 thread so the live panel renders in the main Ring chat. */
@@ -1896,6 +1934,21 @@ async function send(text){
   if(atts.length)um.images=atts.map(a=>a.dataUrl);
   msgs.push(um);touchChat();renderChat();scrollChat();
   const key=text.toLowerCase();
+  // Local browser-visibility commands (never sent to the agent)
+  if(/^(show|open)( me)? the browser$/.test(key)){
+    window._userWantsBrowser=true;
+    if(window._lastFrame){onBrowserFrame(Object.assign({},window._lastFrame,{showBrowser:true}));}
+    else{toast('No browser session running right now');}
+    const bm={role:'agent',text:'Showing the live browser below.'};
+    msgs.push(bm);touchChat();renderChat();scrollChat();return;
+  }
+  if(/^(hide|close)( the)? browser$/.test(key)){
+    window._userWantsBrowser=false;
+    const p=$('#live-browser');if(p)p.remove();
+    window._takeoverMode=false;
+    const bm={role:'agent',text:'Browser hidden. It keeps working in the background.'};
+    msgs.push(bm);touchChat();renderChat();scrollChat();return;
+  }
   if(CANNED[key]){
     S.busy=true;const th={role:'agent',text:'Thinking…',thinking:true};msgs.push(th);renderChat();scrollChat();
     await new Promise(r=>setTimeout(r,700));
