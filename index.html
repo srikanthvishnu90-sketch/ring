@@ -1326,6 +1326,20 @@ function onBrowserFrame(ev){
         body:JSON.stringify({type:'click',x,y})
       }).catch(()=>{});
     };
+    // Keyboard input forwards to cloud browser when in Take Over mode
+    document.addEventListener('keydown',(e)=>{
+      if(!window._takeoverMode||!window._liveSessionId)return;
+      // Don't intercept if user is typing in Ring's own input fields
+      if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+      const key=e.key;
+      apiFetch(`/api/browser/takeover/${window._liveSessionId}`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({type:'key',key})
+      }).catch(()=>{});
+      // Prevent default for special keys to avoid browser navigation
+      if(['Backspace','Tab','Enter',' '].includes(key))e.preventDefault();
+    });
     box.scrollTop=box.scrollHeight;
     panel=$('#live-browser');
   }
@@ -1333,11 +1347,6 @@ function onBrowserFrame(ev){
   if(img&&ev.image)img.src='data:image/jpeg;base64,'+ev.image;
   const label=$('#live-label');
   if(label)label.textContent=(ev.label||'')+' • '+new Date(ev.ts).toLocaleTimeString();
-  // Update takeover button with direct session URL if available
-  if(ev.liveUrl){
-    const btn=$('#live-takeover');
-    if(btn)btn.onclick=()=>window.open(ev.liveUrl,'_blank');
-  }
   panel.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function onBrowserStatus(ev){
