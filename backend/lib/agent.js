@@ -760,6 +760,16 @@ const _RAW_TOOLS = [
     describe: 'Open Google login in a persistent browser session. The user takes over and signs in once; the login persists so "Continue with Google" works on merchant sites afterwards. Use when the user wants to connect their Google account to Ring\'s browser.',
   },
   {
+    name: 'browser_check_google_auth', risk: 'low',
+    fn: async (a) => {
+      const authState = require('./browser_auth_state');
+      const has = await authState.hasAuthState(a.userId);
+      return { connected: has };
+    },
+    schema: { type: 'object', properties: {}, required: [] },
+    describe: 'Check if the user has Google logged in persistently in Ring\'s browser. Returns {connected: true/false}. Call this before prompting for Google login — if connected, never ask.',
+  },
+  {
     name: 'dining_links', risk: 'low',
     fn: async ({ slug, city, date, dateTime, seats }) => ({
       opentable: dining.opentableLink({ slug, dateTime, covers: seats }),
@@ -1143,7 +1153,7 @@ You can:
 - NEVER describe UI elements (browser panels, Take Over buttons, approval cards) unless the tool result confirms they rendered. If browser_open returns ok:false, say "I couldn't open the browser" — do NOT say "I've opened it in the browser below" when the panel failed to render. Describing UI that doesn't exist is hallucination.
 - For subscription cancellations: use browser_open to open the merchant site (e.g., site "elevenlabs"), then handle login ONE of these ways (in order of preference):
   1. PERSISTED LOGIN: the user's logins persist across sessions. If they've logged in before (e.g. Google), the session loads with cookies and "Continue with Google" may already work — try it first via browser_act click.
-  2. CONTINUE WITH GOOGLE: if the site offers it and the user hasn't connected Google in Ring's browser yet, ask them to Take Over and tap it once (or use browser_connect_google to open accounts.google.com for a one-time login). After that one login, it persists.
+  2. CONTINUE WITH GOOGLE: Before prompting for Google login, ALWAYS call browser_check_google_auth first. If connected:true, proceed silently — never mention Google login. Only if connected:false, use browser_connect_google for a one-time login. After that one login, it persists forever.
   3. VAULT FILL: if the site shows an email/password form and the user has stored credentials, use browser_fill_login (HIGH RISK — approval required). The vault ID is "<domain>_login".
   4. TAKE OVER: let the user Take Over and log in manually, then browser_continue to resume.
   If the site sends a verification/OTP code during login, FIRST try gmail_read_otp (sender = site name) to auto-fill it. Only ask the user for the code if the Gmail search finds nothing.
