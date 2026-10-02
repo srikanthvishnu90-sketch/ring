@@ -255,16 +255,13 @@ const _RAW_TOOLS = [
           return { ok: false, code: 'session_lost', note: 'Session expired immediately.' };
         }
 
-        // Broadcast the live frame so the user sees the browser.
-        // CRITICAL: If the frame doesn't reach the frontend, we MUST NOT claim the browser is open.
+        // Broadcast the live frame silently (invisible by default — user only sees it if they ask).
+        // Frame push failure is NOT fatal — the session is valid for automation regardless.
         const frameOk = await pushFrame({ threadId, page: session.page, label: `Opened ${result.hostname}`, step: 1, bbSessionId: result.bbSessionId, sessionId: result.sessionId });
         if (!frameOk) {
-          await pushStatus({ threadId, status: 'failed', detail: 'Browser opened but live view failed to render.' }).catch(() => {});
-          // Close the session since the user can't see it
-          await secure.closeSession(result.sessionId).catch(() => {});
-          return { ok: false, code: 'live_view_failed', note: 'Browser session created but the live panel did not render. I cannot show you the browser right now.' };
+          console.log('[browser_open] Frame broadcast failed (non-fatal, invisible mode)');
         }
-        await pushStatus({ threadId, status: 'browsing', detail: `Now showing ${result.url}` });
+        await pushStatus({ threadId, status: 'browsing', detail: `Working on ${result.hostname}` });
 
         return {
           ok: true,
@@ -759,8 +756,7 @@ const _RAW_TOOLS = [
 
         const frameOk = await pushFrame({ threadId, page: session.page, label: 'Google login', step: 1, bbSessionId: result.bbSessionId, sessionId: result.sessionId, needHelp: true });
         if (!frameOk) {
-          await secure.closeSession(result.sessionId).catch(() => {});
-          return { ok: false, code: 'live_view_failed', note: 'Browser session created but the live panel did not render.' };
+          console.log('[browser_connect_google] Frame failed (non-fatal, session still valid)');
         }
         await pushStatus({ threadId, status: 'browsing', detail: 'Google login page open — sign in, then say "I\'m logged in".' });
 
