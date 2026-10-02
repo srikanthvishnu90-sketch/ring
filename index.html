@@ -1287,9 +1287,11 @@ function onBrowserFrame(ev){
     </div>`);
     $('#live-close').onclick=()=>{const p=$('#live-browser');if(p)p.remove()};
     $('#live-takeover').onclick=()=>{
-      // Open Browserbase sessions - user can find the live session and interact
-      window.open('https://www.browserbase.com/sessions','_blank');
-      toast('Opening Browserbase — find the active session to take over');
+      // Direct link to the Browserbase session. Requires Browserbase access.
+      // If you don't have it, the session view above shows the current state.
+      const url=ev.liveUrl;
+      if(url)window.open(url,'_blank');
+      else toast('No live URL available for this session.');
     };
     box.scrollTop=box.scrollHeight;
     panel=$('#live-browser');
