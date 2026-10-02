@@ -11,7 +11,7 @@ const { broadcastRealtime } = require('./realtime');
 async function pushFrame({ threadId, page, label, step, bbSessionId }) {
   if (!threadId || !page) {
     if (!threadId) console.log('[live_view] No threadId, skipping frame broadcast');
-    return;
+    return false;
   }
   try {
     const buf = await page.screenshot({ type: 'jpeg', quality: 50 });
@@ -26,9 +26,11 @@ async function pushFrame({ threadId, page, label, step, bbSessionId }) {
       ts: Date.now(),
     });
     console.log(`[live_view] Frame broadcast to thread:${threadId}: ${ok ? 'ok' : 'failed'}`);
+    return !!ok;
   } catch (e) {
     // Best-effort; never break the automation for the live view
     console.log('[live_view] Frame error:', e.message);
+    return false;
   }
 }
 

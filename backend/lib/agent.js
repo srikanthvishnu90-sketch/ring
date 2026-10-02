@@ -180,8 +180,15 @@ const _RAW_TOOLS = [
           return { ok: false, code: 'session_lost', note: 'Session expired immediately.' };
         }
 
-        // Broadcast the live frame so the user sees the browser
-        await pushFrame({ threadId, page: session.page, label: `Opened ${result.hostname}`, step: 1, bbSessionId: result.bbSessionId });
+        // Broadcast the live frame so the user sees the browser.
+        // CRITICAL: If the frame doesn't reach the frontend, we MUST NOT claim the browser is open.
+        const frameOk = await pushFrame({ threadId, page: session.page, label: `Opened ${result.hostname}`, step: 1, bbSessionId: result.bbSessionId });
+        if (!frameOk) {
+          await pushStatus({ threadId, status: 'failed', detail: 'Browser opened but live view failed to render.' }).catch(() => {});
+          // Close the session since the user can't see it
+          await secure.closeSession(result.sessionId).catch(() => {});
+          return { ok: false, code: 'live_view_failed', note: 'Browser session created but the live panel did not render. I cannot show you the browser right now.' };
+        }
         await pushStatus({ threadId, status: 'browsing', detail: `Now showing ${result.url}` });
 
         return {
@@ -813,6 +820,7 @@ const SYSTEM_PROMPT = `You are the user's personal agent inside the Ring app. Yo
 - Error transparency: when a tool returns ok:false, ALWAYS include the exact code and note from the tool output in your reply. Never hide the technical error behind a generic "didn't go through" message. The user needs to see what actually failed.
 - If a tool result contains a userMessage field, quote it VERBATIM in your reply. Do not rephrase, summarize, or omit it.
 - NEVER say "Done" unless you actually called a tool and it returned success. If the user says "open X", you MUST call the browser_open tool — do not just say "Done" without opening anything. A "Done" without a tool call is a lie.
+- NEVER describe UI elements (browser panels, Take Over buttons, approval cards) unless the tool result confirms they rendered. If browser_open returns ok:false, say "I couldn't open the browser" — do NOT say "I've opened it in the browser below" when the panel failed to render. Describing UI that doesn't exist is hallucination.
 - For subscription cancellations: use browser_open to open the merchant site (e.g., site "elevenlabs"), let the user Take Over and log in, then use browser_continue to resume, browser_inspect to read the subscription details, and browser_act to click cancel (requires approval). Do NOT use the old subscription_cancel tool — it cannot open a visible browser.
 - Memory + groups: remember durable facts, recall them, reply as @ring in group chats, run polls to plan with friends and lock a time, daily briefs, draft messages (never send without approval), learn routines, smart nudges.
 - Health + notes: log health metrics (steps, sleep, water, weight, workouts, mood, energy), show today's metrics, per-metric trends and multi-day summaries; save, list, search, read, and delete notes.
