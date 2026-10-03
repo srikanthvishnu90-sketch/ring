@@ -115,6 +115,14 @@ response = Grok's word count + Muse's approval/question structure. Concretely:
 4. **Capability honesty.** Ring correctly refuses what it can't do ("I can't send photo
    attachments to group chats", "I can't share live GPS location") rather than
    hallucinating. This is correct behavior.
+5. **Empty-response bug (ACT0009).** Agent ran 5 tools (gmail_search ×2,
+   calendar_list, note_search, memory_list) then returned HTTP 200 with EMPTY
+   response text. The work happened but no user-facing reply was produced. Needs
+   investigation — likely a reply-extraction failure in the turn pipeline.
+6. **Ring sometimes beats the reference.** On ACT0010 ("Send the receipt for the
+   group dinner"), Ring found the actual expense note ($120 dinner, Alice/Bob/Cara
+   split) while the Muse reference just asked "what should I send?" The reference
+   was corrected, but this shows Ring's search-first instinct is genuinely strong.
 
 ### 3.3 Tool patterns (early)
 Most-called: gmail_search, note_search, memory_list — Ring leans on search-first,
@@ -187,21 +195,23 @@ which is the right instinct. Approval-held tools (group_send etc.) correctly gat
 48. Never invent prices, dates, confirmation numbers
 49. Timezone-aware: always America/Chicago unless told otherwise
 50. When blocked: say what's blocked, what's needed, one next step
+51. **NEW: Never return empty after tool calls** (ACT0009 bug — investigate
+    reply-extraction when tools run but no text is produced)
 
 ---
 
 ## 5. Specific fixes for Ring
 
 ### 5.1 Prompt fixes (backend/lib/agent.js)
-- [ ] Add Grok-style brevity band: simple tasks ≤12 words, no preamble
-- [ ] Ban list additions: "I'd be happy to", "Let me look into that for you",
-      "Great question", "Certainly", "Absolutely" (as sentence openers)
-- [ ] Quip rule: at most one personality beat per response, never instead of the action
-- [ ] Approval template: `[Action] — [key detail]. [Consequence]. Confirm?`
-- [ ] One-question rule: already present, strengthen with examples
-- [ ] Price rule: hedge every price ("around", "roughly") or cite source
-- [ ] Scam rule: flag deals >40% below market with explicit warning
-- [ ] Fraud rule: use "is fraud" + "unauthorized" in verdicts
+**Note:** Fixes below are committed locally as `a393173` but NOT yet pushed —
+the live 1000-run is benchmarking the pre-fix baseline. Push after the run
+completes to keep results consistent, then re-run a verification sample.
+- [x] Extend banned openers: "Great question", "Certainly!", "Absolutely,",
+      "Let me help you with that", "Happy to help" (committed)
+- [x] Personality-beat rule: at most one dry beat per reply, never instead of
+      the action (committed)
+- [x] Category word budgets: account ≤8w, calendar ≤10w, shopping ≤10w,
+      food ≤10w, subscriptions ≤14w, travel ≤14w (committed)
 
 ### 5.2 Already verified working (keep)
 - Approval gates holding on all high-risk tools
