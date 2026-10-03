@@ -1,0 +1,130 @@
+/* ==========================================================================
+   Ring Message Components — messages.css
+   Design tokens inherited from index.html (:root).
+   Prefix: rm- (Ring Message). Muse-minimal: no heavy borders, text-focused,
+   subtle motion. Dark-first; light theme overrides at the bottom.
+   ========================================================================== */
+
+/* ---------- 1. Approval field rows (rich detail inside approval cards) --- */
+.rm-fields{display:flex;flex-direction:column;gap:0;margin:2px 0 4px;
+  border-top:1px solid rgba(20,28,38,.12)}
+.rm-field{display:flex;justify-content:space-between;align-items:baseline;
+  gap:12px;padding:9px 0;border-bottom:1px solid rgba(20,28,38,.08);
+  font-size:14.5px;line-height:1.35}
+.rm-field:last-child{border-bottom:none}
+.rm-field .k{color:rgba(22,17,14,.55);font-weight:600;font-size:12.5px;
+  text-transform:uppercase;letter-spacing:.04em;flex-shrink:0}
+.rm-field .v{color:#10151B;font-weight:500;text-align:right;overflow-wrap:anywhere}
+.rm-field .v.strong{font-weight:700}
+.rm-field .v.good{color:#2F5236;font-weight:600}
+.rm-field .v.warn{color:#8a5a00;font-weight:600}
+.rm-field .v.bad{color:#B3261E;font-weight:600}
+.rm-conseq{font-size:13px;color:rgba(22,17,14,.65);line-height:1.45;
+  background:rgba(20,28,38,.05);border-radius:10px;padding:8px 10px;margin:6px 0 2px}
+
+/* ---------- 2. Quick reply pills ---------------------------------------- */
+.rm-qr{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;
+  padding:2px 0 6px;margin-top:2px}
+.rm-qr::-webkit-scrollbar{display:none}
+.rm-qr .chip{cursor:pointer;transition:transform .12s ease}
+.rm-qr .chip:active{transform:scale(.95)}
+
+/* ---------- 3. Progress indicators (Muse-style: text, not spinners) ------ */
+.rm-prog{display:flex;align-items:center;gap:8px;font-size:14px;
+  color:var(--muted);font-style:italic;padding:4px 0}
+.rm-prog .dots::after{content:'';animation:rmDots 1.2s steps(4) infinite}
+@keyframes rmDots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
+.rm-prog.done{color:var(--sage);font-style:normal}
+.rm-prog.err{color:var(--red);font-style:normal}
+.rm-prog .rm-ck{font-style:normal}
+
+/* ---------- 4. Result cards -------------------------------------------- */
+.rm-res{display:flex;flex-direction:column;gap:8px;max-width:85%}
+.rm-res-title{font-size:13px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.rm-card{background:var(--surface);border:1px solid var(--line-soft);
+  border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.rm-card .rm-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.rm-card .rm-name{font-size:16px;font-weight:600;color:var(--text)}
+.rm-card .rm-amt{font-size:16px;font-weight:700;color:var(--silver);white-space:nowrap}
+.rm-card .rm-sub{font-size:13px;color:var(--muted);line-height:1.4}
+.rm-card .rm-row{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--muted)}
+.rm-card .rm-actions{display:flex;gap:8px;margin-top:4px}
+.rm-btn{flex:1;height:40px;border-radius:20px;font-size:14px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);
+  transition:transform .12s ease,opacity .2s}
+.rm-btn:active{transform:scale(.97)}
+.rm-btn.primary{background:var(--mercury);color:#0C1219;border:none}
+.rm-btn.danger{color:#FF6B61;border-color:rgba(255,59,48,.35)}
+.rm-btn[disabled]{opacity:.45;pointer-events:none}
+.rm-stars{color:var(--amber);font-size:13px;letter-spacing:.05em}
+.rm-link{color:var(--silver);text-decoration:underline;text-underline-offset:2px;
+  font-size:13.5px;overflow-wrap:anywhere}
+/* skeleton loading */
+.rm-skel{border-radius:16px;padding:14px;background:var(--surface);
+  border:1px solid var(--line-soft);display:flex;flex-direction:column;gap:10px}
+.rm-skel i{display:block;height:14px;border-radius:7px;
+  background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.12),rgba(255,255,255,.05));
+  background-size:200% 100%;animation:rmShimmer 1.4s linear infinite}
+.rm-skel i.w60{width:60%}.rm-skel i.w80{width:80%}.rm-skel i.w40{width:40%}
+@keyframes rmShimmer{to{background-position:-200% 0}}
+/* empty state */
+.rm-empty{font-size:14.5px;color:var(--muted);padding:14px 16px;
+  border:1px dashed var(--line);border-radius:16px;text-align:center;line-height:1.5}
+
+/* ---------- 5. Steps (max 4, numbered) ---------------------------------- */
+.rm-steps{display:flex;flex-direction:column;gap:8px;margin:4px 0}
+.rm-step{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.4}
+.rm-step .n{flex-shrink:0;width:22px;height:22px;border-radius:11px;
+  background:rgba(255,255,255,.1);color:var(--silver);font-size:12.5px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;margin-top:1px}
+.rm-step.done .n{background:var(--sage);color:#0C1219}
+.rm-step .t{color:var(--silver)}
+.rm-step.done .t{color:var(--muted);text-decoration:line-through}
+
+/* ---------- 6. Notice (error / info / warn) ------------------------------ */
+.rm-notice{border-radius:16px;padding:12px 14px;font-size:14.5px;line-height:1.45;
+  display:flex;flex-direction:column;gap:8px;max-width:85%;
+  background:var(--surface);border:1px solid var(--line-soft);color:var(--silver)}
+.rm-notice .rm-nt{font-weight:700;font-size:15px;color:var(--text)}
+.rm-notice.err{border-color:rgba(255,59,48,.3)}
+.rm-notice.err .rm-nt{color:#FF8A80}
+.rm-notice.warn .rm-nt{color:var(--amber)}
+.rm-notice.info .rm-nt{color:var(--silver)}
+.rm-notice .rm-nb{color:var(--muted)}
+.rm-notice .rm-actions{display:flex;gap:8px}
+
+/* ---------- 7. Group components ----------------------------------------- */
+.rm-ghead{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.rm-avatars{display:flex}
+.rm-avatar{width:26px;height:26px;border-radius:13px;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:700;color:#0C1219;
+  border:2px solid var(--black);margin-left:-8px;background:var(--silver-grad)}
+.rm-avatar:first-child{margin-left:0}
+.rm-gnames{font-size:12.5px;color:var(--muted)}
+.rm-sent{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;
+  color:var(--muted);margin-top:6px}
+.rm-sent .ok{color:var(--sage)}
+.rm-privacy{display:inline-flex;align-items:center;gap:6px;font-size:12px;
+  font-weight:600;color:var(--sage);background:rgba(169,194,166,.12);
+  border:1px solid rgba(169,194,166,.3);border-radius:12px;padding:4px 10px;
+  margin-bottom:6px}
+
+/* ---------- 8. Inline status chips inside agent text --------------------- */
+.rm-tag{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;padding:3px 9px;border-radius:10px;vertical-align:1px}
+.rm-tag.ok{background:rgba(169,194,166,.15);color:var(--sage)}
+.rm-tag.wait{background:rgba(245,183,49,.15);color:var(--amber)}
+.rm-tag.err{background:rgba(255,59,48,.15);color:#FF8A80}
+
+/* ---------- light theme -------------------------------------------------- */
+:root[data-theme="light"] .rm-card{background:#fff;border-color:rgba(20,28,38,.1)}
+:root[data-theme="light"] .rm-card .rm-name{color:#171310}
+:root[data-theme="light"] .rm-card .rm-sub,:root[data-theme="light"] .rm-card .rm-row{color:#5B6572}
+:root[data-theme="light"] .rm-notice{background:#fff;border-color:rgba(20,28,38,.1);color:#26303C}
+:root[data-theme="light"] .rm-notice .rm-nt{color:#171310}
+:root[data-theme="light"] .rm-notice .rm-nb{color:#5B6572}
+:root[data-theme="light"] .rm-empty{color:#5B6572}
+:root[data-theme="light"] .rm-btn{background:#fff;border-color:rgba(20,28,38,.15);color:#171310}
+:root[data-theme="light"] .rm-step .t{color:#26303C}

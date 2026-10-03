@@ -352,6 +352,7 @@ a{color:inherit}
   .mk-arc{stroke-dashoffset:0}.mk-dot{transform:none}
 }
 </style>
+<link rel="stylesheet" href="frontend/components/messages/messages.css">
 </head>
 <body>
 <div id="device">
@@ -434,6 +435,7 @@ setTimeout(function(){var s=document.getElementById('splash');if(s){s.style.opac
 <div class="homebar" aria-hidden="true"></div>
 </div>
 
+<script src="frontend/components/messages/messages.js"></script>
 <script>
 (()=>{
 /* ================= helpers ================= */
@@ -790,6 +792,13 @@ function bindCommon(root){
   root.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>{openConversation();go('chat');send(b.dataset.ask)});
   root.querySelectorAll('[data-gconnect]').forEach(b=>b.onclick=()=>connectGoogle());
   root.querySelectorAll('[data-gbrowser]').forEach(b=>b.onclick=()=>connectGoogleBrowser());
+  // Ring Message Components: quick replies, per-item actions, notice retry/alt.
+  // data-rqr / data-rretry / data-ralt carry the exact text to send.
+  root.querySelectorAll('[data-rqr]').forEach(b=>b.onclick=()=>send(b.dataset.rqr));
+  root.querySelectorAll('[data-rsub]').forEach(b=>b.onclick=()=>send('cancel my '+b.dataset.rsub+' subscription'));
+  root.querySelectorAll('[data-rbook]').forEach(b=>b.onclick=()=>send('book a table at '+b.dataset.rbook));
+  root.querySelectorAll('[data-rretry]').forEach(b=>b.onclick=()=>send(b.dataset.rretry));
+  root.querySelectorAll('[data-ralt]').forEach(b=>b.onclick=()=>send(b.dataset.ralt));
 }
 
 /* ================= SHEETS ================= */
@@ -1208,11 +1217,18 @@ function approvalLabel(p){
   return p.describe||p.name;
 }
 function gMsgHTML(m){
+  // Ring Message Components also render in groups (same roles as main chat).
+  if(m.role==='quickreplies'||m.role==='progress'||m.role==='results'||m.role==='notice'||m.role==='steps'){
+    if(window.RMsg){const h=RMsg.render(m);if(h)return h;}
+  }
   if(m.from==='agent'){
-    return `<div><div class="agent-tag">${mark(12,'#7F8894')}Agent</div><div class="msg-agent">${mdHTML(m.text)}</div>${(m.pendingApprovals||[]).map(p=>`
+    const gh=(window.RMsg&&(m.participants||m.secret))?RMsg.groupHeader(m):'';
+    const sent=(window.RMsg&&m.sentTo)?RMsg.sentIndicator(m):'';
+    return `<div><div class="agent-tag">${mark(12,'#7F8894')}Agent</div>${gh}<div class="msg-agent">${mdHTML(m.text)}</div>${sent}${(m.pendingApprovals||[]).map(p=>`
       <section class="card-silver approval" aria-label="Needs your OK" style="margin-top:8px">
         <div class="k">Needs your OK</div>
         <div class="li"><span style="color:#26303C;display:inline-flex">${I.cal}</span><span>${esc(approvalLabel(p))}</span></div>
+        ${(window.RMsg&&p.args)?RMsg.approvalFields({tool:p.name,args:p.args}):''}
         <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
           <button class="btn btn-brown btn-sm" data-gapprove="${p.id}">Approve</button>
           <button class="btn btn-sm" style="border:1px solid rgba(20,28,38,.35);color:#10151B" data-gdecline="${p.id}">Decline</button>
@@ -1672,6 +1688,13 @@ function docHTML(d){
   return `<section class="doc-card"><div class="doc-head"><span class="doc-ico">${I.doc||''}</span><span class="doc-title">${esc(d.title)}</span><button data-doccopy aria-label="Copy document">${I.copy}<span>Copy</span></button></div><div class="doc-body">${mdHTML(d.body)}</div></section>`;
 }
 function msgHTML(m,i){
+  // Ring Message Components: rich roles render via RMsg (graceful fallback
+  // to plain agent text if the component library failed to load).
+  if(m.role==='quickreplies'||m.role==='progress'||m.role==='results'||m.role==='notice'||m.role==='steps'){
+    if(window.RMsg){const h=RMsg.render(m);if(h)return h;}
+    if(m.text)return `<div class="msg-in"><div class="agent-tag">${mark(12,'#7F8894')}Agent</div><div class="msg-agent">${mdHTML(m.text)}</div></div>`;
+    return '';
+  }
   if(m.role==='user'){
     const imgs=Array.isArray(m.images)&&m.images.length?`<div class="msg-imgs">${m.images.map(u=>`<img src="${u}" alt="attached photo">`).join('')}</div>`:'';
     return `<div class="msg-user msg-in">${imgs}${esc(m.text)}</div>`;
@@ -1698,6 +1721,7 @@ function msgHTML(m,i){
       return `<section class="${done?'card':'card-silver'} approval${done?' done':''} msg-in" aria-label="${done?'Done':waiting?'Waiting':busy?'Working':'Needs your OK'}">
       <div class="k">${done?'Done':waiting?'Waiting':busy?'Working…':'Needs your OK'}</div>
       <div class="li"><span style="color:${done?'var(--sage)':'#26303C'};display:inline-flex">${icon}</span><span>${esc(label)}</span></div>
+      ${window.RMsg?RMsg.approvalFields(m):''}
       ${done||busy||waiting?'':`<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"><button class="btn btn-brown btn-sm" data-approve="${i}">Approve</button><button class="btn btn-sm" style="border:1px solid rgba(20,28,38,.35);color:#10151B" data-decline="${i}">Decline</button></div>`}
     </section>`;
     }
