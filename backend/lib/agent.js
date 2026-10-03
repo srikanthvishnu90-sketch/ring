@@ -1495,32 +1495,39 @@ async function demoResult(name, args) {
     case 'intel_rsvp': return { demo: true, sent: false, note: 'Demo mode: no RSVP was sent. Sign in for the real thing.' };
     case 'intel_followup': return { demo: true, sentUnanswered: [], unrepliedImportant: [], note: 'Demo mode: simulated follow-up radar.' };
     case 'intel_subscriptions': {
-      // LIVE: Search Gmail for real subscription receipts (not demo data)
+      // LIVE: Search ALL connected Gmail accounts for real subscription receipts (Muse's exact process)
       try {
         const uid = a.userId;
-        const results = await gmail.searchMessages({
-          userId: uid,
-          query: 'subject:(receipt OR "subscription" OR "you were charged" OR "payment confirmed" OR "billing") newer_than:90d',
-          maxResults: 30
-        });
-        const subs = [];
+        const googleLib = require('./google');
+        const accounts = await googleLib.listGoogleAccounts(uid).catch(() => []);
+        // If no accounts listed, try primary
+        const emailsToCheck = accounts.length ? accounts : [{ email: null }];
+        const allSubs = [];
         const seen = new Set();
-        for (const m of (results.threads || results.messages || [])) {
-          const from = (m.from || '').toLowerCase();
-          const subject = m.subject || '';
-          // Extract merchant from sender
-          let merchant = m.from?.split('<')[0]?.trim() || 'Unknown';
-          if (seen.has(merchant)) continue;
-          seen.add(merchant);
-          // Look for subscription signals
-          if (/receipt|subscription|charged|billing|payment/i.test(subject)) {
-            subs.push({ merchant, subject, date: m.date, id: m.id || m.threadId });
-          }
-          if (subs.length >= 15) break;
+        for (const acct of emailsToCheck) {
+          const acctUid = acct.email ? `${uid}:google:${acct.email.toLowerCase()}` : uid;
+          try {
+            const results = await gmail.searchMessages({
+              userId: acctUid,
+              query: 'subject:(receipt OR "subscription" OR "you were charged" OR "payment confirmed" OR "billing") newer_than:90d',
+              maxResults: 30
+            });
+            for (const m of (results.threads || results.messages || [])) {
+              const merchant = m.from?.split('<')[0]?.trim() || 'Unknown';
+              const key = merchant.toLowerCase();
+              if (seen.has(key)) continue;
+              seen.add(key);
+              if (/receipt|subscription|charged|billing|payment/i.test(m.subject || '')) {
+                allSubs.push({ merchant, subject: m.subject, date: m.date, email: acct.email || 'primary' });
+              }
+              if (allSubs.length >= 20) break;
+            }
+          } catch (e) { console.log(`[intel_subscriptions] ${acct.email}: ${e.message}`); }
+          if (allSubs.length >= 20) break;
         }
-        return { demo: false, subscriptions: subs, count: subs.length, note: subs.length ? undefined : 'No subscription receipts found in the last 90 days.' };
+        return { demo: false, subscriptions: allSubs, count: allSubs.length, accountsChecked: emailsToCheck.length, note: allSubs.length ? undefined : 'No subscription receipts found in the last 90 days across connected accounts.' };
       } catch (e) {
-        console.log('[intel_subscriptions] Gmail search failed:', e.message);
+        console.log('[intel_subscriptions] failed:', e.message);
         return { demo: false, subscriptions: [], error: true, note: 'Could not access Gmail. Connect your Google account first.' };
       }
     }
