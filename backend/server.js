@@ -209,7 +209,7 @@ app.post('/api/chat/stream', async (req, res) => {
         .then((facts) => Promise.all(facts.map((f) => memory.save(userId, f))))
         .catch(() => {});
     }
-    send({ done: true, text: reply.text, toolsUsed: reply.toolsUsed, mode: reply.mode, demo, pendingApprovals: held, executed: held.length === 0 });
+    send({ done: true, text: reply.text, toolsUsed: reply.toolsUsed, mode: reply.mode, demo, pendingApprovals: held, executed: held.length === 0, blocks: reply.blocks || [] });
   } catch (e) {
     send({ done: true, error: e.message, code: e.code });
   }

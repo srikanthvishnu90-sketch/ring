@@ -1933,6 +1933,7 @@ async function sendStream(text,msg,idx,attachments){
         if(ev.error&&!got)throw new Error(ev.error);
         msg.text=ev.text||msg.text||'Done.';
         (ev.pendingApprovals||[]).forEach(p=>curMsgs().push(approvalFromTool(p)));
+        (ev.blocks||[]).forEach(b=>curMsgs().push(b));
         return true;
       }
     }
@@ -1996,6 +1997,7 @@ async function send(text){
         const data=await r.json();
         msg.thinking=false;msg.streaming=false;msg.text=data.text||'Done.';
         (data.pendingApprovals||[]).forEach(p=>msgs.push(approvalFromTool(p)));
+        (data.blocks||[]).forEach(b=>msgs.push(b));
         S.busy=false;touchChat();renderChat();scrollChat();speakReply(msg.text);return;
       }
     }catch(e){/* fall through to on-device sample */}

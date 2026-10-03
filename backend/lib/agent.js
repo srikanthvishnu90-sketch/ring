@@ -42,7 +42,82 @@ function _pickDriver() {
   return require('./local_driver');
 }
 
+// --- Rich message blocks -------------------------------------------------
+// The frontend's RMsg component library renders 5 structured roles
+// (quickreplies, progress, results, notice, steps) via msgHTML()/gMsgHTML().
+// The agent emits them with the `emit_block` tool; normalizeBlock maps the
+// agent-facing shapes onto exactly what RMsg.render expects. Returns null
+// for unknown roles (dropped, never rendered as broken HTML).
+const RICH_ROLES = ['quickreplies', 'progress', 'results', 'notice', 'steps'];
+function normalizeBlock(a) {
+  a = a || {};
+  const role = String(a.role || '').toLowerCase();
+  if (!RICH_ROLES.includes(role)) return null;
+  const str = (v) => (v === undefined || v === null ? '' : String(v));
+  if (role === 'quickreplies') {
+    const opts = (a.options || a.pills || []).slice(0, 6).map((o) =>
+      typeof o === 'string' ? o : { label: str(o.label), send: str(o.send || o.label) });
+    if (!opts.length) return null;
+    return { role, options: opts };
+  }
+  if (role === 'progress') {
+    const state = ['working', 'done', 'error'].includes(a.state) ? a.state : 'working';
+    return { role, state, label: str(a.label || a.text), kind: str(a.kind || ''), detail: str(a.detail || '') };
+  }
+  if (role === 'results') {
+    const kind = str(a.kind || a.type || 'search');
+    const items = (a.items || []).slice(0, 8);
+    const state = ['loading', 'ready', 'empty', 'error'].includes(a.state)
+      ? a.state : (items.length ? 'ready' : 'empty');
+    return { role, kind, items, state, title: str(a.title || ''), emptyText: str(a.emptyText || ''), errorText: str(a.errorText || ''), retryText: str(a.retryText || '') };
+  }
+  if (role === 'notice') {
+    const tone = ['error', 'warn', 'info'].includes(a.tone) ? a.tone
+      : ['error', 'warn', 'info'].includes(a.kind) ? a.kind : 'info';
+    const out = { role, tone, title: str(a.title || ''), body: str(a.body || a.text || '') };
+    const acts = (a.actions || []).slice(0, 2).map((x) =>
+      typeof x === 'string' ? { label: x, send: x } : { label: str(x.label), send: str(x.send || x.label) })
+      .filter((x) => x.label);
+    if (acts[0]) { out.retryText = acts[0].label; out.retryTextSend = acts[0].send; }
+    if (acts[1]) { out.altText = acts[1].label; out.altTextSend = acts[1].send; }
+    if (a.retryText && !out.retryText) out.retryText = str(a.retryText);
+    if (a.altText && !out.altText) out.altText = str(a.altText);
+    if (!out.body && !out.title) return null;
+    return out;
+  }
+  // steps
+  const items = (a.items || []).slice(0, 4);
+  if (!items.length) return null;
+  return { role, title: str(a.title || ''), items };
+}
+
 const _RAW_TOOLS = [
+  {
+    name: 'emit_block', risk: 'low',
+    fn: async (a) => {
+      const b = normalizeBlock(a);
+      if (b && Array.isArray(a._blocks)) a._blocks.push(b);
+      return { ok: !!b, role: b ? b.role : undefined, note: b ? `Queued '${b.role}' block for the user.` : 'Unknown block role — dropped.' };
+    },
+    schema: { type: 'object', properties: {
+      role: { type: 'string', description: 'quickreplies | progress | results | notice | steps' },
+      pills: { type: 'array', description: 'quickreplies: up to 6 labels (strings or {label, send})' },
+      options: { type: 'array', description: 'quickreplies (alt name for pills)' },
+      text: { type: 'string', description: 'progress label / notice body' },
+      label: { type: 'string', description: 'progress label (alt)' },
+      kind: { type: 'string', description: 'progress kind (email|subscription|booking|ride|food|browser|page) / results kind (subscriptions|restaurants|places|search) / notice tone (error|warn|info)' },
+      type: { type: 'string', description: 'results kind (alt name)' },
+      items: { type: 'array', description: 'results items / steps items (max 4 for steps)' },
+      title: { type: 'string', description: 'results/notice/steps title' },
+      state: { type: 'string', description: 'progress: working|done|error; results: loading|ready|empty|error' },
+      detail: { type: 'string', description: 'progress detail line' },
+      body: { type: 'string', description: 'notice body (alt)' },
+      tone: { type: 'string', description: 'notice tone (alt)' },
+      actions: { type: 'array', description: 'notice: up to 2 {label, send} buttons' },
+      emptyText: { type: 'string', description: 'results: shown when no items' },
+    }, required: ['role'] },
+    describe: 'Render a rich UI block as its own chat message (RMsg components). Use INSTEAD of plain text when the content fits a component. quickreplies {pills:[...] up to 6} — offer next actions/choices. progress {text} — emit BEFORE slow work (Gmail census, browser research), not after. results {type, items} — lists from data you retrieved: type subscriptions needs items [{merchant, amount, currency, cadence, renews, email}]; restaurants/places need [{name, cuisine, rating, distance, price, open}]. notice {kind:error|warn|info, text, actions:[{label, send}]} — on tool failure, emit a notice INSTEAD of an error paragraph. steps {title?, items:[...] max 4} — only when the user explicitly asked for a plan. When a block carries the content, keep your text reply to one short sentence — never duplicate the block in text. Never invent items: only data you actually retrieved.',
+  },
   // Tools contributed by connectors that define their own `tools` array
   // (see backend/connectors/registry.js).
   {
@@ -1264,6 +1339,15 @@ TOOL USE:
 - AMBIGUOUS "unsubscribe from X" → ASK: "Do you want to cancel your X subscription or just stop their marketing emails?" Don't assume. EXCEPTION: merchants where "unsubscribe" unambiguously means the paid subscription (PlayStation Plus, Xbox Game Pass, Netflix, Spotify, Hulu) → route to the subscription-cancel browser flow directly.
 - Vague "do the thing" / "handle it" / "take care of that" with no clear referent → ASK what they mean in one sentence. Run NO tools. NEVER guess from memory or email, never execute actions on a guess, never push an approval card for something the user didn't describe.
 
+RICH MESSAGE BLOCKS (emit_block tool — renders RMsg UI components):
+- Call emit_block to render rich UI INSTEAD of plain text when the content fits a component. Each block becomes its own chat message, in call order.
+- quickreplies {pills:["Label1","Label2"]} — max 6. Use when offering clear next actions or choices ("Cancel it", "Show details").
+- progress {text:"Searching your emails…"} — emit BEFORE slow multi-step work (Gmail census, browser research), never after. The user sees "Searching your emails…" while you work.
+- results {type:"subscriptions", items:[...]} — after "what am I paying for", emit the subscription cards. types: subscriptions | restaurants | places | search. Subscription items: {merchant, amount, currency, cadence, renews, email}. Restaurant items: {name, cuisine, rating, distance, price, open}. Max 8 items — ONLY data you actually retrieved, never invented.
+- notice {kind:"error", text:"plain-language what happened", actions:[{label:"Try again", send:"retry the last step"}]} — on tool failure, emit a notice INSTEAD of writing an error paragraph. kinds: error | warn | info. Up to 2 action buttons.
+- steps {title:"Plan", items:["Do X","Do Y"]} — max 4, ONLY when the user explicitly asked for a plan.
+- When a block carries the content, keep your text reply to ONE short sentence — never duplicate the block's content in text.
+
 CORE TRUTH — TRAIN ON OBJECTIVES:
 - You are scored ONLY on whether the user's objective was met. Not on steps taken, not on how helpful you sounded, not on process.
 - "Cancel my ElevenLabs subscription" → objective met ONLY when ElevenLabs confirms cancellation with an access-end date. Nothing else counts.
@@ -1438,6 +1522,11 @@ function tgHistoryBlock(history) {
 async function demoResult(name, args) {
   const a = args || {};
   switch (name) {
+    case 'emit_block': {
+      const b = normalizeBlock(a);
+      if (b && Array.isArray(a._blocks)) a._blocks.push(b);
+      return { ok: !!b, note: b ? `Queued '${b.role}' block (demo).` : 'Unknown block role.' };
+    }
     case 'gmail_search':
       return {
         demo: true,
@@ -1823,7 +1912,7 @@ const HONEST_FALLBACK = `I wasn't able to stage that just now — nothing was su
 
 // One round of tool-call processing, shared by both turn functions so the
 // honesty guard reuses the exact same execution semantics as the main loop.
-async function processToolCalls({ toolCalls, tools, userId, threadId, toolsUsed, allResults }) {
+async function processToolCalls({ toolCalls, tools, userId, threadId, toolsUsed, allResults, blocks }) {
   const results = [];
   for (const tc of toolCalls) {
     const tool = tools.find((t) => t.name === tc.name);
@@ -1831,7 +1920,7 @@ async function processToolCalls({ toolCalls, tools, userId, threadId, toolsUsed,
     toolsUsed.push({ name: tool.name, risk: tool.risk, args: tc.args });
     if (tool.risk === 'low') {
       try {
-        const out = await tool.fn({ userId, threadId, ...tc.args });
+        const out = await tool.fn({ userId, threadId, ...tc.args, _blocks: blocks });
         // Sanitized result line: on failure the model sees ONLY the plain-language
         // note — never raw JSON internals (stack traces, driver names, errno).
         // Full details still go to logToolRun for debugging.
@@ -1852,7 +1941,7 @@ async function processToolCalls({ toolCalls, tools, userId, threadId, toolsUsed,
         // NEVER expose internal error codes like [code_name] to the user.
         if (out && out.ok === false) {
           const note = out.note || 'Something went wrong.';
-          resultLine += `\n[SYSTEM DIRECTIVE: The tool failed. In your reply, describe what happened in plain user language using this note: "${note}". NEVER quote an error code or bracketed token. Say what failed and what you are doing about it, briefly.]`;
+          resultLine += `\n[SYSTEM DIRECTIVE: The tool failed. Either emit a notice block via emit_block (kind:"error", text in plain user language from this note: "${note}", with a retry action) INSTEAD of an error paragraph, or describe what happened in plain user language in your reply. NEVER quote an error code or bracketed token. Say what failed and what you are doing about it, briefly.]`;
         }
         results.push(resultLine);
         logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
@@ -1903,6 +1992,7 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
 
   const toolsUsed = [];
   const allResults = [];
+  const blocks = []; // rich message blocks queued via emit_block (RMsg roles)
   // Multi-round agent loop (same fix as runAgentTurn): keep executing tool
   // calls and re-prompting until the model answers with no further tool
   // calls, bounded at MAX_ROUNDS (12: enough for exhaustive multi-thread reads).
@@ -1933,7 +2023,7 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
       break;
     }
     const usedBefore = toolsUsed.length;
-    await processToolCalls({ toolCalls: pending, tools, userId, threadId, toolsUsed, allResults });
+    await processToolCalls({ toolCalls: pending, tools, userId, threadId, toolsUsed, allResults, blocks });
     const justUsed = toolsUsed.slice(usedBefore);
     lastHeldName = (justUsed.length > 0
       && justUsed.every((t) => t.risk !== 'low' && t.name === justUsed[0].name))
@@ -1977,7 +2067,7 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
       // action in one fresh reply that supersedes the false draft.
       if (rounds < MAX_ROUNDS) {
         rounds++;
-        await processToolCalls({ toolCalls: fixCalls, tools, userId, threadId, toolsUsed, allResults });
+        await processToolCalls({ toolCalls: fixCalls, tools, userId, threadId, toolsUsed, allResults, blocks });
       }
       const follow = await call(
         `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
@@ -2029,7 +2119,7 @@ async function runAgentTurnStream({ text, userId = 'local', threadId = 'local', 
     );
     if (wrap.text) finalText = finalText + wrap.text;
   }
-  return { text: finalText, toolsUsed, mode: 'live' };
+  return { text: finalText, toolsUsed, mode: 'live', blocks };
 }
 function cannedReply(text) {
   const t = text.toLowerCase();
@@ -2078,6 +2168,7 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
 
   const toolsUsed = [];
   const allResults = [];
+  const blocks = []; // rich message blocks queued via emit_block (RMsg roles)
   // Multi-round agent loop: keep executing the model's tool calls and
   // re-prompting with results until it answers with no further tool calls
   // (bounded so a confused model can't spin forever). Without this, any
@@ -2105,7 +2196,7 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
       break;
     }
     const usedBefore = toolsUsed.length;
-    await processToolCalls({ toolCalls: pending, tools, userId, threadId, toolsUsed, allResults });
+    await processToolCalls({ toolCalls: pending, tools, userId, threadId, toolsUsed, allResults, blocks });
     const justUsed = toolsUsed.slice(usedBefore);
     lastHeldName = (justUsed.length > 0
       && justUsed.every((t) => t.risk !== 'low' && t.name === justUsed[0].name))
@@ -2138,7 +2229,7 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
       // action in one fresh reply that supersedes the false draft.
       if (rounds < MAX_ROUNDS) {
         rounds++;
-        await processToolCalls({ toolCalls: fixCalls, tools, userId, threadId, toolsUsed, allResults });
+        await processToolCalls({ toolCalls: fixCalls, tools, userId, threadId, toolsUsed, allResults, blocks });
       }
       const follow = await call(
         `${prompt}\n\nTool results:\n${allResults.join('\n')}\n\nNow reply to the user concisely (1-3 short sentences). If something is held for approval, say what you're waiting on.`,
@@ -2184,7 +2275,7 @@ async function runAgentTurn({ text, userId = 'local', threadId = 'local', demo =
     );
     if (wrap.text) finalText = wrap.text;
   }
-  return { text: finalText, toolsUsed, mode: 'live' };
+  return { text: finalText, toolsUsed, mode: 'live', blocks };
 }
 
-module.exports = { TOOLS, DEMO_TOOLS, runAgentTurn, runAgentTurnStream, llmConfigured };
+module.exports = { TOOLS, DEMO_TOOLS, runAgentTurn, runAgentTurnStream, llmConfigured, normalizeBlock };

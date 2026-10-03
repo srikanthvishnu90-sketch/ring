@@ -233,6 +233,11 @@ async function postMessage(threadId, { from, text, userId, skipMention }) {
       pendingApprovals: held.length ? held : undefined,
     });
     broadcast(threadId, { type: 'message', message: amsg });
+    // Rich blocks (quickreplies/results/notice/etc.) render via gMsgHTML's
+    // RMsg role dispatch — broadcast each as its own message.
+    for (const b of (reply.blocks || [])) {
+      broadcast(threadId, { type: 'message', message: { ...b, from: 'agent', threadId } });
+    }
   }
   return msg;
 }
