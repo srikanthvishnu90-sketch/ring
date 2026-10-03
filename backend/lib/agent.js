@@ -1426,7 +1426,7 @@ function tgHistoryBlock(history) {
 // created from demo turns are owned by user_id 'demo', and resolve() will
 // only ever run the simulated fn for them — a demo card can never execute
 // a real tool, no matter who resolves it.
-function demoResult(name, args) {
+async function demoResult(name, args) {
   const a = args || {};
   switch (name) {
     case 'gmail_search':
@@ -1494,7 +1494,36 @@ function demoResult(name, args) {
     case 'intel_trip': return { demo: true, stagedOnly: true, bookings: [], stagedEvents: [], note: 'Demo mode: simulated trip pull. Sign in for the real thing.' };
     case 'intel_rsvp': return { demo: true, sent: false, note: 'Demo mode: no RSVP was sent. Sign in for the real thing.' };
     case 'intel_followup': return { demo: true, sentUnanswered: [], unrepliedImportant: [], note: 'Demo mode: simulated follow-up radar.' };
-    case 'intel_subscriptions': return { demo: true, subscriptions: [{ merchant: 'Demo Monthly', amount: 9.99, currency: 'USD', cadence: 'monthly', note: 'Demo mode: simulated.' }] };
+    case 'intel_subscriptions': {
+      // LIVE: Search Gmail for real subscription receipts (not demo data)
+      try {
+        const uid = a.userId;
+        const results = await gmail.searchMessages({
+          userId: uid,
+          query: 'subject:(receipt OR "subscription" OR "you were charged" OR "payment confirmed" OR "billing") newer_than:90d',
+          maxResults: 30
+        });
+        const subs = [];
+        const seen = new Set();
+        for (const m of (results.threads || results.messages || [])) {
+          const from = (m.from || '').toLowerCase();
+          const subject = m.subject || '';
+          // Extract merchant from sender
+          let merchant = m.from?.split('<')[0]?.trim() || 'Unknown';
+          if (seen.has(merchant)) continue;
+          seen.add(merchant);
+          // Look for subscription signals
+          if (/receipt|subscription|charged|billing|payment/i.test(subject)) {
+            subs.push({ merchant, subject, date: m.date, id: m.id || m.threadId });
+          }
+          if (subs.length >= 15) break;
+        }
+        return { demo: false, subscriptions: subs, count: subs.length, note: subs.length ? undefined : 'No subscription receipts found in the last 90 days.' };
+      } catch (e) {
+        console.log('[intel_subscriptions] Gmail search failed:', e.message);
+        return { demo: false, subscriptions: [], error: true, note: 'Could not access Gmail. Connect your Google account first.' };
+      }
+    }
     case 'intel_spending': return { demo: true, total: 0, byMerchant: [], byCategory: [], note: 'Demo mode: simulated spending recap.' };
     case 'intel_contact': return { demo: true, contacts: [], note: 'Demo mode: simulated contact search.' };
     case 'intel_deadlines': return { demo: true, stagedOnly: true, deadlines: [], stagedReminders: [], note: 'Demo mode: simulated deadline watch.' };
