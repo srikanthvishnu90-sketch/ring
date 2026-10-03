@@ -1,0 +1,4285 @@
+{
+ "batch": 3,
+ "category": "travel",
+ "count": 150,
+ "items": [
+  {
+   "id": "ACT0351",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book a flight to Dallas Friday returning Sunday",
+   "muse_response": "Booking it \u2014 Book a flight to Dallas Friday returning Sunday. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book a flight to Dallas Friday returning Sunday. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 90,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0352",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Find the cheapest flight to Denver next weekend",
+   "muse_response": "Booking it \u2014 Find the cheapest flight to Denver next weekend. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Find the cheapest flight to Denver next weekend. I'll confirm the price before anything's charged. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0353",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book a hotel in Austin for two nights under $200 a night",
+   "muse_response": "Booking it \u2014 Book a hotel in Austin for two nights under $200 a night. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book a hotel in Austin for two nights under $200 a night. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 90,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0354",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Check in to my flight tomorrow",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0355",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Add my frequent flyer number to the booking",
+   "muse_response": "Adding it to your booking now.",
+   "ring_response": "Adding it to your booking now. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0356",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Upgrade my seat to extra legroom on the outbound flight",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0357",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book a rental car at Los Angeles airport for the weekend",
+   "muse_response": "Booking it \u2014 Book a rental car at Los Angeles airport for the weekend. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book a rental car at Los Angeles airport for the weekend. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0358",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Get me a window seat on flight 482",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0359",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Change my flight to the earlier departure",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0360",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book airport parking for Friday through Monday",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0361",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Add a checked bag to my reservation",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0362",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Find a nonstop flight to Austin under $300",
+   "muse_response": "Booking it \u2014 Find a nonstop flight to Austin under $300. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Find a nonstop flight to Austin under $300. I'll confirm the price before anything's charged. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0363",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book the 7am shuttle from the hotel to the airport",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0364",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Reserve a hotel room with a king bed and late checkout",
+   "muse_response": "Booking it \u2014 Reserve a hotel room with a king bed and late checkout. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Reserve a hotel room with a king bed and late checkout. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 90,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0365",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Get travel insurance for the New York trip",
+   "muse_response": "Booking it \u2014 Get travel insurance for the New York trip. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Get travel insurance for the New York trip. I'll confirm the price before anything's charged. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0366",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Plan a 3-day itinerary for Washington DC with restaurant reservations",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0367",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book flights and a hotel for two in Phoenix, total under $1,200",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0368",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Find the fastest route to Denver that avoids layovers over 2 hours",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0369",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book my flight and add the hotel my company uses, then expense both",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0370",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Rebook my cancelled flight on the next available option and claim the meal voucher",
+   "muse_response": "Canceling that booking \u2014 I'll confirm any refund or credit.",
+   "ring_response": "I'll help you with that. Canceling that booking \u2014 I'll confirm any refund or credit. Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. Canceling it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0371",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Plan the road trip to Atlanta: route, two hotel stops, and gas cost estimate",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0372",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book a weekend getaway within 3 hours of me under $500 total",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0373",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Get a passport appointment this month and list every document I need",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0374",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book the red-eye to New York and a hotel with 24-hour check-in",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0375",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Compare flying vs driving to New York on cost and time, then book the winner",
+   "muse_response": "Comparing options now \u2014 I'll show you cost vs time side by side, then book your pick.",
+   "ring_response": "Comparing options now \u2014 I'll show you cost vs time side by side, then book your pick. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0376",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book a flight for Leo and me on the same itinerary",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 71,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0377",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Find a hotel near the convention center with free breakfast and parking",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0378",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book the cruise cabin and add the drink package and shore excursion",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0379",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Arrange airport pickup for Priya arriving Thursday at 6pm",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0380",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book a one-way flight to Dallas and a separate return two weeks later",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0381",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book a flight from Chicago to Boston on Saturday",
+   "muse_response": "Booking it \u2014 Book a flight from Chicago to Boston on Saturday. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book a flight from Chicago to Boston on Saturday. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 90,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0382",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Check the status of flight 328",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0383",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Reserve a table for 2 at the hotel restaurant",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0384",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book the airport lounge day pass for my layover",
+   "muse_response": "Booking it \u2014 Book the airport lounge day pass for my layover. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book the airport lounge day pass for my layover. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 90,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0385",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Download my boarding pass",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0386",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Set a fare alert for Chicago to San Francisco under $200",
+   "muse_response": "Booking it \u2014 Set a fare alert for Chicago to San Francisco under $200. I'll confirm the price before anything's charged.",
+   "ring_response": "",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 20,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 35,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0387",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book a pet-friendly hotel in Los Angeles",
+   "muse_response": "Booking it \u2014 Book a pet-friendly hotel in Los Angeles. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book a pet-friendly hotel in Los Angeles. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0388",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Reserve the hotel spa for Saturday morning",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0389",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Buy the city transit pass for Denver",
+   "muse_response": "Booking it \u2014 Buy the city transit pass for Denver. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Buy the city transit pass for Denver. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0390",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book a taxi from the airport to the hotel",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0391",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Add TSA PreCheck to my reservation",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0392",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book a room with two queens in Nashville for Friday",
+   "muse_response": "Booking it \u2014 Book a room with two queens in Nashville for Friday. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book a room with two queens in Nashville for Friday. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 90,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0393",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Get the refund for my cancelled flight",
+   "muse_response": "Canceling that booking \u2014 I'll confirm any refund or credit.",
+   "ring_response": "I'll help you with that. Canceling that booking \u2014 I'll confirm any refund or credit. Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. Canceling it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0394",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book travel insurance for the international trip",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0395",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Reserve a rental car with unlimited miles in Atlanta",
+   "muse_response": "Booking it \u2014 Reserve a rental car with unlimited miles in Atlanta. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Reserve a rental car with unlimited miles in Atlanta. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 90,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0396",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book the cheapest refundable flight to Austin and set a price-drop alert",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0397",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Plan the bachelorette weekend in New York: hotel for 8, dinner reservation, and the Saturday activity",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0398",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Find a flight that lands in Washington DC before noon and a hotel with early check-in",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0399",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book my trip to Chicago using points first, cash for the rest",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0400",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Rebook the whole family of 5 on the same flight after the schedule change",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0401",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Plan a 5-day Denver trip with one rest day and book all the tours",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0402",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book the hotel for the wedding weekend and split the suite cost with Victor",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0403",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Find the best-rated Airbnb near downtown Seattle for 4 nights under $250 a night",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 77,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0404",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book a multi-city trip: Chicago to Los Angeles to Chicago and home",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0405",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Get the visa requirements for New York and start the application",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0406",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book the group rate for 10 rooms at the conference hotel",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0407",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Plan the honeymoon: compare 3 destinations on cost and weather, then book the winner",
+   "muse_response": "Comparing options now \u2014 I'll show you cost vs time side by side, then book your pick.",
+   "ring_response": "Comparing options now \u2014 I'll show you cost vs time side by side, then book your pick. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0408",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book a last-minute flight to San Francisco tonight under $400",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0409",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Arrange the car service for the 5am airport run",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0410",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book the train to Nashville instead of flying and reserve the quiet car",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0411",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Plan the two-week Europe trip: flights, 4 cities, hotels, intercity trains, restaurant bookings, and a day-by-day itinerary under $6,000 for two",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0412",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Rebuild the cancelled honeymoon: rebook flights and hotels for new dates, transfer the nonrefundable tours, file the travel insurance claim, and keep the total within $500 of the original",
+   "muse_response": "Canceling that booking \u2014 I'll confirm any refund or credit.",
+   "ring_response": "I'll help you with that. Canceling that booking \u2014 I'll confirm any refund or credit. Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. Canceling it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0413",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Coordinate the company offsite for 30: group flights, hotel block, meeting space, team dinner, airport transfers, and a per-person cost breakdown",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0414",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Plan the family reunion trip: 12 people flying from 4 cities, one big rental house, the Saturday excursion, dietary needs for 3 kids, and a shared expense ledger",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0415",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Execute the destination wedding logistics: guest travel guide, hotel block, welcome dinner, ceremony transport, and the day-of timeline for 80 guests",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0416",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Book the around-the-world ticket: 5 stops, all on one alliance, maximizing the miles earned, with 3-day minimums per city",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0417",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Plan the month-long remote-work trip: 4 cities with coworking spaces, monthly Airbnb discounts, timezone-friendly flight times, and total cost under $4,000",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0418",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Handle the missed connection: rebook all 4 legs, claim the hotel voucher, reroute the checked bags, and notify the Airbnb host of the late arrival",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0419",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Coordinate the sports team travel: 18 players, gear transport, bus charter, hotel with team rates, meal schedule, and the tournament registration",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0420",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Plan the ski trip for 10: find the resort with the best snow forecast, book the slope-side condo, rent gear for 6, arrange lessons for the beginners, and split everything by room occupancy",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0421",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Book the sabbatical: 3 months across Dallas, Chicago, and Nashville with monthly rentals, local SIM plans, and a budget tracker that alerts at 80% spend",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0422",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Evacuate-proof the trip: rebook everything refundable, buy the premium travel insurance, register with the embassy, and build the contingency plan for each leg",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0423",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Plan the college tour road trip: 6 campuses in 5 days, info session bookings, hotel stops, interview prep slots, and the comparison scorecard",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0424",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Coordinate the film crew travel: 8 people, equipment as checked baggage, location permits, daily call sheets, and the per-diem payouts",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0425",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Book the cruise for the extended family: 3 generations, connecting cabins, the dining rotation, shore excursions for mobility-limited grandparents, and the group photo package",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 71,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0426",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book me a flight",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0427",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book the cheapest flight to Paris tomorrow morning",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 77,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0428",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Plan a trip to the moon for under $500",
+   "muse_response": "I can't do that one \u2014 a moon trip isn't bookable, and $500 won't cover it.",
+   "ring_response": "I can't do that one \u2014 a moon trip isn't bookable, and $500 won't cover it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Bold. Unrealistic, but bold. Here's what I can actually do instead:",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0429",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book the lounge pass for the Washington DC layover",
+   "muse_response": "Booking it \u2014 Book the lounge pass for the Washington DC layover. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book the lounge pass for the Washington DC layover. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 90,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0430",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Check in to the Los Angeles flight",
+   "muse_response": "Booking it \u2014 Check in to the Los Angeles flight. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Check in to the Los Angeles flight. I'll confirm the price before anything's charged. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0431",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book a rental car in Atlanta for 6 days",
+   "muse_response": "Booking it \u2014 Book a rental car in Atlanta for 6 days. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book a rental car in Atlanta for 6 days. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 90,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0432",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book the lounge pass for the Dallas layover",
+   "muse_response": "Booking it \u2014 Book the lounge pass for the Dallas layover. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book the lounge pass for the Dallas layover. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0433",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Check in to the New York flight",
+   "muse_response": "Booking it \u2014 Check in to the New York flight. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Check in to the New York flight. I'll confirm the price before anything's charged. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0434",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Reserve parking at the Seattle airport",
+   "muse_response": "Booking it \u2014 Reserve parking at the Seattle airport. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Reserve parking at the Seattle airport. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0435",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Get the travel insurance for the Miami trip",
+   "muse_response": "Booking it \u2014 Get the travel insurance for the Miami trip. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Get the travel insurance for the Miami trip. I'll confirm the price before anything's charged. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0436",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Reserve the airport shuttle in Boston",
+   "muse_response": "Booking it \u2014 Reserve the airport shuttle in Boston. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Reserve the airport shuttle in Boston. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0437",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Reserve the airport shuttle in New York",
+   "muse_response": "Booking it \u2014 Reserve the airport shuttle in New York. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Reserve the airport shuttle in New York. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0438",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Get the travel insurance for the New York trip",
+   "muse_response": "Booking it \u2014 Get the travel insurance for the New York trip. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Get the travel insurance for the New York trip. I'll confirm the price before anything's charged. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0439",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Reserve the airport shuttle in Phoenix",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0440",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Reserve parking at the Miami airport",
+   "muse_response": "Booking it \u2014 Reserve parking at the Miami airport. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Reserve parking at the Miami airport. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0441",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book the lounge pass for the Boston layover",
+   "muse_response": "Booking it \u2014 Book the lounge pass for the Boston layover. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book the lounge pass for the Boston layover. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 90,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0442",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book the 6am flight to Denver on Monday",
+   "muse_response": "Booking it \u2014 Book the 6am flight to Denver on Monday. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book the 6am flight to Denver on Monday. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 90,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0443",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Get the travel insurance for the Phoenix trip",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0444",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book a flight to Miami next Monday",
+   "muse_response": "Booking it \u2014 Book a flight to Miami next Monday. I'll confirm the price before anything's charged.",
+   "ring_response": "",
+   "ring_tools": [
+    "memory_list",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0445",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Add a bag to the San Francisco booking",
+   "muse_response": "Adding it to your booking now.",
+   "ring_response": "Adding it to your booking now. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0446",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Reserve parking at the Austin airport",
+   "muse_response": "Booking it \u2014 Reserve parking at the Austin airport. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Reserve parking at the Austin airport. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0447",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Reserve the airport shuttle in Washington DC",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0448",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book the lounge pass for the Seattle layover",
+   "muse_response": "Booking it \u2014 Book the lounge pass for the Seattle layover. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book the lounge pass for the Seattle layover. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 90,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0449",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Reserve a hotel in San Francisco for 6 nights",
+   "muse_response": "Booking it \u2014 Reserve a hotel in San Francisco for 6 nights. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Reserve a hotel in San Francisco for 6 nights. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0450",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Reserve parking at the New York airport",
+   "muse_response": "Booking it \u2014 Reserve parking at the New York airport. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Reserve parking at the New York airport. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0451",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book the lounge pass for the Portland layover",
+   "muse_response": "Booking it \u2014 Book the lounge pass for the Portland layover. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book the lounge pass for the Portland layover. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 90,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0452",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Add a bag to the Washington DC booking",
+   "muse_response": "Adding it to your booking now.",
+   "ring_response": "Adding it to your booking now. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0453",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book a flight to Nashville next Monday",
+   "muse_response": "Booking it \u2014 Book a flight to Nashville next Monday. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book a flight to Nashville next Monday. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0454",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Get the travel insurance for the San Francisco trip",
+   "muse_response": "Booking it \u2014 Get the travel insurance for the San Francisco trip. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Get the travel insurance for the San Francisco trip. I'll confirm the price before anything's charged. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0455",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book the lounge pass for the Austin layover",
+   "muse_response": "Booking it \u2014 Book the lounge pass for the Austin layover. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book the lounge pass for the Austin layover. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 90,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0456",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Book a flight to Nashville next Saturday",
+   "muse_response": "Booking it \u2014 Book a flight to Nashville next Saturday. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Book a flight to Nashville next Saturday. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0457",
+   "category": "travel",
+   "complexity": "simple",
+   "input": "Reserve parking at the Boston airport",
+   "muse_response": "Booking it \u2014 Reserve parking at the Boston airport. I'll confirm the price before anything's charged.",
+   "ring_response": "Booking it \u2014 Reserve parking at the Boston airport. I'll confirm the price before anything's charged. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0458",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Find the next week flight to San Francisco under $50 and book it with the hotel",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0459",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Rebook the Portland flight after the delay and claim the voucher",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0460",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book the Portland trip with the Lily crew and split the hotel",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0461",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book the Dallas trip with the Leo crew and split the hotel",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0462",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book flights to Seattle for 10 people on the same reservation",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0463",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Plan the Phoenix weekend: flight, hotel, and the Saturday tour",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0464",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book flights to Seattle for 4 people on the same reservation",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0465",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Plan the Boston weekend: flight, hotel, and the Saturday tour",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0466",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book flights to Washington DC for 8 people on the same reservation",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0467",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book flights to New York for 4 people on the same reservation",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0468",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Find the Friday flight to San Francisco under $50 and book it with the hotel",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0469",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Find the Monday flight to Portland under $100 and book it with the hotel",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0470",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Rebook the Nashville flight after the delay and claim the voucher",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0471",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Plan the Dallas weekend: flight, hotel, and the Saturday tour",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0472",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Plan the Nashville weekend: flight, hotel, and the Saturday tour",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 77,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0473",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Rebook the Los Angeles flight after the delay and claim the voucher",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 77,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0474",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book flights to Phoenix for 6 people on the same reservation",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0475",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book the Portland trip with the Chris crew and split the hotel",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0476",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Rebook the Miami flight after the delay and claim the voucher",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0477",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Find the Friday flight to Atlanta under $50 and book it with the hotel",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 77,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0478",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book the Chicago trip with the Victor crew and split the hotel",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0479",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book the Seattle trip with the Marcus crew and split the hotel",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0480",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book the Miami trip with the Sarah crew and split the hotel",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0481",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Rebook the Washington DC flight after the delay and claim the voucher",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0482",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book flights to Dallas for 10 people on the same reservation",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0483",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Rebook the Seattle flight after the delay and claim the voucher",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0484",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Book flights to Chicago for 4 people on the same reservation",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0485",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Plan the Atlanta weekend: flight, hotel, and the Saturday tour",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0486",
+   "category": "travel",
+   "complexity": "multi",
+   "input": "Rebook the New York flight after the delay and claim the voucher",
+   "muse_response": "On it \u2014 I'll pull options and confirm before booking anything.",
+   "ring_response": "On it \u2014 I'll pull options and confirm before booking anything. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0487",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Plan the Chicago corporate retreat: 25 people, flights, hotel block, and the team dinner",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0488",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Coordinate the New York to Miami group tour: 10 travelers, transport, guides, and the meal plan",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0489",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Plan the Boston corporate retreat: 25 people, flights, hotel block, and the team dinner",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0490",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Coordinate the Los Angeles to Phoenix group tour: 8 travelers, transport, guides, and the meal plan",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0491",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Coordinate the Washington DC to Denver group tour: 8 travelers, transport, guides, and the meal plan",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0492",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Coordinate the Phoenix to Austin group tour: 10 travelers, transport, guides, and the meal plan",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0493",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Plan the Denver corporate retreat: 25 people, flights, hotel block, and the team dinner",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0494",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Plan the New York corporate retreat: 25 people, flights, hotel block, and the team dinner",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0495",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Coordinate the Seattle to Chicago group tour: 6 travelers, transport, guides, and the meal plan",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0496",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Coordinate the Washington DC to San Francisco group tour: 10 travelers, transport, guides, and the meal plan",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0497",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Plan the Los Angeles corporate retreat: 25 people, flights, hotel block, and the team dinner",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Wheels up. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0498",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Plan the Austin corporate retreat: 25 people, flights, hotel block, and the team dinner",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0499",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Plan the Washington DC corporate retreat: 25 people, flights, hotel block, and the team dinner",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pack light, I've got the logistics. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0500",
+   "category": "travel",
+   "complexity": "complex",
+   "input": "Plan the Nashville corporate retreat: 25 people, flights, hotel block, and the team dinner",
+   "muse_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK.",
+   "ring_response": "Planning it. I'll lay out flights, stay, and key bookings, then lock each in with your OK. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "memory_list",
+    "calendar_list",
+    "web_search",
+    "web_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Adventure loading. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  }
+ ]
+}

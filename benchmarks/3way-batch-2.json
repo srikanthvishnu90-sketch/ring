@@ -1,0 +1,4357 @@
+{
+ "batch": 2,
+ "category": "subscriptions_finance",
+ "count": 150,
+ "items": [
+  {
+   "id": "ACT0201",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel my Netflix subscription",
+   "muse_response": "Canceling Netflix. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Netflix. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Netflix. Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0202",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel my Spotify Premium plan",
+   "muse_response": "Canceling Spotify. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Spotify. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Spotify. Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0203",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel Audible and keep my unused credits",
+   "muse_response": "Canceling Audible. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Audible. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Audible. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0204",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Downgrade my YouTube Premium to the basic plan",
+   "muse_response": "I'll handle the Youtube Premium change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Youtube Premium change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0205",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Pause my gym membership for two months",
+   "muse_response": "Pausing that subscription \u2014 you keep your data, billing stops. Confirm?",
+   "ring_response": "Pausing that subscription \u2014 you keep your data, billing stops. Confirm? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pausing it \u2014 cryogenic subscription storage. Confirm?",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0206",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel the free trial of Hulu before it charges me",
+   "muse_response": "Canceling Hulu. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 20,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 35,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Hulu. Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0207",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Turn off auto-renew on my domain registration",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the subscription change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0208",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel my Netflix add-on package",
+   "muse_response": "Canceling Netflix. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Netflix. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Netflix. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0209",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Switch my Peloton plan to the annual billing to save money",
+   "muse_response": "I'll handle the Peloton change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Peloton change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0210",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Remove the extra screens add-on from my streaming plan",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the subscription change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0211",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel my meal-kit subscription effective immediately",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0212",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Freeze my storage unit rental for next month",
+   "muse_response": "Pausing that subscription \u2014 you keep your data, billing stops. Confirm?",
+   "ring_response": "Pausing that subscription \u2014 you keep your data, billing stops. Confirm? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pausing it \u2014 cryogenic subscription storage. Confirm?",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0213",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel the premium tier of my language app",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0214",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Opt out of the extended warranty on my laptop",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the subscription change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0215",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel my magazine subscription and request a refund for the remaining issues",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0216",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Find all recurring charges and cancel the two most expensive",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0217",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Dispute the $47.99 charge from last Tuesday",
+   "muse_response": "I'll dispute the $47.99 charge \u2014 I'll pull the receipt and your statement first. Go ahead?",
+   "ring_response": "",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 12,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 27,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0218",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "List every subscription over $10 a month and cancel the ones I haven't used in 60 days",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0219",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Switch my Disney+ subscription from monthly to annual and confirm the prorated credit",
+   "muse_response": "I'll handle the disney+ change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the disney+ change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0220",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Negotiate my cable bill down and report the new rate before accepting",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the subscription change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 71,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0221",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Find the duplicate Netflix charges and refund the second one",
+   "muse_response": "Scanning your email for recurring charges now. I'll list everything I find.",
+   "ring_response": "Scanning your email for recurring charges now. I'll list everything I find. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0222",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Audit my streaming spend this year and cancel enough to get under $50 a month",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0223",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Consolidate my two cloud storage plans into one and cancel the redundant one",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0224",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Check whether my gym is still charging me after cancellation and dispute it if so",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0225",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Move all my subscriptions to the same credit card and confirm each one migrated",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the subscription change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0226",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Compare my phone plan against two cheaper carriers and switch me if I save over $20 a month",
+   "muse_response": "Comparing them side by side \u2014 I'll show you the better value.",
+   "ring_response": "Comparing them side by side \u2014 I'll show you the better value. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 77,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0227",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Find the subscription I forgot about and cancel it with a screenshot of the confirmation",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0228",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Dispute the double charge from Hulu and escalate to a supervisor if the first agent refuses",
+   "muse_response": "I'll dispute the that charge charge \u2014 I'll pull the receipt and your statement first. Go ahead?",
+   "ring_response": "I'll dispute the that charge charge \u2014 I'll pull the receipt and your statement first. Go ahead? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0229",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Calculate my total monthly subscription spend and build a plan to cut it 30%",
+   "muse_response": "Tallying up every recurring charge now \u2014 I'll break it down by service.",
+   "ring_response": "Tallying up every recurring charge now \u2014 I'll break it down by service. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0230",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Renew my Apple Music membership at the student rate and verify eligibility first",
+   "muse_response": "I'll handle the Apple Music change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Apple Music change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0231",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel my Strava subscription",
+   "muse_response": "Canceling Strava. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Strava. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Strava. Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0232",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Pause my Spotify membership for 90 days",
+   "muse_response": "Pausing Spotify \u2014 you keep your data, billing stops. Confirm?",
+   "ring_response": "Pausing Spotify \u2014 you keep your data, billing stops. Confirm? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pausing Spotify \u2014 cryogenic subscription storage. Confirm?",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0233",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Turn off the $4.99 add-on on my Dropbox account",
+   "muse_response": "I'll handle the Dropbox change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Dropbox change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0234",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Switch my Peloton billing to the Diego family plan",
+   "muse_response": "I'll handle the Peloton change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Peloton change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0235",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel the trial of the Duolingo Plus premium tier",
+   "muse_response": "Canceling Duolingo. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Duolingo. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Duolingo. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0236",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Downgrade my Dropbox account to free",
+   "muse_response": "I'll handle the Dropbox change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Dropbox change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0237",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Remove my payment method from Audible after cancelling",
+   "muse_response": "Canceling Audible. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Audible. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Audible. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0238",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Export my YouTube Premium listening history before I cancel",
+   "muse_response": "Canceling Youtube Premium. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Youtube Premium. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Youtube Premium. Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0239",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel Peloton and tell me what I lose",
+   "muse_response": "Canceling Peloton. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Peloton. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Peloton. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0240",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Stop the Hulu renewal scheduled for next week",
+   "muse_response": "I'll handle the Hulu change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Hulu change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0241",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Change my Strava plan from family to individual",
+   "muse_response": "I'll handle the Strava change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Strava change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0242",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel my subscription to Peloton",
+   "muse_response": "Canceling Peloton. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Peloton. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Peloton. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0243",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Skip next month's Netflix box",
+   "muse_response": "I'll handle the Netflix change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Netflix change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0244",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Reactivate my Peloton account at the promo rate",
+   "muse_response": "I'll handle the Peloton change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Peloton change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0245",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Unsubscribe from the Gym newsletter upsell",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "I'll help you with that. I'll handle the subscription change. Confirm and I'll proceed? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 75,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0246",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Find every free trial expiring this week and cancel the ones I haven't opened",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0247",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Pull my last 3 months of Spotify invoices and flag any price increases",
+   "muse_response": "I'll handle the Spotify change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Spotify change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0248",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Call out the YouTube Premium charge I don't recognize and file a chargeback if they won't refund it",
+   "muse_response": "I'll handle the Youtube Premium change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Youtube Premium change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0249",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Set a reminder to cancel Notion Plus the day before the annual renewal",
+   "muse_response": "Canceling Notion. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Notion. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Notion. Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0250",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Transfer my Max subscription to Priya and remove my card",
+   "muse_response": "I'll handle the Max change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Max change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0251",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Find the cheapest plan that keeps my Netflix watchlist and switch me to it",
+   "muse_response": "Scanning your email for recurring charges now. I'll list everything I find.",
+   "ring_response": "Scanning your email for recurring charges now. I'll list everything I find. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0252",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Dispute the $12.99 Adobe Creative Cloud charge from yesterday that I didn't authorize",
+   "muse_response": "I'll dispute the $12.99 charge \u2014 I'll pull the receipt and your statement first. Go ahead?",
+   "ring_response": "I'll dispute the $12.99 charge \u2014 I'll pull the receipt and your statement first. Go ahead? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0253",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Consolidate my three news subscriptions into one bundle if one exists",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the subscription change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 71,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0254",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Check if Apple Music offers a retention discount before I cancel",
+   "muse_response": "Canceling Apple Music. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Apple Music. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Apple Music. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0255",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Move my Strava billing date to the 1st of the month",
+   "muse_response": "I'll handle the Strava change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Strava change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0256",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Calculate how much I'd save going annual on Adobe Creative Cloud and switch if it's over 15%",
+   "muse_response": "Tallying up every recurring charge now \u2014 I'll break it down by service.",
+   "ring_response": "Tallying up every recurring charge now \u2014 I'll break it down by service. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0257",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Find the student discount for Netflix and apply it with my school email",
+   "muse_response": "Scanning your email for recurring charges now. I'll list everything I find.",
+   "ring_response": "Scanning your email for recurring charges now. I'll list everything I find. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0258",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Cancel Disney+ but keep access until the billing period ends",
+   "muse_response": "Canceling disney+. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling disney+. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing disney+. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0259",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Split the Duolingo Plus family plan cost evenly among the 4 members and request payment",
+   "muse_response": "I'll handle the Duolingo change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Duolingo change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0260",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Review my app store subscriptions and cancel everything under $5 I don't use",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0261",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Do a full subscription audit: pull every recurring charge across all my cards, rank by cost, cancel the bottom 5 I don't use, and produce a monthly savings report",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0262",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Dispute the $249 charge from the hotel that no-showed me: gather the booking confirmation, the cancellation email, file the dispute, and follow up until the credit posts",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0263",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Move my entire financial autopilot: switch banks, update direct deposit with my employer, migrate 12 billers to the new account, and confirm zero missed payments for 60 days",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the subscription change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0264",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Negotiate every renewable bill I have: internet, phone, insurance, and streaming \u2014 call each one, get the retention offer, and only switch providers if the savings beat $200 a year",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the subscription change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0265",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Handle the fraud on my card: freeze the card, dispute the 4 unauthorized charges, order a replacement, and update the card everywhere it's saved",
+   "muse_response": "Pausing that subscription \u2014 you keep your data, billing stops. Confirm?",
+   "ring_response": "Pausing that subscription \u2014 you keep your data, billing stops. Confirm? I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pausing it \u2014 cryogenic subscription storage. Confirm?",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0266",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Cancel my timeshare: find the rescission window, draft the cancellation letter, send it certified mail, and confirm the contract is voided",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0267",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Refinance my auto loan: pull quotes from 3 lenders, compare total cost including fees, refinance with the winner, and set up autopay",
+   "muse_response": "Comparing them side by side \u2014 I'll show you the better value.",
+   "ring_response": "Comparing them side by side \u2014 I'll show you the better value. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0268",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Do my quarterly money review: categorize all spending, flag anomalies over $100, project the next quarter, and recommend 3 concrete cuts",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the subscription change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0269",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Set up the college fund for my kid: compare 529 plans from 3 states, open the best one, set the monthly contribution, and automate it",
+   "muse_response": "Comparing them side by side \u2014 I'll show you the better value.",
+   "ring_response": "Comparing them side by side \u2014 I'll show you the better value. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0270",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Execute the tax-loss harvest: identify the losing positions, sell them, buy the replacement funds, and document the wash-sale avoidance",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the subscription change. Confirm and I'll proceed? I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0271",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Consolidate my retirement accounts: roll the two old 401(k)s into my IRA, confirm the rollovers complete, and rebalance to the target allocation",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the subscription change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0272",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Fight the medical bill: request the itemized statement, verify each charge against the EOB, dispute the $800 duplicate line, and negotiate a payment plan for the rest",
+   "muse_response": "I'll dispute the $800 charge \u2014 I'll pull the receipt and your statement first. Go ahead?",
+   "ring_response": "I'll dispute the $800 charge \u2014 I'll pull the receipt and your statement first. Go ahead? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0273",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Build my emergency fund plan: calculate 6 months of expenses, pick the high-yield account, automate the monthly transfer, and track progress",
+   "muse_response": "Tallying up every recurring charge now \u2014 I'll break it down by service.",
+   "ring_response": "Tallying up every recurring charge now \u2014 I'll break it down by service. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0274",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Cancel everything tied to my old email: inventory the accounts, migrate the important ones, close the dead ones, and confirm no recurring charge survives",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0275",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Do the annual insurance review: compare my renters, auto, and life policies against 3 competitors, switch where I save over 10%, and confirm coverage continuity",
+   "muse_response": "Comparing them side by side \u2014 I'll show you the better value.",
+   "ring_response": "Comparing them side by side \u2014 I'll show you the better value. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0276",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Handle the security deposit dispute: document the apartment condition, cite the state law deadline, send the demand letter, and file in small claims if they miss it",
+   "muse_response": "I'll dispute the that charge charge \u2014 I'll pull the receipt and your statement first. Go ahead?",
+   "ring_response": "I'll dispute the that charge charge \u2014 I'll pull the receipt and your statement first. Go ahead? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0277",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel my subscription",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0278",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Dispute the charge",
+   "muse_response": "I'll dispute the that charge charge \u2014 I'll pull the receipt and your statement first. Go ahead?",
+   "ring_response": "I'll dispute the that charge charge \u2014 I'll pull the receipt and your statement first. Go ahead? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0279",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Get me a full refund on everything I've ever paid Netflix",
+   "muse_response": "I'll handle the Netflix change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Netflix change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0280",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel the Disney+ add-on",
+   "muse_response": "Canceling disney+. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling disney+. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing disney+. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0281",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Downgrade my Notion Plus tier",
+   "muse_response": "I'll handle the Notion change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Notion change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0282",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Freeze my Duolingo Plus membership",
+   "muse_response": "Pausing Duolingo \u2014 you keep your data, billing stops. Confirm?",
+   "ring_response": "Pausing Duolingo \u2014 you keep your data, billing stops. Confirm? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pausing Duolingo \u2014 cryogenic subscription storage. Confirm?",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0283",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Turn off Disney+ auto-renew",
+   "muse_response": "I'll handle the disney+ change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the disney+ change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0284",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel the Headspace add-on",
+   "muse_response": "Canceling Headspace. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Headspace. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Headspace. Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0285",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Freeze my Hulu membership",
+   "muse_response": "Pausing Hulu \u2014 you keep your data, billing stops. Confirm?",
+   "ring_response": "Pausing Hulu \u2014 you keep your data, billing stops. Confirm? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pausing Hulu \u2014 cryogenic subscription storage. Confirm?",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0286",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Freeze my Disney+ membership",
+   "muse_response": "Pausing disney+ \u2014 you keep your data, billing stops. Confirm?",
+   "ring_response": "Pausing disney+ \u2014 you keep your data, billing stops. Confirm? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pausing disney+ \u2014 cryogenic subscription storage. Confirm?",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0287",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel the Spotify add-on",
+   "muse_response": "Canceling Spotify. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Spotify. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Spotify. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0288",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Pause my Gym for a month",
+   "muse_response": "Pausing that subscription \u2014 you keep your data, billing stops. Confirm?",
+   "ring_response": "Pausing that subscription \u2014 you keep your data, billing stops. Confirm? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pausing it \u2014 cryogenic subscription storage. Confirm?",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0289",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Switch Duolingo Plus to the Omar plan",
+   "muse_response": "I'll handle the Duolingo change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Duolingo change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0290",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Opt out of Dropbox marketing emails",
+   "muse_response": "I'll handle the Dropbox change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Dropbox change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0291",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel my Audible renewal",
+   "muse_response": "Canceling Audible. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Audible. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Audible. Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0292",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Downgrade my YouTube Premium tier",
+   "muse_response": "I'll handle the Youtube Premium change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Youtube Premium change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0293",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Switch Apple Music to the Mia plan",
+   "muse_response": "I'll handle the Apple Music change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Apple Music change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0294",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Freeze my Spotify membership",
+   "muse_response": "Pausing Spotify \u2014 you keep your data, billing stops. Confirm?",
+   "ring_response": "Pausing Spotify \u2014 you keep your data, billing stops. Confirm? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pausing Spotify \u2014 cryogenic subscription storage. Confirm?",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0295",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Downgrade my Adobe Creative Cloud tier",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the subscription change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0296",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel the iCloud+ add-on",
+   "muse_response": "Canceling Icloud. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Icloud. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Icloud. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0297",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel my Spotify renewal",
+   "muse_response": "Canceling Spotify. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Spotify. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Spotify. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0298",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Remove the Duolingo Plus premium upsell",
+   "muse_response": "I'll handle the Duolingo change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Duolingo change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0299",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Turn off Dropbox auto-renew",
+   "muse_response": "I'll handle the Dropbox change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Dropbox change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0300",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel my Crunchyroll renewal",
+   "muse_response": "Canceling Crunchyroll. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Crunchyroll. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Crunchyroll. Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0301",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Downgrade my Spotify tier",
+   "muse_response": "I'll handle the Spotify change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Spotify change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0302",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Remove the Headspace premium upsell",
+   "muse_response": "I'll handle the Headspace change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Headspace change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0303",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Cancel my Dropbox renewal",
+   "muse_response": "Canceling Dropbox. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Dropbox. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 81,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Dropbox. Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0304",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Opt out of Netflix marketing emails",
+   "muse_response": "I'll handle the Netflix change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Netflix change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0305",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Turn off iCloud+ auto-renew",
+   "muse_response": "I'll handle the Icloud change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Icloud change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0306",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Remove the Xbox Game Pass premium upsell",
+   "muse_response": "I'll handle the Xbox Game Pass change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Xbox Game Pass change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0307",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Opt out of Gym marketing emails",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 20,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 35,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0308",
+   "category": "subscriptions_finance",
+   "complexity": "simple",
+   "input": "Pause my Duolingo Plus for a month",
+   "muse_response": "Pausing Duolingo \u2014 you keep your data, billing stops. Confirm?",
+   "ring_response": "Pausing Duolingo \u2014 you keep your data, billing stops. Confirm? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Pausing Duolingo \u2014 cryogenic subscription storage. Confirm?",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0309",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Audit my Apple Music usage and downgrade if I'm under the limit",
+   "muse_response": "Scanning your email for recurring charges now. I'll list everything I find.",
+   "ring_response": "Scanning your email for recurring charges now. I'll list everything I find. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0310",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Check my Gym bill for errors and dispute the price hike",
+   "muse_response": "I'll dispute the that charge charge \u2014 I'll pull the receipt and your statement first. Go ahead?",
+   "ring_response": "I'll dispute the that charge charge \u2014 I'll pull the receipt and your statement first. Go ahead? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0311",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Compare Headspace annual vs monthly and switch to the cheaper",
+   "muse_response": "Comparing them side by side \u2014 I'll show you the better value.",
+   "ring_response": "Comparing them side by side \u2014 I'll show you the better value. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 77,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0312",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Compare YouTube Premium annual vs monthly and switch to the cheaper",
+   "muse_response": "Comparing them side by side \u2014 I'll show you the better value.",
+   "ring_response": "Comparing them side by side \u2014 I'll show you the better value. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0313",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Check my Xbox Game Pass bill for errors and dispute the double billing",
+   "muse_response": "I'll dispute the that charge charge \u2014 I'll pull the receipt and your statement first. Go ahead?",
+   "ring_response": "I'll dispute the that charge charge \u2014 I'll pull the receipt and your statement first. Go ahead? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0314",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Compare Peloton annual vs monthly and switch to the cheaper",
+   "muse_response": "Comparing them side by side \u2014 I'll show you the better value.",
+   "ring_response": "Comparing them side by side \u2014 I'll show you the better value. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0315",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Audit my Netflix usage and downgrade if I'm under the limit",
+   "muse_response": "Scanning your email for recurring charges now. I'll list everything I find.",
+   "ring_response": "Scanning your email for recurring charges now. I'll list everything I find. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0316",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Audit my Audible usage and downgrade if I'm under the limit",
+   "muse_response": "Scanning your email for recurring charges now. I'll list everything I find.",
+   "ring_response": "Scanning your email for recurring charges now. I'll list everything I find. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0317",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Move iCloud+ to the new card and confirm the first charge",
+   "muse_response": "I'll handle the Icloud change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Icloud change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0318",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Compare iCloud+ annual vs monthly and switch to the cheaper",
+   "muse_response": "Comparing them side by side \u2014 I'll show you the better value.",
+   "ring_response": "Comparing them side by side \u2014 I'll show you the better value. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 77,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0319",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Compare Hulu annual vs monthly and switch to the cheaper",
+   "muse_response": "Comparing them side by side \u2014 I'll show you the better value.",
+   "ring_response": "Comparing them side by side \u2014 I'll show you the better value. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0320",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Move Crunchyroll to the new card and confirm the first charge",
+   "muse_response": "I'll handle the Crunchyroll change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Crunchyroll change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0321",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Move Netflix to the new card and confirm the first charge",
+   "muse_response": "I'll handle the Netflix change. Confirm and I'll proceed?",
+   "ring_response": "",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0322",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Find the Dropbox retention offer before I cancel",
+   "muse_response": "Canceling Dropbox. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Dropbox. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Dropbox. Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0323",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Audit my Hulu usage and downgrade if I'm under the limit",
+   "muse_response": "Scanning your email for recurring charges now. I'll list everything I find.",
+   "ring_response": "Scanning your email for recurring charges now. I'll list everything I find. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0324",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Find the Apple Music retention offer before I cancel",
+   "muse_response": "Canceling Apple Music. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Apple Music. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Apple Music. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0325",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Check my Strava bill for errors and dispute the mystery charge",
+   "muse_response": "I'll dispute the that charge charge \u2014 I'll pull the receipt and your statement first. Go ahead?",
+   "ring_response": "I'll dispute the that charge charge \u2014 I'll pull the receipt and your statement first. Go ahead? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0326",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Find the Audible retention offer before I cancel",
+   "muse_response": "Canceling Audible. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Audible. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Audible. Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0327",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Audit my Strava usage and downgrade if I'm under the limit",
+   "muse_response": "Scanning your email for recurring charges now. I'll list everything I find.",
+   "ring_response": "Scanning your email for recurring charges now. I'll list everything I find. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0328",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Move Peloton to the new card and confirm the first charge",
+   "muse_response": "I'll handle the Peloton change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Peloton change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0329",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Move YouTube Premium to the new card and confirm the first charge",
+   "muse_response": "I'll handle the Youtube Premium change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Youtube Premium change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0330",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Find the Max retention offer before I cancel",
+   "muse_response": "Canceling that subscription. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling that subscription. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing that subscription. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0331",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Move Strava to the new card and confirm the first charge",
+   "muse_response": "I'll handle the Strava change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Strava change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0332",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Find the Netflix retention offer before I cancel",
+   "muse_response": "Canceling Netflix. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Netflix. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Netflix. Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0333",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Check my YouTube Premium bill for errors and dispute the duplicate bill",
+   "muse_response": "I'll dispute the that charge charge \u2014 I'll pull the receipt and your statement first. Go ahead?",
+   "ring_response": "I'll dispute the that charge charge \u2014 I'll pull the receipt and your statement first. Go ahead? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0334",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Compare Max annual vs monthly and switch to the cheaper",
+   "muse_response": "Comparing them side by side \u2014 I'll show you the better value.",
+   "ring_response": "Comparing them side by side \u2014 I'll show you the better value. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0335",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Audit my Adobe Creative Cloud usage and downgrade if I'm under the limit",
+   "muse_response": "Scanning your email for recurring charges now. I'll list everything I find.",
+   "ring_response": "Scanning your email for recurring charges now. I'll list everything I find. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 77,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0336",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Find the Peloton retention offer before I cancel",
+   "muse_response": "Canceling Peloton. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Peloton. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Peloton. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0337",
+   "category": "subscriptions_finance",
+   "complexity": "multi",
+   "input": "Move Xbox Game Pass to the new card and confirm the first charge",
+   "muse_response": "I'll handle the Xbox Game Pass change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Xbox Game Pass change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0338",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Consolidate my Dropbox and YouTube Premium accounts and cancel the redundant one",
+   "muse_response": "Canceling Youtube Premium. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Youtube Premium. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Youtube Premium. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0339",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Renegotiate my Disney+ contract at renewal and benchmark against 3 competitors",
+   "muse_response": "I'll handle the disney+ change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the disney+ change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0340",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Consolidate my Xbox Game Pass and YouTube Premium accounts and cancel the redundant one",
+   "muse_response": "Canceling Youtube Premium. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Youtube Premium. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Youtube Premium. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0341",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Renegotiate my Notion Plus contract at renewal and benchmark against 3 competitors",
+   "muse_response": "I'll handle the Notion change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Notion change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0342",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Consolidate my Strava and Gym accounts and cancel the redundant one",
+   "muse_response": "Canceling Strava. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Strava. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Strava. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0343",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Renegotiate my Audible contract at renewal and benchmark against 3 competitors",
+   "muse_response": "I'll handle the Audible change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Audible change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0344",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Consolidate my Paramount+ and Notion Plus accounts and cancel the redundant one",
+   "muse_response": "Canceling Notion. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Notion. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Notion. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0345",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Renegotiate my Duolingo Plus contract at renewal and benchmark against 3 competitors",
+   "muse_response": "I'll handle the Duolingo change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Duolingo change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0346",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Consolidate my Strava and Netflix accounts and cancel the redundant one",
+   "muse_response": "Canceling Netflix. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Netflix. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Netflix. Subscription archaeology \u2014 digging up what you're paying for.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0347",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Renegotiate my Xbox Game Pass contract at renewal and benchmark against 3 competitors",
+   "muse_response": "I'll handle the Xbox Game Pass change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the Xbox Game Pass change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0348",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Consolidate my Headspace and Duolingo Plus accounts and cancel the redundant one",
+   "muse_response": "Canceling Duolingo. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Duolingo. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Duolingo. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0349",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Renegotiate my Adobe Creative Cloud contract at renewal and benchmark against 3 competitors",
+   "muse_response": "I'll handle the subscription change. Confirm and I'll proceed?",
+   "ring_response": "I'll handle the subscription change. Confirm and I'll proceed? Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Money saved is money earned. Allegedly.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0350",
+   "category": "subscriptions_finance",
+   "complexity": "complex",
+   "input": "Consolidate my Netflix and Headspace accounts and cancel the redundant one",
+   "muse_response": "Canceling Netflix. Access usually runs to the end of the billing period. Confirm?",
+   "ring_response": "I'll help you with that. Canceling Netflix. Access usually runs to the end of the billing period. Confirm? Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 76,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Killing Netflix. Your wallet says thanks.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  }
+ ]
+}

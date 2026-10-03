@@ -1,0 +1,2866 @@
+{
+ "batch": 6,
+ "category": "shopping",
+ "count": 100,
+ "items": [
+  {
+   "id": "ACT0801",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Find the cheapest AirPods Max and order them",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0802",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Track my Amazon package",
+   "muse_response": "Checking the tracking now.",
+   "ring_response": "Checking the tracking now. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0803",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Order a phone charger to 620 S Michigan Ave",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0804",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy the bestselling air fryer under $100",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0805",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Reorder the protein powder",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0806",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Find black running shoes size 10 under $120 and buy them",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0807",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Order a birthday gift for Tara under $50",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0808",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy the 4K monitor with the best reviews under $300",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0809",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Get a replacement laptop charger for the MacBook Pro",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0810",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Order dog food for the month",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0811",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Find the cheapest Dyson vacuum in stock and order it",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0812",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy 2 white t-shirts, size medium",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0813",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Order the LEGO set for Anaya's kid",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0814",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Get a new coffee maker under $80",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0815",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy the vitamins I ordered last month again",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0816",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Return the defective headphones and order a replacement",
+   "muse_response": "Starting the return \u2014 I'll confirm the replacement before ordering.",
+   "ring_response": "Starting the return \u2014 I'll confirm the replacement before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0817",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Find the cheapest price for the Sony WH-1000XM5 across 5 stores and buy the winner",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0818",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Order the full camping kit: tent, sleeping bag, and stove, under $400 total",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0819",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Buy the birthday gifts for all 3 kids under $150 total",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0820",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Return the wrong-size jacket and exchange it for a large",
+   "muse_response": "Starting the return \u2014 I'll confirm the replacement before ordering.",
+   "ring_response": "Starting the return \u2014 I'll confirm the replacement before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0821",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Compare the iPhone 17 and Pixel 10 on price and camera, then buy the better deal",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0822",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Order groceries plus the cleaning supplies in one cart",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0823",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Find a refurbished MacBook Air under $700 with warranty",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0824",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Buy the office supplies list for the team of 10",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0825",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Order the parts to fix the sink: the cartridge, the wrench, and the sealant",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0826",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Track all 3 of my packages and alert me when each arrives",
+   "muse_response": "Checking the tracking now.",
+   "ring_response": "Checking the tracking now. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0827",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Buy the concert outfit: dress, shoes, and bag, under $200",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0828",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Order the baby registry items that are still unpurchased",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0829",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Find the best-rated standing desk under $400 and order it",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0830",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Buy the ingredients for the recipe I can't find locally",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0831",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Order more paper towels",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0832",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy the Alex book everyone is reading",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0833",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Find a white noise machine under $40",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0834",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Order the HDMI cable, 6 feet",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0835",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy new running socks, 3-pack",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0836",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Get the cheapest AA batteries in bulk",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0837",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Order the water filter replacement",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0838",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy a birthday card for Nina",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0839",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Find the phone case for the iPhone 17",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0840",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Order the desk lamp with the best reviews",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0841",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Price-match the TV at the store and buy it at the lower price",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0842",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Order the wedding gift from the registry and include the gift note",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0843",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Buy the ski gear package: skis, boots, and poles fitted for my size",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0844",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Return the damaged table and reorder from a different seller",
+   "muse_response": "Starting the return \u2014 I'll confirm the replacement before ordering.",
+   "ring_response": "Starting the return \u2014 I'll confirm the replacement before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0845",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Find the organic mattress topper with a 100-night trial under $200",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0846",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Order the 6-month supply of contact lenses",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0847",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Buy the anniversary gift: something engraved, under $150, arrives by Friday",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0848",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Compare 3 espresso machines and buy the one with the best warranty",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0849",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Order the classroom supplies for the 25-student donation",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0850",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Find the cheapest flight-safe car seat and order it before the trip",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0851",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Furnish the new apartment: bed, couch, dining set, and desk, all delivered within 2 weeks, total under $3,000, with the old furniture listed for sale",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0852",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Plan the home office upgrade: the desk, dual monitors, ergonomic chair, lighting, and cable management \u2014 ordered, assembled, and the old gear donated",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0853",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Execute the wardrobe refresh: 10 work outfits, the seasonal swap, donations of the old clothes, and everything under $800",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 71,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0854",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Build the home gym: compare the rack, bench, and weight options, order the best value set, schedule the delivery, and sell the old equipment",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0855",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Do the holiday gift run: gifts for 12 people, each under $75, all wrapped, shipped to 5 addresses, arriving before the 23rd",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0856",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Set up the nursery: crib, mattress, monitor, glider, and the safety gear \u2014 all ordered, assembled, and the recalls checked",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0857",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Plan the kitchen remodel supplies: the faucet, the hardware, the lighting, and the paint \u2014 ordered to arrive before the contractor starts",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0858",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Execute the back-to-school shop: supplies for 3 kids, the clothing, the backpacks, and the laptop \u2014 all under $600",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0859",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Build the emergency kit: 72-hour supplies for 4 people, the documents digitized, the kit stored, and the expiry reminders set",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0860",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Do the full pantry restock: the 40-item list, the bulk buys, the perishables, and the organization system installed",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 65,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0861",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy me something nice",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0862",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Return everything I bought last month",
+   "muse_response": "Starting the return \u2014 I'll confirm the replacement before ordering.",
+   "ring_response": "",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0863",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Buy a working Tesla for $500",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0864",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy the duplicate bill before Saturday",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0865",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy 4 yoga mat",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0866",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Order the yoga mat in black",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0867",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy the late fee before Friday",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0868",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy a bluetooth speaker under $150",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 20,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 35,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0869",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy the late fee before next week",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0870",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Order the map in black",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0871",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy 8 menu",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0872",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Reorder the menu",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0873",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Order the map",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 20,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 35,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0874",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Buy 6 menu",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0875",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Find the yoga mat on sale",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0876",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Get the double billing for Lily",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 79,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0877",
+   "category": "shopping",
+   "complexity": "simple",
+   "input": "Get the wrong charge for Sam",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0878",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Return the receipt and order the upgraded model",
+   "muse_response": "Starting the return \u2014 I'll confirm the replacement before ordering.",
+   "ring_response": "Starting the return \u2014 I'll confirm the replacement before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0879",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Buy the shot list and the mystery charge together for the discount",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0880",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Order 6 seating chart for the Grace team",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0881",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Order 8 espresso tamper for the Raj team",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0882",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Compare the desk organizer at 3 stores and buy the cheapest",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0883",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Buy the menu and the wrong charge together for the discount",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0884",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Find the best-reviewed contact list under $50 and order it",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0885",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Buy the playlist and the wrong charge together for the discount",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0886",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Buy the checklist and the price hike together for the discount",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0887",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Buy the menu and the price hike together for the discount",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0888",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Compare the espresso tamper at 3 stores and buy the cheapest",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "Comparing prices now \u2014 I'll show you the best options before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0889",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Order 4 seating chart for the Grace team",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0890",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Return the checklist and order the upgraded model",
+   "muse_response": "Starting the return \u2014 I'll confirm the replacement before ordering.",
+   "ring_response": "Starting the return \u2014 I'll confirm the replacement before ordering. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0891",
+   "category": "shopping",
+   "complexity": "multi",
+   "input": "Find the best-reviewed air purifier under $50 and order it",
+   "muse_response": "Comparing prices now \u2014 I'll show you the best options before ordering.",
+   "ring_response": "",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0892",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Furnish the itinerary setup: the late fee, accessories, installation, and the old gear resale",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0893",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Furnish the contact list setup: the double billing, accessories, installation, and the old gear resale",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Retail therapy, optimized.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0894",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Furnish the air purifier setup: the price hike, accessories, installation, and the old gear resale",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0895",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Furnish the desk organizer setup: the duplicate bill, accessories, installation, and the old gear resale",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0896",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Source the espresso tamper for the office of 8: quotes from 3 vendors, bulk discount, and the delivery schedule",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 71,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0897",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Furnish the yoga mat setup: the wrong charge, accessories, installation, and the old gear resale",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0898",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Furnish the yoga mat setup: the double billing, accessories, installation, and the old gear resale",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 71,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0899",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Source the budget sheet for the office of 8: quotes from 3 vendors, bulk discount, and the delivery schedule",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 71,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Cart: loaded. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0900",
+   "category": "shopping",
+   "complexity": "complex",
+   "input": "Source the photos for the office of 8: quotes from 3 vendors, bulk discount, and the delivery schedule",
+   "muse_response": "I'll find the best option and confirm before ordering.",
+   "ring_response": "I'll find the best option and confirm before ordering. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "web_search",
+    "web_search",
+    "memory_list",
+    "shopping_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Your wallet might hate me. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  }
+ ]
+}

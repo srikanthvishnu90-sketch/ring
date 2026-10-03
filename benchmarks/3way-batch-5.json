@@ -1,0 +1,4309 @@
+{
+ "batch": 5,
+ "category": "calendar_comms",
+ "count": 150,
+ "items": [
+  {
+   "id": "ACT0651",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule a meeting with Elena and Tom next week",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0652",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Reschedule my 3pm to tomorrow morning",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0653",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Send a reminder to call Mom at 9pm",
+   "muse_response": "Drafting that to Mom now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Mom now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0654",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Block 2 hours Friday for deep work",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0655",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Cancel my 10am meeting today",
+   "muse_response": "Canceling your 10am meeting.",
+   "ring_response": "I'll help you with that. Canceling your 10am meeting. Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 70,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Meeting assassinated. Your calendar breathes again.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0656",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Move all my Friday meetings to Thursday",
+   "muse_response": "Moving it \u2014 I'll confirm the new time with everyone.",
+   "ring_response": "Moving it \u2014 I'll confirm the new time with everyone. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0657",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Set a daily standup at 9:30am for the team",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0658",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Remind me to water the plants every Sunday",
+   "muse_response": "Reminder set.",
+   "ring_response": "Reminder set. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0659",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule a dentist appointment next month",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0660",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Send Zoe a happy birthday text on Friday",
+   "muse_response": "Drafting that to Zoe now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Zoe now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0661",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Add the flight to my calendar with a 3-hour-early reminder",
+   "muse_response": "Reminder set.",
+   "ring_response": "Reminder set. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0662",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Decline the 4pm meeting with a polite note",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0663",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Book a 30-minute 1:1 with my manager next week",
+   "muse_response": "On it.",
+   "ring_response": "On it. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. On it.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0664",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Set an alarm for 6am tomorrow",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0665",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Email Lily the slides before the meeting",
+   "muse_response": "Drafting that to Lily now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Lily now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0666",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Reschedule all my Friday meetings to Thursday",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0667",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Find a 1-hour slot next week that works for Tara, Chris, and Hana",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0668",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Move the team offsite to the week of the 20th and rebook the room",
+   "muse_response": "Moving it \u2014 I'll confirm the new time with everyone.",
+   "ring_response": "Moving it \u2014 I'll confirm the new time with everyone. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0669",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Send the meeting recap to all 8 attendees with the action items assigned",
+   "muse_response": "Drafting that to them now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to them now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0670",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Block my calendar for the vacation week and set the out-of-office reply",
+   "muse_response": "On it.",
+   "ring_response": "",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0671",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Reschedule the dentist, the haircut, and the car service around the trip",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0672",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Find the earliest 2-hour window for the design review this week",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0673",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Email the client the revised proposal and schedule the follow-up call",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 77,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0674",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Cancel everything on my calendar next Friday and notify each organizer",
+   "muse_response": "On it.",
+   "ring_response": "I'll help you with that. On it. Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 70,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. Canceling it.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0675",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Set up the recurring monthly 1:1s with my 3 direct reports",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0676",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Move the deadline reminder series: ping the team 7 days, 3 days, and 1 day before",
+   "muse_response": "Moving it \u2014 I'll confirm the new time with everyone.",
+   "ring_response": "Moving it \u2014 I'll confirm the new time with everyone. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0677",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Coordinate the interview loop: 5 interviewers, one candidate, back-to-back Thursday",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0678",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Send the agenda to the board meeting attendees 48 hours ahead",
+   "muse_response": "Drafting that to them now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to them now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0679",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Sync my work and personal calendars so nothing double-books",
+   "muse_response": "On it.",
+   "ring_response": "",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. On it.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0680",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Schedule the product launch: the announcement, the social posts, and the team toast",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0681",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule a call with Jake tomorrow at 13pm",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0682",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Text Nina that I'm running 10 minutes late",
+   "muse_response": "Drafting that to Nina now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Nina now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0683",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Remind me to take my medication at 8am daily",
+   "muse_response": "Reminder set.",
+   "ring_response": "Reminder set. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0684",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Add Ben's birthday to my calendar",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0685",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Email the team that the deploy is done",
+   "muse_response": "Drafting that to them now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to them now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0686",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule the car maintenance for next Saturday",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0687",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Set a reminder to pay rent on the 1st",
+   "muse_response": "Reminder set.",
+   "ring_response": "Reminder set. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0688",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Book the conference room for 2pm",
+   "muse_response": "On it.",
+   "ring_response": "On it. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0689",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Send the Zoom link to Ben and Chris",
+   "muse_response": "Drafting that to Zoom now \u2014 I'll show it to you before sending.",
+   "ring_response": "",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 20,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 35,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0690",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Remind me to call Marcus back in an hour",
+   "muse_response": "Reminder set.",
+   "ring_response": "Reminder set. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0691",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Cancel the recurring Tuesday meeting",
+   "muse_response": "Canceling your that.",
+   "ring_response": "I'll help you with that. Canceling your that. Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 75,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Meeting assassinated. Your calendar breathes again.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0692",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule a haircut for Saturday morning",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0693",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Email Zoe thanking them for yesterday",
+   "muse_response": "Drafting that to Zoe now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Zoe now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0694",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Set a timer for 25 minutes",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0695",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Add a 15-minute buffer before my 2pm",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0696",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Find a meeting time for 6 people across 3 time zones next week",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 65,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0697",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Reschedule the whole sprint: move the planning, review, and retro one week out",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 15,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 30,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0698",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Send personalized thank-you emails to the 10 interviewers",
+   "muse_response": "Drafting that to them now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to them now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0699",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Block focus time every morning next week and decline anything that conflicts",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0700",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Coordinate the parent-teacher conferences: 3 kids, back-to-back slots Thursday",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0701",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Move my dentist appointment to fit around the flight and notify the office",
+   "muse_response": "Moving it \u2014 I'll confirm the new time with everyone.",
+   "ring_response": "Moving it \u2014 I'll confirm the new time with everyone. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0702",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Set up the wedding day timeline and share it with the vendors",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0703",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Email the 20 newsletter subscribers the monthly update",
+   "muse_response": "Drafting that to them now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to them now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0704",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Schedule the performance reviews: 8 reports, 45 minutes each, over 2 weeks",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 77,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0705",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Remind the team of the Friday deadline every morning this week",
+   "muse_response": "Reminder set.",
+   "ring_response": "Reminder set. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 65,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0706",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Book the moving elevator and notify the building manager",
+   "muse_response": "On it.",
+   "ring_response": "On it. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. On it.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0707",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Send the holiday cards list to the printer by Friday",
+   "muse_response": "Drafting that to them now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to them now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0708",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Coordinate the doctor, the lab, and the pharmacy for Thursday morning",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0709",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Schedule the home showing tour: 5 houses, Saturday, 30 minutes each",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0710",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Set the do-not-disturb schedule for the work trip",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0711",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Rebuild my calendar after the trip change: move 14 meetings across 3 days, resolve the 4 conflicts, notify every attendee, and rebook the 2 client calls first",
+   "muse_response": "Moving it \u2014 I'll confirm the new time with everyone.",
+   "ring_response": "Moving it \u2014 I'll confirm the new time with everyone. I'll hold here for your approval before completing anything. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 14,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 74,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0712",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Run the conference scheduling: 40 speakers, 6 tracks, 3 days, no speaker double-booked, room capacities matched, and the published agenda",
+   "muse_response": "On it.",
+   "ring_response": "On it. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0713",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Coordinate the wedding week: rehearsal dinner, vendor arrivals, the day-of timeline down to 15-minute blocks, and the family group chat updates",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0714",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Plan the product launch comms: the internal announcement, the customer email, the social rollout, the press embargo lift, and the support team briefing \u2014 all timed to the 9am launch",
+   "muse_response": "Drafting that to them now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to them now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0715",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Manage the hiring loop for 12 candidates: phone screens, 4-round panels, debrief scheduling, offer letter timing, and the rejection emails",
+   "muse_response": "Drafting that to them now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to them now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0716",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Reorganize the team's on-call rotation: 8 engineers, holiday coverage, the escalation policy, and the handoff notes for each swap",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0717",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Coordinate the move across time zones: forward the mail, update 20 accounts, schedule the movers, the utility transfers, and the first-week appointments in the new city",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0718",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Run the board meeting prep: the deck from 5 owners, the pre-read sent 72 hours out, the dinner reservation, the AV check, and the minutes within 24 hours",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0719",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Plan the family holiday: 15 people's travel, the shared house, the meal schedule, the gift exchange draw, and the New Year's Eve plan",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0720",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Execute the office relocation: the moving company, the IT cutover weekend, employee desk assignments, the address updates, and the day-one welcome",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 65,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0721",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Coordinate the multi-city book tour: 8 stops, travel between cities, venue tech checks, the local media hits, and the signing stock at each store",
+   "muse_response": "On it.",
+   "ring_response": "On it. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0722",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Run the volunteer drive: recruit 50 people, background checks, shift scheduling across 4 weekends, training sessions, and the appreciation event",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0723",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Manage the semester schedule: 5 classes, the study blocks, the club meetings, the part-time job shifts, and the exam week lockdown plan",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0724",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Coordinate the clinical trial visits: 20 patients, the screening calls, appointment blocks, reminder sequences, and the no-show follow-ups",
+   "muse_response": "Reminder set.",
+   "ring_response": "Reminder set. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0725",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Plan the festival volunteer comms: 200 volunteers, the role assignments, the shift reminders, the day-of broadcast channel, and the thank-you notes",
+   "muse_response": "Reminder set.",
+   "ring_response": "Reminder set. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0726",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule the meeting",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0727",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Move my meeting but don't tell anyone",
+   "muse_response": "Moving it \u2014 I'll confirm the new time with everyone.",
+   "ring_response": "Moving it \u2014 I'll confirm the new time with everyone. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0728",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Schedule a meeting with everyone in the company at a time that works for all 500 people",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0729",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Text Raj about the map",
+   "muse_response": "Drafting that to Raj now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Raj now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0730",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule the receipt for Saturday morning",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0731",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Book 1:1 with Leo next Monday",
+   "muse_response": "On it.",
+   "ring_response": "On it. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. On it.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0732",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Set a reminder for the yoga mat",
+   "muse_response": "Reminder set.",
+   "ring_response": "Reminder set. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0733",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Email Dana the desk organizer",
+   "muse_response": "Drafting that to Dana now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Dana now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0734",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule the schedule for Friday morning",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0735",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Book 1:1 with Sam next next week",
+   "muse_response": "On it.",
+   "ring_response": "",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 20,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 35,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0736",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule the desk organizer for Monday morning",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0737",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule the air purifier for Friday morning",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0738",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Book 1:1 with Sarah next next week",
+   "muse_response": "On it.",
+   "ring_response": "On it. I'll hold here for your approval before completing anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0739",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Set a reminder for the photos",
+   "muse_response": "Reminder set.",
+   "ring_response": "",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 20,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 35,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0740",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Remind me to receipt at 7pm",
+   "muse_response": "Reminder set.",
+   "ring_response": "Reminder set. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0741",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Email Jake the yoga mat",
+   "muse_response": "Drafting that to Jake now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Jake now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0742",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule a call with Nina on Monday",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 20,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 35,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0743",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule the receipt for Friday morning",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0744",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule the contact list for Saturday morning",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0745",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Remind me to contact list at 6pm",
+   "muse_response": "Reminder set.",
+   "ring_response": "Reminder set. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0746",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Text Jake about the receipt",
+   "muse_response": "Drafting that to Jake now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Jake now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0747",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Remind Lily about next week",
+   "muse_response": "Reminder set.",
+   "ring_response": "Reminder set. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0748",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Remind Anaya about Monday",
+   "muse_response": "Reminder set.",
+   "ring_response": "Reminder set. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0749",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule the bluetooth speaker for Saturday morning",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0750",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule the schedule for Saturday morning",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0751",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Email Sarah the budget sheet",
+   "muse_response": "Drafting that to Sarah now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Sarah now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0752",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Add the desk organizer to my calendar",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 73,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0753",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule a call with Elena on Friday",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0754",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Cancel the Monday call with Zoe",
+   "muse_response": "On it.",
+   "ring_response": "I'll help you with that. On it. Before I proceed, I want to confirm the details \u2014 shall I go ahead?",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 22
+   },
+   "ring_total": 75,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. Canceling it.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0755",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Email Victor the budget sheet",
+   "muse_response": "Drafting that to Victor now \u2014 I'll show it to you before sending.",
+   "ring_response": "",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 20,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 35,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0756",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Email Anaya the receipt",
+   "muse_response": "Drafting that to Anaya now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Anaya now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 85,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0757",
+   "category": "calendar_comms",
+   "complexity": "simple",
+   "input": "Schedule a call with Sarah on Saturday",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0758",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Send the laptop stand to Dana, Victor, and Raj before Saturday",
+   "muse_response": "Drafting that to Dana now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Dana now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0759",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Reschedule the Friday meetings around the dentist appointment",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0760",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Find a slot for Zoe and Victor next week and send the invite",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 77,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0761",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Reschedule the next week meetings around the dentist appointment",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0762",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Block Saturday for the espresso tamper and decline conflicts",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0763",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Move the Priya meeting and notify the 4 attendees",
+   "muse_response": "Moving it \u2014 I'll confirm the new time with everyone.",
+   "ring_response": "Moving it \u2014 I'll confirm the new time with everyone. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0764",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Reschedule the Saturday meetings around the dentist appointment",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 77,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. On it.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0765",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Block Saturday for the recap and decline conflicts",
+   "muse_response": "On it.",
+   "ring_response": "",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 12,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 27,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0766",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Find a slot for Nina and Elena next week and send the invite",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0767",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Move the Omar meeting and notify the 10 attendees",
+   "muse_response": "Moving it \u2014 I'll confirm the new time with everyone.",
+   "ring_response": "Moving it \u2014 I'll confirm the new time with everyone. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0768",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Move the Lily meeting and notify the 10 attendees",
+   "muse_response": "Moving it \u2014 I'll confirm the new time with everyone.",
+   "ring_response": "Moving it \u2014 I'll confirm the new time with everyone. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0769",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Block Friday for the seating chart and decline conflicts",
+   "muse_response": "On it.",
+   "ring_response": "",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 0,
+    "intelligence": 12,
+    "directness": 15,
+    "outcome": 0
+   },
+   "ring_total": 27,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0770",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Find a slot for Kevin and Lily next week and send the invite",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0771",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Move the Omar meeting and notify the 4 attendees",
+   "muse_response": "Moving it \u2014 I'll confirm the new time with everyone.",
+   "ring_response": "Moving it \u2014 I'll confirm the new time with everyone. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0772",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Find a slot for Diego and Zoe next week and send the invite",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0773",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Find a slot for Marcus and Ben next week and send the invite",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0774",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Send the itinerary to Priya, Raj, and Sam before Saturday",
+   "muse_response": "Drafting that to Priya now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Priya now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0775",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Find a slot for Leo and Alex next week and send the invite",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0776",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Block Monday for the receipt and decline conflicts",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0777",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Send the budget sheet to Sam, Sarah, and Ben before Monday",
+   "muse_response": "Drafting that to Sam now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Sam now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0778",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Find a slot for Jake and Mia next week and send the invite",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 77,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0779",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Find a slot for Kevin and Zoe next week and send the invite",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0780",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Find a slot for Alex and Tom next week and send the invite",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0781",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Block next week for the contact list and decline conflicts",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0782",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Send the yoga mat to Nina, Elena, and Jake before Monday",
+   "muse_response": "Drafting that to Nina now \u2014 I'll show it to you before sending.",
+   "ring_response": "Drafting that to Nina now \u2014 I'll show it to you before sending. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0783",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Find a slot for Tom and Dana next week and send the invite",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0784",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Move the Omar meeting and notify the 6 attendees",
+   "muse_response": "Moving it \u2014 I'll confirm the new time with everyone.",
+   "ring_response": "Moving it \u2014 I'll confirm the new time with everyone. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0785",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Find a slot for Ben and Priya next week and send the invite",
+   "muse_response": "Finding a slot that works. I'll send the invite once you confirm the time.",
+   "ring_response": "Finding a slot that works. I'll send the invite once you confirm the time. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. Digging in.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0786",
+   "category": "calendar_comms",
+   "complexity": "multi",
+   "input": "Move the Leo meeting and notify the 10 attendees",
+   "muse_response": "Moving it \u2014 I'll confirm the new time with everyone.",
+   "ring_response": "Moving it \u2014 I'll confirm the new time with everyone. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 20,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 80,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 25,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0787",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Reorganize the Chris project calendar: milestones, owner assignments, and the stakeholder review cadence",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0788",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Reorganize the Lily project calendar: milestones, owner assignments, and the stakeholder review cadence",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0789",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Reorganize the Elena project calendar: milestones, owner assignments, and the stakeholder review cadence",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0790",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Reorganize the Victor project calendar: milestones, owner assignments, and the stakeholder review cadence",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0791",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Reorganize the Raj project calendar: milestones, owner assignments, and the stakeholder review cadence",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 65,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0792",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Reorganize the Grace project calendar: milestones, owner assignments, and the stakeholder review cadence",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0793",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Plan the Washington DC conference week: travel, 4 sessions, dinners, and the follow-up sequence",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 65,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0794",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Plan the Nashville conference week: travel, 6 sessions, dinners, and the follow-up sequence",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0795",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Plan the San Francisco conference week: travel, 8 sessions, dinners, and the follow-up sequence",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 65,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0796",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Plan the Chicago conference week: travel, 10 sessions, dinners, and the follow-up sequence",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 12,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 65,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0797",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Plan the Denver conference week: travel, 4 sessions, dinners, and the follow-up sequence",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Consider it handled. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0798",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Plan the Phoenix conference week: travel, 8 sessions, dinners, and the follow-up sequence",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Scheduled. You're welcome. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0799",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Plan the New York conference week: travel, 10 sessions, dinners, and the follow-up sequence",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete. Planning mode: engaged.",
+   "grok_vs_muse": {
+    "conciseness": 12,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  },
+  {
+   "id": "ACT0800",
+   "category": "calendar_comms",
+   "complexity": "complex",
+   "input": "Reorganize the Priya project calendar: milestones, owner assignments, and the stakeholder review cadence",
+   "muse_response": "On it.",
+   "ring_response": "On it. Let me know if you'd like me to adjust anything.",
+   "ring_tools": [
+    "calendar_list",
+    "calendar_list",
+    "memory_list",
+    "gmail_search"
+   ],
+   "ring_scores": {
+    "conciseness": 8,
+    "intelligence": 15,
+    "directness": 25,
+    "outcome": 20
+   },
+   "ring_total": 68,
+   "ring_source": "predicted",
+   "grok_response_predicted": "Calendar Tetris: complete.",
+   "grok_vs_muse": {
+    "conciseness": 20,
+    "intelligence": 20,
+    "directness": 23,
+    "outcome": 20
+   }
+  }
+ ]
+}
