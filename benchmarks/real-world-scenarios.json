@@ -1,0 +1,1402 @@
+[
+ {
+  "id": "RW0001",
+  "category": "subscription_cancel",
+  "input": "cancel my disney+ subscription I used email and password",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=disney+"
+ },
+ {
+  "id": "RW0002",
+  "category": "subscription_cancel",
+  "input": "I want out of audible I signed up with Google",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=audible"
+ },
+ {
+  "id": "RW0003",
+  "category": "subscription_cancel",
+  "input": "end my disney+ subscription I think I used Apple sign-in",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=disney+"
+ },
+ {
+  "id": "RW0004",
+  "category": "subscription_cancel",
+  "input": "cancel my crunchyroll subscription",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=crunchyroll"
+ },
+ {
+  "id": "RW0005",
+  "category": "subscription_cancel",
+  "input": "I want out of hulu I signed up with Google",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=hulu"
+ },
+ {
+  "id": "RW0006",
+  "category": "subscription_cancel",
+  "input": "cancel my icloud+ subscription I think I used Apple sign-in",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=icloud+"
+ },
+ {
+  "id": "RW0007",
+  "category": "subscription_cancel",
+  "input": "turn off my amazon prime subscription I signed up with Google",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=amazon prime"
+ },
+ {
+  "id": "RW0008",
+  "category": "subscription_cancel",
+  "input": "cancel xbox game pass",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=xbox game pass"
+ },
+ {
+  "id": "RW0009",
+  "category": "subscription_cancel",
+  "input": "turn off my youtube premium subscription I used email and password",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=youtube premium"
+ },
+ {
+  "id": "RW0010",
+  "category": "subscription_cancel",
+  "input": "stop paying for nyt I signed up with Google",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=nyt"
+ },
+ {
+  "id": "RW0011",
+  "category": "subscription_cancel",
+  "input": "end my hbo max subscription",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=hbo max"
+ },
+ {
+  "id": "RW0012",
+  "category": "subscription_cancel",
+  "input": "end my peacock subscription I used email and password",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=peacock"
+ },
+ {
+  "id": "RW0013",
+  "category": "subscription_cancel",
+  "input": "cancel paramount+",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=paramount+"
+ },
+ {
+  "id": "RW0014",
+  "category": "subscription_cancel",
+  "input": "end my xbox game pass subscription not sure how I signed up",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=xbox game pass"
+ },
+ {
+  "id": "RW0015",
+  "category": "subscription_cancel",
+  "input": "cancel hulu I think I used Apple sign-in",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=hulu"
+ },
+ {
+  "id": "RW0016",
+  "category": "subscription_cancel",
+  "input": "I want out of paramount+",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=paramount+"
+ },
+ {
+  "id": "RW0017",
+  "category": "subscription_cancel",
+  "input": "I want out of spotify I used email and password",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=spotify"
+ },
+ {
+  "id": "RW0018",
+  "category": "subscription_cancel",
+  "input": "I want out of hulu",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=hulu"
+ },
+ {
+  "id": "RW0019",
+  "category": "subscription_cancel",
+  "input": "cancel peacock not sure how I signed up",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=peacock"
+ },
+ {
+  "id": "RW0020",
+  "category": "subscription_cancel",
+  "input": "stop paying for paramount+ I used email and password",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=paramount+"
+ },
+ {
+  "id": "RW0021",
+  "category": "subscription_cancel",
+  "input": "I want out of paramount+ I used email and password",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=paramount+"
+ },
+ {
+  "id": "RW0022",
+  "category": "subscription_cancel",
+  "input": "stop paying for hulu I think I used Apple sign-in",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=hulu"
+ },
+ {
+  "id": "RW0023",
+  "category": "subscription_cancel",
+  "input": "stop paying for audible not sure how I signed up",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=audible"
+ },
+ {
+  "id": "RW0024",
+  "category": "subscription_cancel",
+  "input": "cancel peacock I think I used Apple sign-in",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=peacock"
+ },
+ {
+  "id": "RW0025",
+  "category": "subscription_cancel",
+  "input": "please cancel my audible account",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=audible"
+ },
+ {
+  "id": "RW0026",
+  "category": "subscription_cancel",
+  "input": "cancel my audible subscription I used email and password",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=audible"
+ },
+ {
+  "id": "RW0027",
+  "category": "subscription_cancel",
+  "input": "cancel peacock",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=peacock"
+ },
+ {
+  "id": "RW0028",
+  "category": "subscription_cancel",
+  "input": "please cancel my amazon prime account I signed up with Google",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=amazon prime"
+ },
+ {
+  "id": "RW0029",
+  "category": "subscription_cancel",
+  "input": "turn off my playstation plus subscription not sure how I signed up",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=playstation plus"
+ },
+ {
+  "id": "RW0030",
+  "category": "subscription_cancel",
+  "input": "cancel apple music I signed up with Google",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=apple music"
+ },
+ {
+  "id": "RW0031",
+  "category": "subscription_cancel",
+  "input": "cancel audible I think I used Apple sign-in",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=audible"
+ },
+ {
+  "id": "RW0032",
+  "category": "subscription_cancel",
+  "input": "turn off my crunchyroll subscription I used email and password",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=crunchyroll"
+ },
+ {
+  "id": "RW0033",
+  "category": "subscription_cancel",
+  "input": "stop paying for audible I think I used Apple sign-in",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=audible"
+ },
+ {
+  "id": "RW0034",
+  "category": "subscription_cancel",
+  "input": "end my playstation plus subscription",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=playstation plus"
+ },
+ {
+  "id": "RW0035",
+  "category": "subscription_cancel",
+  "input": "stop paying for disney+ I signed up with Google",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=disney+"
+ },
+ {
+  "id": "RW0036",
+  "category": "subscription_cancel",
+  "input": "end my crunchyroll subscription not sure how I signed up",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=crunchyroll"
+ },
+ {
+  "id": "RW0037",
+  "category": "subscription_cancel",
+  "input": "I don't want peacock anymore I think I used Apple sign-in",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=peacock"
+ },
+ {
+  "id": "RW0038",
+  "category": "subscription_cancel",
+  "input": "cancel my nyt subscription",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=nyt"
+ },
+ {
+  "id": "RW0039",
+  "category": "subscription_cancel",
+  "input": "cancel google one I used email and password",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=google one"
+ },
+ {
+  "id": "RW0040",
+  "category": "subscription_cancel",
+  "input": "cancel disney+ not sure how I signed up",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=disney+"
+ },
+ {
+  "id": "RW0041",
+  "category": "subscription_cancel",
+  "input": "I don't want youtube premium anymore",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=youtube premium"
+ },
+ {
+  "id": "RW0042",
+  "category": "subscription_cancel",
+  "input": "stop paying for nyt I think I used Apple sign-in",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=nyt"
+ },
+ {
+  "id": "RW0043",
+  "category": "subscription_cancel",
+  "input": "cancel disney+ I think I used Apple sign-in",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=disney+"
+ },
+ {
+  "id": "RW0044",
+  "category": "subscription_cancel",
+  "input": "I want out of evernote I signed up with Google",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=evernote"
+ },
+ {
+  "id": "RW0045",
+  "category": "subscription_cancel",
+  "input": "stop paying for paramount+ I think I used Apple sign-in",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=paramount+"
+ },
+ {
+  "id": "RW0046",
+  "category": "subscription_cancel",
+  "input": "cancel my icloud+ subscription I think I used Apple sign-in",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=icloud+"
+ },
+ {
+  "id": "RW0047",
+  "category": "subscription_cancel",
+  "input": "I don't want hbo max anymore",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=hbo max"
+ },
+ {
+  "id": "RW0048",
+  "category": "subscription_cancel",
+  "input": "please cancel my disney+ account I used email and password",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=disney+"
+ },
+ {
+  "id": "RW0049",
+  "category": "subscription_cancel",
+  "input": "cancel my audible subscription I signed up with Google",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=audible"
+ },
+ {
+  "id": "RW0050",
+  "category": "subscription_cancel",
+  "input": "end my dropbox plus subscription",
+  "expected_behavior": "Agent should: check browser_check_google_auth, open merchant site invisibly via browser_open(site=...), handle login, inspect plan, present approval card with exact terms. NEVER expose error codes. Concise status updates. Stop at approval if irreversible.",
+  "notes": "merchant=dropbox plus"
+ },
+ {
+  "id": "RW0051",
+  "category": "ride_book",
+  "input": "book me an uber now",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "edge=missing_destination"
+ },
+ {
+  "id": "RW0052",
+  "category": "ride_book",
+  "input": "book me an uber now",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "edge=missing_destination"
+ },
+ {
+  "id": "RW0053",
+  "category": "ride_book",
+  "input": "order me an uber",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "edge=missing_destination"
+ },
+ {
+  "id": "RW0054",
+  "category": "ride_book",
+  "input": "book me an uber now",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "edge=missing_destination"
+ },
+ {
+  "id": "RW0055",
+  "category": "ride_book",
+  "input": "book me an uber now",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "edge=missing_destination"
+ },
+ {
+  "id": "RW0056",
+  "category": "ride_book",
+  "input": "order an uber to Navy Pier and back",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "edge=round_trip"
+ },
+ {
+  "id": "RW0057",
+  "category": "ride_book",
+  "input": "order an uber to Wrigley Field and back",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "edge=round_trip"
+ },
+ {
+  "id": "RW0058",
+  "category": "ride_book",
+  "input": "order an uber to the Art Institute and back",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "edge=round_trip"
+ },
+ {
+  "id": "RW0059",
+  "category": "ride_book",
+  "input": "order me an uber to Midway airport in 2 hours",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Midway airport"
+ },
+ {
+  "id": "RW0060",
+  "category": "ride_book",
+  "input": "order me an uber to O'Hare airport in 30 minutes",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=O'Hare airport"
+ },
+ {
+  "id": "RW0061",
+  "category": "ride_book",
+  "input": "order me an uber to Navy Pier now",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Navy Pier"
+ },
+ {
+  "id": "RW0062",
+  "category": "ride_book",
+  "input": "order me an uber to the Art Institute now",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=the Art Institute"
+ },
+ {
+  "id": "RW0063",
+  "category": "ride_book",
+  "input": "order me an uber to Millennium Park Friday at 6pm",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Millennium Park"
+ },
+ {
+  "id": "RW0064",
+  "category": "ride_book",
+  "input": "order me an uber to Navy Pier Friday at 6pm",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Navy Pier"
+ },
+ {
+  "id": "RW0065",
+  "category": "ride_book",
+  "input": "order me an uber to Navy Pier now",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Navy Pier"
+ },
+ {
+  "id": "RW0066",
+  "category": "ride_book",
+  "input": "order me an uber to O'Hare airport",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=O'Hare airport"
+ },
+ {
+  "id": "RW0067",
+  "category": "ride_book",
+  "input": "order me an uber to downtown in 30 minutes",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=downtown"
+ },
+ {
+  "id": "RW0068",
+  "category": "ride_book",
+  "input": "order me an uber to O'Hare airport now",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=O'Hare airport"
+ },
+ {
+  "id": "RW0069",
+  "category": "ride_book",
+  "input": "order me an uber to the Art Institute now",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=the Art Institute"
+ },
+ {
+  "id": "RW0070",
+  "category": "ride_book",
+  "input": "order me an uber to Midway airport in 30 minutes",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Midway airport"
+ },
+ {
+  "id": "RW0071",
+  "category": "ride_book",
+  "input": "order me an uber to Wrigley Field",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Wrigley Field"
+ },
+ {
+  "id": "RW0072",
+  "category": "ride_book",
+  "input": "order me an uber to 456 Oak Ave, Evanston in 30 minutes",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=456 Oak Ave, Evanston"
+ },
+ {
+  "id": "RW0073",
+  "category": "ride_book",
+  "input": "order me an uber to Midway airport in 30 minutes",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Midway airport"
+ },
+ {
+  "id": "RW0074",
+  "category": "ride_book",
+  "input": "order me an uber to Millennium Park Friday at 6pm",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Millennium Park"
+ },
+ {
+  "id": "RW0075",
+  "category": "ride_book",
+  "input": "order me an uber to 456 Oak Ave, Evanston in 30 minutes",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=456 Oak Ave, Evanston"
+ },
+ {
+  "id": "RW0076",
+  "category": "ride_book",
+  "input": "order me an uber to 456 Oak Ave, Evanston in 2 hours",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=456 Oak Ave, Evanston"
+ },
+ {
+  "id": "RW0077",
+  "category": "ride_book",
+  "input": "order me an uber to Navy Pier now",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Navy Pier"
+ },
+ {
+  "id": "RW0078",
+  "category": "ride_book",
+  "input": "order me an uber to O'Hare airport",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=O'Hare airport"
+ },
+ {
+  "id": "RW0079",
+  "category": "ride_book",
+  "input": "order me an uber to Union Station tomorrow at 8am",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Union Station"
+ },
+ {
+  "id": "RW0080",
+  "category": "ride_book",
+  "input": "order me an uber to Union Station in 2 hours",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Union Station"
+ },
+ {
+  "id": "RW0081",
+  "category": "ride_book",
+  "input": "order me an uber to 456 Oak Ave, Evanston",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=456 Oak Ave, Evanston"
+ },
+ {
+  "id": "RW0082",
+  "category": "ride_book",
+  "input": "order me an uber to downtown",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=downtown"
+ },
+ {
+  "id": "RW0083",
+  "category": "ride_book",
+  "input": "order me an uber to O'Hare airport now",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=O'Hare airport"
+ },
+ {
+  "id": "RW0084",
+  "category": "ride_book",
+  "input": "order me an uber to Union Station",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Union Station"
+ },
+ {
+  "id": "RW0085",
+  "category": "ride_book",
+  "input": "order me an uber to the Art Institute now",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=the Art Institute"
+ },
+ {
+  "id": "RW0086",
+  "category": "ride_book",
+  "input": "order me an uber to Navy Pier in 30 minutes",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Navy Pier"
+ },
+ {
+  "id": "RW0087",
+  "category": "ride_book",
+  "input": "order me an uber to Navy Pier Friday at 6pm",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Navy Pier"
+ },
+ {
+  "id": "RW0088",
+  "category": "ride_book",
+  "input": "order me an uber to 456 Oak Ave, Evanston in 30 minutes",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=456 Oak Ave, Evanston"
+ },
+ {
+  "id": "RW0089",
+  "category": "ride_book",
+  "input": "order me an uber to Union Station in 30 minutes",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Union Station"
+ },
+ {
+  "id": "RW0090",
+  "category": "ride_book",
+  "input": "order me an uber to Wrigley Field in 2 hours",
+  "expected_behavior": "Agent should: determine destination/time, use ride_book tool, present fare approval card, never book without approval. Concise. No error codes.",
+  "notes": "dest=Wrigley Field"
+ },
+ {
+  "id": "RW0091",
+  "category": "food_order",
+  "input": "order my usual from uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "edge=usual"
+ },
+ {
+  "id": "RW0092",
+  "category": "food_order",
+  "input": "order my usual from uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "edge=usual"
+ },
+ {
+  "id": "RW0093",
+  "category": "food_order",
+  "input": "order my usual from doordash",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "edge=usual"
+ },
+ {
+  "id": "RW0094",
+  "category": "food_order",
+  "input": "order my usual from grubhub",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "edge=usual"
+ },
+ {
+  "id": "RW0095",
+  "category": "food_order",
+  "input": "order my usual from uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "edge=usual"
+ },
+ {
+  "id": "RW0096",
+  "category": "food_order",
+  "input": "order something vegetarian from grubhub",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "edge=dietary"
+ },
+ {
+  "id": "RW0097",
+  "category": "food_order",
+  "input": "order something vegetarian from uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "edge=dietary"
+ },
+ {
+  "id": "RW0098",
+  "category": "food_order",
+  "input": "order something vegetarian from uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "edge=dietary"
+ },
+ {
+  "id": "RW0099",
+  "category": "food_order",
+  "input": "order something cheap from doordash",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "edge=budget"
+ },
+ {
+  "id": "RW0100",
+  "category": "food_order",
+  "input": "order something cheap from doordash",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "edge=budget"
+ },
+ {
+  "id": "RW0101",
+  "category": "food_order",
+  "input": "order a burrito bowl from Pho 88 on uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Pho 88"
+ },
+ {
+  "id": "RW0102",
+  "category": "food_order",
+  "input": "order a burrito bowl from Pho 88 on uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Pho 88"
+ },
+ {
+  "id": "RW0103",
+  "category": "food_order",
+  "input": "order chicken tikka masala from Taco Bell on doordash",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Taco Bell"
+ },
+ {
+  "id": "RW0104",
+  "category": "food_order",
+  "input": "order chicken tikka masala from Pho 88 on doordash",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Pho 88"
+ },
+ {
+  "id": "RW0105",
+  "category": "food_order",
+  "input": "order 2 tacos from Luigi's Pizza on uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Luigi's Pizza"
+ },
+ {
+  "id": "RW0106",
+  "category": "food_order",
+  "input": "order a burrito bowl from Chipotle on uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Chipotle"
+ },
+ {
+  "id": "RW0107",
+  "category": "food_order",
+  "input": "order a burrito bowl from The Burger Joint on grubhub",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=The Burger Joint"
+ },
+ {
+  "id": "RW0108",
+  "category": "food_order",
+  "input": "order a California roll combo from India House on uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=India House"
+ },
+ {
+  "id": "RW0109",
+  "category": "food_order",
+  "input": "order a California roll combo from McDonald's on uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=McDonald's"
+ },
+ {
+  "id": "RW0110",
+  "category": "food_order",
+  "input": "order a large pepperoni pizza from McDonald's on uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=McDonald's"
+ },
+ {
+  "id": "RW0111",
+  "category": "food_order",
+  "input": "order a large pepperoni pizza from McDonald's on doordash",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=McDonald's"
+ },
+ {
+  "id": "RW0112",
+  "category": "food_order",
+  "input": "order a Big Mac meal from Chipotle on grubhub",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Chipotle"
+ },
+ {
+  "id": "RW0113",
+  "category": "food_order",
+  "input": "order 2 tacos from The Burger Joint on doordash",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=The Burger Joint"
+ },
+ {
+  "id": "RW0114",
+  "category": "food_order",
+  "input": "order a large pepperoni pizza from The Burger Joint on uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=The Burger Joint"
+ },
+ {
+  "id": "RW0115",
+  "category": "food_order",
+  "input": "order a California roll combo from Pho 88 on doordash",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Pho 88"
+ },
+ {
+  "id": "RW0116",
+  "category": "food_order",
+  "input": "order chicken tikka masala from Taco Bell on grubhub",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Taco Bell"
+ },
+ {
+  "id": "RW0117",
+  "category": "food_order",
+  "input": "order a burrito bowl from McDonald's on doordash",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=McDonald's"
+ },
+ {
+  "id": "RW0118",
+  "category": "food_order",
+  "input": "order a Big Mac meal from McDonald's on doordash",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=McDonald's"
+ },
+ {
+  "id": "RW0119",
+  "category": "food_order",
+  "input": "order 2 tacos from Luigi's Pizza on grubhub",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Luigi's Pizza"
+ },
+ {
+  "id": "RW0120",
+  "category": "food_order",
+  "input": "order a Big Mac meal from The Burger Joint on uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=The Burger Joint"
+ },
+ {
+  "id": "RW0121",
+  "category": "food_order",
+  "input": "order 2 tacos from The Burger Joint on uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=The Burger Joint"
+ },
+ {
+  "id": "RW0122",
+  "category": "food_order",
+  "input": "order 2 tacos from India House on uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=India House"
+ },
+ {
+  "id": "RW0123",
+  "category": "food_order",
+  "input": "order 2 tacos from Chipotle on grubhub",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Chipotle"
+ },
+ {
+  "id": "RW0124",
+  "category": "food_order",
+  "input": "order a California roll combo from McDonald's on grubhub",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=McDonald's"
+ },
+ {
+  "id": "RW0125",
+  "category": "food_order",
+  "input": "order a Big Mac meal from McDonald's on doordash",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=McDonald's"
+ },
+ {
+  "id": "RW0126",
+  "category": "food_order",
+  "input": "order 2 tacos from Sushi Palace on grubhub",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Sushi Palace"
+ },
+ {
+  "id": "RW0127",
+  "category": "food_order",
+  "input": "order a cheeseburger and fries from Luigi's Pizza on doordash",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Luigi's Pizza"
+ },
+ {
+  "id": "RW0128",
+  "category": "food_order",
+  "input": "order chicken tikka masala from Taco Bell on uber eats",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Taco Bell"
+ },
+ {
+  "id": "RW0129",
+  "category": "food_order",
+  "input": "order a Big Mac meal from Chipotle on doordash",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Chipotle"
+ },
+ {
+  "id": "RW0130",
+  "category": "food_order",
+  "input": "order 2 tacos from Pho 88 on grubhub",
+  "expected_behavior": "Agent should: identify restaurant/items, use food_order flow, confirm total + delivery address before ordering. Never expose error codes.",
+  "notes": "restaurant=Pho 88"
+ },
+ {
+  "id": "RW0131",
+  "category": "restaurant_res",
+  "input": "book Alinea for 2 Friday",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "restaurant=Alinea"
+ },
+ {
+  "id": "RW0132",
+  "category": "restaurant_res",
+  "input": "book Lou Malnati's for 6 tomorrow",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "restaurant=Lou Malnati's"
+ },
+ {
+  "id": "RW0133",
+  "category": "restaurant_res",
+  "input": "book Oriole for 8 Saturday at 7pm",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "restaurant=Oriole"
+ },
+ {
+  "id": "RW0134",
+  "category": "restaurant_res",
+  "input": "book Alinea for 2 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "restaurant=Alinea"
+ },
+ {
+  "id": "RW0135",
+  "category": "restaurant_res",
+  "input": "book Lou Malnati's for 2 Friday",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "restaurant=Lou Malnati's"
+ },
+ {
+  "id": "RW0136",
+  "category": "restaurant_res",
+  "input": "book Lou Malnati's for 8 tomorrow",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "restaurant=Lou Malnati's"
+ },
+ {
+  "id": "RW0137",
+  "category": "restaurant_res",
+  "input": "book Alinea for 6 Friday",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "restaurant=Alinea"
+ },
+ {
+  "id": "RW0138",
+  "category": "restaurant_res",
+  "input": "book Alinea for 6 tomorrow",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "restaurant=Alinea"
+ },
+ {
+  "id": "RW0139",
+  "category": "restaurant_res",
+  "input": "find a sushi restaurant for 2 Friday",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "cuisine=sushi"
+ },
+ {
+  "id": "RW0140",
+  "category": "restaurant_res",
+  "input": "find a French restaurant for 8 Saturday at 7pm",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "cuisine=French"
+ },
+ {
+  "id": "RW0141",
+  "category": "restaurant_res",
+  "input": "find a sushi restaurant for 4 tomorrow",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "cuisine=sushi"
+ },
+ {
+  "id": "RW0142",
+  "category": "restaurant_res",
+  "input": "find a sushi restaurant for 8 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "cuisine=sushi"
+ },
+ {
+  "id": "RW0143",
+  "category": "restaurant_res",
+  "input": "find a sushi restaurant for 6 this weekend",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "cuisine=sushi"
+ },
+ {
+  "id": "RW0144",
+  "category": "restaurant_res",
+  "input": "find a sushi restaurant for 6 tomorrow",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "cuisine=sushi"
+ },
+ {
+  "id": "RW0145",
+  "category": "restaurant_res",
+  "input": "find a Italian restaurant for 8 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "cuisine=Italian"
+ },
+ {
+  "id": "RW0146",
+  "category": "restaurant_res",
+  "input": "book dinner for 8 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0147",
+  "category": "restaurant_res",
+  "input": "book dinner for 4 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0148",
+  "category": "restaurant_res",
+  "input": "book dinner for 4 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0149",
+  "category": "restaurant_res",
+  "input": "book dinner for 8 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0150",
+  "category": "restaurant_res",
+  "input": "book dinner for 6 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0151",
+  "category": "restaurant_res",
+  "input": "book dinner for 6 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0152",
+  "category": "restaurant_res",
+  "input": "book dinner for 4 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0153",
+  "category": "restaurant_res",
+  "input": "book dinner for 4 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0154",
+  "category": "restaurant_res",
+  "input": "book dinner for 2 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0155",
+  "category": "restaurant_res",
+  "input": "book dinner for 4 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0156",
+  "category": "restaurant_res",
+  "input": "book dinner for 8 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0157",
+  "category": "restaurant_res",
+  "input": "book dinner for 6 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0158",
+  "category": "restaurant_res",
+  "input": "book dinner for 6 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0159",
+  "category": "restaurant_res",
+  "input": "book dinner for 2 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0160",
+  "category": "restaurant_res",
+  "input": "book dinner for 6 tonight",
+  "expected_behavior": "Agent should: identify restaurant/date/party size, check availability, present confirmation details for approval. Concise.",
+  "notes": "edge=vague"
+ },
+ {
+  "id": "RW0161",
+  "category": "complex_multistep",
+  "input": "Cancel icloud+ and peacock",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel', 'subscription_cancel']"
+ },
+ {
+  "id": "RW0162",
+  "category": "complex_multistep",
+  "input": "Cancel youtube premium and evernote",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel', 'subscription_cancel']"
+ },
+ {
+  "id": "RW0163",
+  "category": "complex_multistep",
+  "input": "Cancel my crunchyroll subscription then tell me what I saved",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel']"
+ },
+ {
+  "id": "RW0164",
+  "category": "complex_multistep",
+  "input": "Cancel my disney+ subscription then tell me what I saved",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel']"
+ },
+ {
+  "id": "RW0165",
+  "category": "complex_multistep",
+  "input": "Order a large pepperoni pizza from The Burger Joint and book an Uber to Union Station",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['food_order', 'ride_book']"
+ },
+ {
+  "id": "RW0166",
+  "category": "complex_multistep",
+  "input": "Cancel my hbo max and order an Uber to the airport",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel', 'ride_book']"
+ },
+ {
+  "id": "RW0167",
+  "category": "complex_multistep",
+  "input": "Cancel crunchyroll and hbo max",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel', 'subscription_cancel']"
+ },
+ {
+  "id": "RW0168",
+  "category": "complex_multistep",
+  "input": "Book dinner for 2 Friday and get a ride there",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['restaurant_res', 'ride_book']"
+ },
+ {
+  "id": "RW0169",
+  "category": "complex_multistep",
+  "input": "Cancel my wsj subscription then tell me what I saved",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel']"
+ },
+ {
+  "id": "RW0170",
+  "category": "complex_multistep",
+  "input": "Book dinner for 2 Friday and get a ride there",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['restaurant_res', 'ride_book']"
+ },
+ {
+  "id": "RW0171",
+  "category": "complex_multistep",
+  "input": "Order chicken tikka masala from Sushi Palace and book an Uber to O'Hare airport",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['food_order', 'ride_book']"
+ },
+ {
+  "id": "RW0172",
+  "category": "complex_multistep",
+  "input": "Cancel icloud+ and hbo max",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel', 'subscription_cancel']"
+ },
+ {
+  "id": "RW0173",
+  "category": "complex_multistep",
+  "input": "Book dinner for 2 Friday and get a ride there",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['restaurant_res', 'ride_book']"
+ },
+ {
+  "id": "RW0174",
+  "category": "complex_multistep",
+  "input": "Order chicken tikka masala from Pho 88 and book an Uber to Millennium Park",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['food_order', 'ride_book']"
+ },
+ {
+  "id": "RW0175",
+  "category": "complex_multistep",
+  "input": "Book dinner for 2 Friday and get a ride there",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['restaurant_res', 'ride_book']"
+ },
+ {
+  "id": "RW0176",
+  "category": "complex_multistep",
+  "input": "Cancel my disney+ and order an Uber to the airport",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel', 'ride_book']"
+ },
+ {
+  "id": "RW0177",
+  "category": "complex_multistep",
+  "input": "Order a large pepperoni pizza from McDonald's and book an Uber to 456 Oak Ave, Evanston",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['food_order', 'ride_book']"
+ },
+ {
+  "id": "RW0178",
+  "category": "complex_multistep",
+  "input": "Book dinner for 2 Friday and get a ride there",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['restaurant_res', 'ride_book']"
+ },
+ {
+  "id": "RW0179",
+  "category": "complex_multistep",
+  "input": "Cancel my crunchyroll subscription then tell me what I saved",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel']"
+ },
+ {
+  "id": "RW0180",
+  "category": "complex_multistep",
+  "input": "Order 2 tacos from India House and book an Uber to Navy Pier",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['food_order', 'ride_book']"
+ },
+ {
+  "id": "RW0181",
+  "category": "complex_multistep",
+  "input": "Cancel xbox game pass and hulu",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel', 'subscription_cancel']"
+ },
+ {
+  "id": "RW0182",
+  "category": "complex_multistep",
+  "input": "Cancel hbo max and dropbox plus",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel', 'subscription_cancel']"
+ },
+ {
+  "id": "RW0183",
+  "category": "complex_multistep",
+  "input": "Book dinner for 2 Friday and get a ride there",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['restaurant_res', 'ride_book']"
+ },
+ {
+  "id": "RW0184",
+  "category": "complex_multistep",
+  "input": "Order chicken tikka masala from Pho 88 and book an Uber to downtown",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['food_order', 'ride_book']"
+ },
+ {
+  "id": "RW0185",
+  "category": "complex_multistep",
+  "input": "Book dinner for 2 Friday and get a ride there",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['restaurant_res', 'ride_book']"
+ },
+ {
+  "id": "RW0186",
+  "category": "complex_multistep",
+  "input": "Cancel my paramount+ and order an Uber to the airport",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel', 'ride_book']"
+ },
+ {
+  "id": "RW0187",
+  "category": "complex_multistep",
+  "input": "Cancel my evernote subscription then tell me what I saved",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel']"
+ },
+ {
+  "id": "RW0188",
+  "category": "complex_multistep",
+  "input": "Order pho with beef from The Burger Joint and book an Uber to Union Station",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['food_order', 'ride_book']"
+ },
+ {
+  "id": "RW0189",
+  "category": "complex_multistep",
+  "input": "Book dinner for 2 Friday and get a ride there",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['restaurant_res', 'ride_book']"
+ },
+ {
+  "id": "RW0190",
+  "category": "complex_multistep",
+  "input": "Cancel my netflix subscription then tell me what I saved",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel']"
+ },
+ {
+  "id": "RW0191",
+  "category": "complex_multistep",
+  "input": "Book dinner for 2 Friday and get a ride there",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['restaurant_res', 'ride_book']"
+ },
+ {
+  "id": "RW0192",
+  "category": "complex_multistep",
+  "input": "Order pho with beef from Taco Bell and book an Uber to Union Station",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['food_order', 'ride_book']"
+ },
+ {
+  "id": "RW0193",
+  "category": "complex_multistep",
+  "input": "Cancel hulu and icloud+",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel', 'subscription_cancel']"
+ },
+ {
+  "id": "RW0194",
+  "category": "complex_multistep",
+  "input": "Book dinner for 2 Friday and get a ride there",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['restaurant_res', 'ride_book']"
+ },
+ {
+  "id": "RW0195",
+  "category": "complex_multistep",
+  "input": "Cancel my evernote and order an Uber to the airport",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel', 'ride_book']"
+ },
+ {
+  "id": "RW0196",
+  "category": "complex_multistep",
+  "input": "Cancel my dropbox plus and order an Uber to the airport",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel', 'ride_book']"
+ },
+ {
+  "id": "RW0197",
+  "category": "complex_multistep",
+  "input": "Book dinner for 2 Friday and get a ride there",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['restaurant_res', 'ride_book']"
+ },
+ {
+  "id": "RW0198",
+  "category": "complex_multistep",
+  "input": "Cancel my netflix subscription then tell me what I saved",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel']"
+ },
+ {
+  "id": "RW0199",
+  "category": "complex_multistep",
+  "input": "Cancel my dropbox plus and order an Uber to the airport",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel', 'ride_book']"
+ },
+ {
+  "id": "RW0200",
+  "category": "complex_multistep",
+  "input": "Cancel my dropbox plus and order an Uber to the airport",
+  "expected_behavior": "Agent should: decompose into sequential steps, complete each, report progress concisely. Approval gates for each irreversible step. No error codes.",
+  "notes": "steps=['subscription_cancel', 'ride_book']"
+ }
+]

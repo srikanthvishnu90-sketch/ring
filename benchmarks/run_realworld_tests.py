@@ -35,7 +35,7 @@ if not token:
 print("Authenticated OK", flush=True)
 
 # ── load scenarios, stratified sample ──
-scenarios = json.load(open("/home/hatch/workspace/ring/benchmarks/agent-1000-scenarios.json"))
+scenarios = json.load(open("/home/hatch/workspace/ring/benchmarks/real-world-scenarios.json"))
 by_cat = {}
 for s in scenarios: by_cat.setdefault(s["category"], []).append(s)
 sample = []
@@ -134,7 +134,7 @@ for i, s in enumerate(sample):
           (f"CODES={codes} " if codes else "") + f"tools={[t.get('name') for t in tools_used][:4]}", flush=True)
     time.sleep(1.5)  # be gentle on the API
 
-out = "/home/hatch/workspace/ring/benchmarks/agent-test-results.json"
+out = "/home/hatch/workspace/ring/benchmarks/real-world-test-results.json"
 json.dump({"results": results,
            "summary": {c: {"n": len([r for r in results if r["category"]==c]),
                            "avg": round(sum(r["score"] for r in results if r["category"]==c)/max(1,len([r for r in results if r["category"]==c])),1)}
