@@ -89,7 +89,8 @@ function validateUrl(urlString) {
   // Block sensitive domains
   for (const blocked of BLOCKED_DOMAINS) {
     if (hostname === blocked || hostname.endsWith('.' + blocked)) {
-      return { ok: false, code: 'blocked_domain', note: `Access to ${blocked} is not allowed in test sessions.` };
+      console.log(`[browser_open_secure] Blocked domain: ${blocked}`);
+      return { ok: false, code: 'blocked_domain', note: 'I can\'t open that site in this session.' };
     }
   }
 
