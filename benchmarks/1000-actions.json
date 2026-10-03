@@ -1,0 +1,6023 @@
+[
+ {
+  "id": "ACT0001",
+  "category": "group_social",
+  "input": "Text the group chat the photos from last night",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0002",
+  "category": "group_social",
+  "input": "Send the highlight reel to the family group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0003",
+  "category": "group_social",
+  "input": "Share the new song in the music group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0004",
+  "category": "group_social",
+  "input": "Drop the workout summary into the fitness group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0005",
+  "category": "group_social",
+  "input": "Post the apartment listing to the roommate group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0006",
+  "category": "group_social",
+  "input": "Forward the concert presale code to the friends group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0007",
+  "category": "group_social",
+  "input": "Send the meeting notes to the study group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0008",
+  "category": "group_social",
+  "input": "Share my live location with the travel group for the next hour",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0009",
+  "category": "group_social",
+  "input": "Pin the wedding invite details in the group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0010",
+  "category": "group_social",
+  "input": "Send the receipt for the group dinner to everyone who was there",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0011",
+  "category": "group_social",
+  "input": "Tag everyone in the group with the new venue address",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0012",
+  "category": "group_social",
+  "input": "Upload the birthday video to the shared family album",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0013",
+  "category": "group_social",
+  "input": "Send the RSVP reminder to the group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0014",
+  "category": "group_social",
+  "input": "Share the playlist link with the road trip crew",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0015",
+  "category": "group_social",
+  "input": "Text the group the gate change for our flight",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0016",
+  "category": "group_social",
+  "input": "Plan a surprise birthday for Jake with 8 people while keeping it secret from Jake",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0017",
+  "category": "group_social",
+  "input": "Summarize the 200-message planning thread into the final decisions",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0018",
+  "category": "group_social",
+  "input": "Poll the group on dinner options and book the winner for Friday at 7",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0019",
+  "category": "group_social",
+  "input": "Start a group vote between three Airbnbs and book the winner under $400 a night",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0020",
+  "category": "group_social",
+  "input": "Collect everyone's Venmo for the $120 concert tickets and confirm who's paid",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0021",
+  "category": "group_social",
+  "input": "Create a shared packing list for the ski trip and assign items to each person",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0022",
+  "category": "group_social",
+  "input": "Split the $340 group dinner bill by what everyone ordered and request payment",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0023",
+  "category": "group_social",
+  "input": "Start a Secret Santa draw for 10 people with a $50 cap and email everyone their match",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0024",
+  "category": "group_social",
+  "input": "Coordinate a group gift for Ben's farewell with a $25 suggested contribution",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0025",
+  "category": "group_social",
+  "input": "Build a bracket pool for the playoffs with 12 entrants and track scores weekly",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0026",
+  "category": "group_social",
+  "input": "Organize a potluck where everyone claims a dish and no two people bring the same thing",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0027",
+  "category": "group_social",
+  "input": "Run a poll on which weekend works for the reunion and lock the majority date",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0028",
+  "category": "group_social",
+  "input": "Gather everyone's dietary restrictions and pick a restaurant that works for all",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0029",
+  "category": "group_social",
+  "input": "Set up a rotating chore schedule for the 4 roommates and send weekly reminders",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0030",
+  "category": "group_social",
+  "input": "Plan the bachelor party itinerary for Ben across two days with cost estimates per person",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0031",
+  "category": "group_social",
+  "input": "Add Dana to the birthday group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0032",
+  "category": "group_social",
+  "input": "Mute the fantasy league group until Sunday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0033",
+  "category": "group_social",
+  "input": "Unmute the family group for the weekend",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0034",
+  "category": "group_social",
+  "input": "Change the group chat name to 'Los Angeles Trip 2026'",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0035",
+  "category": "group_social",
+  "input": "Send the brunch menu screenshot to the weekend group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0036",
+  "category": "group_social",
+  "input": "Forward the parking instructions to the tailgate group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0037",
+  "category": "group_social",
+  "input": "Post the final headcount for Saturday to the group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0038",
+  "category": "group_social",
+  "input": "Send the Wi-Fi password to everyone in the group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0039",
+  "category": "group_social",
+  "input": "Share the check-in link for the group flight",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0040",
+  "category": "group_social",
+  "input": "Text the group that we're leaving in 10 minutes",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0041",
+  "category": "group_social",
+  "input": "Announce the new baby photos in the family group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0042",
+  "category": "group_social",
+  "input": "Drop the job posting link into the alumni group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0043",
+  "category": "group_social",
+  "input": "Send the game stream link to the watch party group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0044",
+  "category": "group_social",
+  "input": "Post the final bill split total to the group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0045",
+  "category": "group_social",
+  "input": "Notify the group that the reservation moved to 8pm",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0046",
+  "category": "group_social",
+  "input": "Send the hotel confirmation number to the travel group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0047",
+  "category": "group_social",
+  "input": "Share the ride-share pickup spot with the concert group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0048",
+  "category": "group_social",
+  "input": "Text the group a reminder about Sunday's 9am start",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0049",
+  "category": "group_social",
+  "input": "Forward the rain plan to the picnic group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0050",
+  "category": "group_social",
+  "input": "Send congratulations to Mia in the group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0051",
+  "category": "group_social",
+  "input": "Ask the group which airport to fly into and book my ticket to the consensus choice",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0052",
+  "category": "group_social",
+  "input": "Compile everyone's arrival times and arrange one pickup shuttle for the group",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0053",
+  "category": "group_social",
+  "input": "Survey the group on brunch Saturday vs Sunday and reserve the winning slot",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0054",
+  "category": "group_social",
+  "input": "Start a thread for movie night picks, run a ranked vote, and buy the winning movie's tickets",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0055",
+  "category": "group_social",
+  "input": "Track who has confirmed for the cabin trip and follow up with the holdouts Thursday",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0056",
+  "category": "group_social",
+  "input": "Collect everyone's flight details and build a shared arrival board",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0057",
+  "category": "group_social",
+  "input": "Split the Airbnb $1,800 three ways by nights stayed and request each share",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0058",
+  "category": "group_social",
+  "input": "Coordinate the carpool: map drivers to riders by neighborhood and send assignments",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0059",
+  "category": "group_social",
+  "input": "Run a poll for the team lunch spot and order from the winner for 15 people",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0060",
+  "category": "group_social",
+  "input": "Gather the group's plus-one counts and update the wedding RSVP total",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0061",
+  "category": "group_social",
+  "input": "Plan the office gift exchange: assign matches, set the $30 cap, and send reminders",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0062",
+  "category": "group_social",
+  "input": "Organize the study group schedule for finals week across three subjects",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0063",
+  "category": "group_social",
+  "input": "Coordinate a meal train for Omar with 10 slots and send the calendar link",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0064",
+  "category": "group_social",
+  "input": "Host a group prediction game for the awards show and tally the winners",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0065",
+  "category": "group_social",
+  "input": "Reconcile the shared trip fund: log every expense and settle the balances",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0066",
+  "category": "group_social",
+  "input": "Plan the whole weekend bachelor trip for Zoe: coordinate 10 people's flights, one Airbnb, Saturday dinner reservation, and a cost split that accounts for two people arriving late",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0067",
+  "category": "group_social",
+  "input": "Rebuild the group trip after the flight cancellation: rebook 6 people on the same new flight, extend the Airbnb two nights, notify the car service, and keep the total under $5,000",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0068",
+  "category": "group_social",
+  "input": "Run the 20-person wedding RSVP pipeline: send invites, chase non-responders weekly, track meal choices, seat chart conflicts, and produce the final vendor headcount",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0069",
+  "category": "group_social",
+  "input": "Organize the office holiday party for 60: venue shortlist with quotes, group vote, catering for dietary restrictions, AV setup, and a run-of-show timeline sent to all volunteers",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0070",
+  "category": "group_social",
+  "input": "Coordinate moving day for Dana: recruit 5 helpers, rent the truck, book the freight elevator, order pizza for the crew, and build the packing-to-loading schedule",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0071",
+  "category": "group_social",
+  "input": "Plan the family reunion for 25: poll dates, book the pavilion, assign potluck dishes by family branch, arrange the hotel block, and keep a live headcount doc",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0072",
+  "category": "group_social",
+  "input": "Launch the charity fundraiser group: set the goal, assign outreach roles, track donations in real time, schedule the thank-you messages, and publish the final tally",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0073",
+  "category": "group_social",
+  "input": "Manage the fantasy league all season: draft order randomization, weekly score updates, trade approvals with veto votes, playoff bracket, and payout calculations",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0074",
+  "category": "group_social",
+  "input": "Coordinate the neighborhood block party: permits, vendor bookings, volunteer shifts, sponsor contributions, rain plan, and a post-event budget reconciliation",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0075",
+  "category": "group_social",
+  "input": "Plan the surprise proposal for Anaya: coordinate the photographer, the family arrivals, the decoy dinner story, and a minute-by-minute timeline only the 4 insiders see",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0076",
+  "category": "group_social",
+  "input": "Merge the two study groups into one finals plan: align 12 people's schedules, assign topic leads, book the library room, and publish the daily review agenda",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0077",
+  "category": "group_social",
+  "input": "Run the roommate move-out: schedule the walkthrough, divide the cleaning tasks, settle the shared bills, sell the couch, and coordinate the key handoff",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0078",
+  "category": "group_social",
+  "input": "Coordinate the youth soccer team season: practice schedule across 3 fields, carpool assignments, snack rotation, tournament registration, and the end-of-season party",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0079",
+  "category": "group_social",
+  "input": "Plan the 4-family camping trip: reserve adjacent sites, split gear by family, build the meal plan with a vegetarian family in mind, and set the quiet-hours roster",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0080",
+  "category": "group_social",
+  "input": "Organize the alumni reunion weekend: venue, catering for 80, nametag prep from RSVPs, the Saturday panel lineup, and a photographer booking",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0081",
+  "category": "group_social",
+  "input": "Execute the group gift for Ben's baby shower: collect $40 each from 12 people, pick the registry item, arrange delivery before Saturday, and send the group card",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0082",
+  "category": "group_social",
+  "input": "Run the club's election: nominations, candidate statements, ballot setup, one vote per member verification, and publish the results to the group",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0083",
+  "category": "group_social",
+  "input": "Coordinate the hackathon team of 6: assign roles, book the war room, order meals for 24 hours, submit the registration, and prep the demo checklist",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0084",
+  "category": "group_social",
+  "input": "Plan the cross-country move convoy: two cars, the U-Haul, hotel stops, pet-friendly routing, and a shared gas fund with daily reconciliation",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0085",
+  "category": "group_social",
+  "input": "Organize the community clean-up: recruit 30 volunteers, get the supplies donated, map the zones, schedule the shifts, and file the city permit",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0086",
+  "category": "group_social",
+  "input": "Plan something fun for the group this weekend",
+  "complexity": "multi",
+  "notes": "ambiguous: no group size, activity, or budget"
+ },
+ {
+  "id": "ACT0087",
+  "category": "group_social",
+  "input": "Text everyone about the thing",
+  "complexity": "multi",
+  "notes": "ambiguous: no recipients, no message content"
+ },
+ {
+  "id": "ACT0088",
+  "category": "group_social",
+  "input": "Plan the wedding but don't tell anyone it's a wedding",
+  "complexity": "complex",
+  "notes": "conflicting: secrecy vs coordination needs"
+ },
+ {
+  "id": "ACT0089",
+  "category": "group_social",
+  "input": "Text the group the new meeting spot",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0090",
+  "category": "group_social",
+  "input": "Share the parking map with the tailgate group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0091",
+  "category": "group_social",
+  "input": "Text the group a happy new year",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0092",
+  "category": "group_social",
+  "input": "Send the updated itinerary to the group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0093",
+  "category": "group_social",
+  "input": "Post the seating chart in the alumni group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0094",
+  "category": "group_social",
+  "input": "Share the budget sheet with the Seattle crew",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0095",
+  "category": "group_social",
+  "input": "Pin the itinerary in the Ben group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0096",
+  "category": "group_social",
+  "input": "Share the late fee with the weekend group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0097",
+  "category": "group_social",
+  "input": "Send the invite to the Leo group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0098",
+  "category": "group_social",
+  "input": "Share the flight deal with the travel group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0099",
+  "category": "group_social",
+  "input": "Forward the desk organizer to the Marcus group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0100",
+  "category": "group_social",
+  "input": "Share the double billing with the weekend group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0101",
+  "category": "group_social",
+  "input": "Forward the espresso tamper to the Jake group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0102",
+  "category": "group_social",
+  "input": "Send Tom the seating chart for the group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0103",
+  "category": "group_social",
+  "input": "Send the venue photos to the group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0104",
+  "category": "group_social",
+  "input": "Forward the volunteer signup to the group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0105",
+  "category": "group_social",
+  "input": "Pin the recap in the Sarah group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0106",
+  "category": "group_social",
+  "input": "Pin the schedule in the Mia group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0107",
+  "category": "group_social",
+  "input": "Send the budget sheet to the Victor group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0108",
+  "category": "group_social",
+  "input": "Share the duplicate bill with the weekend group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0109",
+  "category": "group_social",
+  "input": "Share the price hike with the weekend group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0110",
+  "category": "group_social",
+  "input": "Announce the air purifier to the family group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0111",
+  "category": "group_social",
+  "input": "Drop the map into the Phoenix planning group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0112",
+  "category": "group_social",
+  "input": "Send the group the rain-check plan",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0113",
+  "category": "group_social",
+  "input": "Announce the bluetooth speaker to the family group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0114",
+  "category": "group_social",
+  "input": "Share the packing list with the Miami crew",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0115",
+  "category": "group_social",
+  "input": "Announce the itinerary to the family group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0116",
+  "category": "group_social",
+  "input": "Forward the budget sheet to the Ben group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0117",
+  "category": "group_social",
+  "input": "Text the Raj group that price hike",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0118",
+  "category": "group_social",
+  "input": "Post the laptop stand in the alumni group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0119",
+  "category": "group_social",
+  "input": "Forward the checklist to the Tara group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0120",
+  "category": "group_social",
+  "input": "Pin the playlist in the Nina group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0121",
+  "category": "group_social",
+  "input": "Send the photos to the Ben group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0122",
+  "category": "group_social",
+  "input": "Text the Anaya group that wrong charge",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0123",
+  "category": "group_social",
+  "input": "Drop the packing list into the Boston planning group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0124",
+  "category": "group_social",
+  "input": "Share the budget sheet with the Portland crew",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0125",
+  "category": "group_social",
+  "input": "Pin the espresso tamper in the Omar group chat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0126",
+  "category": "group_social",
+  "input": "Forward the menu to the Jake group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0127",
+  "category": "group_social",
+  "input": "Forward the menu to the dinner group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0128",
+  "category": "group_social",
+  "input": "Text the Ben group that wrong charge",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0129",
+  "category": "group_social",
+  "input": "Text the Diego group that price hike",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0130",
+  "category": "group_social",
+  "input": "Text the Zoe group that duplicate bill",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0131",
+  "category": "group_social",
+  "input": "Post the invite in the alumni group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0132",
+  "category": "group_social",
+  "input": "Post the recap in the alumni group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0133",
+  "category": "group_social",
+  "input": "Send Dana the desk organizer for the group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0134",
+  "category": "group_social",
+  "input": "Collect the group's t-shirt sizes and place the bulk order",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0135",
+  "category": "group_social",
+  "input": "Poll the Dana crew on run-of-show and book the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0136",
+  "category": "group_social",
+  "input": "Poll the group on the movie and buy tickets for the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0137",
+  "category": "group_social",
+  "input": "Gather the Leo group's menu and send the summary to all",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0138",
+  "category": "group_social",
+  "input": "Collect everyone's budget sheet for the Phoenix trip and confirm the list",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0139",
+  "category": "group_social",
+  "input": "Gather everyone's availability for game night and lock the date",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0140",
+  "category": "group_social",
+  "input": "Survey the group on the potluck theme and assign dishes",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0141",
+  "category": "group_social",
+  "input": "Run the group gift collection and order the present by Thursday",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0142",
+  "category": "group_social",
+  "input": "Gather the Tara group's schedule and send the summary to all",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0143",
+  "category": "group_social",
+  "input": "Gather the Victor group's budget sheet and send the summary to all",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0144",
+  "category": "group_social",
+  "input": "Collect everyone's desk organizer for the Miami trip and confirm the list",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0145",
+  "category": "group_social",
+  "input": "Poll the Victor crew on laptop stand and book the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0146",
+  "category": "group_social",
+  "input": "Gather the Mia group's playlist and send the summary to all",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0147",
+  "category": "group_social",
+  "input": "Gather the Hana group's air purifier and send the summary to all",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0148",
+  "category": "group_social",
+  "input": "Gather the Zoe group's menu and send the summary to all",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0149",
+  "category": "group_social",
+  "input": "Poll the Mia crew on checklist and book the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0150",
+  "category": "group_social",
+  "input": "Run the Nashville trip poll and reserve the winning laptop stand",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0151",
+  "category": "group_social",
+  "input": "Run the San Francisco trip poll and reserve the winning desk organizer",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0152",
+  "category": "group_social",
+  "input": "Gather the Omar group's run-of-show and send the summary to all",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0153",
+  "category": "group_social",
+  "input": "Start a vote in the Mia group on the Monday plan and lock the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0154",
+  "category": "group_social",
+  "input": "Poll the Leo crew on espresso tamper and book the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0155",
+  "category": "group_social",
+  "input": "Start a vote in the Raj group on the Monday plan and lock the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0156",
+  "category": "group_social",
+  "input": "Run the Portland trip poll and reserve the winning checklist",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0157",
+  "category": "group_social",
+  "input": "Poll the Tara crew on packing list and book the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0158",
+  "category": "group_social",
+  "input": "Gather the Leo group's yoga mat and send the summary to all",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0159",
+  "category": "group_social",
+  "input": "Start a vote in the Priya group on the Monday plan and lock the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0160",
+  "category": "group_social",
+  "input": "Start a vote in the Elena group on the Monday plan and lock the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0161",
+  "category": "group_social",
+  "input": "Gather the Jake group's itinerary and send the summary to all",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0162",
+  "category": "group_social",
+  "input": "Collect everyone's schedule for the Los Angeles trip and confirm the list",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0163",
+  "category": "group_social",
+  "input": "Run the Portland trip poll and reserve the winning espresso tamper",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0164",
+  "category": "group_social",
+  "input": "Gather the Grace group's desk organizer and send the summary to all",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0165",
+  "category": "group_social",
+  "input": "Start a vote in the Alex group on the Monday plan and lock the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0166",
+  "category": "group_social",
+  "input": "Run the Los Angeles trip poll and reserve the winning schedule",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0167",
+  "category": "group_social",
+  "input": "Collect everyone's budget sheet for the Seattle trip and confirm the list",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0168",
+  "category": "group_social",
+  "input": "Run the Atlanta trip poll and reserve the winning invite",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0169",
+  "category": "group_social",
+  "input": "Collect everyone's menu for the Phoenix trip and confirm the list",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0170",
+  "category": "group_social",
+  "input": "Poll the Omar crew on desk organizer and book the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0171",
+  "category": "group_social",
+  "input": "Collect everyone's itinerary for the Los Angeles trip and confirm the list",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0172",
+  "category": "group_social",
+  "input": "Start a vote in the Nina group on the next week plan and lock the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0173",
+  "category": "group_social",
+  "input": "Poll the Raj crew on bluetooth speaker and book the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0174",
+  "category": "group_social",
+  "input": "Poll the Marcus crew on bluetooth speaker and book the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0175",
+  "category": "group_social",
+  "input": "Gather the Kevin group's menu and send the summary to all",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0176",
+  "category": "group_social",
+  "input": "Collect everyone's yoga mat for the Washington DC trip and confirm the list",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0177",
+  "category": "group_social",
+  "input": "Collect everyone's photos for the Chicago trip and confirm the list",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0178",
+  "category": "group_social",
+  "input": "Start a vote in the Mia group on the Saturday plan and lock the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0179",
+  "category": "group_social",
+  "input": "Collect everyone's checklist for the Phoenix trip and confirm the list",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0180",
+  "category": "group_social",
+  "input": "Poll the Sam crew on packing list and book the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0181",
+  "category": "group_social",
+  "input": "Gather the Zoe group's contact list and send the summary to all",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0182",
+  "category": "group_social",
+  "input": "Coordinate the Alex reunion: 8 families, venue, catering, and the travel fund",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0183",
+  "category": "group_social",
+  "input": "Plan the multi-family vacation: 4 families, one resort, the activity schedule, and the cost split by family size",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0184",
+  "category": "group_social",
+  "input": "Coordinate the Mia reunion: 4 families, venue, catering, and the travel fund",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0185",
+  "category": "group_social",
+  "input": "Coordinate the Victor reunion: 6 families, venue, catering, and the travel fund",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0186",
+  "category": "group_social",
+  "input": "Coordinate the Kevin reunion: 10 families, venue, catering, and the travel fund",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0187",
+  "category": "group_social",
+  "input": "Coordinate the Tom reunion: 6 families, venue, catering, and the travel fund",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0188",
+  "category": "group_social",
+  "input": "Run the Dallas group expedition: 6 people, permits, gear, meals, and the day-by-day plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0189",
+  "category": "group_social",
+  "input": "Run the Chicago group expedition: 10 people, permits, gear, meals, and the day-by-day plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0190",
+  "category": "group_social",
+  "input": "Run the Nashville group expedition: 4 people, permits, gear, meals, and the day-by-day plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0191",
+  "category": "group_social",
+  "input": "Coordinate the Omar reunion: 4 families, venue, catering, and the travel fund",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0192",
+  "category": "group_social",
+  "input": "Coordinate the Lily reunion: 10 families, venue, catering, and the travel fund",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0193",
+  "category": "group_social",
+  "input": "Coordinate the Alex reunion: 10 families, venue, catering, and the travel fund",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0194",
+  "category": "group_social",
+  "input": "Coordinate the Elena reunion: 10 families, venue, catering, and the travel fund",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0195",
+  "category": "group_social",
+  "input": "Run the Seattle group expedition: 8 people, permits, gear, meals, and the day-by-day plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0196",
+  "category": "group_social",
+  "input": "Run the Portland group expedition: 6 people, permits, gear, meals, and the day-by-day plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0197",
+  "category": "group_social",
+  "input": "Coordinate the Priya reunion: 10 families, venue, catering, and the travel fund",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0198",
+  "category": "group_social",
+  "input": "Run the Austin group expedition: 10 people, permits, gear, meals, and the day-by-day plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0199",
+  "category": "group_social",
+  "input": "Run the San Francisco group expedition: 6 people, permits, gear, meals, and the day-by-day plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0200",
+  "category": "group_social",
+  "input": "Coordinate the Grace reunion: 8 families, venue, catering, and the travel fund",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0201",
+  "category": "subscriptions_finance",
+  "input": "Cancel my Netflix subscription",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0202",
+  "category": "subscriptions_finance",
+  "input": "Cancel my Spotify Premium plan",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0203",
+  "category": "subscriptions_finance",
+  "input": "Cancel Audible and keep my unused credits",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0204",
+  "category": "subscriptions_finance",
+  "input": "Downgrade my YouTube Premium to the basic plan",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0205",
+  "category": "subscriptions_finance",
+  "input": "Pause my gym membership for two months",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0206",
+  "category": "subscriptions_finance",
+  "input": "Cancel the free trial of Hulu before it charges me",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0207",
+  "category": "subscriptions_finance",
+  "input": "Turn off auto-renew on my domain registration",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0208",
+  "category": "subscriptions_finance",
+  "input": "Cancel my Netflix add-on package",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0209",
+  "category": "subscriptions_finance",
+  "input": "Switch my Peloton plan to the annual billing to save money",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0210",
+  "category": "subscriptions_finance",
+  "input": "Remove the extra screens add-on from my streaming plan",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0211",
+  "category": "subscriptions_finance",
+  "input": "Cancel my meal-kit subscription effective immediately",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0212",
+  "category": "subscriptions_finance",
+  "input": "Freeze my storage unit rental for next month",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0213",
+  "category": "subscriptions_finance",
+  "input": "Cancel the premium tier of my language app",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0214",
+  "category": "subscriptions_finance",
+  "input": "Opt out of the extended warranty on my laptop",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0215",
+  "category": "subscriptions_finance",
+  "input": "Cancel my magazine subscription and request a refund for the remaining issues",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0216",
+  "category": "subscriptions_finance",
+  "input": "Find all recurring charges and cancel the two most expensive",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0217",
+  "category": "subscriptions_finance",
+  "input": "Dispute the $47.99 charge from last Tuesday",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0218",
+  "category": "subscriptions_finance",
+  "input": "List every subscription over $10 a month and cancel the ones I haven't used in 60 days",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0219",
+  "category": "subscriptions_finance",
+  "input": "Switch my Disney+ subscription from monthly to annual and confirm the prorated credit",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0220",
+  "category": "subscriptions_finance",
+  "input": "Negotiate my cable bill down and report the new rate before accepting",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0221",
+  "category": "subscriptions_finance",
+  "input": "Find the duplicate Netflix charges and refund the second one",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0222",
+  "category": "subscriptions_finance",
+  "input": "Audit my streaming spend this year and cancel enough to get under $50 a month",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0223",
+  "category": "subscriptions_finance",
+  "input": "Consolidate my two cloud storage plans into one and cancel the redundant one",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0224",
+  "category": "subscriptions_finance",
+  "input": "Check whether my gym is still charging me after cancellation and dispute it if so",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0225",
+  "category": "subscriptions_finance",
+  "input": "Move all my subscriptions to the same credit card and confirm each one migrated",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0226",
+  "category": "subscriptions_finance",
+  "input": "Compare my phone plan against two cheaper carriers and switch me if I save over $20 a month",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0227",
+  "category": "subscriptions_finance",
+  "input": "Find the subscription I forgot about and cancel it with a screenshot of the confirmation",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0228",
+  "category": "subscriptions_finance",
+  "input": "Dispute the double charge from Hulu and escalate to a supervisor if the first agent refuses",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0229",
+  "category": "subscriptions_finance",
+  "input": "Calculate my total monthly subscription spend and build a plan to cut it 30%",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0230",
+  "category": "subscriptions_finance",
+  "input": "Renew my Apple Music membership at the student rate and verify eligibility first",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0231",
+  "category": "subscriptions_finance",
+  "input": "Cancel my Strava subscription",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0232",
+  "category": "subscriptions_finance",
+  "input": "Pause my Spotify membership for 90 days",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0233",
+  "category": "subscriptions_finance",
+  "input": "Turn off the $4.99 add-on on my Dropbox account",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0234",
+  "category": "subscriptions_finance",
+  "input": "Switch my Peloton billing to the Diego family plan",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0235",
+  "category": "subscriptions_finance",
+  "input": "Cancel the trial of the Duolingo Plus premium tier",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0236",
+  "category": "subscriptions_finance",
+  "input": "Downgrade my Dropbox account to free",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0237",
+  "category": "subscriptions_finance",
+  "input": "Remove my payment method from Audible after cancelling",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0238",
+  "category": "subscriptions_finance",
+  "input": "Export my YouTube Premium listening history before I cancel",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0239",
+  "category": "subscriptions_finance",
+  "input": "Cancel Peloton and tell me what I lose",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0240",
+  "category": "subscriptions_finance",
+  "input": "Stop the Hulu renewal scheduled for next week",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0241",
+  "category": "subscriptions_finance",
+  "input": "Change my Strava plan from family to individual",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0242",
+  "category": "subscriptions_finance",
+  "input": "Cancel my subscription to Peloton",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0243",
+  "category": "subscriptions_finance",
+  "input": "Skip next month's Netflix box",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0244",
+  "category": "subscriptions_finance",
+  "input": "Reactivate my Peloton account at the promo rate",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0245",
+  "category": "subscriptions_finance",
+  "input": "Unsubscribe from the Gym newsletter upsell",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0246",
+  "category": "subscriptions_finance",
+  "input": "Find every free trial expiring this week and cancel the ones I haven't opened",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0247",
+  "category": "subscriptions_finance",
+  "input": "Pull my last 3 months of Spotify invoices and flag any price increases",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0248",
+  "category": "subscriptions_finance",
+  "input": "Call out the YouTube Premium charge I don't recognize and file a chargeback if they won't refund it",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0249",
+  "category": "subscriptions_finance",
+  "input": "Set a reminder to cancel Notion Plus the day before the annual renewal",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0250",
+  "category": "subscriptions_finance",
+  "input": "Transfer my Max subscription to Priya and remove my card",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0251",
+  "category": "subscriptions_finance",
+  "input": "Find the cheapest plan that keeps my Netflix watchlist and switch me to it",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0252",
+  "category": "subscriptions_finance",
+  "input": "Dispute the $12.99 Adobe Creative Cloud charge from yesterday that I didn't authorize",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0253",
+  "category": "subscriptions_finance",
+  "input": "Consolidate my three news subscriptions into one bundle if one exists",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0254",
+  "category": "subscriptions_finance",
+  "input": "Check if Apple Music offers a retention discount before I cancel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0255",
+  "category": "subscriptions_finance",
+  "input": "Move my Strava billing date to the 1st of the month",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0256",
+  "category": "subscriptions_finance",
+  "input": "Calculate how much I'd save going annual on Adobe Creative Cloud and switch if it's over 15%",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0257",
+  "category": "subscriptions_finance",
+  "input": "Find the student discount for Netflix and apply it with my school email",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0258",
+  "category": "subscriptions_finance",
+  "input": "Cancel Disney+ but keep access until the billing period ends",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0259",
+  "category": "subscriptions_finance",
+  "input": "Split the Duolingo Plus family plan cost evenly among the 4 members and request payment",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0260",
+  "category": "subscriptions_finance",
+  "input": "Review my app store subscriptions and cancel everything under $5 I don't use",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0261",
+  "category": "subscriptions_finance",
+  "input": "Do a full subscription audit: pull every recurring charge across all my cards, rank by cost, cancel the bottom 5 I don't use, and produce a monthly savings report",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0262",
+  "category": "subscriptions_finance",
+  "input": "Dispute the $249 charge from the hotel that no-showed me: gather the booking confirmation, the cancellation email, file the dispute, and follow up until the credit posts",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0263",
+  "category": "subscriptions_finance",
+  "input": "Move my entire financial autopilot: switch banks, update direct deposit with my employer, migrate 12 billers to the new account, and confirm zero missed payments for 60 days",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0264",
+  "category": "subscriptions_finance",
+  "input": "Negotiate every renewable bill I have: internet, phone, insurance, and streaming \u2014 call each one, get the retention offer, and only switch providers if the savings beat $200 a year",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0265",
+  "category": "subscriptions_finance",
+  "input": "Handle the fraud on my card: freeze the card, dispute the 4 unauthorized charges, order a replacement, and update the card everywhere it's saved",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0266",
+  "category": "subscriptions_finance",
+  "input": "Cancel my timeshare: find the rescission window, draft the cancellation letter, send it certified mail, and confirm the contract is voided",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0267",
+  "category": "subscriptions_finance",
+  "input": "Refinance my auto loan: pull quotes from 3 lenders, compare total cost including fees, refinance with the winner, and set up autopay",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0268",
+  "category": "subscriptions_finance",
+  "input": "Do my quarterly money review: categorize all spending, flag anomalies over $100, project the next quarter, and recommend 3 concrete cuts",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0269",
+  "category": "subscriptions_finance",
+  "input": "Set up the college fund for my kid: compare 529 plans from 3 states, open the best one, set the monthly contribution, and automate it",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0270",
+  "category": "subscriptions_finance",
+  "input": "Execute the tax-loss harvest: identify the losing positions, sell them, buy the replacement funds, and document the wash-sale avoidance",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0271",
+  "category": "subscriptions_finance",
+  "input": "Consolidate my retirement accounts: roll the two old 401(k)s into my IRA, confirm the rollovers complete, and rebalance to the target allocation",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0272",
+  "category": "subscriptions_finance",
+  "input": "Fight the medical bill: request the itemized statement, verify each charge against the EOB, dispute the $800 duplicate line, and negotiate a payment plan for the rest",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0273",
+  "category": "subscriptions_finance",
+  "input": "Build my emergency fund plan: calculate 6 months of expenses, pick the high-yield account, automate the monthly transfer, and track progress",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0274",
+  "category": "subscriptions_finance",
+  "input": "Cancel everything tied to my old email: inventory the accounts, migrate the important ones, close the dead ones, and confirm no recurring charge survives",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0275",
+  "category": "subscriptions_finance",
+  "input": "Do the annual insurance review: compare my renters, auto, and life policies against 3 competitors, switch where I save over 10%, and confirm coverage continuity",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0276",
+  "category": "subscriptions_finance",
+  "input": "Handle the security deposit dispute: document the apartment condition, cite the state law deadline, send the demand letter, and file in small claims if they miss it",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0277",
+  "category": "subscriptions_finance",
+  "input": "Cancel my subscription",
+  "complexity": "simple",
+  "notes": "missing: which subscription"
+ },
+ {
+  "id": "ACT0278",
+  "category": "subscriptions_finance",
+  "input": "Dispute the charge",
+  "complexity": "multi",
+  "notes": "missing: amount, merchant, date"
+ },
+ {
+  "id": "ACT0279",
+  "category": "subscriptions_finance",
+  "input": "Get me a full refund on everything I've ever paid Netflix",
+  "complexity": "complex",
+  "notes": "impossible: no basis for full historical refund"
+ },
+ {
+  "id": "ACT0280",
+  "category": "subscriptions_finance",
+  "input": "Cancel the Disney+ add-on",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0281",
+  "category": "subscriptions_finance",
+  "input": "Downgrade my Notion Plus tier",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0282",
+  "category": "subscriptions_finance",
+  "input": "Freeze my Duolingo Plus membership",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0283",
+  "category": "subscriptions_finance",
+  "input": "Turn off Disney+ auto-renew",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0284",
+  "category": "subscriptions_finance",
+  "input": "Cancel the Headspace add-on",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0285",
+  "category": "subscriptions_finance",
+  "input": "Freeze my Hulu membership",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0286",
+  "category": "subscriptions_finance",
+  "input": "Freeze my Disney+ membership",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0287",
+  "category": "subscriptions_finance",
+  "input": "Cancel the Spotify add-on",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0288",
+  "category": "subscriptions_finance",
+  "input": "Pause my Gym for a month",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0289",
+  "category": "subscriptions_finance",
+  "input": "Switch Duolingo Plus to the Omar plan",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0290",
+  "category": "subscriptions_finance",
+  "input": "Opt out of Dropbox marketing emails",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0291",
+  "category": "subscriptions_finance",
+  "input": "Cancel my Audible renewal",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0292",
+  "category": "subscriptions_finance",
+  "input": "Downgrade my YouTube Premium tier",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0293",
+  "category": "subscriptions_finance",
+  "input": "Switch Apple Music to the Mia plan",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0294",
+  "category": "subscriptions_finance",
+  "input": "Freeze my Spotify membership",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0295",
+  "category": "subscriptions_finance",
+  "input": "Downgrade my Adobe Creative Cloud tier",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0296",
+  "category": "subscriptions_finance",
+  "input": "Cancel the iCloud+ add-on",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0297",
+  "category": "subscriptions_finance",
+  "input": "Cancel my Spotify renewal",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0298",
+  "category": "subscriptions_finance",
+  "input": "Remove the Duolingo Plus premium upsell",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0299",
+  "category": "subscriptions_finance",
+  "input": "Turn off Dropbox auto-renew",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0300",
+  "category": "subscriptions_finance",
+  "input": "Cancel my Crunchyroll renewal",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0301",
+  "category": "subscriptions_finance",
+  "input": "Downgrade my Spotify tier",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0302",
+  "category": "subscriptions_finance",
+  "input": "Remove the Headspace premium upsell",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0303",
+  "category": "subscriptions_finance",
+  "input": "Cancel my Dropbox renewal",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0304",
+  "category": "subscriptions_finance",
+  "input": "Opt out of Netflix marketing emails",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0305",
+  "category": "subscriptions_finance",
+  "input": "Turn off iCloud+ auto-renew",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0306",
+  "category": "subscriptions_finance",
+  "input": "Remove the Xbox Game Pass premium upsell",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0307",
+  "category": "subscriptions_finance",
+  "input": "Opt out of Gym marketing emails",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0308",
+  "category": "subscriptions_finance",
+  "input": "Pause my Duolingo Plus for a month",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0309",
+  "category": "subscriptions_finance",
+  "input": "Audit my Apple Music usage and downgrade if I'm under the limit",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0310",
+  "category": "subscriptions_finance",
+  "input": "Check my Gym bill for errors and dispute the price hike",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0311",
+  "category": "subscriptions_finance",
+  "input": "Compare Headspace annual vs monthly and switch to the cheaper",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0312",
+  "category": "subscriptions_finance",
+  "input": "Compare YouTube Premium annual vs monthly and switch to the cheaper",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0313",
+  "category": "subscriptions_finance",
+  "input": "Check my Xbox Game Pass bill for errors and dispute the double billing",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0314",
+  "category": "subscriptions_finance",
+  "input": "Compare Peloton annual vs monthly and switch to the cheaper",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0315",
+  "category": "subscriptions_finance",
+  "input": "Audit my Netflix usage and downgrade if I'm under the limit",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0316",
+  "category": "subscriptions_finance",
+  "input": "Audit my Audible usage and downgrade if I'm under the limit",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0317",
+  "category": "subscriptions_finance",
+  "input": "Move iCloud+ to the new card and confirm the first charge",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0318",
+  "category": "subscriptions_finance",
+  "input": "Compare iCloud+ annual vs monthly and switch to the cheaper",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0319",
+  "category": "subscriptions_finance",
+  "input": "Compare Hulu annual vs monthly and switch to the cheaper",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0320",
+  "category": "subscriptions_finance",
+  "input": "Move Crunchyroll to the new card and confirm the first charge",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0321",
+  "category": "subscriptions_finance",
+  "input": "Move Netflix to the new card and confirm the first charge",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0322",
+  "category": "subscriptions_finance",
+  "input": "Find the Dropbox retention offer before I cancel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0323",
+  "category": "subscriptions_finance",
+  "input": "Audit my Hulu usage and downgrade if I'm under the limit",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0324",
+  "category": "subscriptions_finance",
+  "input": "Find the Apple Music retention offer before I cancel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0325",
+  "category": "subscriptions_finance",
+  "input": "Check my Strava bill for errors and dispute the mystery charge",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0326",
+  "category": "subscriptions_finance",
+  "input": "Find the Audible retention offer before I cancel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0327",
+  "category": "subscriptions_finance",
+  "input": "Audit my Strava usage and downgrade if I'm under the limit",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0328",
+  "category": "subscriptions_finance",
+  "input": "Move Peloton to the new card and confirm the first charge",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0329",
+  "category": "subscriptions_finance",
+  "input": "Move YouTube Premium to the new card and confirm the first charge",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0330",
+  "category": "subscriptions_finance",
+  "input": "Find the Max retention offer before I cancel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0331",
+  "category": "subscriptions_finance",
+  "input": "Move Strava to the new card and confirm the first charge",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0332",
+  "category": "subscriptions_finance",
+  "input": "Find the Netflix retention offer before I cancel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0333",
+  "category": "subscriptions_finance",
+  "input": "Check my YouTube Premium bill for errors and dispute the duplicate bill",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0334",
+  "category": "subscriptions_finance",
+  "input": "Compare Max annual vs monthly and switch to the cheaper",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0335",
+  "category": "subscriptions_finance",
+  "input": "Audit my Adobe Creative Cloud usage and downgrade if I'm under the limit",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0336",
+  "category": "subscriptions_finance",
+  "input": "Find the Peloton retention offer before I cancel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0337",
+  "category": "subscriptions_finance",
+  "input": "Move Xbox Game Pass to the new card and confirm the first charge",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0338",
+  "category": "subscriptions_finance",
+  "input": "Consolidate my Dropbox and YouTube Premium accounts and cancel the redundant one",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0339",
+  "category": "subscriptions_finance",
+  "input": "Renegotiate my Disney+ contract at renewal and benchmark against 3 competitors",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0340",
+  "category": "subscriptions_finance",
+  "input": "Consolidate my Xbox Game Pass and YouTube Premium accounts and cancel the redundant one",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0341",
+  "category": "subscriptions_finance",
+  "input": "Renegotiate my Notion Plus contract at renewal and benchmark against 3 competitors",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0342",
+  "category": "subscriptions_finance",
+  "input": "Consolidate my Strava and Gym accounts and cancel the redundant one",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0343",
+  "category": "subscriptions_finance",
+  "input": "Renegotiate my Audible contract at renewal and benchmark against 3 competitors",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0344",
+  "category": "subscriptions_finance",
+  "input": "Consolidate my Paramount+ and Notion Plus accounts and cancel the redundant one",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0345",
+  "category": "subscriptions_finance",
+  "input": "Renegotiate my Duolingo Plus contract at renewal and benchmark against 3 competitors",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0346",
+  "category": "subscriptions_finance",
+  "input": "Consolidate my Strava and Netflix accounts and cancel the redundant one",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0347",
+  "category": "subscriptions_finance",
+  "input": "Renegotiate my Xbox Game Pass contract at renewal and benchmark against 3 competitors",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0348",
+  "category": "subscriptions_finance",
+  "input": "Consolidate my Headspace and Duolingo Plus accounts and cancel the redundant one",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0349",
+  "category": "subscriptions_finance",
+  "input": "Renegotiate my Adobe Creative Cloud contract at renewal and benchmark against 3 competitors",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0350",
+  "category": "subscriptions_finance",
+  "input": "Consolidate my Netflix and Headspace accounts and cancel the redundant one",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0351",
+  "category": "travel",
+  "input": "Book a flight to Dallas Friday returning Sunday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0352",
+  "category": "travel",
+  "input": "Find the cheapest flight to Denver next weekend",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0353",
+  "category": "travel",
+  "input": "Book a hotel in Austin for two nights under $200 a night",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0354",
+  "category": "travel",
+  "input": "Check in to my flight tomorrow",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0355",
+  "category": "travel",
+  "input": "Add my frequent flyer number to the booking",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0356",
+  "category": "travel",
+  "input": "Upgrade my seat to extra legroom on the outbound flight",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0357",
+  "category": "travel",
+  "input": "Book a rental car at Los Angeles airport for the weekend",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0358",
+  "category": "travel",
+  "input": "Get me a window seat on flight 482",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0359",
+  "category": "travel",
+  "input": "Change my flight to the earlier departure",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0360",
+  "category": "travel",
+  "input": "Book airport parking for Friday through Monday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0361",
+  "category": "travel",
+  "input": "Add a checked bag to my reservation",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0362",
+  "category": "travel",
+  "input": "Find a nonstop flight to Austin under $300",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0363",
+  "category": "travel",
+  "input": "Book the 7am shuttle from the hotel to the airport",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0364",
+  "category": "travel",
+  "input": "Reserve a hotel room with a king bed and late checkout",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0365",
+  "category": "travel",
+  "input": "Get travel insurance for the New York trip",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0366",
+  "category": "travel",
+  "input": "Plan a 3-day itinerary for Washington DC with restaurant reservations",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0367",
+  "category": "travel",
+  "input": "Book flights and a hotel for two in Phoenix, total under $1,200",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0368",
+  "category": "travel",
+  "input": "Find the fastest route to Denver that avoids layovers over 2 hours",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0369",
+  "category": "travel",
+  "input": "Book my flight and add the hotel my company uses, then expense both",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0370",
+  "category": "travel",
+  "input": "Rebook my cancelled flight on the next available option and claim the meal voucher",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0371",
+  "category": "travel",
+  "input": "Plan the road trip to Atlanta: route, two hotel stops, and gas cost estimate",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0372",
+  "category": "travel",
+  "input": "Book a weekend getaway within 3 hours of me under $500 total",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0373",
+  "category": "travel",
+  "input": "Get a passport appointment this month and list every document I need",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0374",
+  "category": "travel",
+  "input": "Book the red-eye to New York and a hotel with 24-hour check-in",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0375",
+  "category": "travel",
+  "input": "Compare flying vs driving to New York on cost and time, then book the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0376",
+  "category": "travel",
+  "input": "Book a flight for Leo and me on the same itinerary",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0377",
+  "category": "travel",
+  "input": "Find a hotel near the convention center with free breakfast and parking",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0378",
+  "category": "travel",
+  "input": "Book the cruise cabin and add the drink package and shore excursion",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0379",
+  "category": "travel",
+  "input": "Arrange airport pickup for Priya arriving Thursday at 6pm",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0380",
+  "category": "travel",
+  "input": "Book a one-way flight to Dallas and a separate return two weeks later",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0381",
+  "category": "travel",
+  "input": "Book a flight from Chicago to Boston on Saturday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0382",
+  "category": "travel",
+  "input": "Check the status of flight 328",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0383",
+  "category": "travel",
+  "input": "Reserve a table for 2 at the hotel restaurant",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0384",
+  "category": "travel",
+  "input": "Book the airport lounge day pass for my layover",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0385",
+  "category": "travel",
+  "input": "Download my boarding pass",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0386",
+  "category": "travel",
+  "input": "Set a fare alert for Chicago to San Francisco under $200",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0387",
+  "category": "travel",
+  "input": "Book a pet-friendly hotel in Los Angeles",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0388",
+  "category": "travel",
+  "input": "Reserve the hotel spa for Saturday morning",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0389",
+  "category": "travel",
+  "input": "Buy the city transit pass for Denver",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0390",
+  "category": "travel",
+  "input": "Book a taxi from the airport to the hotel",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0391",
+  "category": "travel",
+  "input": "Add TSA PreCheck to my reservation",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0392",
+  "category": "travel",
+  "input": "Book a room with two queens in Nashville for Friday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0393",
+  "category": "travel",
+  "input": "Get the refund for my cancelled flight",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0394",
+  "category": "travel",
+  "input": "Book travel insurance for the international trip",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0395",
+  "category": "travel",
+  "input": "Reserve a rental car with unlimited miles in Atlanta",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0396",
+  "category": "travel",
+  "input": "Book the cheapest refundable flight to Austin and set a price-drop alert",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0397",
+  "category": "travel",
+  "input": "Plan the bachelorette weekend in New York: hotel for 8, dinner reservation, and the Saturday activity",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0398",
+  "category": "travel",
+  "input": "Find a flight that lands in Washington DC before noon and a hotel with early check-in",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0399",
+  "category": "travel",
+  "input": "Book my trip to Chicago using points first, cash for the rest",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0400",
+  "category": "travel",
+  "input": "Rebook the whole family of 5 on the same flight after the schedule change",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0401",
+  "category": "travel",
+  "input": "Plan a 5-day Denver trip with one rest day and book all the tours",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0402",
+  "category": "travel",
+  "input": "Book the hotel for the wedding weekend and split the suite cost with Victor",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0403",
+  "category": "travel",
+  "input": "Find the best-rated Airbnb near downtown Seattle for 4 nights under $250 a night",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0404",
+  "category": "travel",
+  "input": "Book a multi-city trip: Chicago to Los Angeles to Chicago and home",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0405",
+  "category": "travel",
+  "input": "Get the visa requirements for New York and start the application",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0406",
+  "category": "travel",
+  "input": "Book the group rate for 10 rooms at the conference hotel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0407",
+  "category": "travel",
+  "input": "Plan the honeymoon: compare 3 destinations on cost and weather, then book the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0408",
+  "category": "travel",
+  "input": "Book a last-minute flight to San Francisco tonight under $400",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0409",
+  "category": "travel",
+  "input": "Arrange the car service for the 5am airport run",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0410",
+  "category": "travel",
+  "input": "Book the train to Nashville instead of flying and reserve the quiet car",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0411",
+  "category": "travel",
+  "input": "Plan the two-week Europe trip: flights, 4 cities, hotels, intercity trains, restaurant bookings, and a day-by-day itinerary under $6,000 for two",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0412",
+  "category": "travel",
+  "input": "Rebuild the cancelled honeymoon: rebook flights and hotels for new dates, transfer the nonrefundable tours, file the travel insurance claim, and keep the total within $500 of the original",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0413",
+  "category": "travel",
+  "input": "Coordinate the company offsite for 30: group flights, hotel block, meeting space, team dinner, airport transfers, and a per-person cost breakdown",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0414",
+  "category": "travel",
+  "input": "Plan the family reunion trip: 12 people flying from 4 cities, one big rental house, the Saturday excursion, dietary needs for 3 kids, and a shared expense ledger",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0415",
+  "category": "travel",
+  "input": "Execute the destination wedding logistics: guest travel guide, hotel block, welcome dinner, ceremony transport, and the day-of timeline for 80 guests",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0416",
+  "category": "travel",
+  "input": "Book the around-the-world ticket: 5 stops, all on one alliance, maximizing the miles earned, with 3-day minimums per city",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0417",
+  "category": "travel",
+  "input": "Plan the month-long remote-work trip: 4 cities with coworking spaces, monthly Airbnb discounts, timezone-friendly flight times, and total cost under $4,000",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0418",
+  "category": "travel",
+  "input": "Handle the missed connection: rebook all 4 legs, claim the hotel voucher, reroute the checked bags, and notify the Airbnb host of the late arrival",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0419",
+  "category": "travel",
+  "input": "Coordinate the sports team travel: 18 players, gear transport, bus charter, hotel with team rates, meal schedule, and the tournament registration",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0420",
+  "category": "travel",
+  "input": "Plan the ski trip for 10: find the resort with the best snow forecast, book the slope-side condo, rent gear for 6, arrange lessons for the beginners, and split everything by room occupancy",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0421",
+  "category": "travel",
+  "input": "Book the sabbatical: 3 months across Dallas, Chicago, and Nashville with monthly rentals, local SIM plans, and a budget tracker that alerts at 80% spend",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0422",
+  "category": "travel",
+  "input": "Evacuate-proof the trip: rebook everything refundable, buy the premium travel insurance, register with the embassy, and build the contingency plan for each leg",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0423",
+  "category": "travel",
+  "input": "Plan the college tour road trip: 6 campuses in 5 days, info session bookings, hotel stops, interview prep slots, and the comparison scorecard",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0424",
+  "category": "travel",
+  "input": "Coordinate the film crew travel: 8 people, equipment as checked baggage, location permits, daily call sheets, and the per-diem payouts",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0425",
+  "category": "travel",
+  "input": "Book the cruise for the extended family: 3 generations, connecting cabins, the dining rotation, shore excursions for mobility-limited grandparents, and the group photo package",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0426",
+  "category": "travel",
+  "input": "Book me a flight",
+  "complexity": "simple",
+  "notes": "missing: destination, dates"
+ },
+ {
+  "id": "ACT0427",
+  "category": "travel",
+  "input": "Book the cheapest flight to Paris tomorrow morning",
+  "complexity": "multi",
+  "notes": "edge: extreme last-minute, likely infeasible"
+ },
+ {
+  "id": "ACT0428",
+  "category": "travel",
+  "input": "Plan a trip to the moon for under $500",
+  "complexity": "complex",
+  "notes": "impossible"
+ },
+ {
+  "id": "ACT0429",
+  "category": "travel",
+  "input": "Book the lounge pass for the Washington DC layover",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0430",
+  "category": "travel",
+  "input": "Check in to the Los Angeles flight",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0431",
+  "category": "travel",
+  "input": "Book a rental car in Atlanta for 6 days",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0432",
+  "category": "travel",
+  "input": "Book the lounge pass for the Dallas layover",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0433",
+  "category": "travel",
+  "input": "Check in to the New York flight",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0434",
+  "category": "travel",
+  "input": "Reserve parking at the Seattle airport",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0435",
+  "category": "travel",
+  "input": "Get the travel insurance for the Miami trip",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0436",
+  "category": "travel",
+  "input": "Reserve the airport shuttle in Boston",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0437",
+  "category": "travel",
+  "input": "Reserve the airport shuttle in New York",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0438",
+  "category": "travel",
+  "input": "Get the travel insurance for the New York trip",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0439",
+  "category": "travel",
+  "input": "Reserve the airport shuttle in Phoenix",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0440",
+  "category": "travel",
+  "input": "Reserve parking at the Miami airport",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0441",
+  "category": "travel",
+  "input": "Book the lounge pass for the Boston layover",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0442",
+  "category": "travel",
+  "input": "Book the 6am flight to Denver on Monday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0443",
+  "category": "travel",
+  "input": "Get the travel insurance for the Phoenix trip",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0444",
+  "category": "travel",
+  "input": "Book a flight to Miami next Monday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0445",
+  "category": "travel",
+  "input": "Add a bag to the San Francisco booking",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0446",
+  "category": "travel",
+  "input": "Reserve parking at the Austin airport",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0447",
+  "category": "travel",
+  "input": "Reserve the airport shuttle in Washington DC",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0448",
+  "category": "travel",
+  "input": "Book the lounge pass for the Seattle layover",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0449",
+  "category": "travel",
+  "input": "Reserve a hotel in San Francisco for 6 nights",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0450",
+  "category": "travel",
+  "input": "Reserve parking at the New York airport",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0451",
+  "category": "travel",
+  "input": "Book the lounge pass for the Portland layover",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0452",
+  "category": "travel",
+  "input": "Add a bag to the Washington DC booking",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0453",
+  "category": "travel",
+  "input": "Book a flight to Nashville next Monday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0454",
+  "category": "travel",
+  "input": "Get the travel insurance for the San Francisco trip",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0455",
+  "category": "travel",
+  "input": "Book the lounge pass for the Austin layover",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0456",
+  "category": "travel",
+  "input": "Book a flight to Nashville next Saturday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0457",
+  "category": "travel",
+  "input": "Reserve parking at the Boston airport",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0458",
+  "category": "travel",
+  "input": "Find the next week flight to San Francisco under $50 and book it with the hotel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0459",
+  "category": "travel",
+  "input": "Rebook the Portland flight after the delay and claim the voucher",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0460",
+  "category": "travel",
+  "input": "Book the Portland trip with the Lily crew and split the hotel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0461",
+  "category": "travel",
+  "input": "Book the Dallas trip with the Leo crew and split the hotel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0462",
+  "category": "travel",
+  "input": "Book flights to Seattle for 10 people on the same reservation",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0463",
+  "category": "travel",
+  "input": "Plan the Phoenix weekend: flight, hotel, and the Saturday tour",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0464",
+  "category": "travel",
+  "input": "Book flights to Seattle for 4 people on the same reservation",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0465",
+  "category": "travel",
+  "input": "Plan the Boston weekend: flight, hotel, and the Saturday tour",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0466",
+  "category": "travel",
+  "input": "Book flights to Washington DC for 8 people on the same reservation",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0467",
+  "category": "travel",
+  "input": "Book flights to New York for 4 people on the same reservation",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0468",
+  "category": "travel",
+  "input": "Find the Friday flight to San Francisco under $50 and book it with the hotel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0469",
+  "category": "travel",
+  "input": "Find the Monday flight to Portland under $100 and book it with the hotel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0470",
+  "category": "travel",
+  "input": "Rebook the Nashville flight after the delay and claim the voucher",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0471",
+  "category": "travel",
+  "input": "Plan the Dallas weekend: flight, hotel, and the Saturday tour",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0472",
+  "category": "travel",
+  "input": "Plan the Nashville weekend: flight, hotel, and the Saturday tour",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0473",
+  "category": "travel",
+  "input": "Rebook the Los Angeles flight after the delay and claim the voucher",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0474",
+  "category": "travel",
+  "input": "Book flights to Phoenix for 6 people on the same reservation",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0475",
+  "category": "travel",
+  "input": "Book the Portland trip with the Chris crew and split the hotel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0476",
+  "category": "travel",
+  "input": "Rebook the Miami flight after the delay and claim the voucher",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0477",
+  "category": "travel",
+  "input": "Find the Friday flight to Atlanta under $50 and book it with the hotel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0478",
+  "category": "travel",
+  "input": "Book the Chicago trip with the Victor crew and split the hotel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0479",
+  "category": "travel",
+  "input": "Book the Seattle trip with the Marcus crew and split the hotel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0480",
+  "category": "travel",
+  "input": "Book the Miami trip with the Sarah crew and split the hotel",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0481",
+  "category": "travel",
+  "input": "Rebook the Washington DC flight after the delay and claim the voucher",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0482",
+  "category": "travel",
+  "input": "Book flights to Dallas for 10 people on the same reservation",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0483",
+  "category": "travel",
+  "input": "Rebook the Seattle flight after the delay and claim the voucher",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0484",
+  "category": "travel",
+  "input": "Book flights to Chicago for 4 people on the same reservation",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0485",
+  "category": "travel",
+  "input": "Plan the Atlanta weekend: flight, hotel, and the Saturday tour",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0486",
+  "category": "travel",
+  "input": "Rebook the New York flight after the delay and claim the voucher",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0487",
+  "category": "travel",
+  "input": "Plan the Chicago corporate retreat: 25 people, flights, hotel block, and the team dinner",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0488",
+  "category": "travel",
+  "input": "Coordinate the New York to Miami group tour: 10 travelers, transport, guides, and the meal plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0489",
+  "category": "travel",
+  "input": "Plan the Boston corporate retreat: 25 people, flights, hotel block, and the team dinner",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0490",
+  "category": "travel",
+  "input": "Coordinate the Los Angeles to Phoenix group tour: 8 travelers, transport, guides, and the meal plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0491",
+  "category": "travel",
+  "input": "Coordinate the Washington DC to Denver group tour: 8 travelers, transport, guides, and the meal plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0492",
+  "category": "travel",
+  "input": "Coordinate the Phoenix to Austin group tour: 10 travelers, transport, guides, and the meal plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0493",
+  "category": "travel",
+  "input": "Plan the Denver corporate retreat: 25 people, flights, hotel block, and the team dinner",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0494",
+  "category": "travel",
+  "input": "Plan the New York corporate retreat: 25 people, flights, hotel block, and the team dinner",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0495",
+  "category": "travel",
+  "input": "Coordinate the Seattle to Chicago group tour: 6 travelers, transport, guides, and the meal plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0496",
+  "category": "travel",
+  "input": "Coordinate the Washington DC to San Francisco group tour: 10 travelers, transport, guides, and the meal plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0497",
+  "category": "travel",
+  "input": "Plan the Los Angeles corporate retreat: 25 people, flights, hotel block, and the team dinner",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0498",
+  "category": "travel",
+  "input": "Plan the Austin corporate retreat: 25 people, flights, hotel block, and the team dinner",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0499",
+  "category": "travel",
+  "input": "Plan the Washington DC corporate retreat: 25 people, flights, hotel block, and the team dinner",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0500",
+  "category": "travel",
+  "input": "Plan the Nashville corporate retreat: 25 people, flights, hotel block, and the team dinner",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0501",
+  "category": "food_dining",
+  "input": "Order a pad see ew to 77 Wacker Dr",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0502",
+  "category": "food_dining",
+  "input": "Book Portillo's for 4 Friday at 7pm",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0503",
+  "category": "food_dining",
+  "input": "Order lunch for me from the Thai place",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0504",
+  "category": "food_dining",
+  "input": "Get a large pepperoni pizza delivered to 620 S Michigan Ave",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0505",
+  "category": "food_dining",
+  "input": "Book a table for 2 at Alinea tonight",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0506",
+  "category": "food_dining",
+  "input": "Order coffee and a bagel to the office",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0507",
+  "category": "food_dining",
+  "input": "Reserve Girl & the Goat for Saturday at 8pm for 6 people",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0508",
+  "category": "food_dining",
+  "input": "Order the usual from Chipotle",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0509",
+  "category": "food_dining",
+  "input": "Get sushi delivered to 22 Clark St in under an hour",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0510",
+  "category": "food_dining",
+  "input": "Book brunch for 4 on Sunday at 11am",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0511",
+  "category": "food_dining",
+  "input": "Order a cake for Grace's birthday on Friday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0512",
+  "category": "food_dining",
+  "input": "Find the highest-rated taco truck near me and order 3 tacos",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0513",
+  "category": "food_dining",
+  "input": "Order groceries for the week: milk, eggs, bread, chicken, rice",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0514",
+  "category": "food_dining",
+  "input": "Book the private room at Alinea for 10",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0515",
+  "category": "food_dining",
+  "input": "Cancel my dinner reservation for tonight",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0516",
+  "category": "food_dining",
+  "input": "Order lunch for 12 people with 2 vegetarians",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0517",
+  "category": "food_dining",
+  "input": "Plan the birthday dinner: pick between 3 restaurants, book for 10, and send the menu to the group",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0518",
+  "category": "food_dining",
+  "input": "Order dinner for the team of 8 staying under $200 including tip",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0519",
+  "category": "food_dining",
+  "input": "Find a restaurant that does gluten-free well and book it for Friday",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0520",
+  "category": "food_dining",
+  "input": "Order groceries for the dinner party of 6 and the full recipe ingredient list",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0521",
+  "category": "food_dining",
+  "input": "Book the tasting menu at Girl & the Goat and arrange the wine pairing",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0522",
+  "category": "food_dining",
+  "input": "Order breakfast burritos for the 6am crew before the site visit",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0523",
+  "category": "food_dining",
+  "input": "Plan the office lunch rotation for the week with a different cuisine daily",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0524",
+  "category": "food_dining",
+  "input": "Order the same lunch as last Tuesday for everyone who was in",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0525",
+  "category": "food_dining",
+  "input": "Find a late-night spot open past midnight and book for 5",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0526",
+  "category": "food_dining",
+  "input": "Order a tacos al pastor and a falafel wrap to 77 Wacker Dr, split across two orders for the coupons",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0527",
+  "category": "food_dining",
+  "input": "Book the chef's table experience for Raj's anniversary",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0528",
+  "category": "food_dining",
+  "input": "Order catering for the 30-person meeting with vegan and kosher options",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0529",
+  "category": "food_dining",
+  "input": "Plan the progressive dinner: appetizers, mains, and dessert at 3 different spots",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0530",
+  "category": "food_dining",
+  "input": "Order the weekly meal prep: 5 high-protein dinners under $60",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0531",
+  "category": "food_dining",
+  "input": "Order a butter chicken to 620 S Michigan Ave",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0532",
+  "category": "food_dining",
+  "input": "Book Alinea for 2 tomorrow at 6:30pm",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0533",
+  "category": "food_dining",
+  "input": "Reorder last Friday's dinner",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0534",
+  "category": "food_dining",
+  "input": "Add a tip of 25% to the delivery order",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0535",
+  "category": "food_dining",
+  "input": "Move my Gibsons Bar & Steakhouse reservation from 7 to 8pm",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0536",
+  "category": "food_dining",
+  "input": "Order dessert from the bakery to 123 Main St",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0537",
+  "category": "food_dining",
+  "input": "Get the lunch special from the deli",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0538",
+  "category": "food_dining",
+  "input": "Book a table for 5 at Gibsons Bar & Steakhouse on next Thursday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0539",
+  "category": "food_dining",
+  "input": "Order bubble tea for the study group",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0540",
+  "category": "food_dining",
+  "input": "Cancel the grocery delivery for today",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0541",
+  "category": "food_dining",
+  "input": "Order extra napkins and utensils with the catering",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0542",
+  "category": "food_dining",
+  "input": "Find a dog-friendly patio and book for 4",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0543",
+  "category": "food_dining",
+  "input": "Order the family meal deal to 1510 S Indiana Ave",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0544",
+  "category": "food_dining",
+  "input": "Book The Purple Pig for the client dinner Thursday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0545",
+  "category": "food_dining",
+  "input": "Get the reservation under Kevin's name at Sable Kitchen",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0546",
+  "category": "food_dining",
+  "input": "Order dinner for 2 from different restaurants in one delivery",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0547",
+  "category": "food_dining",
+  "input": "Plan the team lunch for Friday: survey 10 people, pick the winner, order by noon",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0548",
+  "category": "food_dining",
+  "input": "Book the restaurant and arrange the surprise cake delivery at 8pm sharp",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0549",
+  "category": "food_dining",
+  "input": "Order groceries for the week based on the 5 recipes I saved",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0550",
+  "category": "food_dining",
+  "input": "Find the best-rated ramen within 2 miles and order for pickup at 6",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0551",
+  "category": "food_dining",
+  "input": "Book Lou Malnati's for 8 and pre-order the tasting menu for the whole table",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0552",
+  "category": "food_dining",
+  "input": "Order lunch for the client meeting: 6 people, one with a nut allergy",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0553",
+  "category": "food_dining",
+  "input": "Plan the wedding tasting: book 3 caterers for tastings this month",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0554",
+  "category": "food_dining",
+  "input": "Order the office snacks restock: coffee, tea, granola bars, fruit",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0555",
+  "category": "food_dining",
+  "input": "Book brunch and bottomless mimosas for the bachelorette group of 9",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0556",
+  "category": "food_dining",
+  "input": "Order dinner to the hotel room for the late arrival",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0557",
+  "category": "food_dining",
+  "input": "Plan the holiday party menu with the caterer and lock the headcount",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0558",
+  "category": "food_dining",
+  "input": "Order the birthday cake with 'Sam turns 30' written on it for Saturday pickup",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0559",
+  "category": "food_dining",
+  "input": "Book the food truck for the office event of 50 people",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0560",
+  "category": "food_dining",
+  "input": "Order meal kits for 2 for the next 3 weeks",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0561",
+  "category": "food_dining",
+  "input": "Cater the wedding for 120: tasting with 3 vendors, final menu with vegan and halal options, cake tasting, bar service, and the day-of delivery timeline",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0562",
+  "category": "food_dining",
+  "input": "Plan the restaurant week crawl: 5 restaurants in 5 days, reservations for 4 each night, the prix fixe menus compared, and the group cost split",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0563",
+  "category": "food_dining",
+  "input": "Run the office lunch program: vendor selection, weekly ordering for 40 with dietary tracking, budget of $15 per head, and monthly spend reporting",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0564",
+  "category": "food_dining",
+  "input": "Organize the charity gala dinner: venue catering for 200, the auction dinner package, wine pairings, the seating chart, and vendor payment schedule",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0565",
+  "category": "food_dining",
+  "input": "Plan the food tour of Phoenix: 8 stops across 2 days, reservations where needed, the walking route mapped, and the must-order dish at each",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0566",
+  "category": "food_dining",
+  "input": "Execute the Thanksgiving dinner: grocery list for 14, the turkey order from the butcher, cooking timeline, and assignments for the 4 helpers",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0567",
+  "category": "food_dining",
+  "input": "Build the month-long meal plan: 30 dinners, grocery lists by week, prep Sundays scheduled, and total cost under $400",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0568",
+  "category": "food_dining",
+  "input": "Coordinate the food festival booth: permits, ingredient sourcing for 500 servings, volunteer shifts, pricing, and the end-of-day reconciliation",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0569",
+  "category": "food_dining",
+  "input": "Plan the proposal dinner: the private room, the ring in the dessert coordination, photographer timing, and the decoy story for Dana",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0570",
+  "category": "food_dining",
+  "input": "Run the pop-up dinner series: 3 nights, 40 seats each, ticket sales, the guest chef contract, and the profit split",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0571",
+  "category": "food_dining",
+  "input": "Organize the tailgate for 30: grill rental, food and drink quantities, the parking pass, setup crew schedule, and the rain contingency",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0572",
+  "category": "food_dining",
+  "input": "Plan the multi-family Diwali dinner: menu for 25 across 3 families, the potluck assignments, decor order, and the evening program",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0573",
+  "category": "food_dining",
+  "input": "Execute the corporate retreat catering: 3 days of meals for 50, the offsite venue kitchen coordination, dietary matrix, and the final invoice audit",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0574",
+  "category": "food_dining",
+  "input": "Build the restaurant opening checklist: menu printing, staff tasting, soft-opening guest list, reservation system live, and the first-week promo plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0575",
+  "category": "food_dining",
+  "input": "Coordinate the cooking class party: book the venue, the chef, ingredients for 12, the wine pairings, and the recipe cards to take home",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0576",
+  "category": "food_dining",
+  "input": "Order food",
+  "complexity": "simple",
+  "notes": "missing: what, where"
+ },
+ {
+  "id": "ACT0577",
+  "category": "food_dining",
+  "input": "Order dinner for the team but nobody told me who's coming",
+  "complexity": "multi",
+  "notes": "ambiguous: headcount unknown"
+ },
+ {
+  "id": "ACT0578",
+  "category": "food_dining",
+  "input": "Cater the 500-person wedding for $200 total",
+  "complexity": "complex",
+  "notes": "impossible budget"
+ },
+ {
+  "id": "ACT0579",
+  "category": "food_dining",
+  "input": "Get the packing list delivered to 77 Wacker Dr",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0580",
+  "category": "food_dining",
+  "input": "Order a burrito bowl to 22 Clark St",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0581",
+  "category": "food_dining",
+  "input": "Order the mystery charge to 78 Lincoln Park",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0582",
+  "category": "food_dining",
+  "input": "Reserve Bavette's for lunch tomorrow",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0583",
+  "category": "food_dining",
+  "input": "Reserve Au Cheval for lunch tomorrow",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0584",
+  "category": "food_dining",
+  "input": "Reserve Gibsons Bar & Steakhouse for lunch tomorrow",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0585",
+  "category": "food_dining",
+  "input": "Book the Bavette's patio for 4",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0586",
+  "category": "food_dining",
+  "input": "Order the late fee to 3100 N Broadway",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0587",
+  "category": "food_dining",
+  "input": "Book Au Cheval for Tom's dinner on Monday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0588",
+  "category": "food_dining",
+  "input": "Order dessert to 1510 S Indiana Ave",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0589",
+  "category": "food_dining",
+  "input": "Reserve The Purple Pig for lunch tomorrow",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0590",
+  "category": "food_dining",
+  "input": "Order dessert to 77 Wacker Dr",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0591",
+  "category": "food_dining",
+  "input": "Reorder the sushi platter from last Monday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0592",
+  "category": "food_dining",
+  "input": "Order pho for pickup at 7pm",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0593",
+  "category": "food_dining",
+  "input": "Reorder the cheeseburger and fries from last next week",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0594",
+  "category": "food_dining",
+  "input": "Book Bavette's for 4 on next week",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0595",
+  "category": "food_dining",
+  "input": "Reorder the lasagna from last Friday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0596",
+  "category": "food_dining",
+  "input": "Get the playlist delivered to 78 Lincoln Park",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0597",
+  "category": "food_dining",
+  "input": "Book Bavette's for 6 on Friday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0598",
+  "category": "food_dining",
+  "input": "Order poke bowl for pickup at 7pm",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0599",
+  "category": "food_dining",
+  "input": "Reserve Sable Kitchen for lunch tomorrow",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0600",
+  "category": "food_dining",
+  "input": "Book Bavette's for 4 on Monday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0601",
+  "category": "food_dining",
+  "input": "Get the menu delivered to 3100 N Broadway",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0602",
+  "category": "food_dining",
+  "input": "Reserve Portillo's for lunch tomorrow",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0603",
+  "category": "food_dining",
+  "input": "Reserve Lou Malnati's for lunch tomorrow",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0604",
+  "category": "food_dining",
+  "input": "Order a ramen bowl to 45 E 9th St",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0605",
+  "category": "food_dining",
+  "input": "Order ramen bowl for pickup at 9pm",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0606",
+  "category": "food_dining",
+  "input": "Get the shot list delivered to 456 Oak Ave",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0607",
+  "category": "food_dining",
+  "input": "Order the late fee to 900 W Madison",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0608",
+  "category": "food_dining",
+  "input": "Order team lunch for 10 with the dietary survey results applied",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0609",
+  "category": "food_dining",
+  "input": "Order pad thai for Victor and Chipotle chicken bowl for Zoe to 620 S Michigan Ave",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0610",
+  "category": "food_dining",
+  "input": "Order team lunch for 4 with the dietary survey results applied",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0611",
+  "category": "food_dining",
+  "input": "Book Au Cheval for 8 and pre-order the seating chart",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0612",
+  "category": "food_dining",
+  "input": "Order lasagna for Sarah and butter chicken for Tom to 1510 S Indiana Ave",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0613",
+  "category": "food_dining",
+  "input": "Book Alinea for 6 and pre-order the contact list",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0614",
+  "category": "food_dining",
+  "input": "Order pad see ew for Zoe and pepperoni pizza for Ben to 123 Main St",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0615",
+  "category": "food_dining",
+  "input": "Plan the Saturday team dinner at Lou Malnati's for 4",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0616",
+  "category": "food_dining",
+  "input": "Book Au Cheval and arrange the birthday dessert surprise",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0617",
+  "category": "food_dining",
+  "input": "Plan the Saturday team dinner at Alinea for 4",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0618",
+  "category": "food_dining",
+  "input": "Book The Purple Pig for 10 and pre-order the contact list",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0619",
+  "category": "food_dining",
+  "input": "Book Alla Vita and arrange the birthday dessert surprise",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0620",
+  "category": "food_dining",
+  "input": "Book Portillo's for 8 and pre-order the packing list",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0621",
+  "category": "food_dining",
+  "input": "Plan the next week team dinner at Portillo's for 10",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0622",
+  "category": "food_dining",
+  "input": "Plan the next week team dinner at Gibsons Bar & Steakhouse for 6",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0623",
+  "category": "food_dining",
+  "input": "Book Bavette's for 8 and pre-order the playlist",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0624",
+  "category": "food_dining",
+  "input": "Order pepperoni pizza for Sam and pad see ew for Tom to 22 Clark St",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0625",
+  "category": "food_dining",
+  "input": "Plan the next week team dinner at The Purple Pig for 6",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0626",
+  "category": "food_dining",
+  "input": "Book Au Cheval for 6 and pre-order the packing list",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0627",
+  "category": "food_dining",
+  "input": "Order team lunch for 8 with the dietary survey results applied",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0628",
+  "category": "food_dining",
+  "input": "Order ramen bowl for Raj and lasagna for Hana to 900 W Madison",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0629",
+  "category": "food_dining",
+  "input": "Order falafel wrap for Alex and pepperoni pizza for Elena to 123 Main St",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0630",
+  "category": "food_dining",
+  "input": "Plan the Monday team dinner at Bavette's for 4",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0631",
+  "category": "food_dining",
+  "input": "Plan the Friday team dinner at The Purple Pig for 10",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0632",
+  "category": "food_dining",
+  "input": "Book Gibsons Bar & Steakhouse for 8 and pre-order the run-of-show",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0633",
+  "category": "food_dining",
+  "input": "Order team lunch for 6 with the dietary survey results applied",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0634",
+  "category": "food_dining",
+  "input": "Book Girl & the Goat for 4 and pre-order the recap",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0635",
+  "category": "food_dining",
+  "input": "Book Bavette's and arrange the birthday dessert surprise",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0636",
+  "category": "food_dining",
+  "input": "Plan the Monday team dinner at Alinea for 4",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0637",
+  "category": "food_dining",
+  "input": "Plan the Seattle food weekend for 10: Lou Malnati's, the market tour, and the cooking class bookings",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0638",
+  "category": "food_dining",
+  "input": "Cater the office party for 4: menu, dietary needs, delivery timing, and the budget reconciliation",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0639",
+  "category": "food_dining",
+  "input": "Cater the office party for 8: menu, dietary needs, delivery timing, and the budget reconciliation",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0640",
+  "category": "food_dining",
+  "input": "Cater the office party for 10: menu, dietary needs, delivery timing, and the budget reconciliation",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0641",
+  "category": "food_dining",
+  "input": "Plan the Atlanta food weekend for 6: Alla Vita, the market tour, and the cooking class bookings",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0642",
+  "category": "food_dining",
+  "input": "Plan the Austin food weekend for 4: Sable Kitchen, the market tour, and the cooking class bookings",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0643",
+  "category": "food_dining",
+  "input": "Plan the Seattle food weekend for 10: Bavette's, the market tour, and the cooking class bookings",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0644",
+  "category": "food_dining",
+  "input": "Plan the San Francisco food weekend for 6: Gibsons Bar & Steakhouse, the market tour, and the cooking class bookings",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0645",
+  "category": "food_dining",
+  "input": "Plan the Los Angeles food weekend for 8: Au Cheval, the market tour, and the cooking class bookings",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0646",
+  "category": "food_dining",
+  "input": "Plan the Denver food weekend for 6: Sable Kitchen, the market tour, and the cooking class bookings",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0647",
+  "category": "food_dining",
+  "input": "Plan the Boston food weekend for 4: Bavette's, the market tour, and the cooking class bookings",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0648",
+  "category": "food_dining",
+  "input": "Cater the office party for 6: menu, dietary needs, delivery timing, and the budget reconciliation",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0649",
+  "category": "food_dining",
+  "input": "Plan the Portland food weekend for 8: Gibsons Bar & Steakhouse, the market tour, and the cooking class bookings",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0650",
+  "category": "food_dining",
+  "input": "Plan the Chicago food weekend for 10: Gibsons Bar & Steakhouse, the market tour, and the cooking class bookings",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0651",
+  "category": "calendar_comms",
+  "input": "Schedule a meeting with Elena and Tom next week",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0652",
+  "category": "calendar_comms",
+  "input": "Reschedule my 3pm to tomorrow morning",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0653",
+  "category": "calendar_comms",
+  "input": "Send a reminder to call Mom at 9pm",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0654",
+  "category": "calendar_comms",
+  "input": "Block 2 hours Friday for deep work",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0655",
+  "category": "calendar_comms",
+  "input": "Cancel my 10am meeting today",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0656",
+  "category": "calendar_comms",
+  "input": "Move all my Friday meetings to Thursday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0657",
+  "category": "calendar_comms",
+  "input": "Set a daily standup at 9:30am for the team",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0658",
+  "category": "calendar_comms",
+  "input": "Remind me to water the plants every Sunday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0659",
+  "category": "calendar_comms",
+  "input": "Schedule a dentist appointment next month",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0660",
+  "category": "calendar_comms",
+  "input": "Send Zoe a happy birthday text on Friday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0661",
+  "category": "calendar_comms",
+  "input": "Add the flight to my calendar with a 3-hour-early reminder",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0662",
+  "category": "calendar_comms",
+  "input": "Decline the 4pm meeting with a polite note",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0663",
+  "category": "calendar_comms",
+  "input": "Book a 30-minute 1:1 with my manager next week",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0664",
+  "category": "calendar_comms",
+  "input": "Set an alarm for 6am tomorrow",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0665",
+  "category": "calendar_comms",
+  "input": "Email Lily the slides before the meeting",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0666",
+  "category": "calendar_comms",
+  "input": "Reschedule all my Friday meetings to Thursday",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0667",
+  "category": "calendar_comms",
+  "input": "Find a 1-hour slot next week that works for Tara, Chris, and Hana",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0668",
+  "category": "calendar_comms",
+  "input": "Move the team offsite to the week of the 20th and rebook the room",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0669",
+  "category": "calendar_comms",
+  "input": "Send the meeting recap to all 8 attendees with the action items assigned",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0670",
+  "category": "calendar_comms",
+  "input": "Block my calendar for the vacation week and set the out-of-office reply",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0671",
+  "category": "calendar_comms",
+  "input": "Reschedule the dentist, the haircut, and the car service around the trip",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0672",
+  "category": "calendar_comms",
+  "input": "Find the earliest 2-hour window for the design review this week",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0673",
+  "category": "calendar_comms",
+  "input": "Email the client the revised proposal and schedule the follow-up call",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0674",
+  "category": "calendar_comms",
+  "input": "Cancel everything on my calendar next Friday and notify each organizer",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0675",
+  "category": "calendar_comms",
+  "input": "Set up the recurring monthly 1:1s with my 3 direct reports",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0676",
+  "category": "calendar_comms",
+  "input": "Move the deadline reminder series: ping the team 7 days, 3 days, and 1 day before",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0677",
+  "category": "calendar_comms",
+  "input": "Coordinate the interview loop: 5 interviewers, one candidate, back-to-back Thursday",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0678",
+  "category": "calendar_comms",
+  "input": "Send the agenda to the board meeting attendees 48 hours ahead",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0679",
+  "category": "calendar_comms",
+  "input": "Sync my work and personal calendars so nothing double-books",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0680",
+  "category": "calendar_comms",
+  "input": "Schedule the product launch: the announcement, the social posts, and the team toast",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0681",
+  "category": "calendar_comms",
+  "input": "Schedule a call with Jake tomorrow at 13pm",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0682",
+  "category": "calendar_comms",
+  "input": "Text Nina that I'm running 10 minutes late",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0683",
+  "category": "calendar_comms",
+  "input": "Remind me to take my medication at 8am daily",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0684",
+  "category": "calendar_comms",
+  "input": "Add Ben's birthday to my calendar",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0685",
+  "category": "calendar_comms",
+  "input": "Email the team that the deploy is done",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0686",
+  "category": "calendar_comms",
+  "input": "Schedule the car maintenance for next Saturday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0687",
+  "category": "calendar_comms",
+  "input": "Set a reminder to pay rent on the 1st",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0688",
+  "category": "calendar_comms",
+  "input": "Book the conference room for 2pm",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0689",
+  "category": "calendar_comms",
+  "input": "Send the Zoom link to Ben and Chris",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0690",
+  "category": "calendar_comms",
+  "input": "Remind me to call Marcus back in an hour",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0691",
+  "category": "calendar_comms",
+  "input": "Cancel the recurring Tuesday meeting",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0692",
+  "category": "calendar_comms",
+  "input": "Schedule a haircut for Saturday morning",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0693",
+  "category": "calendar_comms",
+  "input": "Email Zoe thanking them for yesterday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0694",
+  "category": "calendar_comms",
+  "input": "Set a timer for 25 minutes",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0695",
+  "category": "calendar_comms",
+  "input": "Add a 15-minute buffer before my 2pm",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0696",
+  "category": "calendar_comms",
+  "input": "Find a meeting time for 6 people across 3 time zones next week",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0697",
+  "category": "calendar_comms",
+  "input": "Reschedule the whole sprint: move the planning, review, and retro one week out",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0698",
+  "category": "calendar_comms",
+  "input": "Send personalized thank-you emails to the 10 interviewers",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0699",
+  "category": "calendar_comms",
+  "input": "Block focus time every morning next week and decline anything that conflicts",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0700",
+  "category": "calendar_comms",
+  "input": "Coordinate the parent-teacher conferences: 3 kids, back-to-back slots Thursday",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0701",
+  "category": "calendar_comms",
+  "input": "Move my dentist appointment to fit around the flight and notify the office",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0702",
+  "category": "calendar_comms",
+  "input": "Set up the wedding day timeline and share it with the vendors",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0703",
+  "category": "calendar_comms",
+  "input": "Email the 20 newsletter subscribers the monthly update",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0704",
+  "category": "calendar_comms",
+  "input": "Schedule the performance reviews: 8 reports, 45 minutes each, over 2 weeks",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0705",
+  "category": "calendar_comms",
+  "input": "Remind the team of the Friday deadline every morning this week",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0706",
+  "category": "calendar_comms",
+  "input": "Book the moving elevator and notify the building manager",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0707",
+  "category": "calendar_comms",
+  "input": "Send the holiday cards list to the printer by Friday",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0708",
+  "category": "calendar_comms",
+  "input": "Coordinate the doctor, the lab, and the pharmacy for Thursday morning",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0709",
+  "category": "calendar_comms",
+  "input": "Schedule the home showing tour: 5 houses, Saturday, 30 minutes each",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0710",
+  "category": "calendar_comms",
+  "input": "Set the do-not-disturb schedule for the work trip",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0711",
+  "category": "calendar_comms",
+  "input": "Rebuild my calendar after the trip change: move 14 meetings across 3 days, resolve the 4 conflicts, notify every attendee, and rebook the 2 client calls first",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0712",
+  "category": "calendar_comms",
+  "input": "Run the conference scheduling: 40 speakers, 6 tracks, 3 days, no speaker double-booked, room capacities matched, and the published agenda",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0713",
+  "category": "calendar_comms",
+  "input": "Coordinate the wedding week: rehearsal dinner, vendor arrivals, the day-of timeline down to 15-minute blocks, and the family group chat updates",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0714",
+  "category": "calendar_comms",
+  "input": "Plan the product launch comms: the internal announcement, the customer email, the social rollout, the press embargo lift, and the support team briefing \u2014 all timed to the 9am launch",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0715",
+  "category": "calendar_comms",
+  "input": "Manage the hiring loop for 12 candidates: phone screens, 4-round panels, debrief scheduling, offer letter timing, and the rejection emails",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0716",
+  "category": "calendar_comms",
+  "input": "Reorganize the team's on-call rotation: 8 engineers, holiday coverage, the escalation policy, and the handoff notes for each swap",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0717",
+  "category": "calendar_comms",
+  "input": "Coordinate the move across time zones: forward the mail, update 20 accounts, schedule the movers, the utility transfers, and the first-week appointments in the new city",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0718",
+  "category": "calendar_comms",
+  "input": "Run the board meeting prep: the deck from 5 owners, the pre-read sent 72 hours out, the dinner reservation, the AV check, and the minutes within 24 hours",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0719",
+  "category": "calendar_comms",
+  "input": "Plan the family holiday: 15 people's travel, the shared house, the meal schedule, the gift exchange draw, and the New Year's Eve plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0720",
+  "category": "calendar_comms",
+  "input": "Execute the office relocation: the moving company, the IT cutover weekend, employee desk assignments, the address updates, and the day-one welcome",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0721",
+  "category": "calendar_comms",
+  "input": "Coordinate the multi-city book tour: 8 stops, travel between cities, venue tech checks, the local media hits, and the signing stock at each store",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0722",
+  "category": "calendar_comms",
+  "input": "Run the volunteer drive: recruit 50 people, background checks, shift scheduling across 4 weekends, training sessions, and the appreciation event",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0723",
+  "category": "calendar_comms",
+  "input": "Manage the semester schedule: 5 classes, the study blocks, the club meetings, the part-time job shifts, and the exam week lockdown plan",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0724",
+  "category": "calendar_comms",
+  "input": "Coordinate the clinical trial visits: 20 patients, the screening calls, appointment blocks, reminder sequences, and the no-show follow-ups",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0725",
+  "category": "calendar_comms",
+  "input": "Plan the festival volunteer comms: 200 volunteers, the role assignments, the shift reminders, the day-of broadcast channel, and the thank-you notes",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0726",
+  "category": "calendar_comms",
+  "input": "Schedule the meeting",
+  "complexity": "simple",
+  "notes": "missing: with whom, when"
+ },
+ {
+  "id": "ACT0727",
+  "category": "calendar_comms",
+  "input": "Move my meeting but don't tell anyone",
+  "complexity": "multi",
+  "notes": "conflicting: rescheduling requires notifying attendees"
+ },
+ {
+  "id": "ACT0728",
+  "category": "calendar_comms",
+  "input": "Schedule a meeting with everyone in the company at a time that works for all 500 people",
+  "complexity": "complex",
+  "notes": "infeasible coordination"
+ },
+ {
+  "id": "ACT0729",
+  "category": "calendar_comms",
+  "input": "Text Raj about the map",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0730",
+  "category": "calendar_comms",
+  "input": "Schedule the receipt for Saturday morning",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0731",
+  "category": "calendar_comms",
+  "input": "Book 1:1 with Leo next Monday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0732",
+  "category": "calendar_comms",
+  "input": "Set a reminder for the yoga mat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0733",
+  "category": "calendar_comms",
+  "input": "Email Dana the desk organizer",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0734",
+  "category": "calendar_comms",
+  "input": "Schedule the schedule for Friday morning",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0735",
+  "category": "calendar_comms",
+  "input": "Book 1:1 with Sam next next week",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0736",
+  "category": "calendar_comms",
+  "input": "Schedule the desk organizer for Monday morning",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0737",
+  "category": "calendar_comms",
+  "input": "Schedule the air purifier for Friday morning",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0738",
+  "category": "calendar_comms",
+  "input": "Book 1:1 with Sarah next next week",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0739",
+  "category": "calendar_comms",
+  "input": "Set a reminder for the photos",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0740",
+  "category": "calendar_comms",
+  "input": "Remind me to receipt at 7pm",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0741",
+  "category": "calendar_comms",
+  "input": "Email Jake the yoga mat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0742",
+  "category": "calendar_comms",
+  "input": "Schedule a call with Nina on Monday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0743",
+  "category": "calendar_comms",
+  "input": "Schedule the receipt for Friday morning",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0744",
+  "category": "calendar_comms",
+  "input": "Schedule the contact list for Saturday morning",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0745",
+  "category": "calendar_comms",
+  "input": "Remind me to contact list at 6pm",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0746",
+  "category": "calendar_comms",
+  "input": "Text Jake about the receipt",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0747",
+  "category": "calendar_comms",
+  "input": "Remind Lily about next week",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0748",
+  "category": "calendar_comms",
+  "input": "Remind Anaya about Monday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0749",
+  "category": "calendar_comms",
+  "input": "Schedule the bluetooth speaker for Saturday morning",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0750",
+  "category": "calendar_comms",
+  "input": "Schedule the schedule for Saturday morning",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0751",
+  "category": "calendar_comms",
+  "input": "Email Sarah the budget sheet",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0752",
+  "category": "calendar_comms",
+  "input": "Add the desk organizer to my calendar",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0753",
+  "category": "calendar_comms",
+  "input": "Schedule a call with Elena on Friday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0754",
+  "category": "calendar_comms",
+  "input": "Cancel the Monday call with Zoe",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0755",
+  "category": "calendar_comms",
+  "input": "Email Victor the budget sheet",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0756",
+  "category": "calendar_comms",
+  "input": "Email Anaya the receipt",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0757",
+  "category": "calendar_comms",
+  "input": "Schedule a call with Sarah on Saturday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0758",
+  "category": "calendar_comms",
+  "input": "Send the laptop stand to Dana, Victor, and Raj before Saturday",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0759",
+  "category": "calendar_comms",
+  "input": "Reschedule the Friday meetings around the dentist appointment",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0760",
+  "category": "calendar_comms",
+  "input": "Find a slot for Zoe and Victor next week and send the invite",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0761",
+  "category": "calendar_comms",
+  "input": "Reschedule the next week meetings around the dentist appointment",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0762",
+  "category": "calendar_comms",
+  "input": "Block Saturday for the espresso tamper and decline conflicts",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0763",
+  "category": "calendar_comms",
+  "input": "Move the Priya meeting and notify the 4 attendees",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0764",
+  "category": "calendar_comms",
+  "input": "Reschedule the Saturday meetings around the dentist appointment",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0765",
+  "category": "calendar_comms",
+  "input": "Block Saturday for the recap and decline conflicts",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0766",
+  "category": "calendar_comms",
+  "input": "Find a slot for Nina and Elena next week and send the invite",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0767",
+  "category": "calendar_comms",
+  "input": "Move the Omar meeting and notify the 10 attendees",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0768",
+  "category": "calendar_comms",
+  "input": "Move the Lily meeting and notify the 10 attendees",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0769",
+  "category": "calendar_comms",
+  "input": "Block Friday for the seating chart and decline conflicts",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0770",
+  "category": "calendar_comms",
+  "input": "Find a slot for Kevin and Lily next week and send the invite",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0771",
+  "category": "calendar_comms",
+  "input": "Move the Omar meeting and notify the 4 attendees",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0772",
+  "category": "calendar_comms",
+  "input": "Find a slot for Diego and Zoe next week and send the invite",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0773",
+  "category": "calendar_comms",
+  "input": "Find a slot for Marcus and Ben next week and send the invite",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0774",
+  "category": "calendar_comms",
+  "input": "Send the itinerary to Priya, Raj, and Sam before Saturday",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0775",
+  "category": "calendar_comms",
+  "input": "Find a slot for Leo and Alex next week and send the invite",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0776",
+  "category": "calendar_comms",
+  "input": "Block Monday for the receipt and decline conflicts",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0777",
+  "category": "calendar_comms",
+  "input": "Send the budget sheet to Sam, Sarah, and Ben before Monday",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0778",
+  "category": "calendar_comms",
+  "input": "Find a slot for Jake and Mia next week and send the invite",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0779",
+  "category": "calendar_comms",
+  "input": "Find a slot for Kevin and Zoe next week and send the invite",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0780",
+  "category": "calendar_comms",
+  "input": "Find a slot for Alex and Tom next week and send the invite",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0781",
+  "category": "calendar_comms",
+  "input": "Block next week for the contact list and decline conflicts",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0782",
+  "category": "calendar_comms",
+  "input": "Send the yoga mat to Nina, Elena, and Jake before Monday",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0783",
+  "category": "calendar_comms",
+  "input": "Find a slot for Tom and Dana next week and send the invite",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0784",
+  "category": "calendar_comms",
+  "input": "Move the Omar meeting and notify the 6 attendees",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0785",
+  "category": "calendar_comms",
+  "input": "Find a slot for Ben and Priya next week and send the invite",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0786",
+  "category": "calendar_comms",
+  "input": "Move the Leo meeting and notify the 10 attendees",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0787",
+  "category": "calendar_comms",
+  "input": "Reorganize the Chris project calendar: milestones, owner assignments, and the stakeholder review cadence",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0788",
+  "category": "calendar_comms",
+  "input": "Reorganize the Lily project calendar: milestones, owner assignments, and the stakeholder review cadence",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0789",
+  "category": "calendar_comms",
+  "input": "Reorganize the Elena project calendar: milestones, owner assignments, and the stakeholder review cadence",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0790",
+  "category": "calendar_comms",
+  "input": "Reorganize the Victor project calendar: milestones, owner assignments, and the stakeholder review cadence",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0791",
+  "category": "calendar_comms",
+  "input": "Reorganize the Raj project calendar: milestones, owner assignments, and the stakeholder review cadence",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0792",
+  "category": "calendar_comms",
+  "input": "Reorganize the Grace project calendar: milestones, owner assignments, and the stakeholder review cadence",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0793",
+  "category": "calendar_comms",
+  "input": "Plan the Washington DC conference week: travel, 4 sessions, dinners, and the follow-up sequence",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0794",
+  "category": "calendar_comms",
+  "input": "Plan the Nashville conference week: travel, 6 sessions, dinners, and the follow-up sequence",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0795",
+  "category": "calendar_comms",
+  "input": "Plan the San Francisco conference week: travel, 8 sessions, dinners, and the follow-up sequence",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0796",
+  "category": "calendar_comms",
+  "input": "Plan the Chicago conference week: travel, 10 sessions, dinners, and the follow-up sequence",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0797",
+  "category": "calendar_comms",
+  "input": "Plan the Denver conference week: travel, 4 sessions, dinners, and the follow-up sequence",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0798",
+  "category": "calendar_comms",
+  "input": "Plan the Phoenix conference week: travel, 8 sessions, dinners, and the follow-up sequence",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0799",
+  "category": "calendar_comms",
+  "input": "Plan the New York conference week: travel, 10 sessions, dinners, and the follow-up sequence",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0800",
+  "category": "calendar_comms",
+  "input": "Reorganize the Priya project calendar: milestones, owner assignments, and the stakeholder review cadence",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0801",
+  "category": "shopping",
+  "input": "Find the cheapest AirPods Max and order them",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0802",
+  "category": "shopping",
+  "input": "Track my Amazon package",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0803",
+  "category": "shopping",
+  "input": "Order a phone charger to 620 S Michigan Ave",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0804",
+  "category": "shopping",
+  "input": "Buy the bestselling air fryer under $100",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0805",
+  "category": "shopping",
+  "input": "Reorder the protein powder",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0806",
+  "category": "shopping",
+  "input": "Find black running shoes size 10 under $120 and buy them",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0807",
+  "category": "shopping",
+  "input": "Order a birthday gift for Tara under $50",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0808",
+  "category": "shopping",
+  "input": "Buy the 4K monitor with the best reviews under $300",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0809",
+  "category": "shopping",
+  "input": "Get a replacement laptop charger for the MacBook Pro",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0810",
+  "category": "shopping",
+  "input": "Order dog food for the month",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0811",
+  "category": "shopping",
+  "input": "Find the cheapest Dyson vacuum in stock and order it",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0812",
+  "category": "shopping",
+  "input": "Buy 2 white t-shirts, size medium",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0813",
+  "category": "shopping",
+  "input": "Order the LEGO set for Anaya's kid",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0814",
+  "category": "shopping",
+  "input": "Get a new coffee maker under $80",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0815",
+  "category": "shopping",
+  "input": "Buy the vitamins I ordered last month again",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0816",
+  "category": "shopping",
+  "input": "Return the defective headphones and order a replacement",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0817",
+  "category": "shopping",
+  "input": "Find the cheapest price for the Sony WH-1000XM5 across 5 stores and buy the winner",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0818",
+  "category": "shopping",
+  "input": "Order the full camping kit: tent, sleeping bag, and stove, under $400 total",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0819",
+  "category": "shopping",
+  "input": "Buy the birthday gifts for all 3 kids under $150 total",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0820",
+  "category": "shopping",
+  "input": "Return the wrong-size jacket and exchange it for a large",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0821",
+  "category": "shopping",
+  "input": "Compare the iPhone 17 and Pixel 10 on price and camera, then buy the better deal",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0822",
+  "category": "shopping",
+  "input": "Order groceries plus the cleaning supplies in one cart",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0823",
+  "category": "shopping",
+  "input": "Find a refurbished MacBook Air under $700 with warranty",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0824",
+  "category": "shopping",
+  "input": "Buy the office supplies list for the team of 10",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0825",
+  "category": "shopping",
+  "input": "Order the parts to fix the sink: the cartridge, the wrench, and the sealant",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0826",
+  "category": "shopping",
+  "input": "Track all 3 of my packages and alert me when each arrives",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0827",
+  "category": "shopping",
+  "input": "Buy the concert outfit: dress, shoes, and bag, under $200",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0828",
+  "category": "shopping",
+  "input": "Order the baby registry items that are still unpurchased",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0829",
+  "category": "shopping",
+  "input": "Find the best-rated standing desk under $400 and order it",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0830",
+  "category": "shopping",
+  "input": "Buy the ingredients for the recipe I can't find locally",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0831",
+  "category": "shopping",
+  "input": "Order more paper towels",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0832",
+  "category": "shopping",
+  "input": "Buy the Alex book everyone is reading",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0833",
+  "category": "shopping",
+  "input": "Find a white noise machine under $40",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0834",
+  "category": "shopping",
+  "input": "Order the HDMI cable, 6 feet",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0835",
+  "category": "shopping",
+  "input": "Buy new running socks, 3-pack",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0836",
+  "category": "shopping",
+  "input": "Get the cheapest AA batteries in bulk",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0837",
+  "category": "shopping",
+  "input": "Order the water filter replacement",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0838",
+  "category": "shopping",
+  "input": "Buy a birthday card for Nina",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0839",
+  "category": "shopping",
+  "input": "Find the phone case for the iPhone 17",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0840",
+  "category": "shopping",
+  "input": "Order the desk lamp with the best reviews",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0841",
+  "category": "shopping",
+  "input": "Price-match the TV at the store and buy it at the lower price",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0842",
+  "category": "shopping",
+  "input": "Order the wedding gift from the registry and include the gift note",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0843",
+  "category": "shopping",
+  "input": "Buy the ski gear package: skis, boots, and poles fitted for my size",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0844",
+  "category": "shopping",
+  "input": "Return the damaged table and reorder from a different seller",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0845",
+  "category": "shopping",
+  "input": "Find the organic mattress topper with a 100-night trial under $200",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0846",
+  "category": "shopping",
+  "input": "Order the 6-month supply of contact lenses",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0847",
+  "category": "shopping",
+  "input": "Buy the anniversary gift: something engraved, under $150, arrives by Friday",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0848",
+  "category": "shopping",
+  "input": "Compare 3 espresso machines and buy the one with the best warranty",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0849",
+  "category": "shopping",
+  "input": "Order the classroom supplies for the 25-student donation",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0850",
+  "category": "shopping",
+  "input": "Find the cheapest flight-safe car seat and order it before the trip",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0851",
+  "category": "shopping",
+  "input": "Furnish the new apartment: bed, couch, dining set, and desk, all delivered within 2 weeks, total under $3,000, with the old furniture listed for sale",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0852",
+  "category": "shopping",
+  "input": "Plan the home office upgrade: the desk, dual monitors, ergonomic chair, lighting, and cable management \u2014 ordered, assembled, and the old gear donated",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0853",
+  "category": "shopping",
+  "input": "Execute the wardrobe refresh: 10 work outfits, the seasonal swap, donations of the old clothes, and everything under $800",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0854",
+  "category": "shopping",
+  "input": "Build the home gym: compare the rack, bench, and weight options, order the best value set, schedule the delivery, and sell the old equipment",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0855",
+  "category": "shopping",
+  "input": "Do the holiday gift run: gifts for 12 people, each under $75, all wrapped, shipped to 5 addresses, arriving before the 23rd",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0856",
+  "category": "shopping",
+  "input": "Set up the nursery: crib, mattress, monitor, glider, and the safety gear \u2014 all ordered, assembled, and the recalls checked",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0857",
+  "category": "shopping",
+  "input": "Plan the kitchen remodel supplies: the faucet, the hardware, the lighting, and the paint \u2014 ordered to arrive before the contractor starts",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0858",
+  "category": "shopping",
+  "input": "Execute the back-to-school shop: supplies for 3 kids, the clothing, the backpacks, and the laptop \u2014 all under $600",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0859",
+  "category": "shopping",
+  "input": "Build the emergency kit: 72-hour supplies for 4 people, the documents digitized, the kit stored, and the expiry reminders set",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0860",
+  "category": "shopping",
+  "input": "Do the full pantry restock: the 40-item list, the bulk buys, the perishables, and the organization system installed",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0861",
+  "category": "shopping",
+  "input": "Buy me something nice",
+  "complexity": "simple",
+  "notes": "ambiguous: no item, no budget"
+ },
+ {
+  "id": "ACT0862",
+  "category": "shopping",
+  "input": "Return everything I bought last month",
+  "complexity": "multi",
+  "notes": "edge: overbroad, likely against policy"
+ },
+ {
+  "id": "ACT0863",
+  "category": "shopping",
+  "input": "Buy a working Tesla for $500",
+  "complexity": "complex",
+  "notes": "impossible"
+ },
+ {
+  "id": "ACT0864",
+  "category": "shopping",
+  "input": "Buy the duplicate bill before Saturday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0865",
+  "category": "shopping",
+  "input": "Buy 4 yoga mat",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0866",
+  "category": "shopping",
+  "input": "Order the yoga mat in black",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0867",
+  "category": "shopping",
+  "input": "Buy the late fee before Friday",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0868",
+  "category": "shopping",
+  "input": "Buy a bluetooth speaker under $150",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0869",
+  "category": "shopping",
+  "input": "Buy the late fee before next week",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0870",
+  "category": "shopping",
+  "input": "Order the map in black",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0871",
+  "category": "shopping",
+  "input": "Buy 8 menu",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0872",
+  "category": "shopping",
+  "input": "Reorder the menu",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0873",
+  "category": "shopping",
+  "input": "Order the map",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0874",
+  "category": "shopping",
+  "input": "Buy 6 menu",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0875",
+  "category": "shopping",
+  "input": "Find the yoga mat on sale",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0876",
+  "category": "shopping",
+  "input": "Get the double billing for Lily",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0877",
+  "category": "shopping",
+  "input": "Get the wrong charge for Sam",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0878",
+  "category": "shopping",
+  "input": "Return the receipt and order the upgraded model",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0879",
+  "category": "shopping",
+  "input": "Buy the shot list and the mystery charge together for the discount",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0880",
+  "category": "shopping",
+  "input": "Order 6 seating chart for the Grace team",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0881",
+  "category": "shopping",
+  "input": "Order 8 espresso tamper for the Raj team",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0882",
+  "category": "shopping",
+  "input": "Compare the desk organizer at 3 stores and buy the cheapest",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0883",
+  "category": "shopping",
+  "input": "Buy the menu and the wrong charge together for the discount",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0884",
+  "category": "shopping",
+  "input": "Find the best-reviewed contact list under $50 and order it",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0885",
+  "category": "shopping",
+  "input": "Buy the playlist and the wrong charge together for the discount",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0886",
+  "category": "shopping",
+  "input": "Buy the checklist and the price hike together for the discount",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0887",
+  "category": "shopping",
+  "input": "Buy the menu and the price hike together for the discount",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0888",
+  "category": "shopping",
+  "input": "Compare the espresso tamper at 3 stores and buy the cheapest",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0889",
+  "category": "shopping",
+  "input": "Order 4 seating chart for the Grace team",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0890",
+  "category": "shopping",
+  "input": "Return the checklist and order the upgraded model",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0891",
+  "category": "shopping",
+  "input": "Find the best-reviewed air purifier under $50 and order it",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0892",
+  "category": "shopping",
+  "input": "Furnish the itinerary setup: the late fee, accessories, installation, and the old gear resale",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0893",
+  "category": "shopping",
+  "input": "Furnish the contact list setup: the double billing, accessories, installation, and the old gear resale",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0894",
+  "category": "shopping",
+  "input": "Furnish the air purifier setup: the price hike, accessories, installation, and the old gear resale",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0895",
+  "category": "shopping",
+  "input": "Furnish the desk organizer setup: the duplicate bill, accessories, installation, and the old gear resale",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0896",
+  "category": "shopping",
+  "input": "Source the espresso tamper for the office of 8: quotes from 3 vendors, bulk discount, and the delivery schedule",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0897",
+  "category": "shopping",
+  "input": "Furnish the yoga mat setup: the wrong charge, accessories, installation, and the old gear resale",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0898",
+  "category": "shopping",
+  "input": "Furnish the yoga mat setup: the double billing, accessories, installation, and the old gear resale",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0899",
+  "category": "shopping",
+  "input": "Source the budget sheet for the office of 8: quotes from 3 vendors, bulk discount, and the delivery schedule",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0900",
+  "category": "shopping",
+  "input": "Source the photos for the office of 8: quotes from 3 vendors, bulk discount, and the delivery schedule",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0901",
+  "category": "account_management",
+  "input": "Reset my Spotify password",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0902",
+  "category": "account_management",
+  "input": "Update my email on all streaming services",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0903",
+  "category": "account_management",
+  "input": "Close my old Twitter account",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0904",
+  "category": "account_management",
+  "input": "Change my Netflix password and sign out all devices",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0905",
+  "category": "account_management",
+  "input": "Update my phone number on my bank account",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0906",
+  "category": "account_management",
+  "input": "Delete my old MySpace-era email account",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0907",
+  "category": "account_management",
+  "input": "Turn on two-factor authentication for my Gmail",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0908",
+  "category": "account_management",
+  "input": "Update my address on my Amazon account",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0909",
+  "category": "account_management",
+  "input": "Cancel my LinkedIn Premium trial",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0910",
+  "category": "account_management",
+  "input": "Change my Apple ID password",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0911",
+  "category": "account_management",
+  "input": "Remove my old phone from my Google account devices",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0912",
+  "category": "account_management",
+  "input": "Update my payment method on iCloud",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0913",
+  "category": "account_management",
+  "input": "Delete the duplicate Facebook account",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0914",
+  "category": "account_management",
+  "input": "Change my Instagram handle to nina",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0915",
+  "category": "account_management",
+  "input": "Download my Google data archive",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0916",
+  "category": "account_management",
+  "input": "Move my photos from iCloud to Google Photos and verify the transfer",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0917",
+  "category": "account_management",
+  "input": "Close my old Twitter account and download the archive first",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0918",
+  "category": "account_management",
+  "input": "Consolidate my two Dropbox accounts into one and cancel the extra",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0919",
+  "category": "account_management",
+  "input": "Update my address everywhere: bank, DMV, subscriptions, and voter registration",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0920",
+  "category": "account_management",
+  "input": "Transfer my domain to the new registrar without downtime",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0921",
+  "category": "account_management",
+  "input": "Merge my duplicate contacts across Google and iCloud",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0922",
+  "category": "account_management",
+  "input": "Set up the password manager: import from the browser, generate new passwords for the top 20 sites, and enable 2FA everywhere",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0923",
+  "category": "account_management",
+  "input": "Close the old bank account after confirming all autopays moved",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0924",
+  "category": "account_management",
+  "input": "Port my number to the new carrier and confirm service works",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0925",
+  "category": "account_management",
+  "input": "Update my name on all accounts after the marriage",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0926",
+  "category": "account_management",
+  "input": "Audit which apps have access to my Google account and revoke the sketchy ones",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0927",
+  "category": "account_management",
+  "input": "Move my music library from Spotify to Apple Music including playlists",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0928",
+  "category": "account_management",
+  "input": "Set up the new phone: transfer everything, verify 2FA, and wipe the old one",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0929",
+  "category": "account_management",
+  "input": "Consolidate my email: forward the old address, update the important accounts, and set the auto-reply",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0930",
+  "category": "account_management",
+  "input": "Reset my Dropbox password",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0931",
+  "category": "account_management",
+  "input": "Log out of Peloton on all devices",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0932",
+  "category": "account_management",
+  "input": "Delete my Audible account",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0933",
+  "category": "account_management",
+  "input": "Update my profile photo on Adobe Creative Cloud",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0934",
+  "category": "account_management",
+  "input": "Change my username on Hulu",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0935",
+  "category": "account_management",
+  "input": "Enable login alerts on Adobe Creative Cloud",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0936",
+  "category": "account_management",
+  "input": "Remove the third-party app access from Dropbox",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0937",
+  "category": "account_management",
+  "input": "Update my recovery email on Disney+",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0938",
+  "category": "account_management",
+  "input": "Turn off ad personalization on Audible",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0939",
+  "category": "account_management",
+  "input": "Export my data from Spotify",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0940",
+  "category": "account_management",
+  "input": "Secure my accounts after the breach: change the passwords, enable 2FA, and check for unauthorized sessions",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0941",
+  "category": "account_management",
+  "input": "Move my 2FA from SMS to an authenticator app on all accounts",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0942",
+  "category": "account_management",
+  "input": "Update my credit card on all 8 services that bill me",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0943",
+  "category": "account_management",
+  "input": "Close my social media accounts except Instagram and download each archive first",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0944",
+  "category": "account_management",
+  "input": "Set up the family sharing: add Sarah and Sam, share the subscriptions, and set the purchase approvals",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0945",
+  "category": "account_management",
+  "input": "Migrate my work email signature and filters to the new job's account",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0946",
+  "category": "account_management",
+  "input": "Consolidate my loyalty programs: link the accounts, transfer the points, and close the duplicates",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0947",
+  "category": "account_management",
+  "input": "Update my emergency contacts on all my accounts",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0948",
+  "category": "account_management",
+  "input": "Set up the digital legacy: designate the inheritor, document the accounts, and store the recovery kit",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0949",
+  "category": "account_management",
+  "input": "Review my privacy settings on all social accounts and lock down the public ones",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0950",
+  "category": "account_management",
+  "input": "Execute the full digital declutter: audit 100+ accounts, delete the 40 I don't use, update passwords on the rest, and document the keepers",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0951",
+  "category": "account_management",
+  "input": "Handle the identity theft: freeze credit at all 3 bureaus, file the FTC report, dispute the fraudulent accounts, and set up monitoring",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0952",
+  "category": "account_management",
+  "input": "Do the post-breakup digital split: separate the shared accounts, change every shared password, split the subscriptions, and revoke device access",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0953",
+  "category": "account_management",
+  "input": "Migrate my entire digital life to the new email: inventory every account, update the login email in priority order, verify each one, and decommission the old address",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0954",
+  "category": "account_management",
+  "input": "Set up the family digital estate: the shared password vault, the emergency access plan, the documented accounts, and the annual review reminder",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0955",
+  "category": "account_management",
+  "input": "Execute the business account separation: split personal and business finances, new EIN accounts, migrate the vendors, and close the commingled cards",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0956",
+  "category": "account_management",
+  "input": "Do the annual security audit: password strength check, 2FA coverage, active sessions review, app permissions cleanup, and the breach exposure check",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0957",
+  "category": "account_management",
+  "input": "Handle the deceased family member's accounts: the memorialization requests, the data downloads, the subscription cancellations, and the estate documentation",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0958",
+  "category": "account_management",
+  "input": "Build the freelance client onboarding system: the contract template, the intake form, the invoicing setup, and the project folder structure",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0959",
+  "category": "account_management",
+  "input": "Execute the country move for my accounts: update residency everywhere, the tax forms, the new payment methods, and the service availability checks",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0960",
+  "category": "account_management",
+  "input": "Delete my account",
+  "complexity": "simple",
+  "notes": "missing: which account"
+ },
+ {
+  "id": "ACT0961",
+  "category": "account_management",
+  "input": "Reset all my passwords at once",
+  "complexity": "multi",
+  "notes": "edge: risky bulk action, needs care"
+ },
+ {
+  "id": "ACT0962",
+  "category": "account_management",
+  "input": "Delete me from the internet completely",
+  "complexity": "complex",
+  "notes": "impossible/infeasible"
+ },
+ {
+  "id": "ACT0963",
+  "category": "account_management",
+  "input": "Update my card on Gym",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0964",
+  "category": "account_management",
+  "input": "Change my Notion Plus email",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0965",
+  "category": "account_management",
+  "input": "Reset my Peloton password",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0966",
+  "category": "account_management",
+  "input": "Update my card on Xbox Game Pass",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0967",
+  "category": "account_management",
+  "input": "Change my Max email",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0968",
+  "category": "account_management",
+  "input": "Cancel my Adobe Creative Cloud premium",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0969",
+  "category": "account_management",
+  "input": "Log out of Notion Plus everywhere",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0970",
+  "category": "account_management",
+  "input": "Log out of Spotify everywhere",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0971",
+  "category": "account_management",
+  "input": "Delete my Dropbox search history",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0972",
+  "category": "account_management",
+  "input": "Update my card on Strava",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0973",
+  "category": "account_management",
+  "input": "Turn on 2FA for Dropbox",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0974",
+  "category": "account_management",
+  "input": "Reset my Hulu password",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0975",
+  "category": "account_management",
+  "input": "Turn on 2FA for Peloton",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0976",
+  "category": "account_management",
+  "input": "Update my address on Adobe Creative Cloud",
+  "complexity": "simple"
+ },
+ {
+  "id": "ACT0977",
+  "category": "account_management",
+  "input": "Enable 2FA on Duolingo Plus and save the backup codes",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0978",
+  "category": "account_management",
+  "input": "Transfer Headspace to Priya and remove my access",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0979",
+  "category": "account_management",
+  "input": "Move my Notion Plus account to the new email and verify it",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0980",
+  "category": "account_management",
+  "input": "Enable 2FA on Headspace and save the backup codes",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0981",
+  "category": "account_management",
+  "input": "Audit Dropbox logins and sign out the unknown devices",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0982",
+  "category": "account_management",
+  "input": "Enable 2FA on Spotify and save the backup codes",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0983",
+  "category": "account_management",
+  "input": "Transfer Hulu to Omar and remove my access",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0984",
+  "category": "account_management",
+  "input": "Enable 2FA on iCloud+ and save the backup codes",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0985",
+  "category": "account_management",
+  "input": "Audit Apple Music logins and sign out the unknown devices",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0986",
+  "category": "account_management",
+  "input": "Transfer Adobe Creative Cloud to Sarah and remove my access",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0987",
+  "category": "account_management",
+  "input": "Enable 2FA on Dropbox and save the backup codes",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0988",
+  "category": "account_management",
+  "input": "Enable 2FA on Peloton and save the backup codes",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0989",
+  "category": "account_management",
+  "input": "Move my Dropbox account to the new email and verify it",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0990",
+  "category": "account_management",
+  "input": "Audit Notion Plus logins and sign out the unknown devices",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0991",
+  "category": "account_management",
+  "input": "Transfer Peloton to Priya and remove my access",
+  "complexity": "multi"
+ },
+ {
+  "id": "ACT0992",
+  "category": "account_management",
+  "input": "Audit my Gym account: sessions, connected apps, payment methods, and the privacy settings",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0993",
+  "category": "account_management",
+  "input": "Audit my Notion Plus account: sessions, connected apps, payment methods, and the privacy settings",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0994",
+  "category": "account_management",
+  "input": "Migrate from Strava to Spotify: export everything, import, verify, and close the old account",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0995",
+  "category": "account_management",
+  "input": "Audit my Paramount+ account: sessions, connected apps, payment methods, and the privacy settings",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0996",
+  "category": "account_management",
+  "input": "Migrate from Netflix to Headspace: export everything, import, verify, and close the old account",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0997",
+  "category": "account_management",
+  "input": "Audit my Disney+ account: sessions, connected apps, payment methods, and the privacy settings",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0998",
+  "category": "account_management",
+  "input": "Migrate from Peloton to YouTube Premium: export everything, import, verify, and close the old account",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT0999",
+  "category": "account_management",
+  "input": "Migrate from Notion Plus to Adobe Creative Cloud: export everything, import, verify, and close the old account",
+  "complexity": "complex"
+ },
+ {
+  "id": "ACT1000",
+  "category": "account_management",
+  "input": "Migrate from Disney+ to Notion Plus: export everything, import, verify, and close the old account",
+  "complexity": "complex"
+ }
+]
