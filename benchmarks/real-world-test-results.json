@@ -1,0 +1,1477 @@
+{
+ "results": [
+  {
+   "id": "RW0161",
+   "category": "complex_multistep",
+   "input": "Cancel icloud+ and peacock",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Starting with Peacock, then handling iCloud+.\n\n1. Peacock: Opening peacocktv.com to log in and cancel your plan.\n2. iCloud+: Cancel directly in iPhone or Mac Settings \u2192 Apple ID \u2192 Subscriptions, as Apple requires device management for iCloud+.",
+   "tools": [
+    "browser_check_google_auth",
+    "intel_subscriptions",
+    "browser_open"
+   ]
+  },
+  {
+   "id": "RW0163",
+   "category": "complex_multistep",
+   "input": "Cancel my crunchyroll subscription then tell me what I saved",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Approve the Crunchyroll sign-in above. Once logged in, I'll check your plan details and cancel the subscription.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_inspect",
+    "browser_fill_login"
+   ]
+  },
+  {
+   "id": "RW0166",
+   "category": "complex_multistep",
+   "input": "Cancel my hbo max and order an Uber to the airport",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening HBO Max to cancel your subscription. Uber to O'Hare, pickup from 1210 S Indiana Ave now \u2014 approve the card above to confirm the booking.",
+   "tools": [
+    "memory_list",
+    "browser_check_google_auth",
+    "browser_open",
+    "ride_book",
+    "browser_inspect"
+   ]
+  },
+  {
+   "id": "RW0167",
+   "category": "complex_multistep",
+   "input": "Cancel crunchyroll and hbo max",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Cancelling Crunchyroll and HBO Max \u2014 starting with Crunchyroll. Opening Crunchyroll to check your plan details.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open"
+   ]
+  },
+  {
+   "id": "RW0168",
+   "category": "complex_multistep",
+   "input": "Book dinner for 2 Friday and get a ride there",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "What time would you like dinner this Friday, October 9? I'll book a sushi table for 2 in Chicago and set up your Uber once confirmed.",
+   "tools": [
+    "memory_list"
+   ]
+  },
+  {
+   "id": "RW0172",
+   "category": "complex_multistep",
+   "input": "Cancel icloud+ and hbo max",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "iCloud+ must be cancelled directly through your device's Apple ID settings. For Max, sign in to your account so I can cancel your plan.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect"
+   ]
+  },
+  {
+   "id": "RW0176",
+   "category": "complex_multistep",
+   "input": "Cancel my disney+ and order an Uber to the airport",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening Disney+ to cancel your subscription. Uber to O'Hare from 1210 S Indiana Ave, pickup now \u2014 approve the card for fare and booking.",
+   "tools": [
+    "memory_list",
+    "browser_check_google_auth",
+    "browser_open",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0181",
+   "category": "complex_multistep",
+   "input": "Cancel xbox game pass and hulu",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Cancelling Xbox Game Pass and Hulu \u2014 starting with Xbox Game Pass. Opening Xbox account page\u2026",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open"
+   ]
+  },
+  {
+   "id": "RW0183",
+   "category": "complex_multistep",
+   "input": "Book dinner for 2 Friday and get a ride there",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "What time would you like dinner on Friday?",
+   "tools": [
+    "memory_list",
+    "places_search"
+   ]
+  },
+  {
+   "id": "RW0186",
+   "category": "complex_multistep",
+   "input": "Cancel my paramount+ and order an Uber to the airport",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Cancelling Paramount+ in the background now.\n\nUber to O'Hare from 1210 S Indiana Ave pickup now \u2014 approve the card above to book your ride.",
+   "tools": [
+    "memory_list",
+    "browser_check_google_auth",
+    "browser_open",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0189",
+   "category": "complex_multistep",
+   "input": "Book dinner for 2 Friday and get a ride there",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Approve the cards above for dinner for 2 at Sushi-san on Friday at 7:00 PM and an Uber ride from 1210 S Indiana Ave.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search",
+    "dining_book",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0190",
+   "category": "complex_multistep",
+   "input": "Cancel my netflix subscription then tell me what I saved",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening Netflix to cancel your subscription \u2014 approve the sign-in above so I can check your plan details and cancel it.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_fill_login"
+   ]
+  },
+  {
+   "id": "RW0191",
+   "category": "complex_multistep",
+   "input": "Book dinner for 2 Friday and get a ride there",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I set up your reservation at Sushi-san for 2 this Friday, Oct 9 at 7:00 PM, and scheduled an Uber pickup from 1210 S Indiana Ave at 6:30 PM. Approve the cards above to confirm dinner and your ride.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search",
+    "dining_book",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0197",
+   "category": "complex_multistep",
+   "input": "Book dinner for 2 Friday and get a ride there",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Dinner for 2 at Sushi-san on Friday at 7:00 PM and an Uber from 1210 S Indiana Ave are waiting. Approve the cards above to confirm.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search",
+    "dining_book",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0198",
+   "category": "complex_multistep",
+   "input": "Cancel my netflix subscription then tell me what I saved",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening Netflix to check your subscription details.\n\n1. Sign into Netflix and check your plan price.\n2. Get your approval on the cancellation terms.\n3. Cancel the subscription and confirm your savings.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open"
+   ]
+  },
+  {
+   "id": "RW0091",
+   "category": "food_order",
+   "input": "order my usual from uber eats",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Pepperoni pizza from Lou Malnati's for delivery to 1210 S Indiana Ave. Approve the card above to place the order.",
+   "tools": [
+    "memory_list",
+    "food_order"
+   ]
+  },
+  {
+   "id": "RW0093",
+   "category": "food_order",
+   "input": "order my usual from doordash",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Ordering a Pepperoni pizza from Lou Malnati's to 1210 S Indiana Ave via DoorDash. Approve the order card above to confirm.",
+   "tools": [
+    "memory_list",
+    "food_order"
+   ]
+  },
+  {
+   "id": "RW0096",
+   "category": "food_order",
+   "input": "order something vegetarian from grubhub",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Approve the card above to place your vegetarian Grubhub order to 1210 S Indiana Ave.",
+   "tools": [
+    "memory_list",
+    "food_order"
+   ]
+  },
+  {
+   "id": "RW0097",
+   "category": "food_order",
+   "input": "order something vegetarian from uber eats",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Cheese pizza from Lou Malnati's to 1210 S Indiana Ave. Approve the card above to complete your order.",
+   "tools": [
+    "memory_list",
+    "food_order"
+   ]
+  },
+  {
+   "id": "RW0098",
+   "category": "food_order",
+   "input": "order something vegetarian from uber eats",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I set up a Cheese Deep Dish Pizza delivery from Lou Malnati's via Uber Eats to 1210 S Indiana Ave. Approve the card above to place the order.",
+   "tools": [
+    "memory_list",
+    "food_order"
+   ]
+  },
+  {
+   "id": "RW0102",
+   "category": "food_order",
+   "input": "order a burrito bowl from Pho 88 on uber eats",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Pho 88 doesn't have burrito bowls on their menu. Would you like a Vietnamese rice bowl from Pho 88, or a burrito bowl from a Mexican spot like Chipotle?",
+   "tools": []
+  },
+  {
+   "id": "RW0106",
+   "category": "food_order",
+   "input": "order a burrito bowl from Chipotle on uber eats",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Burrito Bowl from Chipotle to 1210 S Indiana Ave \u2014 approve the order card above to confirm.",
+   "tools": [
+    "memory_list",
+    "food_order"
+   ]
+  },
+  {
+   "id": "RW0111",
+   "category": "food_order",
+   "input": "order a large pepperoni pizza from McDonald's on doordash",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "McDonald's doesn't sell pizza. Would you like to order a large pepperoni pizza from Lou Malnati's instead?",
+   "tools": []
+  },
+  {
+   "id": "RW0113",
+   "category": "food_order",
+   "input": "order 2 tacos from The Burger Joint on doordash",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "The Burger Joint doesn't have tacos on their menu. Would you like to order burgers from them instead, or get tacos from a local taco spot?",
+   "tools": [
+    "memory_list"
+   ]
+  },
+  {
+   "id": "RW0116",
+   "category": "food_order",
+   "input": "order chicken tikka masala from Taco Bell on grubhub",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Taco Bell doesn't serve chicken tikka masala. Would you like to order it from a local Indian restaurant instead, or pick an item from Taco Bell?",
+   "tools": []
+  },
+  {
+   "id": "RW0119",
+   "category": "food_order",
+   "input": "order 2 tacos from Luigi's Pizza on grubhub",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Luigi's Pizza doesn't have tacos on their menu. Would you like to order pizza from Luigi's, or get tacos from a local spot like Antique Taco instead?",
+   "tools": [
+    "memory_list"
+   ]
+  },
+  {
+   "id": "RW0120",
+   "category": "food_order",
+   "input": "order a Big Mac meal from The Burger Joint on uber eats",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "A Big Mac meal is only available from McDonald's, not The Burger Joint. Would you like me to order a Big Mac meal from McDonald's, or a double burger meal from The Burger Joint instead?",
+   "tools": [
+    "memory_list"
+   ]
+  },
+  {
+   "id": "RW0121",
+   "category": "food_order",
+   "input": "order 2 tacos from The Burger Joint on uber eats",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "The Burger Joint doesn't offer tacos on their menu. Would you like to order a burger from them instead, or get tacos from a local taco spot on Uber Eats?",
+   "tools": [
+    "memory_list"
+   ]
+  },
+  {
+   "id": "RW0127",
+   "category": "food_order",
+   "input": "order a cheeseburger and fries from Luigi's Pizza on doordash",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Luigi's Pizza doesn't serve cheeseburgers. Would you like a meatball sub from Luigi's instead, or should I order a cheeseburger and fries from a burger spot like Shake Shack?",
+   "tools": [
+    "memory_list"
+   ]
+  },
+  {
+   "id": "RW0128",
+   "category": "food_order",
+   "input": "order chicken tikka masala from Taco Bell on uber eats",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Taco Bell doesn't serve chicken tikka masala. Would you like a Cantina Chicken Bowl from Taco Bell, or chicken tikka masala from an Indian restaurant instead?",
+   "tools": []
+  },
+  {
+   "id": "RW0131",
+   "category": "restaurant_res",
+   "input": "book Alinea for 2 Friday",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "What time would you like the reservation for on Friday, October 9?",
+   "tools": []
+  },
+  {
+   "id": "RW0132",
+   "category": "restaurant_res",
+   "input": "book Lou Malnati's for 6 tomorrow",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "How many people should I book for at 6 PM tomorrow?",
+   "tools": []
+  },
+  {
+   "id": "RW0133",
+   "category": "restaurant_res",
+   "input": "book Oriole for 8 Saturday at 7pm",
+   "score": 78,
+   "breakdown": {
+    "correctness": 8,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Booking Oriole for 8 people this Saturday at 7:00 PM. Approve the card above to confirm your reservation.",
+   "tools": [
+    "dining_book"
+   ]
+  },
+  {
+   "id": "RW0134",
+   "category": "restaurant_res",
+   "input": "book Alinea for 2 tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "What time would you like your reservation at Alinea tonight?",
+   "tools": []
+  },
+  {
+   "id": "RW0138",
+   "category": "restaurant_res",
+   "input": "book Alinea for 6 tomorrow",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "What time would you like for Alinea tomorrow, and is 6 your party size?",
+   "tools": []
+  },
+  {
+   "id": "RW0142",
+   "category": "restaurant_res",
+   "input": "find a sushi restaurant for 8 tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Top recommendations for sushi tonight in Chicago are **Sushi-san** (River North) and **Blue Sushi Sake Grill**. \n\nWould you like me to try booking a table for 8 at 8:00 PM at Sushi-san?",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search"
+   ]
+  },
+  {
+   "id": "RW0145",
+   "category": "restaurant_res",
+   "input": "find a Italian restaurant for 8 tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've set up a reservation at Quartino Ristorante for 8 people at 8:00 PM tonight. Approve the card above to complete the booking.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search",
+    "dining_book"
+   ]
+  },
+  {
+   "id": "RW0147",
+   "category": "restaurant_res",
+   "input": "book dinner for 4 tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Booking Sushi-san for 4 tonight at 7:00 PM \u2014 approve the card to confirm.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search",
+    "dining_book"
+   ]
+  },
+  {
+   "id": "RW0148",
+   "category": "restaurant_res",
+   "input": "book dinner for 4 tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "What time and restaurant or cuisine would you like for tonight?",
+   "tools": []
+  },
+  {
+   "id": "RW0149",
+   "category": "restaurant_res",
+   "input": "book dinner for 8 tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "No tables available for a party of 8 at 8:00 PM tonight in Chicago. Would you like me to try a different time, party size, or a specific restaurant?",
+   "tools": [
+    "memory_list",
+    "dining_tonight"
+   ]
+  },
+  {
+   "id": "RW0152",
+   "category": "restaurant_res",
+   "input": "book dinner for 4 tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've set up a dinner reservation for 4 tonight at 7:00 PM at Sushi-san. Approve the card above to confirm the booking.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search",
+    "dining_book"
+   ]
+  },
+  {
+   "id": "RW0155",
+   "category": "restaurant_res",
+   "input": "book dinner for 4 tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've set up a reservation for 4 at Sushi-san for tonight at 7:00 PM. Approve the card above to confirm the booking.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search",
+    "dining_book"
+   ]
+  },
+  {
+   "id": "RW0156",
+   "category": "restaurant_res",
+   "input": "book dinner for 8 tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Reservation for 8 at Sushi-san tonight at 8:00 PM is ready. Approve the card above to confirm the booking.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search",
+    "dining_book"
+   ]
+  },
+  {
+   "id": "RW0157",
+   "category": "restaurant_res",
+   "input": "book dinner for 6 tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Approve the card above to book dinner for 6 at Sushi-san tonight.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search",
+    "dining_book"
+   ]
+  },
+  {
+   "id": "RW0158",
+   "category": "restaurant_res",
+   "input": "book dinner for 6 tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Table for 6 at Sushi-san at 7:00 PM tonight. Approve the card above to confirm your reservation.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search",
+    "dining_book"
+   ]
+  },
+  {
+   "id": "RW0051",
+   "category": "ride_book",
+   "input": "book me an uber now",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Where would you like to go from 1210 S Indiana Ave?",
+   "tools": [
+    "memory_list"
+   ]
+  },
+  {
+   "id": "RW0053",
+   "category": "ride_book",
+   "input": "order me an uber",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Where would you like to go?",
+   "tools": [
+    "memory_list"
+   ]
+  },
+  {
+   "id": "RW0056",
+   "category": "ride_book",
+   "input": "order an uber to Navy Pier and back",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Uber to Navy Pier, pickup from 1210 S Indiana Ave now. Approve the card for fare and booking.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0057",
+   "category": "ride_book",
+   "input": "order an uber to Wrigley Field and back",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Uber to Wrigley Field from 1210 S Indiana Ave, pickup now. Approve the card above to confirm the fare and ride.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0058",
+   "category": "ride_book",
+   "input": "order an uber to the Art Institute and back",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Uber to the Art Institute from 1210 S Indiana Ave, pickup now. Approve the card to confirm the fare and booking.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0062",
+   "category": "ride_book",
+   "input": "order me an uber to the Art Institute now",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Uber to the Art Institute, pickup from 1210 S Indiana Ave now. Approve the card above for fare and booking.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0066",
+   "category": "ride_book",
+   "input": "order me an uber to O'Hare airport",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Uber to O'Hare, pickup from 1210 S Indiana Ave now. Approve the card above to check fare and confirm.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0071",
+   "category": "ride_book",
+   "input": "order me an uber to Wrigley Field",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Uber to Wrigley Field, pickup from 1210 S Indiana Ave now. Approve the card to confirm your fare and booking.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0073",
+   "category": "ride_book",
+   "input": "order me an uber to Midway airport in 30 minutes",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Uber to Midway Airport from 1210 S Indiana Ave, pickup in 30 minutes. Approve the card above to confirm your booking.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0076",
+   "category": "ride_book",
+   "input": "order me an uber to 456 Oak Ave, Evanston in 2 hours",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Scheduled an Uber from 1210 S Indiana Ave to 456 Oak Ave, Evanston for 6:41 AM. Approve the card above to confirm.",
+   "tools": [
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0079",
+   "category": "ride_book",
+   "input": "order me an uber to Union Station tomorrow at 8am",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Uber to Union Station from 1210 S Indiana Ave, scheduled for tomorrow at 8:00 AM. Approve the card to confirm and book.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0080",
+   "category": "ride_book",
+   "input": "order me an uber to Union Station in 2 hours",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Uber to Union Station, pickup from 1210 S Indiana Ave at 6:42 AM. Approve the card to confirm your ride.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0081",
+   "category": "ride_book",
+   "input": "order me an uber to 456 Oak Ave, Evanston",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Uber to 456 Oak Ave, Evanston, pickup from 1210 S Indiana Ave now. Approve the card above to confirm the booking.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0087",
+   "category": "ride_book",
+   "input": "order me an uber to Navy Pier Friday at 6pm",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Uber from 1210 S Indiana Ave to Navy Pier, scheduled for Friday at 6:00 PM. Approve the card to confirm your ride.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0088",
+   "category": "ride_book",
+   "input": "order me an uber to 456 Oak Ave, Evanston in 30 minutes",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Uber to 456 Oak Ave, Evanston, pickup from 1210 S Indiana Ave at 5:12 AM (in 30 minutes). Approve the card to confirm the fare and book.",
+   "tools": [
+    "ride_book"
+   ]
+  },
+  {
+   "id": "RW0001",
+   "category": "subscription_cancel",
+   "input": "cancel my disney+ subscription I used email and password",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening Disney+ to cancel your subscription. Approve the sign-in above to log in and proceed.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_fill_login"
+   ]
+  },
+  {
+   "id": "RW0002",
+   "category": "subscription_cancel",
+   "input": "I want out of audible I signed up with Google",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening Audible to check your plan details.\n\n1. Sign into Audible with Google.\n2. Review your subscription terms.\n3. Confirm cancellation.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open"
+   ]
+  },
+  {
+   "id": "RW0003",
+   "category": "subscription_cancel",
+   "input": "end my disney+ subscription I think I used Apple sign-in",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening www.google.com\u2026 Navigating to Disney+ to check your subscription details.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open"
+   ]
+  },
+  {
+   "id": "RW0006",
+   "category": "subscription_cancel",
+   "input": "cancel my icloud+ subscription I think I used Apple sign-in",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Apple requires you to sign in \u2014 tap Take Over to log into your Apple Account, then let me know when you're done. Tap \"Take Over\" in the browser panel, do what's needed, then say \"done\" and I'll continue.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_request_help"
+   ]
+  },
+  {
+   "id": "RW0007",
+   "category": "subscription_cancel",
+   "input": "turn off my amazon prime subscription I signed up with Google",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening Amazon to cancel your Prime subscription \u2014 approve the sign-in above so I can continue.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_open",
+    "browser_inspect",
+    "browser_fill_login"
+   ]
+  },
+  {
+   "id": "RW0008",
+   "category": "subscription_cancel",
+   "input": "cancel xbox game pass",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening Microsoft to cancel Xbox Game Pass \u2014 approve the sign-in above to continue.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_fill_login"
+   ]
+  },
+  {
+   "id": "RW0016",
+   "category": "subscription_cancel",
+   "input": "I want out of paramount+",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening Paramount+ to cancel your subscription \u2014 approve the sign-in above to continue.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_fill_login"
+   ]
+  },
+  {
+   "id": "RW0023",
+   "category": "subscription_cancel",
+   "input": "stop paying for audible not sure how I signed up",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening Audible to locate your subscription details. I'll check your plan terms and ask for your approval before cancelling.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open"
+   ]
+  },
+  {
+   "id": "RW0029",
+   "category": "subscription_cancel",
+   "input": "turn off my playstation plus subscription not sure how I signed up",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening PlayStation to turn off your subscription \u2014 approve the sign-in above so I can access your account details.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_act"
+   ]
+  },
+  {
+   "id": "RW0037",
+   "category": "subscription_cancel",
+   "input": "I don't want peacock anymore I think I used Apple sign-in",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Peacock requires signing in with your Apple ID \u2014 tap Take Over to complete sign-in, then let me know. Tap \"Take Over\" in the browser panel, do what's needed, then say \"done\" and I'll continue.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_request_help"
+   ]
+  },
+  {
+   "id": "RW0038",
+   "category": "subscription_cancel",
+   "input": "cancel my nyt subscription",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening New York Times \u2014 approve the sign-in above to log in and cancel your subscription.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_open",
+    "browser_inspect",
+    "browser_act"
+   ]
+  },
+  {
+   "id": "RW0043",
+   "category": "subscription_cancel",
+   "input": "cancel disney+ I think I used Apple sign-in",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Disney+ requires Apple sign-in \u2014 tap Take Over to log in, then say done. Tap \"Take Over\" in the browser panel, do what's needed, then say \"done\" and I'll continue.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_request_help"
+   ]
+  },
+  {
+   "id": "RW0045",
+   "category": "subscription_cancel",
+   "input": "stop paying for paramount+ I think I used Apple sign-in",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Paramount+ requires signing in \u2014 tap Take Over to log in with your Apple ID or credentials, then say done. Tap \"Take Over\" in the browser panel, do what's needed, then say \"done\" and I'll continue.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_request_help"
+   ]
+  },
+  {
+   "id": "RW0046",
+   "category": "subscription_cancel",
+   "input": "cancel my icloud+ subscription I think I used Apple sign-in",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I can't cancel iCloud+ automatically because Apple requires device-level authentication for subscription management. \n\nTo cancel, open **Settings** on your iPhone or iPad, tap **[Your Name]** > **Subscriptions** > **iCloud+**, and select **Cancel Subscription**.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open"
+   ]
+  },
+  {
+   "id": "RW0050",
+   "category": "subscription_cancel",
+   "input": "end my dropbox plus subscription",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening Dropbox to cancel your Plus subscription. Approve the sign-in card above so I can view your plan details.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_act"
+   ]
+  }
+ ],
+ "summary": {
+  "subscription_cancel": {
+   "n": 15,
+   "avg": 100.0
+  },
+  "ride_book": {
+   "n": 15,
+   "avg": 100.0
+  },
+  "food_order": {
+   "n": 15,
+   "avg": 100.0
+  },
+  "restaurant_res": {
+   "n": 15,
+   "avg": 98.5
+  },
+  "complex_multistep": {
+   "n": 15,
+   "avg": 100.0
+  }
+ }
+}
