@@ -181,7 +181,8 @@ const _RAW_TOOLS = [
         }
         return { ok: true, results, note: `${results.length} results for "${a.query}"` };
       } catch (e) {
-        return { ok: false, code: 'search_failed', note: `Search failed: ${e.message}`.slice(0, 200) };
+        console.log('[web_search] failed:', e.message);
+        return { ok: false, code: 'search_failed', note: 'Web search is temporarily unavailable. Try again in a moment.' };
       }
     },
     schema: { type: 'object', properties: {
@@ -272,8 +273,9 @@ const _RAW_TOOLS = [
           userMessage: `Opening ${result.hostname}…`,
         };
       } catch (e) {
-        await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
-        return { ok: false, code: 'browser_failed', note: `Failed to open browser: ${e.message}`.slice(0, 300) };
+        console.log('[browser_open] failed:', e.message);
+        await pushStatus({ threadId, status: 'failed', detail: 'Could not open the site.' }).catch(() => {});
+        return { ok: false, code: 'browser_failed', note: 'I couldn\'t open that site right now. Please try again in a moment.' };
       }
     },
     schema: { type: 'object', properties: {
@@ -359,8 +361,9 @@ const _RAW_TOOLS = [
           userMessage: `I'm back in the browser at ${new URL(url).hostname}. Let me check the current page.`,
         };
       } catch (e) {
-        await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
-        return { ok: false, code: 'resume_failed', note: `Could not resume browser: ${e.message}`.slice(0, 200) };
+        console.log('[browser_continue] failed:', e.message);
+        await pushStatus({ threadId, status: 'failed', detail: 'Could not resume.' }).catch(() => {});
+        return { ok: false, code: 'resume_failed', note: 'I lost the browser session. Let me start fresh.' };
       }
     },
     schema: { type: 'object', properties: {
@@ -462,8 +465,9 @@ const _RAW_TOOLS = [
           note: 'Page content extracted. Analyze for subscription details.',
         };
       } catch (e) {
-        await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
-        return { ok: false, code: 'inspect_failed', note: `Could not inspect page: ${e.message}`.slice(0, 200) };
+        console.log('[browser_inspect] failed:', e.message);
+        await pushStatus({ threadId, status: 'failed', detail: 'Could not read the page.' }).catch(() => {});
+        return { ok: false, code: 'inspect_failed', note: 'I couldn\'t read that page. Let me try a different approach.' };
       }
     },
     schema: { type: 'object', properties: {
@@ -565,8 +569,9 @@ const _RAW_TOOLS = [
           note: `${result}. Page is now at ${newUrl}`,
         };
       } catch (e) {
-        await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
-        return { ok: false, code: 'act_failed', note: `Action failed: ${e.message}`.slice(0, 200) };
+        console.log('[browser_act] failed:', e.message);
+        await pushStatus({ threadId, status: 'failed', detail: 'Action didn\'t work.' }).catch(() => {});
+        return { ok: false, code: 'act_failed', note: 'That didn\'t work. Let me try a different way.' };
       }
     },
     schema: { type: 'object', properties: {
@@ -703,8 +708,9 @@ const _RAW_TOOLS = [
             : `Couldn't complete the login for ${hostname}: ${fillResult.note}`,
         };
       } catch (e) {
-        await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
-        return { ok: false, code: 'fill_failed', note: `Login fill failed: ${e.message}`.slice(0, 200) };
+        console.log('[browser_fill_login] failed:', e.message);
+        await pushStatus({ threadId, status: 'failed', detail: 'Could not fill login.' }).catch(() => {});
+        return { ok: false, code: 'fill_failed', note: 'I couldn\'t fill the login form. You can use Take Over to log in manually.' };
       }
     },
     schema: { type: 'object', properties: {
@@ -742,7 +748,8 @@ const _RAW_TOOLS = [
 
         return { ok: true, note: 'Browser session closed.' };
       } catch (e) {
-        return { ok: false, code: 'close_failed', note: e.message.slice(0, 200) };
+        console.log('[browser_close] failed:', e.message);
+        return { ok: false, code: 'close_failed', note: 'Browser session already closed.' };
       }
     },
     schema: { type: 'object', properties: {
@@ -800,8 +807,9 @@ const _RAW_TOOLS = [
           userMessage: 'Google login is ready — tap "Take Over", sign in with your Google account, then say "I\'m logged in". I\'ll save it so "Continue with Google" works on sites like ElevenLabs from now on.',
         };
       } catch (e) {
-        await pushStatus({ threadId, status: 'failed', detail: e.message.slice(0, 150) }).catch(() => {});
-        return { ok: false, code: 'browser_failed', note: `Failed to open Google login: ${e.message}`.slice(0, 300) };
+        console.log('[browser_connect_google] failed:', e.message);
+        await pushStatus({ threadId, status: 'failed', detail: 'Could not open Google login.' }).catch(() => {});
+        return { ok: false, code: 'browser_failed', note: 'I couldn\'t open the Google login page. Please try again.' };
       }
     },
     schema: { type: 'object', properties: {} },
