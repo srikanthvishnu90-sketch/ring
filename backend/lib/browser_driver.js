@@ -218,7 +218,8 @@ async function resolveSession(job) {
     try {
       alive = await browserbaseSessionAlive(rec.bb_session_id);
     } catch (e) {
-      return { error: { ok: false, code: 'browser_failed', sessionId: job.sessionId, note: `Could not verify session liveness: ${String(e.message).slice(0, 160)}` } };
+      console.log('[browser_driver] liveness check failed:', e.message);
+      return { error: { ok: false, code: 'browser_failed', sessionId: job.sessionId, note: 'I lost the browser session. Let me start fresh.' } };
     }
     if (!alive) {
       try { await sessions.markExpired(job.sessionId); } catch { /* best effort */ }
@@ -257,7 +258,7 @@ async function execute(job, deps = {}) {
     return {
       ok: false,
       code: code === 'PLAYWRIGHT_CORE_MISSING' ? 'browser_failed' : code,
-      note: `Browser phase failed: ${String((e && e.message) || e).slice(0, 280)}`,
+      note: 'That step did not work in the browser. Let me try a different way.',
       ...(job && job.sessionId ? { sessionId: job.sessionId } : {}),
       phaseMs: Date.now() - started,
     };
@@ -289,7 +290,8 @@ async function executeInner(job, deps = {}) {
     if (r.error) return stripSensitive(r.error);
     session = r.session;
   } catch (e) {
-    return { ok: false, code: 'browser_failed', note: `Session setup failed: ${String((e && e.message) || e).slice(0, 200)}` };
+    console.log('[browser_driver] session setup failed:', (e && e.message) || e);
+    return { ok: false, code: 'browser_failed', note: 'I could not start the browser session. Let me try again.' };
   }
   const sessionId = session.id;
   // 4. Run ONE phase with a wall-clock budget (serverless-safe). On
@@ -342,7 +344,7 @@ async function executeInner(job, deps = {}) {
       await endSession(sessionId, session.bb_session_id);
       return {
         ok: false, code: (e && e.code) || 'browser_failed', sessionId,
-        note: `Browser phase threw: ${String((e && e.message) || e).slice(0, 240)} — session closed, nothing was completed.`,
+        note: 'That did not work — I closed the session. Nothing was completed.',
       };
     } finally {
       clearTimeout(onTimeout);

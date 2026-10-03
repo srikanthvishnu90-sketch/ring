@@ -134,7 +134,8 @@ async function createSecureSession({ url, userId, clientIp, isPublic }) {
   try {
     bbSession = await driver.createSession();
   } catch (e) {
-    return { ok: false, code: 'session_failed', note: `Could not create browser session: ${e.message}`.slice(0, 200) };
+    console.log('[browser_open_secure] session create failed:', e.message);
+    return { ok: false, code: 'session_failed', note: 'I couldn\'t start a browser session right now.' };
   }
 
   // 4. Connect and create the browser context.
@@ -168,7 +169,8 @@ async function createSecureSession({ url, userId, clientIp, isPublic }) {
   } catch (e) {
     try { await driver.stopSession(bbSession.id); } catch {}
     try { browser && await browser.close(); } catch {}
-    return { ok: false, code: 'browser_failed', note: `Browser connection failed: ${e.message}`.slice(0, 200) };
+    console.log('[browser_open_secure] browser failed:', e.message);
+    return { ok: false, code: 'browser_failed', note: 'I couldn\'t open that site right now due to a browser connection issue.' };
   }
 
   // 5. Register with auto-expiry (in-memory for quick access)

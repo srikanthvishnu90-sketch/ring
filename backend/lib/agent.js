@@ -1832,7 +1832,15 @@ async function processToolCalls({ toolCalls, tools, userId, threadId, toolsUsed,
     if (tool.risk === 'low') {
       try {
         const out = await tool.fn({ userId, threadId, ...tc.args });
-        let resultLine = `${tc.name} → ${JSON.stringify(out).slice(0, 10000)}`;
+        // Sanitized result line: on failure the model sees ONLY the plain-language
+        // note — never raw JSON internals (stack traces, driver names, errno).
+        // Full details still go to logToolRun for debugging.
+        let resultLine;
+        if (out && out.ok === false) {
+          resultLine = `${tc.name} → failed: ${out.note || 'Something went wrong.'}`;
+        } else {
+          resultLine = `${tc.name} → ${JSON.stringify(out).slice(0, 10000)}`;
+        }
         // Phase honesty: an intermediate phase is NOT completion. Bind the
         // model's reply to the required user message so it cannot be
         // rephrased into "done/completed/cancelled".
@@ -1849,7 +1857,8 @@ async function processToolCalls({ toolCalls, tools, userId, threadId, toolsUsed,
         results.push(resultLine);
         logToolRun({ userId, tool: tool.name, args: tc.args, result: out, status: 'executed' }).catch(() => {});
       } catch (e) {
-        results.push(`${tc.name} → ERROR ${e.code || ''}: ${e.message}`.slice(0, 400));
+        // Sanitized: never feed raw exception text to the model.
+        results.push(`${tc.name} → failed unexpectedly. [SYSTEM DIRECTIVE: describe what happened in plain user language, briefly. NEVER quote technical details, error names, or codes.]`.slice(0, 400));
         logToolRun({ userId, tool: tool.name, args: tc.args, result: { error: e.message, code: e.code }, status: 'failed' }).catch(() => {});
       }
     } else {
