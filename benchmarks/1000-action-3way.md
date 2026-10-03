@@ -1,6 +1,6 @@
 # 1000-Action 3-Way Benchmark: Muse vs Ring vs Grok
 
-**Status: Ring live run in progress. Muse vs Grok(predicted) analysis complete (1000/1000).**
+**Status: Ring live run in progress on post-fix prompt (commit a393173). Muse vs Grok(predicted) analysis complete (1000/1000).**
 
 | Metric | Value |
 |---|---|
@@ -9,11 +9,13 @@
 | Complexity split | 40% simple / 40% multi / 20% complex |
 | Muse responses | 1000/1000 authored |
 | Grok responses | 1000/1000 predicted (marked throughout) |
-| Ring responses | Live run in progress (resumable) |
+| Ring responses | Live run in progress — clean run on post-fix prompt |
+| Prompt under test | a393173 (banned openers+, personality-beat rule, category word budgets) |
 | Corpus | `benchmarks/1000-actions.json` |
 | 3-way responses | `benchmarks/1000-actions-3way.json` |
 | Ring results | `benchmarks/1000-actions-ring-results.json` |
 | Scores | `benchmarks/1000-actions-scores.json` |
+| Scorer | `/tmp/score_3way.py` (re-run any time) |
 
 > **Grok responses are PREDICTED**, not live. They are modeled on Grok's public persona
 > (xAI): witty, irreverent, Hitchhiker's Guide-inspired rebellious streak, casual and
