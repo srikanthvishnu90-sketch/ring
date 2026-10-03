@@ -1,0 +1,1708 @@
+{
+ "results": [
+  {
+   "id": "S0951",
+   "category": "conciseness",
+   "input": "what can you do",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I can help you manage your day-to-day tasks:\n\n1. **Email & Calendar:** Search and triage Gmail, draft replies, schedule or update events, and build meeting prep briefs.\n2. **Subscriptions & Bookings:** Cancel subscriptions, book restaurant tables, track packages, or search flights and hotels.\n3. **Notes & Memory:** Store notes, remember personal preferences, log health metrics, or manage group plans.\n\nLet me know what you'd like to work on.",
+   "tools": []
+  },
+  {
+   "id": "S0955",
+   "category": "conciseness",
+   "input": "what can you do",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I can handle tasks across your email, calendar, subscriptions, bookings, and personal tracking:\n\n1. **Email & Calendar**: Search, triage, draft, or reply to emails, and schedule or update calendar events.\n2. **Subscriptions**: Inspect billing details and process cancellations.\n3. **Bookings & Rides**: Reserve restaurant tables, book Uber rides, and search flights or hotels.\n4. **Notes & Health**: Log health metrics (sleep, steps, water, workouts), save notes, and store facts or preferences.\n5. **Research & Tasks**: Search the web, check order statuses, track packages, and fill web forms.\n\nTell",
+   "tools": []
+  },
+  {
+   "id": "S0961",
+   "category": "conciseness",
+   "input": "hi",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Hi! How can I help you today?",
+   "tools": []
+  },
+  {
+   "id": "S0962",
+   "category": "conciseness",
+   "input": "hi",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Hi! How can I help you today?",
+   "tools": []
+  },
+  {
+   "id": "S0965",
+   "category": "conciseness",
+   "input": "hi",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Hello! How can I help you today?",
+   "tools": []
+  },
+  {
+   "id": "S1007",
+   "category": "conciseness",
+   "input": "what time is it",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "It is 1:50 AM on Saturday, October 3, 2026 (Europe/Rome time).",
+   "tools": []
+  },
+  {
+   "id": "S1025",
+   "category": "conciseness",
+   "input": "book a table for 2 italian tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I found top Italian spots in Chicago for tonight, including Quartino Ristorante, Alla Vita, Il Porcellino, and Monteverde. \n\nWhich restaurant and time would you prefer (e.g. 7:30 PM)? Let me know and I'll attempt the booking for 2.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search"
+   ]
+  },
+  {
+   "id": "S1036",
+   "category": "conciseness",
+   "input": "who are you",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I'm your personal assistant in Ring.",
+   "tools": []
+  },
+  {
+   "id": "S1039",
+   "category": "conciseness",
+   "input": "who are you",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I'm your personal assistant in Ring. I help manage your calendar, emails, bookings, subscriptions, tasks, and notes. How can I help you today?",
+   "tools": []
+  },
+  {
+   "id": "S1050",
+   "category": "conciseness",
+   "input": "bye",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Goodbye! Let me know if you need anything else.",
+   "tools": []
+  },
+  {
+   "id": "S1051",
+   "category": "edge",
+   "input": "cancel my netflix subscription and also order me an uber to downtown",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening Netflix in the background to access your subscription details. I'm also preparing an Uber ride from 1210 S Indiana Ave to downtown Chicago. I'll share the cancellation terms and ride fare for your approval as soon as they're ready.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "memory_list"
+   ]
+  },
+  {
+   "id": "S1053",
+   "category": "edge",
+   "input": "can you   cancel    my    hulu     subscription",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've opened Hulu's account page to cancel your subscription. Please approve the login request above so I can sign in and check your plan terms.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_open",
+    "browser_inspect",
+    "browser_fill_login"
+   ]
+  },
+  {
+   "id": "S1056",
+   "category": "edge",
+   "input": "i want to cancel my apple music subscription. actually never mind.",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Got it, leaving your Apple Music subscription active.",
+   "tools": []
+  },
+  {
+   "id": "S1058",
+   "category": "edge",
+   "input": "what subscriptions do I have?",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I found two recurring charges in your recent receipts:\n\n\u2022 **donotreply@gopassport.com**: $2.80 (last seen Sep 30, 2026)\n\u2022 **Meta**: $799.00 (last seen Sep 29, 2026)",
+   "tools": [
+    "intel_subscriptions"
+   ]
+  },
+  {
+   "id": "S1079",
+   "category": "edge",
+   "input": "ORDER UBER NOW DOWNTOWN",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged your Uber ride to Downtown. Please review and approve the details on the card to request the ride.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "S1088",
+   "category": "edge",
+   "input": "um, can you like, cancel hulu or whatever",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've navigated to Hulu's login page. Please approve the login prompt so I can sign in and continue with the cancellation.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_fill_login"
+   ]
+  },
+  {
+   "id": "S1093",
+   "category": "edge",
+   "input": "what can you do???",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I assist with tasks across your email, calendar, bookings, subscriptions, and daily tracking:\n\n1. **Email & Calendar** \u2013 Read, search, reply, schedule or update events, and build itineraries or daily briefs.\n2. **Subscriptions & Web Tasks** \u2013 Cancel recurring subscriptions, fill web forms, log into sites, and track packages or orders.\n3. **Bookings & Rides** \u2013 Reserve restaurant tables, book Uber rides, search flights or hotels, and check reservation details.\n4. **Health & Notes** \u2013 Log health metrics (sleep, steps, water, mood) and save or search notes.\n\nTell me what you need done and I'll ha",
+   "tools": []
+  },
+  {
+   "id": "S1095",
+   "category": "edge",
+   "input": "   help   ",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "What can I help you with?",
+   "tools": []
+  },
+  {
+   "id": "S1100",
+   "category": "edge",
+   "input": "   help   ",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "How can I help you today?",
+   "tools": []
+  },
+  {
+   "id": "S1102",
+   "category": "edge",
+   "input": "um, can you like, cancel hulu or whatever",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening Hulu to cancel your subscription. I've sent an approval card to fill your login credentials from your secure vault\u2014please approve it so I can continue.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_fill_login"
+   ]
+  },
+  {
+   "id": "S0851",
+   "category": "error_handling",
+   "input": "asdfghjkl",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "How can I help you today?",
+   "tools": []
+  },
+  {
+   "id": "S0855",
+   "category": "error_handling",
+   "input": "???",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "How can I help you today?",
+   "tools": []
+  },
+  {
+   "id": "S0861",
+   "category": "error_handling",
+   "input": "flibbertigibbet subscription",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I couldn't find any emails or receipts for a \"flibbertigibbet\" subscription in your account. Let me know if it might be listed under a different merchant name or email address.",
+   "tools": [
+    "gmail_search"
+   ]
+  },
+  {
+   "id": "S0862",
+   "category": "error_handling",
+   "input": "cancel my subscription to Mars",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I couldn't find any receipts or subscription records for \"Mars\" in your email or active subscriptions. Could you share the exact website domain or billing name so I can locate the account and cancel it for you?",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "gmail_search",
+    "intel_subscriptions"
+   ]
+  },
+  {
+   "id": "S0865",
+   "category": "error_handling",
+   "input": "qwerty",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "How can I help?",
+   "tools": []
+  },
+  {
+   "id": "S0907",
+   "category": "error_handling",
+   "input": "lorem ipsum dolor",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "It looks like you sent placeholder text. How can I help you?",
+   "tools": []
+  },
+  {
+   "id": "S0925",
+   "category": "error_handling",
+   "input": "do the thing",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Assuming you're referring to your NEMA Chicago sublease for Unit 1702, there are two pending items: signing the document via the RentCafe link and ensuring your dad is listed on your Lemonade renters insurance policy.\n\nWhich specific task would you like me to handle or clarify?",
+   "tools": [
+    "memory_list",
+    "note_list",
+    "gmail_search",
+    "gmail_threads"
+   ]
+  },
+  {
+   "id": "S0936",
+   "category": "error_handling",
+   "input": "???",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "What can I help you with today?",
+   "tools": []
+  },
+  {
+   "id": "S0939",
+   "category": "error_handling",
+   "input": "do the thing",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've set up the email to be forwarded, but it requires your approval before it can be sent. Please tap approve on the card below to send it out.",
+   "tools": [
+    "gmail_triage",
+    "note_list",
+    "gmail_thread",
+    "gmail_search",
+    "gmail_forward"
+   ]
+  },
+  {
+   "id": "S0950",
+   "category": "error_handling",
+   "input": "???",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "How can I help you?",
+   "tools": []
+  },
+  {
+   "id": "S0352",
+   "category": "food_order",
+   "input": "get me a burrito bowl from Chipotle on uber eats",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged your order for a Chipotle burrito bowl to 1210 S Indiana Ave. Please review and tap approve on the card below to place the order.",
+   "tools": [
+    "memory_list",
+    "food_order"
+   ]
+  },
+  {
+   "id": "S0359",
+   "category": "food_order",
+   "input": "doordash a cheeseburger from Chipotle",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Chipotle doesn't serve cheeseburgers on their menu\u2014they specialize in burritos, bowls, tacos, and quesadillas. Let me know if you'd like a different item from Chipotle, or if I should order a cheeseburger from a spot like Five Guys or Shake Shack instead.",
+   "tools": [
+    "memory_list"
+   ]
+  },
+  {
+   "id": "S0372",
+   "category": "food_order",
+   "input": "get me a caesar salad from Chipotle on uber eats",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged your Chipotle Caesar Salad order to 1210 S Indiana Ave. Please tap approve on the card above to complete the order on Uber Eats.",
+   "tools": [
+    "memory_list",
+    "food_order"
+   ]
+  },
+  {
+   "id": "S0374",
+   "category": "food_order",
+   "input": "doordash a caesar salad from Chipotle",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged your DoorDash order for a Caesar salad from Chipotle to 1210 S Indiana Ave. Please approve the confirmation card above to place the order.",
+   "tools": [
+    "memory_list",
+    "food_order"
+   ]
+  },
+  {
+   "id": "S0376",
+   "category": "food_order",
+   "input": "order a burrito bowl from Portillo's",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged your Portillo's burrito bowl order for delivery to 1210 S Indiana Ave. Please review and approve the order card above so I can place it.",
+   "tools": [
+    "memory_list",
+    "food_order"
+   ]
+  },
+  {
+   "id": "S0380",
+   "category": "food_order",
+   "input": "order food: a burrito bowl from Portillo's",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged your order for a burrito bowl from Portillo's to 1210 S Indiana Ave. Please review and tap approve on the card below to complete the purchase. I've also noted your peanut allergy for the order.",
+   "tools": [
+    "memory_list",
+    "food_order"
+   ]
+  },
+  {
+   "id": "S0411",
+   "category": "food_order",
+   "input": "order a pepperoni pizza from Lou Malnati's",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged your order for a pepperoni pizza from Lou Malnati's to 1210 S Indiana Ave. \n\nPlease review and approve the order details on the card above to complete the purchase.",
+   "tools": [
+    "memory_list",
+    "food_order"
+   ]
+  },
+  {
+   "id": "S0441",
+   "category": "food_order",
+   "input": "order a chicken sandwich from Shake Shack",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've set up your Shake Shack chicken sandwich order for delivery to 1210 S Indiana Ave. Please approve the card below to send it through.",
+   "tools": [
+    "memory_list",
+    "food_order"
+   ]
+  },
+  {
+   "id": "S0463",
+   "category": "food_order",
+   "input": "I want a pepperoni pizza, order from Sweetgreen",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Sweetgreen doesn't serve pizza\u2014they specialize in salads and warm bowls. \n\nI can order a pepperoni pizza from Lou Malnati's for you instead, or help you order something from Sweetgreen's menu. Which would you prefer?",
+   "tools": []
+  },
+  {
+   "id": "S0500",
+   "category": "food_order",
+   "input": "order a pepperoni pizza from Panera",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged an order for a pepperoni pizza from Panera to 1210 S Indiana Ave. Please approve the order card above to complete it.",
+   "tools": [
+    "memory_list",
+    "food_order"
+   ]
+  },
+  {
+   "id": "S0602",
+   "category": "general_chat",
+   "input": "hello",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Hello! How can I help you today?",
+   "tools": []
+  },
+  {
+   "id": "S0609",
+   "category": "general_chat",
+   "input": "who are you",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I'm your personal assistant in Ring. Let me know what you need help with.",
+   "tools": []
+  },
+  {
+   "id": "S0622",
+   "category": "general_chat",
+   "input": "hi there",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Hi there! How can I help you today?",
+   "tools": []
+  },
+  {
+   "id": "S0624",
+   "category": "general_chat",
+   "input": "sup",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Hey! How can I help today?",
+   "tools": []
+  },
+  {
+   "id": "S0626",
+   "category": "general_chat",
+   "input": "good afternoon",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Good afternoon! How can I help you today?",
+   "tools": []
+  },
+  {
+   "id": "S0630",
+   "category": "general_chat",
+   "input": "thanks!",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "You're welcome! Let me know whenever you need anything else.",
+   "tools": []
+  },
+  {
+   "id": "S0661",
+   "category": "general_chat",
+   "input": "what can you do?",
+   "score": 80,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 5,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I can handle tasks across your email, calendar, web services, and personal tracking:\n\n1. **Email & Inbox**: Search messages, triage inbox, summarize threads, draft/send replies, and find receipts or attachments.\n2. **Calendar**: Schedule, update, or cancel events, check free time/conflicts, and get daily briefings.\n3. **Web Tasks & Bookings**: Cancel subscriptions, book restaurant tables or Uber rides, check order statuses, track packages, and run web forms.\n4. **Memory, Notes & Health**: Remember preferences/facts, save notes, and log/track health metrics like steps, sleep, and workouts.\n\nTel",
+   "tools": []
+  },
+  {
+   "id": "S0691",
+   "category": "general_chat",
+   "input": "help",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "How can I help you today?",
+   "tools": []
+  },
+  {
+   "id": "S0713",
+   "category": "general_chat",
+   "input": "thanks",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "You're welcome! Let me know if you need anything else.",
+   "tools": []
+  },
+  {
+   "id": "S0750",
+   "category": "general_chat",
+   "input": "help",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "What can I help you with today?",
+   "tools": []
+  },
+  {
+   "id": "S0751",
+   "category": "prerequisite",
+   "input": "cancel my netflix subscription",
+   "score": 93,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 3
+   },
+   "codes": [],
+   "reply": "I've navigated to Netflix's sign-in page and staged your stored credentials. Please approve the login request to continue with the cancellation.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_fill_login"
+   ]
+  },
+  {
+   "id": "S0755",
+   "category": "prerequisite",
+   "input": "order chipotle",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I'll deliver to 1210 S Indiana Ave. What specific items would you like in your Chipotle order (e.g., chicken bowl, burrito)?",
+   "tools": [
+    "memory_list"
+   ]
+  },
+  {
+   "id": "S0761",
+   "category": "prerequisite",
+   "input": "book a table",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Which restaurant, date, time, and party size would you like to book in Chicago?",
+   "tools": [
+    "memory_list",
+    "dining_tonight"
+   ]
+  },
+  {
+   "id": "S0762",
+   "category": "prerequisite",
+   "input": "book a table",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I checked for available tables tonight at 7:00 PM in Chicago, but couldn't find any openings. Which restaurant, time, and party size would you like me to book?",
+   "tools": [
+    "memory_list",
+    "dining_tonight"
+   ]
+  },
+  {
+   "id": "S0765",
+   "category": "prerequisite",
+   "input": "order me an uber",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I can set up your Uber pickup at 1210 S Indiana Ave. Where would you like to be dropped off?",
+   "tools": [
+    "memory_list"
+   ]
+  },
+  {
+   "id": "S0807",
+   "category": "prerequisite",
+   "input": "get me an uber",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I'll set up your Uber assuming pickup at 1210 S Indiana Ave. Where would you like to go?",
+   "tools": [
+    "memory_list"
+   ]
+  },
+  {
+   "id": "S0825",
+   "category": "prerequisite",
+   "input": "get me an uber",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I can set up your Uber pickup from 1210 S Indiana Ave. Where would you like to go?",
+   "tools": [
+    "memory_list",
+    "calendar_list"
+   ]
+  },
+  {
+   "id": "S0836",
+   "category": "prerequisite",
+   "input": "order doordash",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "What restaurant and items would you like to order from DoorDash? I have your delivery address set as 1210 S Indiana Ave.",
+   "tools": [
+    "memory_list"
+   ]
+  },
+  {
+   "id": "S0839",
+   "category": "prerequisite",
+   "input": "cancel my hbo max subscription",
+   "score": 93,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 3
+   },
+   "codes": [],
+   "reply": "Opening Max to access your account settings. I'll check your current plan details and ask for your approval before finalizing the cancellation.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open"
+   ]
+  },
+  {
+   "id": "S0850",
+   "category": "prerequisite",
+   "input": "get me an uber",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Where are you heading? I can set your pickup at 1210 S Indiana Ave once you give me your destination.",
+   "tools": [
+    "memory_list"
+   ]
+  },
+  {
+   "id": "S0501",
+   "category": "restaurant_res",
+   "input": "book a table for 2 at a italian restaurant tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've set up a table reservation for 2 tonight. Please review and approve the request on the card below to confirm your booking.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search",
+    "dining_book"
+   ]
+  },
+  {
+   "id": "S0505",
+   "category": "restaurant_res",
+   "input": "book a table for 4 at a italian restaurant tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I couldn't find available tables for 4 at Italian restaurants in Chicago tonight around 7:00 PM. Let me know if a different time works, or if you'd like me to check availability for a specific restaurant.",
+   "tools": [
+    "memory_list",
+    "dining_tonight"
+   ]
+  },
+  {
+   "id": "S0511",
+   "category": "restaurant_res",
+   "input": "book a table for 6 at a italian restaurant friday at 7pm",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged the reservation request for a table for 6 this Friday, October 9 at 7:00 PM. Please review and tap approve on the card above to complete the booking.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "dining_tonight",
+    "places_search",
+    "dining_book"
+   ]
+  },
+  {
+   "id": "S0512",
+   "category": "restaurant_res",
+   "input": "book a table for 6 at a italian restaurant saturday",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged a reservation for 6 at Quartino Ristorante for today, Saturday, October 3 at 7:00 PM. Please tap approve on the card above to confirm the booking.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "dining_tonight",
+    "places_search",
+    "dining_book"
+   ]
+  },
+  {
+   "id": "S0515",
+   "category": "restaurant_res",
+   "input": "book a table for 8 at a italian restaurant friday at 7pm",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've set up a reservation request for 8 people this Friday, October 9 at 7:00 PM. Please review and tap approve on the card below to complete the booking.",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search",
+    "dining_book"
+   ]
+  },
+  {
+   "id": "S0557",
+   "category": "restaurant_res",
+   "input": "find me a italian place for 6 people tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Here are top Italian spots in Chicago for 6 people tonight:\n\n1. **Il Porcellino** (River North) \u2013 4.8\u2605\n2. **Alla Vita** (West Loop) \u2013 4.8\u2605\n3. **Quartino Ristorante** (River North) \u2013 4.7\u2605\n\nLet me know your preferred time and spot, and I can request the booking for you.",
+   "tools": [
+    "memory_list",
+    "calendar_list",
+    "dining_tonight",
+    "places_search"
+   ]
+  },
+  {
+   "id": "S0575",
+   "category": "restaurant_res",
+   "input": "book a table for 6 at a sushi restaurant friday at 7pm",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I couldn't find any online reservation openings for a party of 6 at a Chicago sushi restaurant this Friday, October 9 at 7:00 PM. Would you like me to search for alternative times like 6:00 PM or 8:30 PM, or try specific restaurants?",
+   "tools": [
+    "memory_list",
+    "calendar_list",
+    "dining_tonight"
+   ]
+  },
+  {
+   "id": "S0586",
+   "category": "restaurant_res",
+   "input": "reserve dinner for 4, sushi food, tomorrow night",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've submitted the reservation request for 4 people tomorrow night (October 4) at 7:00 PM. Please tap approve on the card below to confirm the booking.",
+   "tools": [
+    "calendar_list",
+    "places_search",
+    "memory_list",
+    "dining_tonight",
+    "places_search",
+    "dining_book"
+   ]
+  },
+  {
+   "id": "S0589",
+   "category": "restaurant_res",
+   "input": "reserve dinner for 6, sushi food, tonight",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've set up a reservation request for 6 people tonight. Please tap approve on the card above to complete the booking.",
+   "tools": [
+    "memory_list",
+    "calendar_list",
+    "dining_tonight",
+    "places_search",
+    "dining_book"
+   ]
+  },
+  {
+   "id": "S0600",
+   "category": "restaurant_res",
+   "input": "I need a sushi restaurant reservation for 2 saturday",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I found top-rated options in Chicago for 2 people today, including Sushi-san, Blue Sushi Sake Grill, and Umai. \n\nWhat time would you like to dine so I can check exact availability and set up your reservation?",
+   "tools": [
+    "memory_list",
+    "dining_tonight",
+    "places_search"
+   ]
+  },
+  {
+   "id": "S0202",
+   "category": "ride_book",
+   "input": "I need a ride to O'Hare airport",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged an Uber ride from 1210 S Indiana Ave to O'Hare International Airport (ORD). \n\nPlease review and approve the request card so I can proceed with getting the fare and confirming your ride.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "S0209",
+   "category": "ride_book",
+   "input": "book an uber to downtown Chicago",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged your Uber ride to downtown Chicago. Please review and approve the ride details on the card above to confirm.",
+   "tools": [
+    "ride_book"
+   ]
+  },
+  {
+   "id": "S0222",
+   "category": "ride_book",
+   "input": "get me a car to Wrigley Field",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've set up a ride to Wrigley Field from 1210 S Indiana Ave. Please confirm the fare and details on the approval card to request your car.",
+   "tools": [
+    "memory_list",
+    "calendar_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "S0224",
+   "category": "ride_book",
+   "input": "call me an uber to Wrigley Field",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged an Uber ride to Wrigley Field from 1210 S Indiana Ave. Please tap approve on the card below so I can proceed with booking and confirm your fare.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "S0226",
+   "category": "ride_book",
+   "input": "I need a ride to the Art Institute",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've set up a ride to the Art Institute of Chicago from 1210 S Indiana Ave. Please approve the request card below so I can proceed with finding your driver and confirming the fare.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "S0230",
+   "category": "ride_book",
+   "input": "call me an uber to the Art Institute",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged an Uber ride from 1210 S Indiana Ave to the Art Institute. Please review and approve the request on the approval card below to proceed.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "S0261",
+   "category": "ride_book",
+   "input": "uber to downtown Chicago in 10 minutes",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged your Uber ride to downtown Chicago for departure in 10 minutes. Please review and approve the request on the card to complete the booking.",
+   "tools": [
+    "ride_book"
+   ]
+  },
+  {
+   "id": "S0291",
+   "category": "ride_book",
+   "input": "uber to Wrigley Field in 10 minutes",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've staged an Uber ride to Wrigley Field from 1210 S Indiana Ave scheduled for 10 minutes from now. Please approve the card above to confirm the fare and book the ride.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "S0313",
+   "category": "ride_book",
+   "input": "uber to the Willis Tower right now",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've requested an Uber to Willis Tower. Please tap Approve on the card to confirm and book the ride.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "S0350",
+   "category": "ride_book",
+   "input": "uber to Midway airport at 5pm",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've set up an Uber ride to Midway Airport for 5:00 PM today (picking up at 1210 S Indiana Ave). Please approve the request card to finalize the ride.",
+   "tools": [
+    "memory_list",
+    "ride_book"
+   ]
+  },
+  {
+   "id": "S0002",
+   "category": "subscription_cancel",
+   "input": "stop my elevenlabs subscription",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening ElevenLabs. I'm waiting for your approval to sign in and access your account details\u2014please approve the action above so I can proceed with cancelling your subscription.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_act"
+   ]
+  },
+  {
+   "id": "S0009",
+   "category": "subscription_cancel",
+   "input": "kill my elevenlabs subscription",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening ElevenLabs to cancel your subscription. Please approve the sign-in request above so I can log in and manage your plan.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_act"
+   ]
+  },
+  {
+   "id": "S0022",
+   "category": "subscription_cancel",
+   "input": "stop my spotify subscription",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening Spotify to manage your subscription. I've requested to log in using your Google account, which is waiting for your approval to proceed.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_act"
+   ]
+  },
+  {
+   "id": "S0024",
+   "category": "subscription_cancel",
+   "input": "please cancel spotify",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Opening Spotify to manage your subscription. I've staged the login using your Google account\u2014please approve the request so I can log in and proceed with the cancellation.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_act"
+   ]
+  },
+  {
+   "id": "S0030",
+   "category": "subscription_cancel",
+   "input": "unsubscribe from spotify",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've submitted the request to unsubscribe from Spotify emails. Please confirm the approval card to proceed.",
+   "tools": [
+    "unsubscribe_email"
+   ]
+  },
+  {
+   "id": "S0113",
+   "category": "subscription_cancel",
+   "input": "I want to end my audible subscription",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've reached the Audible sign-in page. Please approve the prompt to sign in with your saved credentials so I can proceed with cancelling your subscription.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_fill_login"
+   ]
+  },
+  {
+   "id": "S0150",
+   "category": "subscription_cancel",
+   "input": "unsubscribe from playstation plus",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I'm opening PlayStation Store to access your subscription settings. Please approve the sign-in action on the approval card so I can proceed with cancelling PlayStation Plus.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_act"
+   ]
+  },
+  {
+   "id": "S0172",
+   "category": "subscription_cancel",
+   "input": "stop my google one subscription",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Google requires you to sign in \u2014 tap Take Over to sign into your Google account, then tell me when you're done. Tap \"Take Over\" in the browser panel, do what's needed, then say \"done\" and I'll continue.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_request_help"
+   ]
+  },
+  {
+   "id": "S0178",
+   "category": "subscription_cancel",
+   "input": "I don't want google one anymore, cancel it",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "Google requires you to sign in to access your Google One settings \u2014 please tap Take Over to sign in. Tap \"Take Over\" in the browser panel, do what's needed, then say \"done\" and I'll continue.",
+   "tools": [
+    "browser_check_google_auth",
+    "browser_open",
+    "browser_inspect",
+    "browser_request_help"
+   ]
+  },
+  {
+   "id": "S0200",
+   "category": "subscription_cancel",
+   "input": "unsubscribe from notion",
+   "score": 100,
+   "breakdown": {
+    "correctness": 30,
+    "conciseness": 25,
+    "no_error_codes": 20,
+    "intelligence": 15,
+    "prerequisites": 10
+   },
+   "codes": [],
+   "reply": "I've set up the request to unsubscribe from Notion marketing emails. Please tap approve on the card above to complete it.",
+   "tools": [
+    "unsubscribe_email"
+   ]
+  }
+ ],
+ "summary": {
+  "subscription_cancel": {
+   "n": 10,
+   "avg": 100.0
+  },
+  "ride_book": {
+   "n": 10,
+   "avg": 100.0
+  },
+  "food_order": {
+   "n": 10,
+   "avg": 100.0
+  },
+  "restaurant_res": {
+   "n": 10,
+   "avg": 100.0
+  },
+  "general_chat": {
+   "n": 10,
+   "avg": 98.0
+  },
+  "prerequisite": {
+   "n": 10,
+   "avg": 98.6
+  },
+  "error_handling": {
+   "n": 10,
+   "avg": 100.0
+  },
+  "conciseness": {
+   "n": 10,
+   "avg": 100.0
+  },
+  "edge": {
+   "n": 10,
+   "avg": 100.0
+  }
+ }
+}
